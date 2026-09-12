@@ -110,7 +110,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="mt-2 w-full rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-black/60 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/70"
+              className="mt-2 w-full rounded-[var(--radius-md)] border border-[var(--muted-gold)]/25 bg-[var(--surface-1)] px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/70"
               placeholder="you@example.com"
             />
           </label>

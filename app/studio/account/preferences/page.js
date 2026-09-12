@@ -71,7 +71,7 @@ export default function PreferencesPage() {
         description="Set default workflow, browsing, discovery, and page behavior preferences for Studio."
       />
 
-      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-6">
+      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-[var(--surface-1)] p-6">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
           Page Defaults
         </p>
@@ -93,7 +93,7 @@ export default function PreferencesPage() {
         </div>
       </section>
 
-      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/15 bg-black/20 p-5 text-sm leading-7 text-[var(--muted)]">
+      <section className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/15 bg-[var(--surface-1)] p-5 text-sm leading-7 text-[var(--muted)]">
         These controls are frontend placeholders. Later, preferences should save
         to a profile/settings table and be consumed by pages like Community, My
         Creations, Image Studio, and creation builders.

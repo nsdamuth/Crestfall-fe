@@ -81,7 +81,7 @@ export default function NpcEntryModalView({
         )}
 
         {!isLinkedCharacterMode && actorMechanicsProfileAttachmentContent ? (
-          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-4">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4">
             {actorMechanicsProfileAttachmentContent}
           </div>
         ) : null}

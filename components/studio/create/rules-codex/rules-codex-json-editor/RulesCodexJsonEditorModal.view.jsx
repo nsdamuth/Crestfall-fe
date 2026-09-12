@@ -29,7 +29,7 @@ function IssueList({ title, issues = [], tone = "error" }) {
         {issues.map((issue, index) => (
           <div
             key={`${issue?.path || "issue"}-${index}`}
-            className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+            className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2"
           >
             <code className="break-all text-[11px] text-[var(--gold-ornament)]">
               {issue?.path || "$"}
@@ -143,7 +143,7 @@ export default function RulesCodexJsonEditorModalView({
             onChange={(event) => onChangeJson?.(event.target.value)}
             spellCheck={false}
             aria-label="Rules Codex JSON"
-            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/55"
+            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/55"
           />
         </section>
 

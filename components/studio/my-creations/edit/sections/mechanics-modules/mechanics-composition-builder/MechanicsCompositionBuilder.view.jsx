@@ -26,7 +26,7 @@ function TextField({ label, value, onChange, type = "text", placeholder = "" }) 
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+        className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -1383,7 +1383,7 @@ export default function MechanicsCompositionBuilderView({
         )}
       </div>
 
-      <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+      <p className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
         Cross-lane composition is explicitly non-transactional. A STOP policy prevents later steps but does not roll back earlier successful mutations.
       </p>
     </section>

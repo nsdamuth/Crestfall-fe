@@ -58,7 +58,7 @@ export default function AccountStubPageView({
       </div>
 
       {notice ? (
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-black/20 p-5 text-sm leading-7 text-[var(--ink-dim)]">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-[var(--surface-1)] p-5 text-sm leading-7 text-[var(--ink-dim)]">
           {notice}
         </div>
       ) : null}

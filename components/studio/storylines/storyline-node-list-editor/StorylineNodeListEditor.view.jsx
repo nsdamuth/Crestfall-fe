@@ -145,7 +145,7 @@ export default function StorylineNodeListEditorView({
                       )
                     }
                     placeholder="Optional evidence or authored condition that indicates this node has concluded."
-                    className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+                    className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 outline-none"
                   />
                 </label>
 
@@ -162,7 +162,7 @@ export default function StorylineNodeListEditorView({
                         event.target.value
                       )
                     }
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70"
+                    className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {node.transitionOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -177,7 +177,7 @@ export default function StorylineNodeListEditorView({
               </div>
 
               {node.needsTriggers ? (
-                <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-black/25 p-4">
+                <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-[var(--surface-1)] p-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-start gap-3">
                       <GitBranch
@@ -205,7 +205,7 @@ export default function StorylineNodeListEditorView({
                             event.target.value
                           )
                         }
-                        className="rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs outline-none"
+                        className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-xs outline-none"
                       >
                         {node.triggerModeOptions.map((option) => (
                           <option key={option.value} value={option.value}>
@@ -238,7 +238,7 @@ export default function StorylineNodeListEditorView({
                               event.target.value
                             )
                           }
-                          className="rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-xs outline-none"
+                          className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-xs outline-none"
                         >
                           {node.triggerTypeOptions.map((option) => (
                             <option key={option.value} value={option.value}>
@@ -256,7 +256,7 @@ export default function StorylineNodeListEditorView({
                             )
                           }
                           placeholder="Trigger label"
-                          className="rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm outline-none"
+                          className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm outline-none"
                         />
                         <input
                           value={trigger.description}
@@ -268,7 +268,7 @@ export default function StorylineNodeListEditorView({
                             )
                           }
                           placeholder="What must occur or be confirmed?"
-                          className="rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm outline-none"
+                          className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm outline-none"
                         />
                         <button
                           type="button"
@@ -310,7 +310,7 @@ export default function StorylineNodeListEditorView({
                         )
                       }
                       placeholder="What remains naturally available after this node?"
-                      className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+                      className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 outline-none"
                     />
                   </label>
                   <label className="block">
@@ -327,7 +327,7 @@ export default function StorylineNodeListEditorView({
                         )
                       }
                       placeholder="Optional world-facing pressure that may surface without controlling the player."
-                      className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+                      className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 outline-none"
                     />
                   </label>
                 </div>

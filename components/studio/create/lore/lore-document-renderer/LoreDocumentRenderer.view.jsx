@@ -383,7 +383,7 @@ export default function LoreDocumentRendererView({
       ))}
 
       {!chapters.length ? (
-        <div className="mx-auto max-w-5xl rounded-[var(--radius-md)] border border-dashed border-[var(--gold-ornament)]/30 bg-black/30 p-10 text-center text-sm text-[var(--ink-dim)]">
+        <div className="mx-auto max-w-5xl rounded-[var(--radius-md)] border border-dashed border-[var(--gold-ornament)]/30 bg-[var(--surface-1)] p-10 text-center text-sm text-[var(--ink-dim)]">
           Add a chapter to begin the Lore publication.
         </div>
       ) : null}

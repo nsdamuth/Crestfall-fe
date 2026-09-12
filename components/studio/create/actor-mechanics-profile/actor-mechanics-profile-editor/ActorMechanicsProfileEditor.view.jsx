@@ -97,7 +97,7 @@ function TextInput({ value = "", onChange, placeholder = "", ...props }) {
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
     />
   );
 }
@@ -117,7 +117,7 @@ function SelectInput({ value, onChange, children, disabled = false }) {
 
 function CheckboxRow({ checked, onChange, label, description }) {
   return (
-    <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+    <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
       <input
         type="checkbox"
         checked={checked}
@@ -941,7 +941,7 @@ export default function ActorMechanicsProfileEditorView({
                                   </div>
                                 ) : null}
 
-                                <div className="mt-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2">
+                                <div className="mt-3 rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2">
                                   <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--ink-dim)]">
                                     Creation Reference
                                   </p>

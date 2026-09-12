@@ -36,7 +36,7 @@ export default function StudioAccountProfileView({
 }) {
   if (isLoading) {
     return (
-      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4 text-sm text-[var(--ink-dim)]">
+      <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
         Loading profile…
       </div>
     );
@@ -53,7 +53,7 @@ export default function StudioAccountProfileView({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6"
+      className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-5">
         <div className="flex items-center gap-4">
@@ -313,7 +313,7 @@ function LabeledInput({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
       {note ? (
         <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">{note}</p>
@@ -340,7 +340,7 @@ function LabeledTextarea({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -367,7 +367,7 @@ function ReadOnlyValue({ label, value, note }) {
       <span className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
         {label}
       </span>
-      <div className="mt-2 rounded-[var(--radius-md)] border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+      <div className="mt-2 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink-dim)]">
         {value}
       </div>
       {note ? (

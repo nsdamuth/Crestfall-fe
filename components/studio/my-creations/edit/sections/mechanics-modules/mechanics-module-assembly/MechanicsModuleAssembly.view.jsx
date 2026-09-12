@@ -17,7 +17,7 @@ function MechanicsTextField({ label, value, onChange, placeholder, type = "text"
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -51,7 +51,7 @@ export function MechanicsRuntimeFoldSection({
     <section
       id={id}
       data-mechanics-runtime-section={id}
-      className="scroll-mt-28 overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/20"
+      className="scroll-mt-28 overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)]"
     >
       <button
         type="button"
@@ -67,7 +67,7 @@ export function MechanicsRuntimeFoldSection({
           <div className="mt-2 flex flex-wrap items-center gap-3">
             <h3 className="font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">{title}</h3>
             {badge ? (
-              <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
+              <span className="rounded-full border border-white/10 bg-[var(--surface-1)] px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
                 {badge}
               </span>
             ) : null}
@@ -113,7 +113,7 @@ export function MechanicsFoldableItemShell({
   }, [foldSignal?.revision, foldSignal?.expanded]);
 
   return (
-    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/25">
+    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)]">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"
@@ -171,7 +171,7 @@ export function MechanicsCommandsAssemblyView({
   renderCommand = null,
 }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/20 p-5">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className={EYEBROW_CLASS}>
@@ -210,7 +210,7 @@ export function MechanicsCommandsAssemblyView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--ink-dim)]">
+        <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 text-sm leading-6 text-[var(--ink-dim)]">
           No commands defined yet. Add a command such as{" "}
           <span className="text-[var(--ink)]">/settled</span>,{" "}
           <span className="text-[var(--ink)]">/warn boundary</span>, or{" "}
@@ -309,7 +309,7 @@ export default function MechanicsModuleAssemblyView({
             <input
               value={contractVersion}
               readOnly
-              className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)] outline-none"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink-dim)] outline-none"
             />
           </label>
           <MechanicsTextField
@@ -399,7 +399,7 @@ export default function MechanicsModuleAssemblyView({
         {guardsContent}
       </MechanicsRuntimeFoldSection>
 
-      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+      <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
         <p className={EYEBROW_CLASS}>Save Shape</p>
         <p className="mt-3">
           Saves into <span className="text-[var(--ink)]">creation.data.instanceData</span>.

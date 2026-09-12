@@ -45,7 +45,7 @@ export default function CreationPickerPanelView({
 
   return (
     <div>
-      <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+      <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
         <Search size={16} className="text-[var(--gold-ornament)]" />
         <input
           value={query}
@@ -76,7 +76,7 @@ export default function CreationPickerPanelView({
             );
           })
         ) : (
-          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
             <p className="text-sm leading-6 text-[var(--ink-dim)]">
               {emptyMessage}
             </p>

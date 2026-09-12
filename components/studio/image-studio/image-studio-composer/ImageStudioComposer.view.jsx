@@ -84,7 +84,7 @@ export default function ImageStudioComposerView({
               className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition disabled:cursor-not-allowed disabled:opacity-45 ${
                 mode === option.id
                   ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                  : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
               }`}
             >
               <Icon size={14} />
@@ -123,7 +123,7 @@ export default function ImageStudioComposerView({
               onChange={(event) => onChangePrompt?.(event.target.value)}
               placeholder="Describe what you want to see..."
               rows={5}
-              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
             />
           </label>
           <button
@@ -183,12 +183,12 @@ export default function ImageStudioComposerView({
                   }
                   placeholder="Optional: describe what to avoid for this request..."
                   rows={3}
-                  className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+                  className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                 />
               </label>
 
               {inheritedNegativePromptItems.length ? (
-                <div className="rounded-xl border border-[var(--gold-ornament)]/15 bg-black/20 p-3">
+                <div className="rounded-xl border border-[var(--gold-ornament)]/15 bg-[var(--surface-1)] p-3">
                   <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                     Inherited from selected assets
                   </p>

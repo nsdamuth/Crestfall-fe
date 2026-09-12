@@ -202,7 +202,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -211,7 +211,7 @@ function TextArea(props) {
   return (
     <textarea
       {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -317,7 +317,7 @@ function EntriesTab({
               );
             })
           ) : (
-            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+            <p className="rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No outfit entries yet. Add one to begin.
             </p>
           )}
@@ -345,7 +345,7 @@ function EntriesTab({
             onChooseOutfit={() => onChooseOutfit?.(activeEntry.id)}
           />
         ) : (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="rounded-2xl border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
             <Shirt size={28} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an outfit entry or add a new one.
@@ -377,7 +377,7 @@ function WardrobeEntryEditor({
         </Field>
 
         <Field label="Outfit">
-          <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             {entry.outfitCreationId ? (
               <div className="flex items-start gap-4">
                 {entry.outfitImageUrl ? (
@@ -455,7 +455,7 @@ function WardrobeEntryEditor({
         </div>
       </div>
 
-      <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
+      <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
         <input
           type="checkbox"
           checked={entry.enabled !== false}
@@ -509,7 +509,7 @@ function RulesTab({
           />
         </Field>
 
-        <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
+        <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
           <input
             type="checkbox"
             checked={Boolean(selectionRules.allowRandom)}

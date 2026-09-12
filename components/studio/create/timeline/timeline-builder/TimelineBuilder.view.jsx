@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
+  "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
 
 function Field({ label, help = "", children }) {
   return (
@@ -90,7 +90,7 @@ function EntryRow({
               onChange={(event) =>
                 onUpdateEntryChapter?.(entry.id, event.target.value)
               }
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
             >
               <option value="">Unassigned</option>
               {chapters.map((chapter) => (
@@ -114,7 +114,7 @@ function EntryRow({
               placeholder={
                 entry.timelineOrder === null ? "Unplaced" : String(entry.timelineOrder)
               }
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
             />
           </label>
           <button
@@ -144,7 +144,7 @@ function ChapterRow({ chapter, onUpdateChapter, onRemoveChapter }) {
           onChange={(event) =>
             onUpdateChapter?.(chapter.id, "order", event.target.value)
           }
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
         />
       </label>
       <label className="block min-w-0">
@@ -157,7 +157,7 @@ function ChapterRow({ chapter, onUpdateChapter, onRemoveChapter }) {
           onChange={(event) =>
             onUpdateChapter?.(chapter.id, "title", event.target.value)
           }
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
           placeholder="Arc I — Origins to Bronze Age"
         />
       </label>
@@ -249,11 +249,11 @@ export default function TimelineBuilderView({
           </p>
 
           <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
-            <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
               <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Lore</p>
               <p className="mt-2 text-lg">{entryCount}</p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
               <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Unplaced</p>
               <p className="mt-2 text-lg">{unplacedCount}</p>
             </div>
@@ -379,7 +379,7 @@ export default function TimelineBuilderView({
                 ))}
               </div>
             ) : (
-              <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/20 px-5 py-8 text-center">
+              <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-[var(--surface-1)] px-5 py-8 text-center">
                 <p className="text-sm text-[var(--ink-dim)]">No authored chapters yet. Era grouping and continuous chronology still work without them.</p>
               </div>
             )}
@@ -416,7 +416,7 @@ export default function TimelineBuilderView({
                 ))}
               </div>
             ) : (
-              <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/20 px-5 py-10 text-center">
+              <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-[var(--surface-1)] px-5 py-10 text-center">
                 <p className="text-sm text-[var(--ink-dim)]">No Lore is attached yet.</p>
                 <button type="button" onClick={() => onOpenLorePicker?.()} className="cf-btn mt-4">
                   <Plus size={14} /> Add the first Lore Asset

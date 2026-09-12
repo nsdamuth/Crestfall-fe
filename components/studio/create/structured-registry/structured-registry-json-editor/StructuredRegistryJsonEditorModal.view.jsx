@@ -118,7 +118,7 @@ export default function StructuredRegistryJsonEditorModalView({
             onChange={(event) => onChangeJson?.(event.target.value)}
             spellCheck={false}
             aria-label={jsonAriaLabel}
-            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
           />
         </section>
 
@@ -130,7 +130,7 @@ export default function StructuredRegistryJsonEditorModalView({
             </p>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <section className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             <p className={EYEBROW_CLASS}>AI / Link Safety</p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               Existing linked Creation IDs may be preserved. New Creation IDs cannot be introduced through JSON; use the visual link picker after applying bulk-authored content.
@@ -138,7 +138,7 @@ export default function StructuredRegistryJsonEditorModalView({
           </section>
 
           {statusMessage ? (
-            <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <section className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
               <p className={EYEBROW_CLASS}>Status</p>
               <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">{statusMessage}</p>
             </section>

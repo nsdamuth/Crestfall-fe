@@ -228,7 +228,7 @@ function GuidedBuildView({
       />
 
       <div className="mt-5 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.16em]">
-        <span className="rounded-full border border-[var(--gold-ornament)]/25 bg-black/35 px-3 py-2 text-[var(--gold-ornament)]">
+        <span className="rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] px-3 py-2 text-[var(--gold-ornament)]">
           {isLoading
             ? "Loading progress"
             : progress.coreComplete

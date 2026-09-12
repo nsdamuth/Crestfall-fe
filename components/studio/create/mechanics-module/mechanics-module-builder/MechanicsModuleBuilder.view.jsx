@@ -31,7 +31,7 @@ function TextField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -39,7 +39,7 @@ function TextField({ label, value, onChange, placeholder }) {
 
 function RuntimeFieldsFixtureFallback() {
   return (
-    <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 bg-black/20 p-6 text-sm leading-6 text-[var(--ink-dim)]">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 bg-[var(--surface-1)] p-6 text-sm leading-6 text-[var(--ink-dim)]">
       The live Binding Shell supplies the Crestfall mechanics fields editor here.
       Fixture previews keep this application-owned editor disconnected from
       persistence and runtime state.
@@ -78,7 +78,7 @@ export default function MechanicsModuleBuilderView({
           locations, characters, scenarios, or narrators.
         </p>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
           <p className={EYEBROW_CLASS}>Runtime Contract</p>
           <p className="mt-3">
             Module ID:{" "}
@@ -168,7 +168,7 @@ export default function MechanicsModuleBuilderView({
           eyebrow="Runtime Fields"
           title="Meters, Commands, Status Blocks, and Guards"
         >
-          <div className="mb-6 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <div className="mb-6 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
             <Activity className="mt-1 text-[var(--gold-ornament)]" size={20} />
             <div>
               <p className="text-sm text-[var(--ink)]">

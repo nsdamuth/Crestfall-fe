@@ -7,7 +7,7 @@ function StatsPoolsConfiguration({ statsConfiguration }) {
     : [];
 
   return (
-    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/20 p-5">
+    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--surface-1)] p-5">
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         Stats & Pools
       </p>
@@ -64,7 +64,7 @@ function StatsPoolsConfiguration({ statsConfiguration }) {
                               event.target.value
                             )
                           }
-                          className="mt-3 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
+                          className="mt-3 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
                         />
                       </label>
                     ))}
@@ -105,7 +105,7 @@ function SkillsConfiguration({ skillsConfiguration }) {
     : [];
 
   return (
-    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/20 p-5">
+    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--surface-1)] p-5">
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         Skills
       </p>
@@ -151,7 +151,7 @@ function SkillsConfiguration({ skillsConfiguration }) {
                               event.target.value
                             )
                           }
-                          className="mt-3 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
+                          className="mt-3 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
                         >
                           <option value="">
                             {slot.required ? "Choose a Skill" : "No Skill selected"}
@@ -224,7 +224,7 @@ function RoomLocalChoiceField({
         <select
           value={normalizedValue}
           onChange={(event) => onChange?.(event.target.value)}
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
         >
           {normalizedOptions.map((option) => (
             <option key={option} value={option}>{option}</option>
@@ -244,7 +244,7 @@ function RoomLocalChoiceField({
           value={value || ""}
           onChange={(event) => onChange?.(event.target.value)}
           placeholder="Choose or type a custom value"
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
         />
         <datalist id={effectiveListId}>
           {normalizedOptions.map((option) => (
@@ -262,7 +262,7 @@ function RoomLocalChoiceField({
         value={value || ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder="GENERAL"
-        className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+        className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
       />
     </label>
   );
@@ -288,7 +288,7 @@ function RoomLocalCustomField({ field = {}, value = "", listId = "", onChange = 
           value={value}
           onChange={(event) => onChange?.(event.target.value)}
           maxLength={field.maxLength}
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
         />
       </label>
     );
@@ -301,7 +301,7 @@ function RoomLocalCustomField({ field = {}, value = "", listId = "", onChange = 
         <select
           value={value}
           onChange={(event) => onChange?.(event.target.value)}
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
         >
           <option value="">Choose…</option>
           {options.map((option) => <option key={option} value={option}>{option}</option>)}
@@ -321,7 +321,7 @@ function RoomLocalCustomField({ field = {}, value = "", listId = "", onChange = 
           onChange={(event) => onChange?.(event.target.value)}
           maxLength={field.maxLength}
           placeholder="Choose or type a custom value"
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
         />
         <datalist id={effectiveListId}>
           {options.map((option) => <option key={option} value={option} />)}
@@ -338,7 +338,7 @@ function RoomLocalCustomField({ field = {}, value = "", listId = "", onChange = 
         onChange={(event) => onChange?.(event.target.value)}
         maxLength={field.maxLength}
         rows={3}
-        className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+        className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
       />
     </label>
   );
@@ -434,7 +434,7 @@ function RoomLocalAbilitySpellAuthoring({
                                 event.target.value
                               )
                             }
-                            className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+                            className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
                           />
                         </label>
 
@@ -450,7 +450,7 @@ function RoomLocalAbilitySpellAuthoring({
                                 event.target.value
                               )
                             }
-                            className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+                            className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
                           >
                             {(group.typeOptions || []).map((option) => (
                               <option key={option} value={option}>{String(option).replaceAll("_", " ")}</option>
@@ -508,7 +508,7 @@ function RoomLocalAbilitySpellAuthoring({
                                 )
                               }
                               rows={3}
-                              className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+                              className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
                             />
                           </label>
                         ) : null}
@@ -527,7 +527,7 @@ function RoomLocalAbilitySpellAuthoring({
                                 )
                               }
                               rows={3}
-                              className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+                              className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
                             />
                           </label>
                         ) : null}
@@ -597,7 +597,7 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
     : [];
 
   return (
-    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/20 p-5">
+    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--surface-1)] p-5">
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         Abilities & Magic
       </p>
@@ -765,7 +765,7 @@ export default function StoryCharacterConfigurationView({
 
   return (
     <section className="space-y-5">
-      <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+      <div className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5">
         <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
           Character Configuration
         </p>
@@ -778,7 +778,7 @@ export default function StoryCharacterConfigurationView({
       </div>
 
       {loading ? (
-        <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--muted)]">
+        <div className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5 text-sm text-[var(--muted)]">
           Loading Character Configuration…
         </div>
       ) : error ? (
@@ -786,12 +786,12 @@ export default function StoryCharacterConfigurationView({
           {error}
         </div>
       ) : !hasPlayerActor ? (
-        <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--muted)]">
+        <div className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5 text-sm text-[var(--muted)]">
           This Story does not currently have a player actor awaiting Character Configuration.
         </div>
       ) : (
         <>
-          <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+          <div className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5">
             <p className="text-sm font-medium text-[var(--foreground)]">
               Status: {status.replaceAll("_", " ")}
             </p>

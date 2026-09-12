@@ -121,7 +121,7 @@ export default function LocationRegistryBuilderView({
                     className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                       active
                         ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                        : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                        : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                     }`}
                   >
                     <Icon size={14} />
@@ -230,7 +230,7 @@ export default function LocationRegistryBuilderView({
         </div>
 
         {mode === "edit" ? (
-          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+          <p className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             Use the page Save button to persist changes.
           </p>
         ) : (
@@ -1492,7 +1492,7 @@ function TextInput({ label, value, onChange, placeholder = "" }) {
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -1523,7 +1523,7 @@ function SelectInput({
       <select
         value={value || ""}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
       >
         {includeBlank ? <option value="">{blankLabel}</option> : null}
         {normalizedOptions.map((option) => (
@@ -1567,7 +1567,7 @@ function OptionMultiSelect({
         {options.map((option) => (
           <label
             key={option}
-            className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3"
+            className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3"
           >
             <input
               type="checkbox"
@@ -1615,7 +1615,7 @@ function RouteTypeMultiSelect({
         {options.map((routeType) => (
           <label
             key={routeType}
-            className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3"
+            className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3"
           >
             <input
               type="checkbox"
@@ -1634,7 +1634,7 @@ function RouteTypeMultiSelect({
 
 function CheckboxInput({ label, checked, onChange }) {
   return (
-    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
       <input
         type="checkbox"
         checked={Boolean(checked)}
@@ -1649,7 +1649,7 @@ function CheckboxInput({ label, checked, onChange }) {
 
 function EmptyPanel({ message }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
       <p className="text-sm leading-6 text-[var(--ink-dim)]">{message}</p>
     </div>
   );

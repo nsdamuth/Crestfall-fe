@@ -239,7 +239,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-[var(--radius-md)] border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -248,7 +248,7 @@ function TextArea(props) {
   return (
     <textarea
       {...props}
-      className="w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -350,7 +350,7 @@ function EntriesTab({
               </button>
             ))
           ) : (
-            <p className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+            <p className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No entries yet. Add an object to begin.
             </p>
           )}
@@ -375,7 +375,7 @@ function EntriesTab({
             onDelete={() => onDeleteEntry?.(activeEntry.id)}
           />
         ) : (
-          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
             <Box size={28} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an object entry or add a new one.
@@ -642,7 +642,7 @@ function TrackingTab({
                 </Field>
               </div>
 
-              <label className="mt-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-3">
+              <label className="mt-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-3">
                 <input
                   type="checkbox"
                   checked={entry.doNotHallucinateAvailability !== false}
@@ -790,7 +790,7 @@ function ReviewTab({ entries, scope, reviewPayloadText }) {
           </dl>
         </div>
 
-        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {reviewPayloadText}
         </pre>
       </div>
@@ -800,7 +800,7 @@ function ReviewTab({ entries, scope, reviewPayloadText }) {
 
 function EmptyEntriesMessage({ text }) {
   return (
-    <p className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+    <p className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
       {text}
     </p>
   );

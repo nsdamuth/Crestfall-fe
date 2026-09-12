@@ -78,7 +78,7 @@ export default function StorylineReferencePickerModalView({
             ))}
           </div>
 
-          <label className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+          <label className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
             <Search size={17} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}

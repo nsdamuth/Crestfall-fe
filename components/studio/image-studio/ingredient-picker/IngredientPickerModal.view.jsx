@@ -67,7 +67,7 @@ export default function IngredientPickerModalView({
           <div
             role="tablist"
             aria-label="Ingredient source"
-            className="mb-4 inline-flex rounded-xl border border-white/10 bg-black/25 p-1"
+            className="mb-4 inline-flex rounded-xl border border-white/10 bg-[var(--surface-1)] p-1"
           >
             {sourceOptions.map((option) => {
               const active = option.id === sourceMode;

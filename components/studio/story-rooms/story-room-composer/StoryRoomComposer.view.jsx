@@ -165,7 +165,7 @@ function DesktopComposer({
   useAutoResizeTextarea(textareaRef, draft, 360);
 
   return (
-    <div className="hidden border-t border-white/10 bg-black/35 p-4 xl:block">
+    <div className="hidden border-t border-white/10 bg-[var(--surface-1)] p-4 xl:block">
       {disabledReason ? (
         <p className="mb-3 rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 px-4 py-3 text-sm text-[var(--ink-dim)]">
           {disabledReason}
@@ -205,7 +205,7 @@ function DesktopComposer({
               disabled={textareaDisabled}
               placeholder={placeholder}
               rows={2}
-              className="mt-2 max-h-[360px] min-h-[72px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+              className="mt-2 max-h-[360px] min-h-[72px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
               onChangeDraft={onChangeDraft}
               onUpdateSuggestionQueries={onUpdateSuggestionQueries}
               onMoveMentionHighlight={onMoveMentionHighlight}
@@ -451,7 +451,7 @@ function MobileComposer({
           disabled={textareaDisabled}
           placeholder={placeholder}
           rows={1}
-          className="max-h-[220px] min-h-[52px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-black/55 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+          className="max-h-[220px] min-h-[52px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
           onChangeDraft={onChangeDraft}
           onUpdateSuggestionQueries={onUpdateSuggestionQueries}
           onMoveMentionHighlight={onMoveMentionHighlight}

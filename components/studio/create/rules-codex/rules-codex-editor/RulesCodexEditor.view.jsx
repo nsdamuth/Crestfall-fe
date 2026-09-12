@@ -78,7 +78,7 @@ function TextInput({ value = "", onChange, placeholder = "", ...props }) {
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -92,7 +92,7 @@ function NumberInput({ value, onChange, min, max, step = 1 }) {
       max={max}
       step={step}
       onChange={onChange}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -196,7 +196,7 @@ export default function RulesCodexEditorView({
       </div>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Authority
           </p>
@@ -204,7 +204,7 @@ export default function RulesCodexEditorView({
             Interpretation only
           </p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Sections
           </p>
@@ -212,7 +212,7 @@ export default function RulesCodexEditorView({
             {sectionCount.toLocaleString()} / {sectionLimit.toLocaleString()}
           </p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Guidance budget
           </p>
@@ -330,7 +330,7 @@ export default function RulesCodexEditorView({
             return (
               <article
                 key={`${section.id || "section"}-${section.order}-${index}`}
-                className="overflow-hidden rounded-xl border border-white/10 bg-black/25"
+                className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]"
               >
                 <div className="flex items-start gap-2 px-3 py-3 sm:px-4">
                   <button
@@ -514,7 +514,7 @@ export default function RulesCodexEditorView({
                         </div>
                       </div>
 
-                      <div className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+                      <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
                         <span className="font-medium text-[var(--gold-ornament)]">
                           Fixed authority:
                         </span>{" "}
@@ -582,10 +582,10 @@ export default function RulesCodexEditorView({
                           </div>
 
                           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                            <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
+                            <div className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
                               Known domains: {knownDomains.join(", ")}
                             </div>
-                            <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
+                            <div className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
                               Known scopes: {knownScopeTypes.join(", ")}
                             </div>
                           </div>
@@ -612,7 +612,7 @@ export default function RulesCodexEditorView({
           })}
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-5 text-sm leading-6 text-[var(--ink-dim)]">
           The authored Codex remains available for editing, but no section may be
           selected for runtime context while the Codex is disabled.
         </div>
@@ -627,7 +627,7 @@ export default function RulesCodexEditorView({
       ) : null}
 
       {!safeSections.length && enabled ? (
-        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-6 text-center">
+        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-6 text-center">
           <BookOpenText
             size={28}
             className="mx-auto text-[var(--gold-ornament)]"

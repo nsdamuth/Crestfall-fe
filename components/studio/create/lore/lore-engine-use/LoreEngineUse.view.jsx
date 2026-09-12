@@ -828,7 +828,7 @@ export default function LoreEngineUseView({
           </div>
 
           {latest ? (
-            <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+            <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
@@ -905,7 +905,7 @@ export default function LoreEngineUseView({
               <div className="rounded-xl border border-violet-300/20 bg-violet-300/5 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
                 Use <span className="text-[var(--ink)]">Engine Use JSON</span> to import or export this complete unsent configuration. On a draft, applying JSON updates the staged <span className="font-mono text-[var(--ink)]">metadata.engineUseAuthoring</span> data shown by these controls; use the page Save action to persist it. Submission remains a separate later action.
               </div>
-              <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
+              <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
                 <div className="flex items-center gap-3">
                   <BookOpenCheck size={19} className="text-violet-200" />
                   <div>
@@ -981,7 +981,7 @@ export default function LoreEngineUseView({
                 ) : null}
               </div>
 
-              <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
+              <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
                 <div className="flex items-center gap-3">
                   <UserRound size={19} className="text-violet-200" />
                   <div>
@@ -1061,7 +1061,7 @@ export default function LoreEngineUseView({
                 )}
               </div>
 
-              <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
+              <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
                 <div className="flex items-center gap-3">
                   <MapPin size={19} className="text-violet-200" />
                   <div>

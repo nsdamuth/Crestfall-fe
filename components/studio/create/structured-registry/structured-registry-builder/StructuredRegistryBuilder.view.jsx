@@ -79,7 +79,7 @@ export default function StructuredRegistryBuilderView({
           <div className="flex flex-wrap gap-2">
             {documentControls}
             {isEditMode ? (
-              <p className="rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+              <p className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                 Use the page Save button to persist changes.
               </p>
             ) : (
@@ -243,7 +243,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -344,7 +344,7 @@ function EntriesTab({
               );
             })
           ) : (
-            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+            <p className="rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No entries yet.
             </p>
           )}
@@ -372,7 +372,7 @@ function EntriesTab({
             onDelete={() => onDeleteEntry(activeEntry.id)}
           />
         ) : (
-          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
             Select an entry or add a new one.
           </p>
         )}
@@ -498,7 +498,7 @@ function RelationshipsTab({
             />
           ))
         ) : (
-          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
             Add entries before defining relationships.
           </p>
         )}
@@ -602,7 +602,7 @@ function LinkedCreationGroup({
           ))}
         </div>
       ) : (
-        <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+        <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
           {group.emptyLabel || "No linked creations yet."}
         </p>
       )}
@@ -616,7 +616,7 @@ function LinkedCreationCard({ link, onRemove, onNotesChange }) {
       <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
         {link.imageUrl ? (
           <div
-            className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black/45 bg-cover bg-center"
+            className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)] bg-cover bg-center"
             style={{ backgroundImage: `url(${link.imageUrl})` }}
           />
         ) : (
@@ -737,7 +737,7 @@ function RulesTab({ config, entries, onUpdateEntry }) {
             </div>
           ))
         ) : (
-          <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+          <p className="rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
             Add entries before defining rules.
           </p>
         )}
@@ -785,7 +785,7 @@ function RewardListHeader({ title, description, onAdd, addLabel }) {
 
 function EmptyRewardList({ children }) {
   return (
-    <p className="mt-3 rounded-xl border border-dashed border-white/10 bg-black/20 p-3 text-xs leading-5 text-[var(--ink-dim)]">
+    <p className="mt-3 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-3 text-xs leading-5 text-[var(--ink-dim)]">
       {children}
     </p>
   );
@@ -842,7 +842,7 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
             maxLength={SHORT_LONGFORM_MAX_LENGTH}
           />
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             <RewardListHeader
               title="Monetary rewards"
               description="Optional payment terms. Amount and currency stay descriptive until a Mechanics/Gameflow operation performs an actual grant."
@@ -933,7 +933,7 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
             )}
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             <RewardListHeader
               title="Item rewards"
               description="Describe promised items here. If the reward corresponds to a first-class Crestfall Item Registry asset, link that asset under Relationships rather than inventing an ID."
@@ -1015,7 +1015,7 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
             )}
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             <RewardListHeader
               title="Progression rewards"
               description="Use for experience/XP, reputation, renown, advancement points, or other world-specific progression terms. These are promised terms only until an explicit Mechanics/Gameflow binding fulfills them."
@@ -1122,7 +1122,7 @@ function QuestRewardsFields({ entry, onUpdateEntry }) {
             )}
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             <RewardListHeader
               title="Other rewards"
               description="Use for favors, reputation, titles, access, services, training, salvage rights, recognition, or other non-currency terms."
@@ -1275,7 +1275,7 @@ function ReviewTab({ config, entryCount, reviewPayloadText }) {
           </dl>
         </div>
 
-        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {reviewPayloadText}
         </pre>
       </div>

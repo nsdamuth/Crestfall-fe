@@ -71,7 +71,7 @@ export default function MechanicsActionBuilderShell() {
         <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
           A reusable actor-agnostic executable rule. Story and actor availability are attached separately.
         </p>
-        <div className="mt-5 rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+        <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
           <p>Action key</p>
           <p className="mt-1 break-all text-[var(--ink)]">{actionKey || "Set action.id in JSON"}</p>
         </div>
@@ -85,8 +85,8 @@ export default function MechanicsActionBuilderShell() {
         <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">Identity</p>
           <div className="mt-5 grid gap-4">
-            <label className="block"><span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">Name</span><input value={title} onChange={(e) => setTitle(e.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm" /></label>
-            <label className="block"><span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">Description</span><textarea value={description} onChange={(e) => setDescription(e.target.value)} className="mt-2 min-h-28 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm" /></label>
+            <label className="block"><span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">Name</span><input value={title} onChange={(e) => setTitle(e.target.value)} className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm" /></label>
+            <label className="block"><span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">Description</span><textarea value={description} onChange={(e) => setDescription(e.target.value)} className="mt-2 min-h-28 w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm" /></label>
             <div className="grid gap-4 md:grid-cols-2">
               <CrestfallSelect label="Visibility" value={visibility} onChange={setVisibility} options={VISIBILITY_OPTIONS} />
               <CrestfallSelect label="Content Rating" value={contentRating} onChange={setContentRating} options={CONTENT_RATING_OPTIONS} />

@@ -31,7 +31,7 @@ export default function PriorityTriadEditor({
   }
 
   return (
-    <div className="rounded-2xl border border-[var(--line-whisper)] bg-black/10 p-4 md:p-5">
+    <div className="rounded-2xl border border-[var(--line-whisper)] bg-[var(--surface-1)] p-4 md:p-5">
       <div>
         <h3 className="font-display text-xl text-[var(--ink)]">{title}</h3>
         <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">

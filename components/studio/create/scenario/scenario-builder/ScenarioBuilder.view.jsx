@@ -42,7 +42,7 @@ export default function ScenarioBuilderView({
           settings.
         </p>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Draft Progress
           </p>
@@ -55,7 +55,7 @@ export default function ScenarioBuilderView({
           </p>
         </div>
 
-        <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Enabled Middleware
           </p>
@@ -305,7 +305,7 @@ export default function ScenarioBuilderView({
             />
           </div>
 
-          <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
             <div className="flex items-start gap-3">
               <ShieldCheck className="mt-1 text-[var(--gold-ornament)]" size={19} />
               <div>
@@ -365,7 +365,7 @@ function StoryCircleCard({ step, value, onChange }) {
           onChange={(event) => onChange(event.target.value)}
           placeholder="Optional story-circle notes..."
           rows={4}
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+          className="w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
         />
       </div>
     </div>
@@ -383,7 +383,7 @@ function TextField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -401,7 +401,7 @@ function TextAreaField({ label, value, onChange, placeholder, rows = 5 }) {
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -424,7 +424,7 @@ function ReferenceSelectorField({
       <button
         type="button"
         onClick={onOpen}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-4 text-left transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 text-left transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/50"
       >
         <span className="block text-sm text-[var(--ink)]">
           {selectedItems.length

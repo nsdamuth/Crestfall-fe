@@ -49,7 +49,7 @@ export default async function AccountPage() {
         <StudioAccountProfile />
 
         <section className="grid gap-6 xl:grid-cols-[0.72fr_1.28fr]">
-          <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+          <div className="rounded-[var(--radius-md)] border border-[var(--muted-gold)]/20 bg-[var(--surface-1)] p-5">
             <StudioAccountCoins />
 
             <div className="mt-6">

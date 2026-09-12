@@ -68,7 +68,7 @@ export default function MechanicsActionJsonEditor({ value = {}, onChange = null 
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+      <div className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
         <p className="font-medium text-[var(--ink)]">First-class Mechanics Action</p>
         <p className="mt-1">
           Paste the complete <code>mechanics_action_definition_v0</code> here.
@@ -87,7 +87,7 @@ export default function MechanicsActionJsonEditor({ value = {}, onChange = null 
           setMessage("");
         }}
         spellCheck={false}
-        className="min-h-[34rem] w-full resize-y rounded-xl border border-white/10 bg-black/45 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+        className="min-h-[34rem] w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
         aria-label="Mechanics Action JSON"
       />
 

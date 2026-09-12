@@ -41,7 +41,7 @@ export default function OfficialCharactersGridView({
           value={query}
           onChange={(event) => onChangeQuery?.(event.target.value)}
           placeholder={searchPlaceholder}
-          className="w-full rounded-full border border-[var(--gold-ornament)]/20 bg-black/60 px-5 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]/60 focus:border-[var(--gold-ornament)]/60 sm:max-w-md"
+          className="w-full rounded-full border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] px-5 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]/60 focus:border-[var(--gold-ornament)]/60 sm:max-w-md"
         />
       </div>
 
@@ -60,7 +60,7 @@ export default function OfficialCharactersGridView({
           )}
         />
       ) : (
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-8 text-center">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-8 text-center">
           <h2 className="font-display text-2xl">{emptyTitle}</h2>
           <p className="mt-3 text-[var(--ink-dim)]">{emptyMessage}</p>
         </div>

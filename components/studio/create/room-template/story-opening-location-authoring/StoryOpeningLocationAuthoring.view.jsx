@@ -40,7 +40,7 @@ export default function StoryOpeningLocationAuthoringView({
           className={`rounded-[var(--radius-md)] border px-4 py-3 text-left transition ${
             !playerSelect
               ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-              : "border-[var(--line)] bg-black/20 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
+              : "border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
           }`}
         >
           <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
@@ -57,7 +57,7 @@ export default function StoryOpeningLocationAuthoringView({
           className={`rounded-[var(--radius-md)] border px-4 py-3 text-left transition ${
             playerSelect
               ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-              : "border-[var(--line)] bg-black/20 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
+              : "border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
           }`}
         >
           <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">

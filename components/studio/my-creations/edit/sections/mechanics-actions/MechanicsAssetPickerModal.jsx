@@ -105,7 +105,7 @@ export default function MechanicsAssetPickerModal({
               <button key={source.id} type="button" onClick={() => { setActiveSource(source.id); setQuery(""); }} className={`cf-btn ${activeSource === source.id ? "cf-btn--primary" : "cf-btn--secondary"}`}>{source.label}</button>
             ))}
           </div>
-          <label className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm">
+          <label className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={isSet ? "Search Action Sets..." : "Search Mechanics Actions..."} className="w-full bg-transparent outline-none" />
           </label>

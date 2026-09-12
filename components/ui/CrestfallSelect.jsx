@@ -43,7 +43,7 @@ export default function CrestfallSelect({
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className="mt-2 flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-left text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 flex w-full items-center justify-between rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-left text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/50"
       >
         <span>{selected?.label || "Select…"}</span>
         <ChevronDown

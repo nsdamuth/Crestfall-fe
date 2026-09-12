@@ -40,7 +40,7 @@ function TextInput({ value, onChange, placeholder = "" }) {
       value={value ?? ""}
       onChange={(event) => onChange?.(event.target.value)}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -62,7 +62,7 @@ function NumberInput({
       value={value ?? ""}
       disabled={disabled}
       onChange={(event) => onChange?.(event.target.value)}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none disabled:cursor-not-allowed disabled:opacity-60 focus:border-[var(--gold-ornament)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none disabled:cursor-not-allowed disabled:opacity-60 focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -72,7 +72,7 @@ function SelectInput({ value, onChange, options = [] }) {
     <select
       value={value || ""}
       onChange={(event) => onChange?.(event.target.value)}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/70 px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>
@@ -126,7 +126,7 @@ function ThresholdPreview({ rows = [], omittedCount = 0 }) {
   const splitIndex = Math.ceil(rows.length / 2);
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-white/10 bg-black/20">
+    <div className="overflow-x-auto rounded-xl border border-white/10 bg-[var(--surface-1)]">
       <table className="w-full min-w-[560px] table-fixed border-collapse text-sm">
         <thead className="bg-[var(--fill-whisper)] text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
           <tr>
@@ -341,7 +341,7 @@ export default function ProgressionProfileEditorView({
         </div>
 
         {generatedMode ? (
-          <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
               Algorithmic Settings
             </p>
@@ -441,7 +441,7 @@ export default function ProgressionProfileEditorView({
         ) : null}
 
         {overridesEnabled ? (
-          <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -567,7 +567,7 @@ export default function ProgressionProfileEditorView({
             </div>
           </div>
         ) : (
-          <details className="group mt-6 overflow-hidden rounded-xl border border-white/10 bg-black/20">
+          <details className="group mt-6 overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]">
             <summary className="cursor-pointer list-none px-4 py-3 [&::-webkit-details-marker]:hidden">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="min-w-0">
@@ -631,7 +631,7 @@ export default function ProgressionProfileEditorView({
           {tiers.map((tier, index) => (
             <article
               key={`${tier.id}-${index}`}
-              className="rounded-xl border border-white/10 bg-black/25 p-4"
+              className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4"
             >
               <div className="flex items-center justify-between gap-4">
                 <p className="font-semibold">{tier.title || tier.id}</p>
@@ -732,25 +732,25 @@ export default function ProgressionProfileEditorView({
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
           <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             Levels
           </p>
           <p className="mt-2 text-2xl">{metrics.thresholdCount || 0}</p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
           <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             Stored rows
           </p>
           <p className="mt-2 text-2xl">{metrics.storedThresholdCount || 0}</p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
           <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             Overrides
           </p>
           <p className="mt-2 text-2xl">{metrics.overrideCount || 0}</p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
           <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
             Tiers
           </p>

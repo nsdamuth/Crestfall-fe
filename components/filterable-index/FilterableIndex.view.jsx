@@ -28,7 +28,7 @@ export default function FilterableIndexView({
               value={search}
               onChange={(event) => onSearchChange?.(event.target.value)}
               placeholder="Search the archive..."
-              className="w-full rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(255,255,255,0.08)] px-5 pr-12 py-3 font-serif text-base text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]"
+              className="w-full rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-1)] px-5 pr-12 py-3 font-serif text-base text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]"
             />
 
             {search ? (
@@ -51,7 +51,7 @@ export default function FilterableIndexView({
                 onChange={(event) =>
                   onFilterChange?.(filter.key, event.target.value)
                 }
-                className="rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[rgba(20,18,16,0.95)] px-4 py-3 font-display text-xs uppercase tracking-[0.2em] text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]"
+                className="rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-1)] px-4 py-3 font-display text-xs uppercase tracking-[0.2em] text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]"
               >
                 <option value="all">{filter.label}</option>
 
@@ -94,7 +94,7 @@ export default function FilterableIndexView({
               className={`whitespace-nowrap rounded-[var(--radius-md)] px-4 py-2 font-display text-xs uppercase tracking-[0.2em] ${
                 allTagsActive
                   ? "bg-[var(--gold-ornament)] text-black"
-                  : "bg-[rgba(255,255,255,0.08)] text-[var(--ink-dim)]"
+                  : "bg-[var(--surface-1)] text-[var(--ink-dim)]"
               }`}
             >
               All
@@ -108,7 +108,7 @@ export default function FilterableIndexView({
                 className={`whitespace-nowrap rounded-[var(--radius-md)] px-4 py-2 font-display text-xs uppercase tracking-[0.2em] ${
                   tag.isActive
                     ? "bg-[var(--gold-ornament)] text-black"
-                    : "bg-[rgba(255,255,255,0.08)] text-[var(--ink-dim)] hover:text-[var(--ink)]"
+                    : "bg-[var(--surface-1)] text-[var(--ink-dim)] hover:text-[var(--ink)]"
                 }`}
               >
                 {tag.value}

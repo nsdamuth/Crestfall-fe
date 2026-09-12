@@ -79,7 +79,7 @@ export default function StoryRoomsHubView({
       />
 
       <div className="hidden md:block">
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
@@ -258,7 +258,7 @@ function MobileStoryRoomsDrawer({
       <button
         type="button"
         onClick={onToggle || undefined}
-        className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/45 px-4 py-3 text-left"
+        className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] px-4 py-3 text-left"
       >
         <span className="flex min-w-0 items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
@@ -283,7 +283,7 @@ function MobileStoryRoomsDrawer({
       </button>
 
       {open ? (
-        <div className="mt-3 space-y-4 rounded-[var(--radius-md)] border border-white/10 bg-black/45 p-4">
+        <div className="mt-3 space-y-4 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4">
           <div className="flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)]">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
@@ -380,7 +380,7 @@ function RoomListRow({
             className={`flex h-5 w-5 items-center justify-center rounded-full border ${
               room.selected
                 ? "border-red-300 bg-red-300 text-black"
-                : "border-red-300/70 bg-black/20"
+                : "border-red-300/70 bg-[var(--surface-1)]"
             }`}
           >
             {room.selected ? "✓" : ""}

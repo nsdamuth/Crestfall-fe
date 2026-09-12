@@ -15,7 +15,7 @@ export default function PublicProfileTabsView({
           <h2 className="mt-2 font-display text-3xl">{title}</h2>
         </div>
 
-        <div className="flex gap-2 rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-1">
+        <div className="flex gap-2 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-1">
           {tabs.map((tab) => (
             <button
               key={tab.id}

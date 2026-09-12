@@ -40,7 +40,7 @@ export default function StoryRulesCodexAttachmentsSectionView({
       </div>
 
       <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/30 p-5">
-        <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-4">
+        <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
           <BookOpen
             size={18}
             className="mt-0.5 shrink-0 text-[var(--gold-ornament)]"
@@ -66,7 +66,7 @@ export default function StoryRulesCodexAttachmentsSectionView({
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+          <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
             {emptyLabel}
           </p>
         )}
@@ -82,16 +82,16 @@ function RulesCodexAttachmentCard({
 } = {}) {
   return (
     <article className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
-      <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
+      <div className="flex items-center gap-3 border-b border-white/10 bg-[var(--surface-1)] p-3">
         {attachment?.imageUrl ? (
           <div
-            className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-black/45 bg-cover bg-center"
+            className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-[var(--surface-1)] bg-cover bg-center"
             style={{ backgroundImage: `url(${attachment.imageUrl})` }}
             role="img"
             aria-label={`${attachment?.title || "Rules Codex"} cover`}
           />
         ) : (
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/45 text-[var(--gold-ornament)]">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-[var(--surface-1)] text-[var(--gold-ornament)]">
             <BookOpen size={22} />
           </div>
         )}
@@ -130,7 +130,7 @@ function RulesCodexAttachmentCard({
           value={attachment?.notes || ""}
           onChange={(event) => onNotesChange?.(event.target.value)}
           placeholder="Optional Story-scope notes..."
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+          className="w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
         />
       </div>
     </article>

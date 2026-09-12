@@ -48,7 +48,7 @@ function Field({ label, children, detail = "" }) {
 }
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
+  "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
 
 function ReferenceSelector({
   items = [],
@@ -822,7 +822,7 @@ function BlockFields({
         <button
           type="button"
           onClick={() => onOpenImagePicker?.(chapterId, sectionId, block.id)}
-          className="relative flex min-h-36 items-center justify-center overflow-hidden rounded-xl border border-dashed border-[var(--gold-ornament)]/35 bg-black/25 text-sm text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10"
+          className="relative flex min-h-36 items-center justify-center overflow-hidden rounded-xl border border-dashed border-[var(--gold-ornament)]/35 bg-[var(--surface-1)] text-sm text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10"
         >
           {block.src ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -1174,7 +1174,7 @@ export default function LoreEditorView({
   }
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         {/* ED1C: suppressed under the v2 editor shell, whose section
             box carries the one header; unchanged everywhere else. */}

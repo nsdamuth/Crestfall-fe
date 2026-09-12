@@ -42,7 +42,7 @@ export default function ItemStartingAssignmentEditorView({
   pickerSlot = null,
 } = {}) {
   return (
-    <div className="mt-4 rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/25 p-4">
+    <div className="mt-4 rounded-2xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-4">
       <div>
         <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
           Starting Assignment
@@ -64,14 +64,14 @@ export default function ItemStartingAssignmentEditorView({
       </div>
 
       {showUnassignedState ? (
-        <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+        <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
           The item is defined, but it does not begin in any Character,
           Location, or Story inventory.
         </p>
       ) : null}
 
       {showStoryState ? (
-        <p className="mt-4 rounded-xl border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+        <p className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
           The item begins in the general Story inventory. It is not initially
           held by a participant or placed at a specific Location.
         </p>
@@ -110,7 +110,7 @@ export default function ItemStartingAssignmentEditorView({
               </div>
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4">
+            <div className="rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4">
               <p className="text-sm leading-6 text-[var(--ink-dim)]">
                 No starting {emptyHolderLabel} selected.
               </p>
@@ -129,7 +129,7 @@ export default function ItemStartingAssignmentEditorView({
       ) : null}
 
       {showPlacement ? (
-        <div className="mt-5 rounded-xl border border-white/10 bg-black/25 p-4">
+        <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
           <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Nested Starting Placement
           </p>
@@ -150,7 +150,7 @@ export default function ItemStartingAssignmentEditorView({
           </div>
 
           {placementSpecificity === "UNSPECIFIED" ? (
-            <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/30 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+            <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
               The current holder is authoritative, but the exact pocket, bag,
               shelf, container, or surface is not defined.
             </p>
@@ -225,19 +225,19 @@ export default function ItemStartingAssignmentEditorView({
                           }
                           onBlur={() => onBlurPlacementStepLabel?.(step.id)}
                           placeholder="Pants pocket, back closet, top shelf..."
-                          className="mt-2 w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+                          className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
                         />
                       </label>
                     </div>
                   </div>
                 ))
               ) : (
-                <p className="rounded-xl border border-dashed border-white/10 bg-black/30 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+                <p className="rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
                   No placement levels have been added yet.
                 </p>
               )}
 
-              <div className="rounded-xl border border-dashed border-[var(--gold-ornament)]/20 bg-black/20 p-4">
+              <div className="rounded-xl border border-dashed border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-4">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
                     <p className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
@@ -275,7 +275,7 @@ export default function ItemStartingAssignmentEditorView({
                     onChangePlacementNote?.(event.target.value)
                   }
                   placeholder="Optional detail that does not fit cleanly into the placement path."
-                  className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+                  className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
                 />
               </label>
             </div>

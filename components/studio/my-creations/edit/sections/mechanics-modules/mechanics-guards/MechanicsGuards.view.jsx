@@ -126,7 +126,7 @@ function GuardCard({
   }, [foldSignal?.revision, foldSignal?.expanded]);
 
   return (
-    <article className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)]">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"

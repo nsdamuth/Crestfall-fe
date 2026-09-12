@@ -34,7 +34,7 @@ export default function StoryRoomStatePanelView({
   const safeActions = Array.isArray(actions) ? actions : [];
 
   return (
-    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5">
       <div className="mb-4 flex items-center justify-between gap-3">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           {eyebrow}

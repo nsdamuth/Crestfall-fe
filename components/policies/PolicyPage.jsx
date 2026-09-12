@@ -62,7 +62,7 @@ export default function PolicyPage({ policy }) {
         ))}
       </div>
 
-      <footer className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5 text-sm leading-7 text-[var(--ink-dim)]">
+      <footer className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5 text-sm leading-7 text-[var(--ink-dim)]">
         Future versions of this page should include effective date, last updated
         date, contact method, jurisdiction-specific notices where applicable,
         and any required legal language after review.

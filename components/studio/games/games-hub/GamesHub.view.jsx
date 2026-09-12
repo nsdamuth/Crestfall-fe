@@ -19,7 +19,7 @@ import {
 
 function PreviewViewModeToggle({ value = "grid", onChange, label = "View" }) {
   return (
-    <div className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-1">
+    <div className="inline-flex items-center gap-2 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-1">
       <span className="px-2 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
         {label}
       </span>
@@ -82,7 +82,7 @@ export default function GamesHubView({
 
       <div className="hidden md:block">
         <div className="grid gap-5 xl:grid-cols-[1fr_0.7fr]">
-          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6">
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Start Playing
             </p>
@@ -97,7 +97,7 @@ export default function GamesHubView({
               community sandbox play.
             </p>
 
-            <div className="mt-6 flex items-center gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3">
+            <div className="mt-6 flex items-center gap-3 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3">
               <Search size={16} className="text-[var(--gold-ornament)]" />
               <input
                 value={query}
@@ -128,7 +128,7 @@ export default function GamesHubView({
             </div>
           </div>
 
-          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6">
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Continue
             </p>
@@ -248,7 +248,7 @@ function MobileGamesDrawer({
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/45 px-4 py-3 text-left"
+        className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] px-4 py-3 text-left"
       >
         <span className="flex min-w-0 items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
@@ -273,8 +273,8 @@ function MobileGamesDrawer({
       </button>
 
       {open ? (
-        <div className="mt-3 space-y-4 rounded-[var(--radius-md)] border border-white/10 bg-black/45 p-4">
-          <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3">
+        <div className="mt-3 space-y-4 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4">
+          <div className="flex items-center gap-3 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={query}
@@ -531,7 +531,7 @@ function FeaturedRail({ games, onPlay, startingGameId }) {
   if (!games.length) return null;
 
   return (
-    <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+    <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">

@@ -46,7 +46,7 @@ function getSecurityPresentation(
     INACTIVE: {
       label: "Inactive",
       detail: "Advanced Prompting is optional and currently has no runtime effect.",
-      className: "border-white/10 bg-black/25 text-[var(--ink-dim)]",
+      className: "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)]",
     },
   };
 
@@ -92,7 +92,7 @@ export default function AdvancedPromptingEditorView({
   );
 
   return (
-    <section className="min-w-0 max-w-full rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5">
+    <section className="min-w-0 max-w-full rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0 max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
@@ -208,7 +208,7 @@ export default function AdvancedPromptingEditorView({
                       }
                       placeholder={section.placeholder}
                       rows={8}
-                      className="min-w-0 max-w-full w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+                      className="min-w-0 max-w-full w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                     />
 
                     <div className="mt-3 flex items-center justify-between gap-3 text-xs">
@@ -235,7 +235,7 @@ export default function AdvancedPromptingEditorView({
           })}
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-5 text-sm leading-6 text-[var(--ink-dim)]">
           {inactiveDescription}
         </div>
       )}

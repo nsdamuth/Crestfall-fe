@@ -188,7 +188,7 @@ export default function MechanicsModulePickerModalView({
             })}
           </div>
 
-          <label className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
+          <label className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink-dim)]">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={query}

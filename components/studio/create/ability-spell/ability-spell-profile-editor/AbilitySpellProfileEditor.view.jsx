@@ -14,7 +14,7 @@ import {
   ABILITY_SPELL_TYPES,
 } from "./AbilitySpellProfileEditor.contract";
 
-const inputClass = "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50";
+const inputClass = "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50";
 
 function Label({ children }) {
   return <label className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">{children}</label>;
@@ -215,7 +215,7 @@ export default function AbilitySpellProfileEditorView({
             {selectionGroups.map((group, groupIndex) => (
               <div
                 key={`${group.id}-${groupIndex}`}
-                className="rounded-xl border border-white/10 bg-black/25 p-4"
+                className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4"
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="text-sm font-semibold">
@@ -302,7 +302,7 @@ export default function AbilitySpellProfileEditorView({
         {roomLocalDefinitionAuthoring.mode === "GROUPS" ? (
           <div className="mt-5 space-y-4">
             {roomLocalAuthoringGroups.map((group, groupIndex) => (
-              <div key={`${group.id}-${groupIndex}`} className="rounded-xl border border-white/10 bg-black/25 p-4">
+              <div key={`${group.id}-${groupIndex}`} className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="text-sm font-semibold">{group.title || group.id || `Authoring Group ${groupIndex + 1}`}</p>
@@ -421,7 +421,7 @@ export default function AbilitySpellProfileEditorView({
 
         <div className="mt-5 space-y-5">
           {definitions.map((definition, definitionIndex) => (
-            <article key={`${definition.id}-${definitionIndex}`} className="rounded-2xl border border-white/10 bg-black/25 p-5">
+            <article key={`${definition.id}-${definitionIndex}`} className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div><p className="text-base font-semibold">{definition.title || definition.id || `Definition ${definitionIndex + 1}`}</p><p className="mt-1 text-xs uppercase tracking-[0.14em] text-[var(--muted)]">{definition.id} · {definition.type}</p></div>
                 <button type="button" onClick={() => onRemoveDefinition?.(definitionIndex)} className="inline-flex items-center gap-2 rounded-xl border border-rose-300/20 px-3 py-2 text-xs text-rose-100"><Trash2 size={14} /> Remove</button>

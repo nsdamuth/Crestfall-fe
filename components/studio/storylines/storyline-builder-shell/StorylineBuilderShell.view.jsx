@@ -34,7 +34,7 @@ export default function StorylineBuilderShellView({
 }) {
   return (
     <section className="grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.24em] text-[var(--gold-ornament)]">
           {eyebrow}
         </p>
@@ -51,7 +51,7 @@ export default function StorylineBuilderShellView({
             <input
               value={titleValue}
               onChange={(event) => onChangeTitle(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm outline-none"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm outline-none"
             />
           </label>
 
@@ -63,7 +63,7 @@ export default function StorylineBuilderShellView({
               rows={4}
               value={descriptionValue}
               onChange={(event) => onChangeDescription(event.target.value)}
-              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 outline-none"
             />
           </label>
 
@@ -75,7 +75,7 @@ export default function StorylineBuilderShellView({
               <select
                 value={visibilityValue}
                 onChange={(event) => onChangeVisibility(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm outline-none"
+                className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm outline-none"
               >
                 {visibilityOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -92,7 +92,7 @@ export default function StorylineBuilderShellView({
               <select
                 value={contentRatingValue}
                 onChange={(event) => onChangeContentRating(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm outline-none"
+                className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm outline-none"
               >
                 {contentRatingOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -112,7 +112,7 @@ export default function StorylineBuilderShellView({
               value={tagsValue}
               onChange={(event) => onChangeTags(event.target.value)}
               placeholder={tagsPlaceholder}
-              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 outline-none"
             />
           </label>
         </div>
@@ -139,11 +139,11 @@ export default function StorylineBuilderShellView({
       </aside>
 
       <div className="space-y-6">
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6">
           {nodeEditorSlot}
         </div>
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6">
           {openWorldSettingsSlot}
         </div>
       </div>

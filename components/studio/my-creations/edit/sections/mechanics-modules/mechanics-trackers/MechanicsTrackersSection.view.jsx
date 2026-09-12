@@ -38,7 +38,7 @@ function TextField({ label, value, onChange, placeholder = "", type = "text" }) 
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+        className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -254,7 +254,7 @@ function HintList({ title, values, empty, draft, setDraft, add, placeholder, add
         {values.map((value, index) => (
           <span
             key={`${value}-${index}`}
-            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--ink)]"
+            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-[var(--surface-1)] px-3 py-1 text-xs text-[var(--ink)]"
           >
             <span className="break-all">{value}</span>
             <button
@@ -282,7 +282,7 @@ function HintList({ title, values, empty, draft, setDraft, add, placeholder, add
             }
           }}
           placeholder={placeholder}
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
         />
         <ActionButton onClick={add}>
           <Plus size={14} />

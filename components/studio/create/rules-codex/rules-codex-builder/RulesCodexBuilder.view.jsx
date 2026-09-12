@@ -22,7 +22,7 @@ function TextInput({ value, onChange, placeholder }) {
       value={value}
       onChange={(event) => onChange?.(event.target.value)}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -88,13 +88,13 @@ export default function RulesCodexBuilderView({
         </div>
 
         <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
-          <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Errors
             </p>
             <p className="mt-2 text-lg">{errorCount}</p>
           </div>
-          <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Warnings
             </p>

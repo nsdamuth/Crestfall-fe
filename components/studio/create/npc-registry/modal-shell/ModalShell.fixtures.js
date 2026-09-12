@@ -5,7 +5,7 @@ const standardBody = (
       <input
         type="text"
         defaultValue="Captain Elian Voss"
-        className="rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-[var(--ink)] outline-none"
+        className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--ink)] outline-none"
       />
     </label>
 
@@ -13,7 +13,7 @@ const standardBody = (
       Registry Notes
       <textarea
         defaultValue="A trusted harbor captain who knows the eastern trade routes."
-        className="min-h-32 rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-[var(--ink)] outline-none"
+        className="min-h-32 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--ink)] outline-none"
       />
     </label>
   </div>

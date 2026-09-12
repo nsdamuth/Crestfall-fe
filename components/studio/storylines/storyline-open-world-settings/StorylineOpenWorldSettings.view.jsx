@@ -41,7 +41,7 @@ export default function StorylineOpenWorldSettingsView({
             onChange={(event) =>
               onChangeDefaultTransition?.(event.target.value)
             }
-            className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm outline-none"
+            className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm outline-none"
           >
             {defaultTransitionOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -71,7 +71,7 @@ export default function StorylineOpenWorldSettingsView({
           value={guidanceValue}
           onChange={(event) => onChangeGuidance?.(event.target.value)}
           placeholder={guidancePlaceholder}
-          className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+          className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 outline-none"
         />
       </label>
 
@@ -84,7 +84,7 @@ export default function StorylineOpenWorldSettingsView({
           value={pressureCadenceValue}
           onChange={(event) => onChangePressureCadence?.(event.target.value)}
           placeholder={pressureCadencePlaceholder}
-          className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+          className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 outline-none"
         />
       </label>
     </div>

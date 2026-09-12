@@ -14,7 +14,7 @@ export default function PublicProfileHeroView({
   engagementActionsSlot = null,
 } = {}) {
   return (
-    <section className="overflow-hidden rounded-3xl border border-[var(--gold-ornament)]/20 bg-black/30 shadow-2xl shadow-black/30">
+    <section className="overflow-hidden rounded-3xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] shadow-2xl shadow-black/30">
       <div
         className="relative min-h-[280px] bg-[radial-gradient(circle_at_top_left,rgba(214,184,111,0.22),transparent_36%),linear-gradient(135deg,rgba(38,27,21,0.95),rgba(6,6,8,0.98))]"
         style={

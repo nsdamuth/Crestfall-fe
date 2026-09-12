@@ -150,7 +150,7 @@ function PresetFolder({
         </span>
 
         <span className="flex shrink-0 items-center gap-2">
-          <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] text-[var(--ink-dim)]">
+          <span className="rounded-full border border-white/10 bg-[var(--surface-1)] px-2 py-0.5 text-[10px] text-[var(--ink-dim)]">
             {folder.cards.length}
           </span>
           <ChevronDown
@@ -581,7 +581,7 @@ export default function MechanicsPresetApplicationModalView({
               </aside>
             </div>
           ) : (
-            <div className="flex min-h-[20rem] items-center justify-center rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/15 p-8 text-center">
+            <div className="flex min-h-[20rem] items-center justify-center rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
               <div>
                 <AlertTriangle
                   size={24}

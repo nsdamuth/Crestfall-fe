@@ -11,7 +11,7 @@ function Label({ children }) {
 }
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50";
+  "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50";
 
 function TextInput({ value = "", onChange = null, type = "text", ...props }) {
   return (
@@ -176,7 +176,7 @@ export default function WalletProfileEditorView({
           {currencies.map((currency, currencyIndex) => (
             <article
               key={`${currency.id}-${currencyIndex}`}
-              className="rounded-2xl border border-white/10 bg-black/25 p-5"
+              className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>

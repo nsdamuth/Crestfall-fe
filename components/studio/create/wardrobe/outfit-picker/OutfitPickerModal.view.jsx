@@ -42,7 +42,7 @@ export default function OutfitPickerModalView({
         </div>
 
         <div className="max-h-[75vh] overflow-y-auto p-5">
-          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}
@@ -55,7 +55,7 @@ export default function OutfitPickerModalView({
           </label>
 
           {isLoading ? (
-            <p className="mt-5 rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+            <p className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
               {loadingMessage}
             </p>
           ) : null}
@@ -67,7 +67,7 @@ export default function OutfitPickerModalView({
           ) : null}
 
           {showEmptyState ? (
-            <p className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+            <p className="mt-5 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
               {emptyMessage}
             </p>
           ) : null}

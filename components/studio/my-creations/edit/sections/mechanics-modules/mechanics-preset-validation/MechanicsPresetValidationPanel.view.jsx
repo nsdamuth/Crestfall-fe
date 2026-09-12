@@ -59,14 +59,14 @@ export default function MechanicsPresetValidationPanelView({
               {statusLabel}
             </span>
             {expectedOutcomeLabel ? (
-              <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+              <span className="rounded-full border border-white/10 bg-[var(--surface-1)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                 Expected: {expectedOutcomeLabel}
               </span>
             ) : null}
             {domainLaneLabels.map((lane) => (
               <span
                 key={lane}
-                className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
+                className="rounded-full border border-white/10 bg-[var(--surface-1)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
               >
                 {lane}
               </span>
@@ -145,7 +145,7 @@ export default function MechanicsPresetValidationPanelView({
           {notes.map((note, index) => (
             <p
               key={`${index}-${note}`}
-              className="rounded-xl border border-white/10 bg-black/20 p-4 text-xs leading-5 text-[var(--ink-dim)]"
+              className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 text-xs leading-5 text-[var(--ink-dim)]"
             >
               {note}
             </p>

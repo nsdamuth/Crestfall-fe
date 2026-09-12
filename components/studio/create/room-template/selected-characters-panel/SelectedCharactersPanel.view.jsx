@@ -37,7 +37,7 @@ export default function SelectedCharactersPanelView({
           safeCharacters.map((character) => (
             <div
               key={character.id}
-              className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 p-3"
+              className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] p-3"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 font-display text-xl text-[var(--gold-ornament)]">
                 {character.initial || "?"}

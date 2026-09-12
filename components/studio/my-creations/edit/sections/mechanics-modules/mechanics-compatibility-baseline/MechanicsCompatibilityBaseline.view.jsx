@@ -16,7 +16,7 @@ export default function MechanicsCompatibilityBaselineView({
 }) {
   return (
     <section className="grid gap-6">
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-6">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] p-6">
         <p className={EYEBROW_CLASS}>Mechanics M0</p>
         <h2 className="mt-2 font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)]">Compatibility Baseline</h2>
         <p className="mt-3 max-w-4xl text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
@@ -33,7 +33,7 @@ export default function MechanicsCompatibilityBaselineView({
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[0.34fr_0.66fr]">
-        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <p className={EYEBROW_CLASS}>Frozen fixtures</p>
           <div className="mt-4 grid gap-2">
             {fixtures.map((fixture) => (
@@ -45,7 +45,7 @@ export default function MechanicsCompatibilityBaselineView({
           </div>
         </aside>
 
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className={EYEBROW_CLASS}>Selected fixture</p>
@@ -57,16 +57,16 @@ export default function MechanicsCompatibilityBaselineView({
           <div className="mt-4 flex flex-wrap gap-2">
             {(selectedFixture?.domains || []).map((domain) => <span key={domain} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] text-[var(--ink-dim)]">{domain}</span>)}
           </div>
-          <pre className="mt-5 max-h-[36rem] overflow-auto rounded-xl border border-white/10 bg-black/50 p-4 text-xs leading-6 text-white/75">{JSON.stringify(selectedFixture?.moduleData || selectedFixture?.preset || null, null, 2)}</pre>
+          <pre className="mt-5 max-h-[36rem] overflow-auto rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 text-xs leading-6 text-white/75">{JSON.stringify(selectedFixture?.moduleData || selectedFixture?.preset || null, null, 2)}</pre>
         </div>
       </div>
 
       <div className="grid gap-5 xl:grid-cols-2">
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <p className={EYEBROW_CLASS}>External repositories</p>
           <div className="mt-4 grid gap-3">{externalRepositories.map((repo) => <div key={repo.id} className="rounded-xl border border-white/10 bg-black/20 p-4"><p className="text-sm text-[var(--ink)]">{repo.id}</p><p className="mt-1 font-mono text-xs text-[var(--ink-dim)]">{repo.environmentVariable}</p><p className="mt-2 text-xs text-[var(--ink-dim)]">{repo.statusWhenUnavailable}</p></div>)}</div>
         </div>
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <p className={EYEBROW_CLASS}>Deferred cross-tier gates</p>
           <div className="mt-4 grid gap-3">{deferredDiagnostics.map((item) => <div key={item.id} className="rounded-xl border border-white/10 bg-black/20 p-4"><p className="text-sm text-[var(--ink)]">{item.id}</p><p className="mt-2 text-xs text-[var(--ink-dim)]">Requires: {item.requires.join(", ")}</p></div>)}</div>
         </div>

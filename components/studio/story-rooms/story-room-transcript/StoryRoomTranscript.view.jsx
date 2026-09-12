@@ -171,7 +171,7 @@ function MessageReportDialog({
             value={reasonCode}
             onChange={(event) => onReasonCodeChange?.(event.target.value)}
             disabled={pending}
-            className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-3 py-2.5 text-sm normal-case tracking-normal text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+            className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-3 py-2.5 text-sm normal-case tracking-normal text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
           >
             {reasonOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -193,7 +193,7 @@ function MessageReportDialog({
             rows={4}
             maxLength={2000}
             placeholder="Describe what should be reviewed."
-            className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-3 py-2.5 text-sm normal-case leading-6 tracking-normal text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]/70 focus:border-[var(--gold-ornament)]/50"
+            className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-3 py-2.5 text-sm normal-case leading-6 tracking-normal text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]/70 focus:border-[var(--gold-ornament)]/50"
           />
         </label>
 
@@ -277,7 +277,7 @@ function PlayerCharacterPromptCard({ prompt }) {
 
 function StatusCard({ icon: Icon, spin = false, children }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/20 p-5 text-center">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-5 text-center">
       <Icon
         className={`mx-auto text-[var(--gold-ornament)] ${spin ? "animate-spin" : ""}`}
         size={24}

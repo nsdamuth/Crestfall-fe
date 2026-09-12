@@ -76,7 +76,7 @@ export default function MyCreationsHubView({
           </div>
         }
       >
-        <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+        <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
           <Search size={16} className="text-[var(--gold-ornament)]" />
           <input
             value={query}
@@ -110,7 +110,7 @@ export default function MyCreationsHubView({
                 className={`rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                   active
                     ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                    : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                    : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                 }`}
               >
                 {tab.label}
@@ -142,7 +142,7 @@ export default function MyCreationsHubView({
             />
           ))
         ) : (
-          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 2xl:col-span-4">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center sm:col-span-2 lg:col-span-3 2xl:col-span-4">
             <p className="font-display text-3xl">No creations here yet</p>
             <p className="mx-auto mt-3 max-w-2xl leading-7 text-[var(--ink-dim)]">
               This section will populate once creation drafts are saved. Current

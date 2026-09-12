@@ -4,7 +4,7 @@ function Field({ label, children }) {
   return <div><label className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">{label}</label>{children}</div>;
 }
 
-const inputClass = "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50";
+const inputClass = "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50";
 
 export default function AbilitySpellProfileBuilderView({
   title = "", description = "", visibility = "PRIVATE", contentRating = "SFW",

@@ -136,7 +136,7 @@ export default function LoreEngineUseJsonEditorModalView({
             onChange={(event) => onChangeJson?.(event.target.value)}
             spellCheck={false}
             aria-label="Engine Use Authoring JSON"
-            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/55"
+            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/55"
           />
         </section>
 
@@ -150,7 +150,7 @@ export default function LoreEngineUseJsonEditorModalView({
             </p>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <section className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Contract
             </p>
@@ -162,7 +162,7 @@ export default function LoreEngineUseJsonEditorModalView({
             </p>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <section className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Safety boundary
             </p>
@@ -172,7 +172,7 @@ export default function LoreEngineUseJsonEditorModalView({
           </section>
 
           {statusMessage ? (
-            <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <section className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 Status
               </p>

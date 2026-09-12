@@ -31,7 +31,7 @@ export default async function PublicProfileConnectionsPage({
         Followers and following for this public Crestfall creator.
       </StudioPageHeader>
 
-      <section className="mt-8 rounded-2xl border border-[var(--muted-gold)]/20 bg-black/45 p-5">
+      <section className="mt-8 rounded-2xl border border-[var(--muted-gold)]/20 bg-[var(--surface-1)] p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
             href={`/studio/profile/${encodeURIComponent(publicUsername)}`}
@@ -40,7 +40,7 @@ export default async function PublicProfileConnectionsPage({
             ← Back to profile
           </Link>
 
-          <div className="flex rounded-xl border border-white/10 bg-black/30 p-1">
+          <div className="flex rounded-xl border border-white/10 bg-[var(--surface-1)] p-1">
             <ConnectionTab
               username={publicUsername}
               tab="followers"
@@ -74,7 +74,7 @@ export default async function PublicProfileConnectionsPage({
               />
             ))
           ) : (
-            <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+            <div className="rounded-2xl border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
               <p className="font-display text-3xl">
                 No {activeTab === "following" ? "following" : "followers"} yet
               </p>

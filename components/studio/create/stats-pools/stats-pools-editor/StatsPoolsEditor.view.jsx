@@ -57,7 +57,7 @@ function TextInput({ value = "", onChange, placeholder = "", disabled = false, t
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
     />
   );
 }
@@ -77,7 +77,7 @@ function SelectInput({ value, onChange, children, disabled = false }) {
 
 function CheckboxRow({ checked, onChange, label, description = "", disabled = false }) {
   return (
-    <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+    <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
       <input
         type="checkbox"
         checked={checked}
@@ -124,7 +124,7 @@ function IssueList({ issues = [] }) {
 
 function MetricCard({ label, value, detail = "" }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
@@ -308,7 +308,7 @@ function FormulaEditor({
           return (
             <div
               key={`${definitionId}-operand-${index}`}
-              className="rounded-xl border border-white/10 bg-black/25 p-3"
+              className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3"
             >
               <div className="grid gap-3 md:grid-cols-[160px_minmax(0,1fr)_auto]">
                 <div>
@@ -588,7 +588,7 @@ function StatDefinitionCard({
   onRemoveDefinition,
 }) {
   return (
-    <article className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]">
       <DefinitionHeader
         title={definition.title}
         id={definition.id}
@@ -771,7 +771,7 @@ function PoolDefinitionCard({
   onRemoveDefinition,
 }) {
   return (
-    <article className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]">
       <DefinitionHeader
         title={definition.title}
         id={definition.id}
@@ -975,7 +975,7 @@ function ModifierCard({
     : statOptions;
 
   return (
-    <article className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]">
       <DefinitionHeader
         title={definition.title}
         id={definition.id}
@@ -1184,7 +1184,7 @@ function ConditionCard({
   const selected = new Set(definition.modifierDefinitionIds || []);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]">
       <DefinitionHeader
         title={definition.title}
         id={definition.id}
@@ -1499,7 +1499,7 @@ export default function StatsPoolsEditorView({
         />
       </div>
 
-      <div className="mt-7 rounded-xl border border-white/10 bg-black/25 p-4 sm:p-5">
+      <div className="mt-7 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 sm:p-5">
         <div className="flex items-start gap-3">
           <Layers3 size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
@@ -1574,7 +1574,7 @@ export default function StatsPoolsEditorView({
           >
             <Icon size={14} />
             {label}
-            <span className="rounded-full bg-black/35 px-2 py-0.5 text-[10px]">
+            <span className="rounded-full bg-[var(--surface-1)] px-2 py-0.5 text-[10px]">
               {panelCounts[value] || 0}
             </span>
           </button>
@@ -1785,7 +1785,7 @@ function PanelHeading({ title, body, actionLabel, onAction, disabled }) {
 
 function EmptyPanel({ icon: Icon, title, body }) {
   return (
-    <div className="rounded-xl border border-dashed border-white/10 bg-black/20 px-5 py-10 text-center">
+    <div className="rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] px-5 py-10 text-center">
       <Icon size={28} className="mx-auto text-[var(--gold-ornament)]/70" />
       <p className="mt-3 text-sm text-[var(--ink)]">{title}</p>
       <p className="mx-auto mt-2 max-w-xl text-xs leading-5 text-[var(--ink-dim)]">

@@ -191,7 +191,7 @@ export default function CreationProfilePageView({
           <div className="mt-5">{creditsSlot}</div>
         ) : (
           <>
-            <div className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+            <div className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
               <Search size={16} className="text-[var(--gold-ornament)]" />
               <input
                 value={query}
@@ -202,7 +202,7 @@ export default function CreationProfilePageView({
             </div>
 
             {!visibleMedia.length ? (
-          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
             <ImageIcon size={30} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 font-display text-3xl">No public media yet</p>
             <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
@@ -285,7 +285,7 @@ function LibraryPassViewerPanel({ panel, onPurchase }) {
               {panel.actionLabel}
             </button>
           ) : (
-            <span className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+            <span className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
               New purchases unavailable
             </span>
           )
@@ -313,7 +313,7 @@ function FilterButton({ active, onClick, children }) {
       className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
         active
           ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-          : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+          : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
       }`}
     >
       {children}

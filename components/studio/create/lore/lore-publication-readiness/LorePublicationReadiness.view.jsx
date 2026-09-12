@@ -234,7 +234,7 @@ function SecurityValidationPanel({
     : [];
 
   return (
-    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/25 p-5">
+    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -280,7 +280,7 @@ function SecurityValidationPanel({
       ) : null}
 
       {latestValidation ? (
-        <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
@@ -348,7 +348,7 @@ function SecurityValidationPanel({
           ) : null}
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/15 px-4 py-5 text-sm text-[var(--ink-dim)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-[var(--surface-1)] px-4 py-5 text-sm text-[var(--ink-dim)]">
           This Lore Asset has not been submitted for security validation.
         </div>
       )}
@@ -463,7 +463,7 @@ function PublicReleasePanel({
           </div>
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/15 px-4 py-5 text-sm text-[var(--ink-dim)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-[var(--surface-1)] px-4 py-5 text-sm text-[var(--ink-dim)]">
           This Lore Asset does not have a public revision yet.
         </div>
       )}
@@ -628,7 +628,7 @@ export default function LorePublicationReadinessView({
       {engineUsePanel}
 
       <div className="mt-8 grid gap-5 xl:grid-cols-[1fr_0.42fr]">
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
@@ -663,7 +663,7 @@ export default function LorePublicationReadinessView({
           </div>
         </div>
 
-        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <Info size={20} className="text-[var(--gold-ornament)]" />
           <h3 className="mt-3 font-display text-3xl">Owner verification</h3>
           <p className="mt-3 leading-7 text-[var(--ink-dim)]">

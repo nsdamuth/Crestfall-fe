@@ -47,7 +47,7 @@ export default function CharacterTemplateGalleryView({
         ))}
 
         {safeTemplates.length === 0 ? (
-          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-8 text-center md:col-span-2">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-8 text-center md:col-span-2">
             <h2 className="font-display text-2xl">No templates available</h2>
             <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
               Built-in and creator-made character templates will appear here.

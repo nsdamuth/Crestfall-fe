@@ -32,7 +32,7 @@ function previewFilters() {
         defaultValue: "",
         placeholder: "Search creations...",
         className:
-          "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]",
+          "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]",
       })
     ),
     createElement(
@@ -45,7 +45,7 @@ function previewFilters() {
             key: label,
             type: "button",
             className:
-              "rounded-full border border-white/10 bg-black/25 px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]",
+              "rounded-full border border-white/10 bg-[var(--surface-1)] px-4 py-2 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)]",
             onClick: noop,
           },
           label

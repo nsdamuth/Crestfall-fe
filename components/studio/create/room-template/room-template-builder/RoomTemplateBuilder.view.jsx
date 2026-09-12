@@ -75,7 +75,7 @@ export default function RoomTemplateBuilderView({
           rules into a reusable playable setup.
         </p>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Draft Progress
           </p>
@@ -219,7 +219,7 @@ export default function RoomTemplateBuilderView({
               className={`rounded-[var(--radius-md)] border p-5 text-left transition ${
                 effectiveTurnBased
                   ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                  : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
               }`}
             >
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
@@ -313,7 +313,7 @@ export default function RoomTemplateBuilderView({
                       className={`aspect-square rounded-xl border text-[10px] uppercase tracking-[0.12em] transition ${
                         active
                           ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                          : "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
+                          : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
                       }`}
                     >
                       Slot {slot + 1}
@@ -375,7 +375,7 @@ export default function RoomTemplateBuilderView({
             />
           </div>
 
-          <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
             <div className="flex items-start gap-3">
               <ShieldCheck
                 className="mt-1 text-[var(--gold-ornament)]"

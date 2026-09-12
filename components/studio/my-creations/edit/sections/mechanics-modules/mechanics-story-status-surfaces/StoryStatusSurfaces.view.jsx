@@ -26,7 +26,7 @@ function Field({ label, value, onChange, placeholder = "", help = "", list }) {
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
         list={list}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]"
+        className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]"
       />
       {help ? <span className="text-[11px] leading-5 text-[var(--muted)]">{help}</span> : null}
     </label>
@@ -40,7 +40,7 @@ function SelectField({ label, value, onChange, options, help = "" }) {
       <select
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
+        className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
       >
         {options.map((option) => (
           <option key={option.value ?? option} value={option.value ?? option}>
@@ -315,7 +315,7 @@ function ReadoutCard({
           placeholder="Unavailable"
           help="Shown when the authoritative source cannot resolve safely."
         />
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--muted)]">
           <input
             type="checkbox"
             checked={readout.enabled !== false}
@@ -433,7 +433,7 @@ function SurfaceCard({
               <input
                 readOnly
                 value={host === "INLINE" ? "Inline in Story Room" : host}
-                className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-[var(--muted)] outline-none"
+                className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--muted)] outline-none"
               />
               <span className="text-[11px] leading-5 text-[var(--muted)]">
                 V1 supports inline presentation only. The readout contract is separate so modal/drawer hosts can be added later without redefining these values.
@@ -455,7 +455,7 @@ function SurfaceCard({
                 help="Presentation only; changing placement never changes gameplay state."
               />
             ) : null}
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--muted)]">
               <input
                 type="checkbox"
                 checked={surface.enabled !== false}
@@ -564,7 +564,7 @@ export default function StoryStatusSurfacesView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--muted)]">
+        <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 text-sm leading-6 text-[var(--muted)]">
           No Story Status Surfaces yet. Add one when this module should expose live state persistently in the Story UI.
         </div>
       )}

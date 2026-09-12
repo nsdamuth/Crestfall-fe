@@ -22,7 +22,7 @@ export default function StorylinesHubView({
 
   return (
     <div className="mt-8 space-y-6">
-      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/40 p-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="font-display text-3xl">{heading}</h2>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">

@@ -43,7 +43,7 @@ export default function DefaultPlayerCharacterPickerModalView({
         </div>
 
         <div className="max-h-[72vh] overflow-y-auto p-5">
-          <label className="flex items-center gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3">
+          <label className="flex items-center gap-3 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}
@@ -56,7 +56,7 @@ export default function DefaultPlayerCharacterPickerModalView({
           </label>
 
           {isLoading ? (
-            <p className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+            <p className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
               Loading player characters...
             </p>
           ) : null}
@@ -68,7 +68,7 @@ export default function DefaultPlayerCharacterPickerModalView({
           ) : null}
 
           {showEmptyState ? (
-            <p className="mt-5 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+            <p className="mt-5 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
               No Player Character creations found.
             </p>
           ) : null}
