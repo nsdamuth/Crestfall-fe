@@ -127,7 +127,7 @@ export default function StudioMobileNavView({
               <InternalLinkComponent
                 href={brandHref}
                 onClick={onNavigate}
-                className="flex items-center gap-[var(--space-2)]"
+                className="flex min-h-[var(--control-md)] items-center gap-[var(--space-2)]"
               >
                 <svg
                   viewBox="0 0 64 64"
@@ -205,7 +205,7 @@ export default function StudioMobileNavView({
                   <button
                     type="button"
                     onClick={onToggleSocial}
-                    className="flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+                    className="flex min-h-[var(--control-md)] w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
                   >
                     <span>{communityLinksLabel}</span>
                     {socialOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
@@ -276,10 +276,10 @@ export default function StudioMobileNavView({
                 key={link.href}
                 href={link.href}
                 aria-current={link.isActive ? "page" : undefined}
-                className="cf-dock-link flex min-h-[var(--control-md)] flex-col items-center justify-center gap-[var(--space-1)] rounded-[var(--radius-sm)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]"
+                className="min-w-0 cf-dock-link flex min-h-[var(--control-md)] flex-col items-center justify-center gap-[var(--space-1)] rounded-[var(--radius-sm)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[color:var(--ink-faint)]"
               >
                 <Icon size={20} className="shrink-0" />
-                <span>{link.label}</span>
+                <span className="w-full truncate text-center">{link.label}</span>
               </InternalLinkComponent>
             );
           })}
@@ -367,7 +367,7 @@ function MobileAccountSummary({
             target="_blank"
             rel="noreferrer"
             aria-label={discordLink.label}
-            className="grid h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+            className="grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
           >
             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
               <use href="/assets/icons/icons-v7.svg#i-58" />
@@ -380,7 +380,7 @@ function MobileAccountSummary({
             href={accountLink.href}
             onClick={onNavigate}
             aria-label={accountLink.label}
-            className="grid h-[var(--control-sm)] w-[var(--control-sm)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
+            className="grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 place-items-center rounded-full border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--line)] hover:text-[var(--gold-action)] hover:shadow-[var(--glow-hover)]"
           >
             <svg
               viewBox="0 0 24 24"
@@ -401,7 +401,7 @@ function MobileAccountSummary({
 
       <a
         href={logoutHref}
-        className="inline-flex items-center gap-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[color:var(--gold-ornament)] transition hover:text-[color:var(--ink)]"
+        className="inline-flex min-h-[var(--control-md)] items-center gap-[var(--space-1)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[color:var(--gold-ornament)] transition hover:text-[color:var(--ink)]"
       >
         <LogOut size={13} />
         {logoutLabel}
@@ -411,7 +411,7 @@ function MobileAccountSummary({
         <InternalLinkComponent
           href={termsLink.href}
           onClick={onNavigate}
-          className="block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] transition hover:text-[var(--gold-action)] hover:opacity-100"
+          className="flex min-h-[var(--control-md)] items-center text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-faint)] opacity-[var(--state-disabled-opacity)] transition hover:text-[var(--gold-action)] hover:opacity-100"
         >
           {termsLink.label}
         </InternalLinkComponent>
@@ -469,7 +469,7 @@ function MobileDrawerExternalLink({ link, onNavigate = () => {} }) {
       target="_blank"
       rel="noreferrer"
       onClick={onNavigate}
-      className="cf-nav-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
+      className="cf-nav-link flex min-h-[var(--control-md)] items-center gap-3 rounded-lg px-3 py-2.5 text-xs uppercase tracking-[0.16em] text-[var(--ink-dim)] transition hover:bg-[var(--gold-ornament)]/10 hover:text-[var(--ink)]"
     >
       <Icon size={16} className="shrink-0" />
       <span>{link.label}</span>
