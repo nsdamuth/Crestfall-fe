@@ -28,7 +28,7 @@ function PreviewViewModeToggle({ value = "grid", onChange, label = "View" }) {
           key={mode}
           type="button"
           onClick={() => onChange?.(mode)}
-          className={`rounded-[var(--radius-md)] px-3 py-2 text-[10px] uppercase tracking-[0.14em] ${
+          className={`rounded-[var(--radius-md)] min-h-[var(--control-md)] px-3 py-2 text-[10px] uppercase tracking-[0.14em] ${
             value === mode
               ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
               : "text-[var(--ink-dim)]"
@@ -610,7 +610,7 @@ function CanonBadge({ value }) {
 
   // Ruling 3: Canon stays the one special gold badge. Every other
   // category hook (Canon-Compatible, Community Sandbox, unmatched)
-  // carries no color of its own — the label text alone carries the
+  // carries no color of its own, the label text alone carries the
   // category, per the badges family's "no color-only meaning" rule.
   const styles = {
     OFFICIAL_CANON: "bg-[var(--tag-bed-canvas)] text-[var(--gold-bright)]",
@@ -650,7 +650,7 @@ function PillButton({ active, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 min-h-[var(--control-sm)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
+      className={`shrink-0 min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
         active
           ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
           : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
