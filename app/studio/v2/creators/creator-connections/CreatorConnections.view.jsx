@@ -33,7 +33,7 @@ function TabSwitcher({ activeTab, followersCount, followingCount, onChangeTab })
     <div
       role="tablist"
       aria-label="Followers and following"
-      className="inline-flex w-fit rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-1)]"
+      className="flex w-full flex-wrap rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-1)] md:inline-flex md:w-fit md:flex-nowrap"
     >
       <TabButton
         id="followers"
