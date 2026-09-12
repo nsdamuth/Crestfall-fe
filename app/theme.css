@@ -600,7 +600,13 @@
 
   /* --- FIELD BEDS ----------------------------------------------------
      Gate 2 token law row 8. */
-  --bed-deep:   #0d0b08;
+  /* Lifted 12 Sep 2026 (refine after browser review): #0d0b08 sat
+     0.9 L* above the canvas, so fields read as holes to the page.
+     #181510 clears the same 4.4 L* floor every other ladder step
+     clears (4.74 L* above --canvas). It now sits 0.97 L* below
+     --surface-1; the field separates from its card by the inset
+     --shadow-bed, the hairline, and the label, not by fill alone. */
+  --bed-deep:   #181510;
   --shadow-bed: inset 0 1px 2px rgba(0, 0, 0, .25);
 
   /* --- FADE DIVIDER --------------------------------------------------
@@ -849,7 +855,7 @@
   --fill-ghost:         rgba(96, 74, 34, .04);
   --grad-card:          linear-gradient(160deg, var(--surface-2), var(--surface-1));
   --grad-rail:          linear-gradient(160deg, var(--surface-3), var(--surface-2));
-  --bed-deep:           #e3dbc7;
+  --bed-deep:           #ded6c3;   /* 4.61 L* below the Eggshell canvas, 12 Sep 2026 refine */
   --chrome-wash:        rgba(6, 4, 2, .62);
   --panel-glass:        rgba(36, 32, 25, .85);
   --panel-ui-glass:     rgba(252, 248, 238, .94);
