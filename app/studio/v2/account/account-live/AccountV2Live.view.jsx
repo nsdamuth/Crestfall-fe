@@ -562,7 +562,7 @@ function InlineMessage({
         <button
           type="button"
           onClick={() => onAction?.()}
-          className="cf-btn cf-btn--secondary cf-btn--sm"
+          className="cf-btn cf-btn--secondary cf-btn--sm [@media(pointer:coarse)]:h-[var(--control-md)]"
         >
           {actionLabel}
         </button>
