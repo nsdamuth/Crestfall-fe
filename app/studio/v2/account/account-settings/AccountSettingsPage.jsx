@@ -39,7 +39,7 @@ export default function AccountSettingsPage({ settingsId }) {
       <div>
         <Link
           href="/studio/v2/account"
-          className="inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition-colors hover:text-[var(--gold-bright)]"
+          className="inline-flex min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] items-center gap-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] transition-colors hover:text-[var(--gold-bright)]"
         >
           <ArrowLeft size={16} aria-hidden="true" />
           Back to Account
