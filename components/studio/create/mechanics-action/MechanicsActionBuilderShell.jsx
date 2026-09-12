@@ -12,6 +12,7 @@ import {
   buildMechanicsActionData,
   createMechanicsActionStarterDefinition,
 } from "./mechanicsActionContract";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const VISIBILITY_OPTIONS = [
   { value: "PRIVATE", label: "Private" },
@@ -65,7 +66,12 @@ export default function MechanicsActionBuilderShell() {
 
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+          implicit base column is sized by min-width:auto, so any nowrap
+          descendant becomes the page's horizontal scroll width. This is
+          the single-column rule for this shell: one column in DOM order
+          below xl, each child free to shrink to the gutter. */}
+      <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">Mechanics Action</p>
         <h2 className="mt-2 font-display text-4xl">{title || "Untitled Action"}</h2>
         <p className="mt-3 text-sm leading-6 text-[var(--ink-dim)]">
@@ -81,7 +87,7 @@ export default function MechanicsActionBuilderShell() {
         {saveMessage ? <p className={`mt-3 text-sm ${saveStatus === "error" ? "text-[var(--status-danger)]" : "text-[var(--status-success)]"}`}>{saveMessage}</p> : null}
       </aside>
 
-      <div className="space-y-6">
+      <div className="min-w-0 space-y-6">
         <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">Identity</p>
           <div className="mt-5 grid gap-4">
@@ -99,6 +105,14 @@ export default function MechanicsActionBuilderShell() {
           <div className="mt-5"><MechanicsActionJsonEditor value={action} onChange={setAction} /></div>
         </section>
       </div>
+      {/* MOBILE-SHELLS: the aside's Save draft is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={saveDraft}
+        disabled={saveStatus === "saving"}
+      />
     </section>
   );
 }
