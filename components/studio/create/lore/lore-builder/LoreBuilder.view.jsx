@@ -8,6 +8,7 @@ import {
   TextAreaField,
   SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const inputClass =
   "mt-2 w-full rounded-xl border border-white/10 bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
@@ -45,7 +46,12 @@ export default function LoreBuilderView({
 }) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5 xl:sticky xl:top-24">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+          implicit base column is sized by min-width:auto, so any nowrap
+          descendant becomes the page's horizontal scroll width. This is
+          the single-column rule for this shell: one column in DOM order
+          below xl, each child free to shrink to the gutter. */}
+      <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5 xl:sticky xl:top-24">
         <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
           <BookOpenText size={18} />
           <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
@@ -79,7 +85,7 @@ export default function LoreBuilderView({
         {saveMessage ? <p className={`mt-3 text-sm ${saveStatus === "error" ? "text-red-200" : "text-emerald-200"}`}>{saveMessage}</p> : null}
       </aside>
 
-      <div className="space-y-6">
+      <div className="min-w-0 space-y-6">
         <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5 sm:p-6">
           <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">Publication Identity</p>
           <h2 className="mt-2 font-display text-3xl">Name and draft access</h2>
@@ -99,9 +105,9 @@ export default function LoreBuilderView({
           </div>
         </section>
 
-        <div className="flex gap-2 rounded-xl border border-white/10 bg-[var(--surface-1)] p-2">
-          <button type="button" onClick={() => onSetActiveMode?.("EDIT")} className={`inline-flex items-center gap-2 rounded-lg px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${activeMode === "EDIT" ? "bg-[var(--gold-ornament)]/15 text-white" : "text-[var(--ink-dim)]"}`}><Pencil size={14} /> Edit Document</button>
-          <button type="button" onClick={() => onSetActiveMode?.("PREVIEW")} className={`inline-flex items-center gap-2 rounded-lg px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${activeMode === "PREVIEW" ? "bg-[var(--gold-ornament)]/15 text-white" : "text-[var(--ink-dim)]"}`}><Eye size={14} /> Preview</button>
+        <div className="flex flex-wrap gap-2 rounded-xl border border-white/10 bg-[var(--surface-1)] p-2">
+          <button type="button" onClick={() => onSetActiveMode?.("EDIT")} className={`inline-flex min-h-[var(--control-md)] flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${activeMode === "EDIT" ? "bg-[var(--gold-ornament)]/15 text-white" : "text-[var(--ink-dim)]"}`}><Pencil size={14} /> Edit Document</button>
+          <button type="button" onClick={() => onSetActiveMode?.("PREVIEW")} className={`inline-flex min-h-[var(--control-md)] flex-1 items-center justify-center gap-2 rounded-lg px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${activeMode === "PREVIEW" ? "bg-[var(--gold-ornament)]/15 text-white" : "text-[var(--ink-dim)]"}`}><Eye size={14} /> Preview</button>
         </div>
 
         {activeMode === "EDIT" ? <LoreEditorView {...editorViewProps} /> : <LoreDocumentRendererView
@@ -109,6 +115,14 @@ export default function LoreBuilderView({
             LinkComponent={LinkComponent}
           />}
       </div>
+      {/* MOBILE-SHELLS: the aside's Save draft is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }
