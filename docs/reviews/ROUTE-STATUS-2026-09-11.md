@@ -1,5 +1,11 @@
 # Route status audit, 11 Sep 2026
 
+## Ruling, 11 Sep 2026 (Brian)
+
+The live route set for the CSS sweep is the 92 Current routes. The 8 Superseded routes get no CSS session and go to Nick as a recommendation (see "Recommended to Nick for review" below). The 5 Unknown routes are excluded from the sweep until Nick classifies them.
+
+This ruling is what `docs/reviews/CSS-SWEEP-AUDIT-2026-09-11.md` section 8 is recomputed against; see the "docs: live route set ruled 11 Sep 2026" commit for the recut session order.
+
 Read-only classification of all 105 product routes listed in `docs/reviews/CSS-SWEEP-AUDIT-2026-09-11.md` as Current, Superseded, or Unknown. Branch `fe/css`, tree clean at commit b0c1b735 before the first read (G1). Nothing in this pass edits product code; this file is the only file written.
 
 Method: the 105 routes were split into 13 batches matching the CSS sweep audit's own units. For each route a classify pass read the page file (and its main view/client component), traced live navigation wiring (the studio sidebar and mobile-nav view models, the public SiteHeader/SiteFooter/PublicHome footer), checked for a v2 or replacement counterpart against `app/studio/v2/**`, grepped for inbound links from other routes, checked `git log` for the page file's last commit date, and scanned for the retired product words (story-rooms, room, arc, codex, sessions, storyline) in the path and rendered copy. A second, independent verify pass then adversarially re-checked every citation against the live source rather than trusting the classify pass's quotes, correcting citations and, where warranted, statuses. 11 corrections were made across the 105 routes (wrong line numbers, two mixed-up commit dates on the v2 account sub-pages, and one genuine Unknown-to-Current upgrade for `/studio/templates/characters` after chasing a loose end the first pass had left dangling). Zero routes were left unclassified (G2). No render step ran, per the brief.
@@ -149,3 +155,36 @@ Recommendation only. These are the Superseded routes, with file paths, for Brian
 - G5: no em dashes (scrubbed from every agent sourced field before this file was written); commit and push follow this write. DONE
 
 STATUS: All 105 product routes classified: 92 Current, 8 Superseded, 5 Unknown. Route table, summary, and the Nick recommendation list are complete; four Superseded routes are confirmed by an unconditional redirect in their own page file, two by an explicit compatibility route code comment plus a live counterpart, and two by proof that no live path navigates to them while an embedded modal on `/studio` covers the same function. All five Unknown routes were independently re-checked in the verify pass and genuinely have no nav path or inbound link either way. NEXT ACTION: Brian rules the live route set.
+
+## Document staleness finding, 11 Sep 2026
+
+Observation only, for Nick to rule. Not acted on here.
+
+`docs/CRESTFALL-PRODUCT-MODEL-UXUI.md` section 6 ("Migration strategy: build new, then cut over once") states the v2 cutover has not started: "Old pages and old addresses are untouched until the new set covers 100 percent of live features... No page cuts over individually ahead of this sequence, and no new page enters the live sidebar before the go-live step; the preview flag... remains the only pre-cutover navigation surface." That describes a state where, absent the preview flag, every visitor sees the legacy nav and no v2 page is reachable from the live sidebar.
+
+The live code does not match that description. In production (`NODE_ENV === "production"`, no `NEXT_PUBLIC_SIDEBAR_V2_PREVIEW` override), `lib/shared/flags/sidebarV2Preview.js:8-12` returns `isSidebarV2PreviewEnabled() === false`. But both nav view models compute a second, independent condition that overrides the flag:
+
+- `components/studio/studio-sidebar/useStudioSidebarViewModel.js:202-207`: `const v2Surface = pathname === "/studio" || pathname.startsWith("/studio/v2") || pathname.startsWith("/studio/story-rooms") || pathname.startsWith("/studio/creations") || pathname.startsWith("/studio/create") || pathname.startsWith("/studio/feedback"); const previewEnabled = v2Surface || isSidebarV2PreviewEnabled();`
+- `components/studio/studio-mobile-nav/useStudioMobileNavViewModel.js:123-127`: the identical `v2Surface` computation.
+- `components/studio/studio-sidebar/StudioSidebar.view.jsx:164-220`: `{previewEnabled ? (` renders only the nine-page v2 preview nav (`STUDIO_SIDEBAR_PREVIEW_GROUPS`) when `previewEnabled` is true, and the legacy link list (`STUDIO_SIDEBAR_PRIMARY_LINKS`) otherwise. The comment at lines 169-172 reads: "Legacy group REMOVED from preview mode, RULED 23 Aug 2026 (build-0823 pass 4, sidebar refinement): only the nine-page model plus lawful supporting entries render here. Flag-off (production) rendering, below, is untouched."
+
+Net effect: in production today, any visitor on `/studio`, any `/studio/v2/*`, `/studio/story-rooms*`, `/studio/creations*`, `/studio/create*`, or `/studio/feedback` sees the v2 nine-page nav regardless of the preview flag. This is a page-by-page cutover already in effect, not gated behind the flag section 6 names as the sole pre-cutover surface.
+
+Four routes also carry explicit code comments identifying themselves as compatibility shims for an already-underway convergence cutover, not pre-cutover scaffolding:
+
+- `/studio/create` (`app/studio/create/page.js:7`, function `CreatePage`): unconditional `redirect("/studio?mode=full")`. Comment: "V2 convergence cutover: the historical /studio/create catalogue is no longer a product destination. Keep the route as a compatibility pointer so stale links, bookmarks, and legacy navigation return to canonical Full Studio."
+- `/studio/create/mechanics-loadout` (`app/studio/create/mechanics-loadout/page.js:4`, function `LegacyMechanicsLoadoutCreatePage`): unconditional `redirect("/studio/create/actor-mechanics-profile")`.
+- `/studio/create/timeline` (`app/studio/create/timeline/page.jsx:4`, function `LegacyCreateTimelineCompatibilityPage`): unconditional `redirect("/studio/v2/editor/new?type=TIMELINE&origin=lore")`.
+- `/studio/create/timeline/[id]` (`app/studio/create/timeline/[id]/page.jsx:8,11`, function `LegacyEditTimelineCompatibilityPage`): redirects to `/studio/v2/lore` when no id is present, else to `` /studio/v2/editor/${id}?origin=timeline ``.
+
+This is a document-versus-code discrepancy, not a route classification question; it does not change any status in the table above. Nick rules whether section 6 is updated to match the live code, or the live code is walked back to match section 6.
+
+## Gate record, ruling update 11 Sep 2026
+
+- G1: ruling recorded at the top of this file, above the read-only classification. DONE
+- G2: `docs/reviews/CSS-SWEEP-AUDIT-2026-09-11.md` section 8 recut to cover only the 92 Current routes; excluded rows and pages stated per session in that file's new "Exclusion note" per session and its summary table. DONE
+- G3: every representative browser-review page in the recut section 8 is a Current route independently verified (programmatically, against the parsed hit and overlay tables) to carry at least one changed row in that session's class. DONE
+- G4: document staleness finding above cites file and line for the nav switch (`useStudioSidebarViewModel.js:202-207`, `useStudioMobileNavViewModel.js:123-127`, `StudioSidebar.view.jsx:164-220`) and names all four compatibility shim routes. DONE
+- G5: no em dashes; commit and push follow this write. DONE
+
+STATUS: Brian's ruling recorded (92 Current routes are the CSS sweep's live route set; 8 Superseded go to Nick as a recommendation; 5 Unknown are excluded pending Nick's classification). The document staleness finding is recorded as an observation for Nick, citing the v2Surface nav switch and all four compatibility shim routes. `docs/reviews/CSS-SWEEP-AUDIT-2026-09-11.md` section 8 is recut against the 92 Current routes with rows and pages dropped stated per session, and every representative review page reverified as a Current route carrying a real row in its class. NEXT ACTION: dead code packet, then Brian rules CSS session 2.

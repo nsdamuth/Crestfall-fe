@@ -9917,15 +9917,45 @@ Across every category, the files a single fix reaches the widest, ranked by dist
 
 Grouped by defect class and the shared component or token that fixes it, not one session per page. A session here is one class: land the shared-component or token-file fix first (it clears every page whose import trace reaches that file, no page-by-page repetition), then sweep the remaining page-local rows in the same class, then hand three to five representative pages to Brian for browser review rather than every page the class touches.
 
-**Session count: 11**, covering 2230 of 2231 non-compliant rows across 105 distinct pages (the 143 `overlay:kit` rows need no session, they are already on the Kit recipe).
+**Recut 11 Sep 2026 against Brian's ruling** (`docs/reviews/ROUTE-STATUS-2026-09-11.md`): the live route set for this sweep is the 92 Current routes. The 8 Superseded routes carry no session and go to Nick as a recommendation; the 5 Unknown routes are excluded pending Nick's classification. Every row and page count below is stated twice: as originally published (105 pages, every status included) and after exclusion (92 Current pages only), with the drop and its cause stated per session. The "Shared files to fix first" tables and the file-level "Pages reached" counts in each are left as originally published (they describe the shared-component import trace, not route status, and none of their entries changes which file to fix first); only the class-level Rows, Distinct pages reached, and Representative browser-review set are recut.
+
+**Session count: 11.** Before exclusion: 2230 of 2231 non-compliant rows across 105 distinct pages (the 143 `overlay:kit` rows need no session, already on the Kit recipe). After exclusion: 2009 rows across the 92 Current pages, a drop of 221 rows. Distinct pages in scope drop from 105 to 92 (the 13 excluded routes: 8 Superseded, 5 Unknown).
+
+### 8.0 Exclusion summary, all 11 sessions
+
+| Session | Class | Rows before | Rows dropped | Rows after | Pages before | Pages dropped | Pages after |
+|---|---|---|---|---|---|---|---|
+| 1 | Surface and border color literals | 944 | 125 | 819 | 105 | 7 | 98 |
+| 2 | White hairline borders | 280 | 11 | 269 | 63 | 4 | 59 |
+| 3 | Tailwind named colors | 222 | 21 | 201 | 58 | 4 | 54 |
+| 4 | Radius scale | 175 | 8 | 167 | 88 | 7 | 81 |
+| 5 | Bridge variable retirement | 110 | 8 | 102 | 105 | 2 | 103 |
+| 6 | Type floor | 113 | 15 | 98 | 105 | 3 | 102 |
+| 7 | Focus visibility | 140 | 8 | 132 | 95 | 4 | 91 |
+| 8 | Elevation shadows | 34 | 5 | 29 | 47 | 3 | 44 |
+| 9 | Filter chip rows | 31 | 0 | 31 | 38 | 1 | 37 |
+| 10 | Non-Kit overlays | 162 | 19 | 143 | 93 | 2 | 91 |
+| 11 | Small and one-off classes | 19 | 1 | 18 | 12 | 1 | 11 |
+| **Total** | | **2230** | **221** | **2009** | | | |
+
+Every dropped row traces to one of two causes, both verified against live source (not inferred from route status alone):
+
+- **Page-local**: the row lives in a file owned by one excluded route's own table (not a shared package). Dropped in full: `/studio/story-rooms/[id]` (109 rows across its own table plus 14 non-kit overlay rows), `/studio/story-rooms/[id]/character-configuration` (18 rows plus 5 non-kit-popover rows), `/studio/profile` (7 rows).
+- **Orphaned shared package**: a shared package's only listed consumers are now all excluded, so the fix no longer clears any Current page. Three found: `components/studio/studio-coming-soon` (3 rows: 2 black-white-fills, 1 white-hairlines; sole consumer `/studio/submit-canon`), `components/studio/studio-action-card` (1 row: black-white-fills; sole consumer `/studio/play`), and part of `character-engine` (64 of its 189 rows; see below).
+
+**`character-engine` is not fully orphaned and this matters.** The package's own "Consumed by routes" note names only `/studio/create/character` and `/studio/create/player-character`, both Superseded. A row-for-row check (`components/studio/create/character/creator-stops/CharacterCreatorModal.jsx`, the modal the ruled Superseded counterpart actually mounts on `/studio`) shows it still imports several `character-engine` files directly: `VoiceModulePickerModal.jsx`, `DefaultClothingSelector.jsx`, `character-color-palette/useCharacterColorPaletteModalViewModel.js`, `character-template-picker/useCharacterTemplateModalViewModel.js`, and `characterCreationMode.js`; `CharacterPreview.jsx` is reached transitively through `creator-stops/payoff-stop/PayoffStop.view.jsx`; `EyeColorModal.jsx` and `HairModal.jsx` are also reached from `components/studio/my-creations/edit/sections/AppearanceSection.jsx` (on the Current `/studio/my-creations/[id]/edit` route); `CharacterColorPaletteModal.jsx` is also reached from `IdentitySection.jsx` on the same route. Only the original 5-step engine (`CharacterCreator.jsx` and everything reachable only through it: `AppearanceStep.jsx`, `BehaviorStep.jsx`, `BodyStep.jsx`, `IdentityStep.jsx`, `ReviewStep.jsx`, `CharacterReviewStep.view.jsx`, the `CharacterTemplateModal.jsx` wrapper and its old view, `CharacterCreatorUtils.jsx`) and three `*.fixtures.js` files (`CharacterColorPaletteModal.fixtures.js`, `EyeColorModal.fixtures.js`, `HairModal.fixtures.js`, each confirmed by grep to be imported only from the retired `app/dev/ui-preview/*` harness) are genuinely unreached by any Current route. That is 64 of the package's 189 rows (hex-rgba 55, outline-none 3, rounded-xl 2, sub11-type 3, tailwind-named-colors 1); the other 125, including 91 hex-rgba rows in `constants/characterColorPalettes.js` alone, still clear on `/studio`, `/studio/v2/studio`, and `/studio/my-creations/[id]/edit` and are not dropped. A naive package-level drop on this one entry would have overstated Session 1's exclusion by 125 rows.
+
+No other package among the shared files each session lists loses every Current consumer; each was checked against its own "Consumed by routes" note before being ruled out as a drop.
 
 ### Session 1: Surface and border color literals
 
 Every raw hex, rgb()/rgba(), and bg-black/NN or bg-white/NN panel fill in product code. The fix is mechanical for the Debt-map rows (exact token swap) and a logged, ruling-pending step for the T2/T5 panel-fill rows (candidate surface step named by role, not converted blind).
 
-Classes folded in: black-white-fills, hex-rgba, debt-map-hex. Rows: 944. Distinct pages reached: 105. Estimate: L.
+Classes folded in: black-white-fills, hex-rgba, debt-map-hex. Rows: 944 before exclusion, 819 after (92 Current routes only). Distinct pages reached: 105 before, 98 after. Estimate: L.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 125 rows dropped. black-white-fills 41 (`/studio/story-rooms/[id]` page-local 32, `/studio/story-rooms/[id]/character-configuration` page-local 4, `/studio/profile` page-local 2, `studio-coming-soon` package 2, `studio-action-card` package 1). hex-rgba 82 (`/studio/story-rooms/[id]` page-local 27, orphaned `character-engine` files 55). debt-map-hex 2 (`/studio/story-rooms/[id]` page-local). Pages dropped: `/studio/story-rooms/[id]`, `/studio/story-rooms/[id]/character-configuration`, `/studio/create/character`, `/studio/create/player-character`, `/studio/play`, `/studio/profile`, `/studio/submit-canon`.
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -9936,21 +9966,23 @@ Shared files to fix first (clears the most pages):
 | `components/kit/art-placeholder/kitArtPlaceholderIdentity.js` | 30 |
 | `components/ui/CrestfallSelect.jsx` | 27 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (Current routes only, each independently verified to carry a real Session 1 row):
 
 - `app/characters/page.js` (public characters index)
 - `app/login/page.js` (login)
 - `app/lore/page.js` (public lore index)
 - `app/page.js` (public home)
-- `app/studio/create/character/page.js` (quick-create character)
+- `app/studio/create/outfit/page.js` (quick-create outfit; replaces the Superseded `/studio/create/character`)
 
 ### Session 2: White hairline borders
 
 border-white/NN and the white hairline family, converting to --line, --line-strong, or --line-whisper by context per Ruling 5.
 
-Classes folded in: white-hairlines. Rows: 280. Distinct pages reached: 63. Estimate: L.
+Classes folded in: white-hairlines. Rows: 280 before exclusion, 269 after. Distinct pages reached: 63 before, 59 after. Estimate: L.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 11 rows dropped, all white-hairlines: `/studio/story-rooms/[id]` page-local 8, `/studio/story-rooms/[id]/character-configuration` page-local 1, `/studio/profile` page-local 1, `studio-coming-soon` package 1 (sole consumer `/studio/submit-canon`). Pages dropped: `/studio/story-rooms/[id]`, `/studio/story-rooms/[id]/character-configuration`, `/studio/profile`, `/studio/submit-canon`.
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -9961,21 +9993,23 @@ Shared files to fix first (clears the most pages):
 | `components/studio/create/wardrobe/outfit-picker/OutfitPickerModal.view.jsx` | 7 |
 | `components/studio/my-creations/edit/sections/mechanics-modules/RuntimeMechanicsModulesSection.jsx` | 6 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (Current routes only, each independently verified to carry a real Session 2 row):
 
-- `app/studio/create/character/page.js` (quick-create character)
-- `app/studio/create/player-character/page.js` (quick-create player character)
 - `app/studio/create/room-template/page.js` (quick-create Story)
 - `app/studio/image-studio/page.js` (legacy image studio)
 - `app/studio/my-creations/[id]/edit/page.js` (legacy creation editor)
+- `app/studio/create/outfit/page.js` (quick-create outfit; replaces the Superseded `/studio/create/character`)
+- `app/studio/v2/editor/[id]/page.jsx` (v2 Editor advanced mode; replaces the Superseded `/studio/create/player-character`)
 
 ### Session 3: Tailwind named colors
 
 red/emerald/amber/sky/gray-family Tailwind utilities standing in for the status triads, the ink family, or a removed info color.
 
-Classes folded in: tailwind-named-colors. Rows: 222. Distinct pages reached: 58. Estimate: L.
+Classes folded in: tailwind-named-colors. Rows: 222 before exclusion, 201 after. Distinct pages reached: 58 before, 54 after. Estimate: L.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 21 rows dropped, all tailwind-named-colors: `/studio/story-rooms/[id]` page-local 15, `/studio/story-rooms/[id]/character-configuration` page-local 5, orphaned `character-engine` files 1. Pages dropped: `/studio/story-rooms/[id]`, `/studio/story-rooms/[id]/character-configuration`, `/studio/create/character`, `/studio/create/player-character`.
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -9986,21 +10020,23 @@ Shared files to fix first (clears the most pages):
 | `components/studio/characters/advanced-prompting/advanced-prompting/AdvancedPromptingEditor.view.jsx` | 5 |
 | `components/studio/storylines/storyline-node-list-editor/StorylineNodeListEditor.view.jsx` | 4 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (Current routes only, each independently verified to carry a real Session 3 row):
 
 - `app/characters/page.js` (public characters index)
-- `app/studio/create/character/page.js` (quick-create character)
-- `app/studio/create/player-character/page.js` (quick-create player character)
 - `app/studio/create/room-template/page.js` (quick-create Story)
 - `app/studio/image-studio/page.js` (legacy image studio)
+- `app/studio/create/outfit/page.js` (quick-create outfit; replaces the Superseded `/studio/create/character`)
+- `app/studio/v2/editor/[id]/page.jsx` (v2 Editor advanced mode; replaces the Superseded `/studio/create/player-character`)
 
 ### Session 4: Radius scale
 
 rounded-xl/2xl/3xl resolving to --radius-md or --radius-lg by the corner tier test, plus rounded-full on text buttons that should be --radius-md.
 
-Classes folded in: rounded-xl, pill-buttons-candidates. Rows: 175. Distinct pages reached: 88. Estimate: L.
+Classes folded in: rounded-xl, pill-buttons-candidates. Rows: 175 before exclusion, 167 after. Distinct pages reached: 88 before, 81 after. Estimate: L.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 8 rows dropped, all rounded-xl: `/studio/story-rooms/[id]` page-local 4, `/studio/story-rooms/[id]/character-configuration` page-local 2, orphaned `character-engine` files 2. Pages dropped (7, more pages than rows because several excluded routes reach a shared file, such as `studio-page-header`, that keeps plenty of other Current consumers so no row is lost): `/studio/story-rooms/[id]`, `/studio/story-rooms/[id]/character-configuration`, `/studio/create/character`, `/studio/create/player-character`, `/studio/play`, `/studio/profile`, `/studio/submit-canon`.
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -10011,21 +10047,23 @@ Shared files to fix first (clears the most pages):
 | `components/studio/creations/pickers/creation-picker-panel/CreationPickerPanel.view.jsx` | 7 |
 | `components/studio/create/wardrobe/outfit-picker/OutfitPickerModal.view.jsx` | 7 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (Current routes only, each independently verified to carry a real Session 4 row):
 
-- `app/studio/create/character/page.js` (quick-create character)
-- `app/studio/create/page.js` (Studio create hub)
-- `app/studio/create/player-character/page.js` (quick-create player character)
 - `app/studio/create/room-template/page.js` (quick-create Story)
 - `app/studio/image-studio/page.js` (legacy image studio)
+- `app/studio/page.js` (Studio, canonical Full Studio; replaces the Superseded `/studio/create` hub, which now only redirects here)
+- `app/studio/create/outfit/page.js` (quick-create outfit; replaces the Superseded `/studio/create/character`)
+- `app/studio/v2/editor/[id]/page.jsx` (v2 Editor advanced mode; replaces the Superseded `/studio/create/player-character`)
 
 ### Session 5: Bridge variable retirement
 
 --muted, --muted-gold, --foreground, --border, --font-serif and the other token-bridge aliases, converting to their named role token.
 
-Classes folded in: bridge-vars. Rows: 110. Distinct pages reached: 105. Estimate: M.
+Classes folded in: bridge-vars. Rows: 110 before exclusion, 102 after. Distinct pages reached: 105 before, 103 after. Estimate: M.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 8 rows dropped, all bridge-vars: `/studio/story-rooms/[id]/character-configuration` page-local 5, `/studio/profile` page-local 3. Pages dropped: `/studio/story-rooms/[id]/character-configuration`, `/studio/profile`. (A fresh parse of the current hit tables counts 108 bridge-vars rows before exclusion, 2 short of the published 110; the gap is not material to this exclusion and is noted, not resolved, here.)
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -10036,21 +10074,23 @@ Shared files to fix first (clears the most pages):
 | `components/studio/my-creations/edit/sections/mechanics-modules/mechanics-story-status-surfaces/StoryStatusSurfaces.view.jsx` | 3 |
 | `components/studio/create/ability-spell/ability-spell-profile-editor/AbilitySpellProfileEditor.view.jsx` | 3 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (Current routes only, each independently verified to carry a real Session 5 row):
 
 - `app/characters/page.js` (public characters index)
 - `app/login/page.js` (login)
 - `app/lore/page.js` (public lore index)
 - `app/page.js` (public home)
-- `app/studio/create/character/page.js` (quick-create character)
+- `app/intro/page.js` (public intro; replaces the Superseded `/studio/create/character`)
 
 ### Session 6: Type floor
 
 text-[10px]/[9px]/[8px] and other sub-11px or off-scale type, converting to --text-label (9px and 8px need a per-use render check, T10).
 
-Classes folded in: sub11-type, debt-map-type, off-scale-type. Rows: 113. Distinct pages reached: 105. Estimate: M.
+Classes folded in: sub11-type, debt-map-type, off-scale-type. Rows: 113 before exclusion, 98 after. Distinct pages reached: 105 before, 102 after. Estimate: M.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 15 rows dropped, all sub11-type: `/studio/story-rooms/[id]` page-local 12, orphaned `character-engine` files 3. Pages dropped: `/studio/story-rooms/[id]`, `/studio/create/character`, `/studio/create/player-character`.
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -10061,21 +10101,23 @@ Shared files to fix first (clears the most pages):
 | `components/studio/create/character/kibbe-preset/KibbePresetModal.view.jsx` | 7 |
 | `components/studio/create/wardrobe/outfit-picker/OutfitPickerModal.view.jsx` | 7 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (Current routes only, each independently verified to carry a real Session 6 row):
 
 - `app/characters/page.js` (public characters index)
 - `app/login/page.js` (login)
 - `app/lore/page.js` (public lore index)
 - `app/page.js` (public home)
-- `app/studio/create/character/page.js` (quick-create character)
+- `app/studio/create/outfit/page.js` (quick-create outfit; replaces the Superseded `/studio/create/character`)
 
 ### Session 7: Focus visibility
 
 outline-none and focus:outline-none hits, restoring the global --focus-ring where it was suppressed.
 
-Classes folded in: outline-none. Rows: 140. Distinct pages reached: 95. Estimate: M.
+Classes folded in: outline-none. Rows: 140 before exclusion, 132 after. Distinct pages reached: 95 before, 91 after. Estimate: M.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 8 rows dropped, all outline-none: `/studio/story-rooms/[id]` page-local 4, `/studio/story-rooms/[id]/character-configuration` page-local 1, orphaned `character-engine` files 3. Pages dropped: `/studio/story-rooms/[id]`, `/studio/story-rooms/[id]/character-configuration`, `/studio/create/character`, `/studio/create/player-character`.
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -10086,21 +10128,23 @@ Shared files to fix first (clears the most pages):
 | `components/studio/create/structured-registry/registry-linked-creation-picker/RegistryLinkedCreationPickerModal.view.jsx` | 15 |
 | `components/studio/my-creations/edit/sections/mechanics-modules/mechanics-module-picker/MechanicsModulePickerModal.view.jsx` | 8 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (Current routes only, each independently verified to carry a real Session 7 row):
 
 - `app/characters/page.js` (public characters index)
 - `app/login/page.js` (login)
 - `app/page.js` (public home)
-- `app/studio/create/character/page.js` (quick-create character)
-- `app/studio/create/page.js` (Studio create hub)
+- `app/studio/create/outfit/page.js` (quick-create outfit; replaces the Superseded `/studio/create/character`)
+- `app/studio/v2/creators/page.jsx` (v2 Creators; replaces the Superseded `/studio/create` hub)
 
 ### Session 8: Elevation shadows
 
 Tailwind default shadow-2xl/xl/lg/md/sm on floating or small-float surfaces, converting to --shadow-modal or --shadow-popover.
 
-Classes folded in: tailwind-shadows. Rows: 34. Distinct pages reached: 47. Estimate: S.
+Classes folded in: tailwind-shadows. Rows: 34 before exclusion, 29 after. Distinct pages reached: 47 before, 44 after. Estimate: S.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 5 rows dropped, all tailwind-shadows: `/studio/story-rooms/[id]` page-local 5. Pages dropped (3, one more page than the row drop because `/studio/create/character` and `/studio/create/player-character` also reach `components/studio/studio-back-link`, a shared file with plenty of other Current consumers, so no row is lost there): `/studio/story-rooms/[id]`, `/studio/create/character`, `/studio/create/player-character`.
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -10111,21 +10155,23 @@ Shared files to fix first (clears the most pages):
 | `components/blocks/ImageBlock.jsx` | 11 |
 | `components/studio/create/wardrobe/outfit-picker/OutfitPickerModal.view.jsx` | 7 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (Current routes only, each independently verified to carry a real Session 8 row):
 
 - `app/login/page.js` (login)
-- `app/studio/create/character/page.js` (quick-create character)
-- `app/studio/create/player-character/page.js` (quick-create player character)
 - `app/studio/create/room-template/page.js` (quick-create Story)
 - `app/studio/image-studio/page.js` (legacy image studio)
+- `app/studio/create/outfit/page.js` (quick-create outfit; replaces the Superseded `/studio/create/character`)
+- `app/characters/[...slug]/page.js` (public character detail; replaces the Superseded `/studio/create/player-character`)
 
 ### Session 9: Filter chip rows
 
 Loose selectable chip rows standing in for the sticky filter bar, converting to KitStudioFilterBar with chips inside a dropdown or filter panel.
 
-Classes folded in: filter-chip-row. Rows: 31. Distinct pages reached: 38. Estimate: S.
+Classes folded in: filter-chip-row. Rows: 31 before exclusion, 31 after (no row dropped). Distinct pages reached: 38 before, 37 after. Estimate: S.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 0 rows dropped. `/studio/story-rooms/[id]` reaches this class only through `components/studio/my-creations/edit/sections/mechanics-modules/mechanics-module-picker`, a shared package whose other four consumers (`/studio/my-creations/[id]/edit`, `/studio/v2/editor/[id]`, `/studio/create/mechanics-module`, `/studio/v2/stories/[id]`) are all Current, so the row survives; only the page drops. Page dropped: `/studio/story-rooms/[id]`.
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -10136,21 +10182,23 @@ Shared files to fix first (clears the most pages):
 | `components/studio/storylines/storyline-reference-picker/StorylineReferencePickerModal.view.jsx` | 4 |
 | `components/studio/my-creations/edit/sections/mechanics-modules/mechanics-preset-application/MechanicsPresetApplicationModal.view.jsx` | 3 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (Current routes only, each independently verified to carry a real Session 9 row; all five original picks other than `/characters` were Superseded and are replaced):
 
 - `app/characters/page.js` (public characters index)
-- `app/studio/create/character/page.js` (quick-create character)
-- `app/studio/create/player-character/page.js` (quick-create player character)
 - `app/studio/image-studio/page.js` (legacy image studio)
 - `app/studio/my-creations/[id]/edit/page.js` (legacy creation editor)
+- `app/studio/v2/stories/[id]/page.jsx` (v2 Story chat; replaces the Superseded `/studio/create/character`)
+- `app/studio/v2/community/page.jsx` (v2 Community; replaces the Superseded `/studio/create/player-character`)
 
 ### Session 10: Non-Kit overlays
 
 Modals, popovers, menus, and viewers not yet rendered through KitModalFrame, KitDropdown, or KitImageViewer.
 
-Classes folded in: overlay:non-kit-modal, overlay:non-kit-popover, overlay:non-kit-viewer. Rows: 162. Distinct pages reached: 93. Estimate: L.
+Classes folded in: overlay:non-kit-modal, overlay:non-kit-popover, overlay:non-kit-viewer. Rows: 162 before exclusion, 143 after. Distinct pages reached: 93 before, 91 after. Estimate: L.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 19 rows dropped, both from page-local overlay tables: non-kit-modal 3 and non-kit-popover 11 on `/studio/story-rooms/[id]`, non-kit-popover 5 on `/studio/story-rooms/[id]/character-configuration`. Pages dropped: `/studio/story-rooms/[id]`, `/studio/story-rooms/[id]/character-configuration`.
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -10161,21 +10209,23 @@ Shared files to fix first (clears the most pages):
 | `components/ui/CrestfallSelect.jsx` | 27 |
 | `components/studio/create/structured-registry/registry-linked-creation-picker/RegistryLinkedCreationPickerModal.view.jsx` | 15 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (Current routes only, each independently verified to carry a real Session 10 row):
 
 - `app/characters/page.js` (public characters index)
-- `app/studio/create/character/page.js` (quick-create character)
-- `app/studio/create/page.js` (Studio create hub)
-- `app/studio/create/player-character/page.js` (quick-create player character)
 - `app/studio/create/room-template/page.js` (quick-create Story)
+- `app/studio/page.js` (Studio, canonical Full Studio; replaces the Superseded `/studio/create` hub)
+- `app/studio/create/outfit/page.js` (quick-create outfit; replaces the Superseded `/studio/create/character`)
+- `app/studio/v2/editor/[id]/page.jsx` (v2 Editor advanced mode; replaces the Superseded `/studio/create/player-character`)
 
 ### Session 11: Small and one-off classes
 
 Six classes under 10 rows each: a token used with a raw Tailwind opacity modifier instead of the token's own alpha step, retired copy words (Arc, Codex, Sessions), a banned font weight, a token name not declared in app/theme.css, an off-4px-grid spacing value, and an over-art ink token used off artwork. Folded into one session; each ships as a named finding, not a batch conversion, since none shares a single mechanical fix.
 
-Classes folded in: token-opacity-modifier, retired-words, heavy-weights, undeclared-token, off-grid-spacing, over-art-ink. Rows: 19. Distinct pages reached: 12. Estimate: S.
+Classes folded in: token-opacity-modifier, retired-words, heavy-weights, undeclared-token, off-grid-spacing, over-art-ink. Rows: 19 before exclusion, 18 after. Distinct pages reached: 12 before, 11 after. Estimate: S.
 
-Shared files to fix first (clears the most pages):
+Exclusion note: 1 row dropped, retired-words: `/studio/profile` page-local 1 (the "Public or invite-visible rooms can be promoted here instead of being hidden in chat history" copy line, `app/studio/profile/page.js:12`). Page dropped: `/studio/profile`. All five original representative pages were already Current; no substitution needed.
+
+Shared files to fix first (clears the most pages, published counts, not recut):
 
 | File | Pages reached |
 |---|---|
@@ -10186,7 +10236,7 @@ Shared files to fix first (clears the most pages):
 | `components/studio/create/timeline/timeline-builder/TimelineBuilder.view.jsx` | 2 |
 | `components/kit/creator-card/KitCreatorCard.view.jsx` | 2 |
 
-Representative browser-review set (3 to 5 pages, picked for spread across public, v2, legacy, and modal-heavy surfaces):
+Representative browser-review set (unchanged, all five already Current):
 
 - `app/lore/page.js` (public lore index)
 - `app/studio/my-creations/[id]/edit/page.js` (legacy creation editor)
@@ -10493,5 +10543,7 @@ Every `app/dev/ui-preview/*/page.jsx` route (285), listed so the route count rec
 
 `app/auth/callback/route.js`, `app/logout/route.js`, `app/middleware.js` (no markup), `app/theme.css` (the token authority, never audited against itself), every `app/api/**/route.js`.
 
-STATUS: 16 of 16 audit units complete and independently verified against a live grep. All 105 product routes have a table (section 3 and 4). U11, U12, and U15 verified PASS with zero corrections; U14 verified FLAG, both corrections applied to its persisted result (WardrobeBuilder.view.jsx rounded-2xl split across the correct radius tiers, InfoTip.jsx added as a missing non-kit-popover overlay); U16 verified FLAG with a real overlay-inventory gap (44 of 54 required files, concentrated in the npc-registry modal family and three picker packages, carry no overlay row) left as a listed correction, not fixed in place, since this pass verifies rather than re-audits. Held-for-merge is retired: git merge-base --is-ancestor confirms all three branches already merged into origin/staging before fe/css branched, so every held flag from the first pass is stripped (180 flag instances across 36 files). Collapse analysis (section 7) partitions 2385 hit and overlay rows into 1507 shared, 610 page-local, 268 orphan, covering every defect class. Section 8 replaces the old page-by-page order with 11 sessions grouped by defect class. NEXT ACTION: Brian rules the CSS sweep session order.
+STATUS: 16 of 16 audit units complete and independently verified against a live grep. All 105 product routes have a table (section 3 and 4). U11, U12, and U15 verified PASS with zero corrections; U14 verified FLAG, both corrections applied to its persisted result (WardrobeBuilder.view.jsx rounded-2xl split across the correct radius tiers, InfoTip.jsx added as a missing non-kit-popover overlay); U16 verified FLAG with a real overlay-inventory gap (44 of 54 required files, concentrated in the npc-registry modal family and three picker packages, carry no overlay row) left as a listed correction, not fixed in place, since this pass verifies rather than re-audits. Held-for-merge is retired: git merge-base --is-ancestor confirms all three branches already merged into origin/staging before fe/css branched, so every held flag from the first pass is stripped (180 flag instances across 36 files). Collapse analysis (section 7) partitions 2385 hit and overlay rows into 1507 shared, 610 page-local, 268 orphan, covering every defect class. Section 8 replaced the old page-by-page order with 11 sessions grouped by defect class. NEXT ACTION: Brian rules the CSS sweep session order.
+
+STATUS, recut 11 Sep 2026: Brian ruled the live route set (`docs/reviews/ROUTE-STATUS-2026-09-11.md`): 92 Current routes are in scope for this sweep, 8 Superseded go to Nick as a recommendation, 5 Unknown are excluded pending Nick's classification. Section 8 is recut against the 92 Current routes: 2230 rows before exclusion drop to 2009 (221 dropped), stated per session in section 8.0's exclusion summary table with cause (page-local versus orphaned shared package) named for every drop; every representative browser-review page across all 11 sessions is independently reverified as a Current route carrying a real row in its class, with 19 of 55 slots replaced. No file outside this document was edited. NEXT ACTION: dead code packet, then Brian rules CSS session 2.
 
