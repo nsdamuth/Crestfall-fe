@@ -188,7 +188,7 @@ export default function CreationImageLibraryPageView({
                 key={option.value}
                 type="button"
                 onClick={() => onSetEligibilityFilter?.(option.value)}
-                className={`inline-flex min-h-[var(--control-sm)] items-center rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
+                className={`inline-flex min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] items-center rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
                   active
                     ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
                     : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
@@ -517,7 +517,7 @@ function LibraryImageCard({
               onClick={() =>
                 onAssignFeaturedSlot?.(action.slotKey, image.id)
               }
-              className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] transition disabled:cursor-not-allowed disabled:opacity-45 ${
+              className={`min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] transition disabled:cursor-not-allowed disabled:opacity-45 ${
                 action.active
                   ? "border-transparent bg-[image:var(--grad-gold)] text-[var(--tag-fill-ink)]"
                   : "border-dashed border-[var(--line)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-action)] hover:text-[var(--ink)]"
