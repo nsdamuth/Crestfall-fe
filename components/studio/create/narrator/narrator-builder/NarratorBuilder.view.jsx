@@ -5,6 +5,7 @@ import { BookOpen, Save, Sparkles } from "lucide-react";
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import NarratorModuleSelectorView from "@/components/studio/create/narrator/narrator-module-selector/NarratorModuleSelector.view";
 import NarratorDirectivesEditor from "@/components/studio/narrators/advanced-prompting/NarratorDirectivesEditor";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 function TextField({ label, value, onChange, placeholder }) {
   return (
@@ -64,7 +65,12 @@ export default function NarratorBuilderView({
 } = {}) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.46fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+          implicit base column is sized by min-width:auto, so any nowrap
+          descendant becomes the page's horizontal scroll width. This is
+          the single-column rule for this shell: one column in DOM order
+          below xl, each child free to shrink to the gutter. */}
+      <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Narrator Builder
         </p>
@@ -131,7 +137,7 @@ export default function NarratorBuilderView({
         ) : null}
       </aside>
 
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
+      <div className="min-w-0 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Narrator Profile
         </p>
@@ -232,6 +238,14 @@ export default function NarratorBuilderView({
           </div>
         </div>
       </div>
+      {/* MOBILE-SHELLS: the aside's Save draft is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }
