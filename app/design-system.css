@@ -628,3 +628,19 @@
     height: calc(var(--control-md) + var(--space-8));
   }
 }
+
+/* --- SMALL BUTTON TOUCH FLOOR, package MOBILE-SHELLS ---------
+   .cf-btn--sm pins its height to --control-sm, 32, and because
+   .cf-btn is unlayered CSS no Tailwind height utility can reach
+   it. That is correct for dense desktop chrome and wrong for a
+   finger. This is the same pairing docs/DESIGN-TOKENS.md already
+   requires of --control-filter: the compact height is legal on a
+   fine pointer only, and touch keeps the --control-md 44px
+   floor. Scoped to the pointer, not to a width, so a small
+   button is safe wherever it is written.                       */
+
+@media (pointer: coarse) {
+  .cf-btn--sm {
+    height: var(--control-md);
+  }
+}
