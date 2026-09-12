@@ -94,7 +94,7 @@ export default function StudioSidebarView({
     <aside
       className={`
         hidden shrink-0 border-r border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-5 transition-all duration-300 lg:sticky lg:top-0 lg:block lg:h-dvh lg:self-start lg:overflow-y-auto
-        ${collapsed ? "w-16" : "w-56"}
+        ${collapsed ? "lg:w-16" : "lg:w-56"}
       `}
     >
       {/* Collapsed header stacks the logo icon (Home link) above the
