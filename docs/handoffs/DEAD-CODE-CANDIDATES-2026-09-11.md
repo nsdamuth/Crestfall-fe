@@ -3028,9 +3028,9 @@ reflected here.
 - **G5**, no em dashes: DONE (checked by grep across this file after
   assembly).
 
-Commit: `docs: dead code candidates 11 Sep 2026` -- {{COMMIT_HASH}}
-Pushed: {{PUSH_STATUS}}
-Tree clean: {{TREE_STATUS}}
+Commit: `docs: dead code candidates 11 Sep 2026` -- b0258aa8
+Pushed: yes, `origin/fe/css` (85c623f1..b0258aa8)
+Tree clean: yes
 
 STATUS: dead code candidate packet complete, 3,072-file import graph
 built and partitioned (888 Tier A / 647 Tier B / 13 Tier C / 8 Tier D /
