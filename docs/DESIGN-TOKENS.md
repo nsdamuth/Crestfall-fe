@@ -237,7 +237,8 @@ theme the matrix below is computed against); WCAG 2.2 numbers,
 | `--blur-chrome` | `12px` | same | Persistent chrome frost, minted 8 Aug 2026 at the proof's create-hub `.topbar` value; scope extended 22 Aug 2026 (Gate 2 token law row 10) to the editor sticky nav and the mobile save row | Sticky top bars and other persistent (non-floating) chrome, the editor sticky nav, the mobile save row | Any floating panel (use `--blur-panel`), the image viewer veil, tile art, banners, tag beds | locked |
 | `--blur-glass` | `12px` | same | Tooltip glass only. Third blur token, no cross-borrowing with the two above (A2, ratified narrow, 22 Aug 2026): every glass-chrome surface actually built (kebab menus, the viewer header, the viewer's 390 close control) resolves through `--panel-glass` at `--blur-panel` (2px), not this token | Tooltips (pending the CR-047 component) | Any other surface, including glass-chrome menus and headers | locked |
 | `--chrome-wash` | `rgba(6,4,2,.62)` | same, interim (F1) | The near-black wash paired with `--blur-chrome`; ALSO the image viewer veil color, paired with `--blur-panel` per B7 | Sticky chrome, editor sticky nav, mobile save row, image viewer veil | Any surface not paired with `--blur-chrome` or the viewer's `--blur-panel` veil | locked |
-| `--panel-glass` | `rgba(36,32,25,.85)` | same, interim (F1) | Glass-panel background, paired with `--blur-panel` (2px), never `--blur-glass`. Scope widened 22 Aug 2026 (NEW LAW B, F3 closed GO 2B, Final Ruling Render): every menu and popover app-wide, not only kebab menus | Kebab menus (B6), the `KitCreationCard` viewer-owned kebab menu (NEW LAW A), `KitDropdown` and every other menu/popover surface app-wide, the viewer's two-line header (B7); selection modals (picker, sort) keep their own panel-lift-gradient modal surface, unchanged by this widening | Tooltip surfaces (use `--surface-3`, RULED 12 Sep 2026) | locked |
+| `--panel-glass` | `rgba(36,32,25,.85)` | same, by design: art under it does not flip | Over-art glass background, paired with `--blur-panel` (2px), never `--blur-glass`. NEW LAW B (22 Aug 2026) widened it to every menu and popover; NARROWED 12 Sep 2026 (Brian, INSET ladder ruling, option A): menus and popovers resolve through the themed `--panel-ui-glass` row below, and this token is over-art glass only | The lightbox and image viewer chrome (two-line header, controls, circular close chips), the image editor and image overlay panels, the modal-frame phone close chip, the asset-detail catalogue card over scrimmed art, the picker-modal selected-check chip over a thumbnail; selection modals (picker, sort) keep their own panel-lift-gradient modal surface | UI menus and popovers (use `--panel-ui-glass`), tooltip surfaces (use `--surface-3`, RULED 12 Sep 2026) | locked |
+| `--panel-ui-glass` | `rgba(36,32,25,.92)` | `rgba(252,248,238,.94)` | Themed UI glass for every menu and popover, paired with `--blur-panel` (2px), never `--blur-glass`. Minted in `app/theme.css` after the 30 Aug 2026 S02 render sitting so Eggshell menus read as parchment glass rather than stranded dark chrome; entered into law 12 Sep 2026 (Brian, option A: the law catches up with the build; replacing it with `--panel-glass` was rejected because it would darken every Eggshell menu until F1) | `KitDropdown` and every other menu/popover surface app-wide, `KitFilterPanel`, `KitGlobalSearch`, the form-field menu recipe, the `KitCreationCard` kebab menu | Over-art surfaces (use `--panel-glass`), tooltip surfaces (use `--surface-3`) | locked |
 
 Scrims do not flip with the theme because the artwork under them does
 not flip. `--blur-panel`, `--blur-chrome`, and `--blur-glass` are
@@ -488,10 +489,11 @@ repeated here.
 F1, held for a Brian ruling: every row above marked "interim (F1)"
 declares the same value in both themes today; real light-theme values
 need a render sitting (the panel-lift gradient, creation-card
-gradient, `--fill-option-rest`, `--panel-glass`,
+gradient, `--fill-option-rest`,
 `--grad-card`, `--grad-rail`, `--chrome-wash`, `--ink-typed`,
 `--fill-ghost`). `--bed-deep` left this list 12 Sep 2026 when its
-light value was ruled.
+light value was ruled; `--panel-glass` left it the same day, its
+single dark value being by design for over-art glass.
 
 ## Ladder and state primitives, RULED 9 Aug 2026
 
