@@ -40,7 +40,7 @@ export default async function PublicProfileConnectionsPage({
             ← Back to profile
           </Link>
 
-          <div className="flex rounded-xl border border-white/10 bg-[var(--surface-1)] p-1">
+          <div className="flex flex-wrap rounded-xl border border-white/10 bg-[var(--surface-1)] p-1">
             <ConnectionTab
               username={publicUsername}
               tab="followers"
@@ -95,7 +95,7 @@ function ConnectionTab({ username, tab, activeTab, count, label }) {
   return (
     <Link
       href={`/studio/profile/${encodeURIComponent(username)}/connections?tab=${tab}`}
-      className={`rounded-lg px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
+      className={`inline-flex min-h-[var(--control-md)] flex-1 items-center justify-center rounded-lg px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
         active
           ? "bg-[var(--muted-gold)]/15 text-[var(--foreground)]"
           : "text-[var(--muted)] hover:text-[var(--foreground)]"
