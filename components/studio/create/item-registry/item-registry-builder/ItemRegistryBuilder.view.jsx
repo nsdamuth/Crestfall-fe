@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const TAB_ICONS = {
   overview: ClipboardList,
@@ -203,13 +204,25 @@ export default function ItemRegistryBuilderView({
           reviewPayloadText={reviewPayloadText}
         />
       ) : null}
+      {/* MOBILE-SHELLS: the header row's Save is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          header button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }
 
+/* MOBILE-SHELLS: min-w-0 on Panel's root is what lets the two-pane
+   region at xl collapse to one column below it without either pane
+   being floored at its subtree min-content and pushing the page
+   sideways. Both panes render through this one component. */
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
+    <section className="min-w-0 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
       <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
@@ -313,7 +326,7 @@ function EntriesTab({
   onDeleteEntry,
 }) {
   return (
-    <div className="grid gap-5 xl:grid-cols-[0.42fr_1fr]">
+    <div className="grid min-w-0 gap-5 xl:grid-cols-[0.42fr_1fr]">
       <Panel
         eyebrow="Entries"
         title="Objects"
