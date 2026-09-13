@@ -21,6 +21,8 @@ import {
   Users,
 } from "lucide-react";
 
+import RailPanelGlyph from "@/components/studio/story-rooms/story-room-chat-shell/RailPanelGlyph";
+
 const PREVIEW_SOON_LABEL = "Soon";
 
 const ICONS = Object.freeze({
@@ -143,23 +145,13 @@ export default function StudioSidebarView({
           // Bare icon, no circle (Brian, 10 Sep 2026, session 2 review):
           // the ringed button fought the ringed logo mark beside it.
           // Same 44px target; hover and active read as the gold icon.
+          // The glyph is the shared panel toggle glyph (brief 3 item 3):
+          // one drawing for this toggle and the story chat's two rail
+          // toggles, turning 180 degrees between expanded and collapsed.
           className="grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 place-items-center rounded-[var(--radius-md)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--gold-action)] active:text-[var(--gold-deep)]"
           aria-label={collapseAriaLabel}
         >
-          <svg
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <rect x="3" y="4" width="18" height="16" rx="2" />
-            <path d="M9 4v16" />
-          </svg>
+          <RailPanelGlyph side="left" open={!collapsed} />
         </button>
       </div>
 

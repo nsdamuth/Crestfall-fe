@@ -319,7 +319,8 @@ function StoryChatMobileBar({
 
 // One 44px toggle per rail (brief 2 item 5): the same glyph and recipe
 // as the primary sidebar's collapse toggle, shared from RailPanelGlyph
-// with the composer's mobile story list button (item 11). The story
+// with the composer's mobile story list button (item 11). The glyph
+// turns 180 degrees between open and closed (brief 3 item 3). The story
 // list toggle anchors to the right edge of its panel and the details
 // toggle to the left edge, so each sits against the center column open
 // or closed.
@@ -340,7 +341,7 @@ function RailEdgeToggle({ side, open = false, onClick, openLabel, closeLabel }) 
         aria-expanded={open}
         className={BARE_ICON_BUTTON_CLASS}
       >
-        <RailPanelGlyph side={side} />
+        <RailPanelGlyph side={side} open={open} />
       </button>
     </div>
   );
