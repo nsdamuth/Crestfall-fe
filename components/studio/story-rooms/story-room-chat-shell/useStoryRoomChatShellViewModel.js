@@ -21,11 +21,12 @@ export const STORY_ROOM_DELETE_CONFIRMATION_LINES = [
   "This cannot be undone.",
 ];
 
+// Auto plus every selectable responder (fe/chat-studio item 2 retired
+// the Random option).
 export function buildNextSpeakerOptions(speakerOptions = []) {
   return [
     { id: "AUTO", label: "Auto" },
     ...(Array.isArray(speakerOptions) ? speakerOptions : []),
-    { id: "RANDOM", label: "Random" },
   ];
 }
 
@@ -257,7 +258,6 @@ export function useStoryRoomChatShellViewModel({
   // during render for the same reason as the room reset above.
   const selectedResponderStillAvailable =
     nextSpeaker === "AUTO" ||
-    nextSpeaker === "RANDOM" ||
     safeSpeakerOptions.some((option) => option?.id === nextSpeaker);
   if (!selectedResponderStillAvailable) {
     setNextSpeaker("AUTO");
@@ -515,8 +515,6 @@ export function useStoryRoomChatShellViewModel({
       locationMentionOptions,
       commandOptions: commands,
       onSend: sendMessage,
-      onOpenCast: () => setMobilePanel("cast"),
-      onOpenState: () => setMobilePanel("state"),
       isSending: sending,
       disabled: loading || Boolean(error) || !chatAllowed,
       disabledReason: chatUnavailableReason,

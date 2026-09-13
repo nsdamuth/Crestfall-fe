@@ -4,15 +4,14 @@ const returnNull = () => null;
 const defaultInputModeOptions = [
   { value: "DIALOGUE", label: "Dialogue" },
   { value: "ACTION", label: "Action" },
-  { value: "OOC", label: "OOC / Note" },
-  { value: "DIRECT", label: "Direct / GM" },
+  { value: "OOC", label: "OOC" },
+  { value: "DIRECT", label: "Direct" },
 ];
 
 const defaultSpeakerOptions = [
   { id: "AUTO", label: "Auto", iconKind: "auto" },
   { id: "narrator-1", label: "The Chronicler", iconKind: "narrator" },
-  { id: "character-1", label: "Seraphine Vale", iconKind: "participant" },
-  { id: "RANDOM", label: "Random", iconKind: "random" },
+  { id: "character-1", label: "Seraphine Vale", iconKind: "participant", avatarUrl: "" },
 ];
 
 const defaultCallbacks = {
@@ -25,8 +24,6 @@ const defaultCallbacks = {
   onSelectMention: returnNull,
   onDismissMentionSuggestions: noop,
   onSend: noop,
-  onOpenCast: noop,
-  onOpenState: noop,
 };
 
 function createFixture(overrides = {}) {
@@ -38,13 +35,15 @@ function createFixture(overrides = {}) {
     draft: "",
     mentionSuggestions: [],
     highlightedMentionIndex: 0,
-    placeholder: "Write dialogue or natural player input...",
+    placeholder: "Send a message",
     textareaDisabled: false,
     sendDisabled: false,
     isSending: false,
     submitIsContinuation: true,
-    submitLabel: "Continue Scene",
-    submitPendingLabel: "Choosing next responder...",
+    submitLabel: "Continue",
+    submitPendingLabel: "Choosing the next speaker",
+    sceneImageState: "soon",
+    sceneImageLabel: "Scene image, not available yet",
     ...defaultCallbacks,
     ...overrides,
   };
@@ -58,11 +57,10 @@ export const storyRoomComposerDraftFixture = createFixture({
   inputMode: "ACTION",
   nextSpeaker: "character-1",
   draft: "Seraphine steps between the envoy and the sealed gate.",
-  placeholder: "Describe an action visible in the scene...",
   sendDisabled: false,
   submitIsContinuation: false,
   submitLabel: "Send",
-  submitPendingLabel: "Sending...",
+  submitPendingLabel: "Sending",
 });
 
 export const storyRoomComposerMentionFixture = createFixture({
@@ -70,7 +68,7 @@ export const storyRoomComposerMentionFixture = createFixture({
   sendDisabled: false,
   submitIsContinuation: false,
   submitLabel: "Send",
-  submitPendingLabel: "Sending...",
+  submitPendingLabel: "Sending",
   mentionSuggestions: [
     {
       id: "character-1",
@@ -95,23 +93,21 @@ export const storyRoomComposerSendingFixture = createFixture({
   isSending: true,
   submitIsContinuation: false,
   submitLabel: "Send",
-  submitPendingLabel: "Sending...",
+  submitPendingLabel: "Sending",
 });
 
 export const storyRoomComposerDisabledFixture = createFixture({
-  draft: "This draft remains visible while the room is unavailable.",
+  draft: "This draft remains visible while the story is unavailable.",
+  disabledReason: "Chat is not available for this account.",
   textareaDisabled: true,
   sendDisabled: true,
   submitIsContinuation: false,
   submitLabel: "Send",
-  submitPendingLabel: "Sending...",
+  submitPendingLabel: "Sending",
 });
 
 export const storyRoomComposerMinimalOptionsFixture = createFixture({
-  nextSpeakerOptions: [
-    { id: "AUTO", label: "Auto", iconKind: "auto" },
-    { id: "RANDOM", label: "Random", iconKind: "random" },
-  ],
+  nextSpeakerOptions: [{ id: "AUTO", label: "Auto", iconKind: "auto" }],
 });
 
 export const storyRoomComposerLongContentFixture = createFixture({
@@ -123,13 +119,16 @@ export const storyRoomComposerLongContentFixture = createFixture({
       label: "Aurelia Vespera, Last Cartographer of the Ninth Gate",
       iconKind: "participant",
     },
+    { id: "character-3", label: "Brannoc", iconKind: "participant" },
+    { id: "character-4", label: "Ilse of the Weir", iconKind: "participant" },
+    { id: "character-5", label: "Tamsin", iconKind: "participant" },
+    { id: "character-6", label: "Oren Vale", iconKind: "participant" },
   ],
   nextSpeaker: "character-long",
   draft:
     "Slow the scene and let every present character react to the revelation before advancing the objective. Preserve the uncertainty around the sealed archive, emphasize the sound of distant machinery, and allow the player to interrupt before the narrator resolves the moment.",
-  placeholder: "Steer pacing, scene direction, or GM-style movement...",
   sendDisabled: false,
   submitIsContinuation: false,
   submitLabel: "Send",
-  submitPendingLabel: "Sending...",
+  submitPendingLabel: "Sending",
 });

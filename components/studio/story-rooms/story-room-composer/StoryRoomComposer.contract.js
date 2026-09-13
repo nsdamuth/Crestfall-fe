@@ -1,21 +1,36 @@
-export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "1.5.0";
+export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "2.0.0";
 
 /**
  * Stable UI boundary for the Story Room message composer.
  *
- * The View owns desktop/mobile composition, disclosure of mobile tools,
- * textarea sizing, Enter/Shift+Enter submission behavior, command/mention-menu presentation, and disabled future-tool
- * placeholders. It does not receive raw Story Room participant records and
- * does not own message submission, room state, persistence, or API behavior.
+ * 2.0.0, fe/chat-studio item 2 (12 Sep 2026). BREAKING: one composer bar
+ * at every width replaces the desktop and mobile compositions; the
+ * mobile tools drawer, the responder overflow picker, the Next Speaker
+ * and Input Mode labels, the Random speaker (iconKind "random"), the two
+ * Soon scene buttons, and the old continue label are retired;
+ * `onOpenCast` and `onOpenState` are removed. ADDITIVE: `sceneImageState`
+ * ("soon" | "ready") and `sceneImageLabel` describe the one scene image
+ * seat, disabled until the Chassis serves the operation (CR-070).
+ *
+ * The View owns the bar: a 44px circle per cast member and the Auto
+ * circle (tap reports the speaker through onChangeNextSpeaker), the
+ * input mode chip (KitDropdown, labelMode replace, the first mode as
+ * the resting value), the scene image seat, the growing message field,
+ * and the gold send circle. It owns textarea sizing, Enter and
+ * Shift+Enter submission, and the command, mention, and location menu
+ * presentation. It does not receive raw Story Room participant records
+ * and does not own message submission, room state, persistence, or API
+ * behavior.
  *
  * @typedef {Object} StoryRoomComposerInputModeOption
  * @property {string} value Semantic input-mode value.
  * @property {string} label Display label.
  *
  * @typedef {Object} StoryRoomComposerSpeakerOption
- * @property {string} id Opaque speaker-selection value.
+ * @property {string} id Opaque speaker-selection value ("AUTO" or a participant id).
  * @property {string} label Display label.
- * @property {"auto"|"narrator"|"participant"|"random"} iconKind Display icon category.
+ * @property {"auto"|"narrator"|"participant"} iconKind Display icon category.
+ * @property {string} [avatarUrl] Display-ready avatar URL for participants.
  *
  * @typedef {Object} StoryRoomComposerMention
  * @property {string} participantId Opaque participant identifier.
@@ -41,14 +56,16 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "1.5.0";
  * @property {boolean} highlightedCommandExact Whether Enter should execute the exact selected command.
  * @property {Object[]} locationSuggestions Filtered display-ready Location Registry options.
  * @property {number} highlightedLocationIndex
- * @property {string} placeholder
+ * @property {string} placeholder "Send a message" in every mode.
  * @property {string} disabledReason User-facing explanation when chat authoring is unavailable.
  * @property {boolean} textareaDisabled
  * @property {boolean} sendDisabled
  * @property {boolean} isSending
- * @property {boolean} submitIsContinuation Whether the empty AUTO action continues the scene.
- * @property {string} submitLabel Idle submit-action label.
- * @property {string} submitPendingLabel In-flight submit-action label.
+ * @property {boolean} submitIsContinuation Whether the empty Auto send continues the scene.
+ * @property {string} submitLabel The send circle's accessible name at rest ("Send" or "Continue").
+ * @property {string} submitPendingLabel The send circle's accessible name while sending.
+ * @property {"soon"|"ready"} sceneImageState "soon" renders the scene image seat disabled.
+ * @property {string} sceneImageLabel The scene image seat's accessible name.
  * @property {(nextValue: string) => void} onChangeInputMode
  * @property {(speakerId: string) => void} onChangeNextSpeaker
  * @property {(nextValue: string, cursorPosition: number) => void} onChangeDraft
@@ -66,8 +83,6 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "1.5.0";
  * @property {(runtimeEntryId: string) => number|null} onSelectLocation
  * @property {() => void} onDismissLocationSuggestions
  * @property {(options?: Object) => void} onSend
- * @property {() => void} onOpenCast
- * @property {() => void} onOpenState
  */
 
 export {};

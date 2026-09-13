@@ -108,11 +108,11 @@ test("ViewModel preserves responder, mention, and mobile panel projection", () =
   );
 
   assert.match(viewModel, /\{ id: "AUTO", label: "Auto" \}/);
-  assert.match(viewModel, /\{ id: "RANDOM", label: "Random" \}/);
+  assert.doesNotMatch(viewModel, /label: "Random"/);
   assert.match(viewModel, /participantType === "CHARACTER"/);
   assert.match(viewModel, /locationMentionOptions/);
-  assert.match(viewModel, /onOpenCast: \(\) => setMobilePanel\("cast"\)/);
-  assert.match(viewModel, /onOpenState: \(\) => setMobilePanel\("state"\)/);
+  assert.match(viewModel, /onOpenMobileCast: \(\) => setMobilePanel\("cast"\)/);
+  assert.match(viewModel, /onOpenMobileState: \(\) => setMobilePanel\("state"\)/);
   assert.match(viewModel, /onUpdated: reloadStoryRoom/);
   assert.match(viewModel, /disabled: loading \|\| Boolean\(error\) \|\| !chatAllowed/);
 });

@@ -1,33 +1,34 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
+  ArrowUp,
   BookOpen,
-  Download,
-  Eye,
   Image as ImageIcon,
   MapPin,
-  Send,
-  Share2,
-  Shuffle,
-  SlidersHorizontal,
   Sparkles,
   UserRound,
-  Users,
-  Wand2,
-  X,
 } from "lucide-react";
 
-import KitModalFrame from "@/components/kit/KitModalFrame";
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 const SPEAKER_ICONS = {
   auto: Sparkles,
   narrator: BookOpen,
   participant: UserRound,
-  random: Shuffle,
 };
 
+const CIRCLE_BUTTON_CLASS =
+  "flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)]";
+
+// One composer bar at every width (fe/chat-studio item 2, 12 Sep 2026).
+// Row one: a 44px circle per cast member (tap: that character speaks
+// next, through the existing next-speaker handler), the Auto circle,
+// then the input mode chip and the scene image seat at the right end.
+// Row two: the growing message field and the gold send circle. The
+// former speaker and mode eyebrow labels, the Random speaker, the two
+// Soon scene buttons, the mobile tools drawer, and the old continue
+// label are retired.
 export default function StoryRoomComposerView({
   inputModeOptions = [],
   inputMode = "DIALOGUE",
@@ -41,107 +42,16 @@ export default function StoryRoomComposerView({
   highlightedCommandExact = false,
   locationSuggestions = [],
   highlightedLocationIndex = 0,
-  placeholder = "Write dialogue or natural player input...",
+  placeholder = "Send a message",
   disabledReason = "",
   textareaDisabled = false,
   sendDisabled = true,
   isSending = false,
   submitIsContinuation = false,
   submitLabel = "Send",
-  submitPendingLabel = "Sending...",
-  onChangeInputMode,
-  onChangeNextSpeaker,
-  onChangeDraft,
-  onUpdateSuggestionQueries,
-  onMoveMentionHighlight,
-  onSelectHighlightedMention,
-  onSelectMention,
-  onDismissMentionSuggestions,
-  onMoveCommandHighlight,
-  onSelectHighlightedCommand,
-  onSelectCommand,
-  onDismissCommandSuggestions,
-  onMoveLocationHighlight,
-  onSelectHighlightedLocation,
-  onSelectLocation,
-  onDismissLocationSuggestions,
-  onSend,
-  onOpenCast,
-  onOpenState,
-}) {
-  const sharedProps = {
-    inputModeOptions,
-    inputMode,
-    nextSpeakerOptions,
-    nextSpeaker,
-    draft,
-    mentionSuggestions,
-    highlightedMentionIndex,
-    commandSuggestions,
-    highlightedCommandIndex,
-    highlightedCommandExact,
-    locationSuggestions,
-    highlightedLocationIndex,
-    placeholder,
-    disabledReason,
-    textareaDisabled,
-    sendDisabled,
-    isSending,
-    submitIsContinuation,
-    submitLabel,
-    submitPendingLabel,
-    onChangeInputMode,
-    onChangeNextSpeaker,
-    onChangeDraft,
-    onUpdateSuggestionQueries,
-    onMoveMentionHighlight,
-    onSelectHighlightedMention,
-    onSelectMention,
-    onDismissMentionSuggestions,
-    onMoveCommandHighlight,
-    onSelectHighlightedCommand,
-    onSelectCommand,
-    onDismissCommandSuggestions,
-    onMoveLocationHighlight,
-    onSelectHighlightedLocation,
-    onSelectLocation,
-    onDismissLocationSuggestions,
-    onSend,
-  };
-
-  return (
-    <>
-      <DesktopComposer {...sharedProps} />
-      <MobileComposer
-        {...sharedProps}
-        onOpenCast={onOpenCast}
-        onOpenState={onOpenState}
-      />
-    </>
-  );
-}
-
-function DesktopComposer({
-  inputModeOptions,
-  inputMode,
-  nextSpeakerOptions,
-  nextSpeaker,
-  draft,
-  mentionSuggestions,
-  highlightedMentionIndex,
-  commandSuggestions,
-  highlightedCommandIndex,
-  highlightedCommandExact,
-  locationSuggestions,
-  highlightedLocationIndex,
-  placeholder,
-  disabledReason,
-  textareaDisabled,
-  sendDisabled,
-  isSending,
-  submitIsContinuation,
-  submitLabel,
-  submitPendingLabel,
+  submitPendingLabel = "Sending",
+  sceneImageState = "soon",
+  sceneImageLabel = "Scene image, not available yet",
   onChangeInputMode,
   onChangeNextSpeaker,
   onChangeDraft,
@@ -162,108 +72,125 @@ function DesktopComposer({
 }) {
   const textareaRef = useRef(null);
 
-  useAutoResizeTextarea(textareaRef, draft, 360);
+  useAutoResizeTextarea(textareaRef, draft, 220);
+
+  const speakerOptions = Array.isArray(nextSpeakerOptions) ? nextSpeakerOptions : [];
+  const autoOption = speakerOptions.find((option) => option?.id === "AUTO") || null;
+  const castOptions = speakerOptions.filter((option) => option?.id && option.id !== "AUTO");
+
+  const modeOptions = (Array.isArray(inputModeOptions) ? inputModeOptions : [])
+    .map((option) => ({ value: option?.value, label: option?.label }))
+    .filter((option) => option.value && option.label);
+  const restingMode = modeOptions[0] || { value: "DIALOGUE", label: "Dialogue" };
+
+  const sendTitle = isSending ? submitPendingLabel : submitLabel;
 
   return (
-    <div className="hidden border-t border-white/10 bg-[var(--surface-1)] p-4 xl:block">
-      {disabledReason ? (
-        <p className="mb-3 rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 px-4 py-3 text-sm text-[var(--ink-dim)]">
-          {disabledReason}
-        </p>
-      ) : null}
+    <div className="relative z-50 shrink-0 bg-transparent">
+      <div className="border-t border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-[var(--space-2)]">
+        {disabledReason ? (
+          <p className="mb-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            {disabledReason}
+          </p>
+        ) : null}
 
-      <div className="mb-3 flex flex-wrap items-center gap-2">
-        <p className="mr-1 text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-          Next Speaker
-        </p>
+        <div className="mb-[var(--space-2)] flex items-center gap-[var(--space-2)]">
+          <div className="flex min-w-0 flex-1 items-center gap-[var(--space-2)] overflow-x-auto">
+            {castOptions.map((option) => (
+              <SpeakerCircle
+                key={option.id}
+                option={option}
+                active={nextSpeaker === option.id}
+                disabled={textareaDisabled}
+                onChange={onChangeNextSpeaker}
+              />
+            ))}
 
-        <SpeakerButtons
-          options={nextSpeakerOptions}
-          selectedId={nextSpeaker}
-          onChange={onChangeNextSpeaker}
-          desktop
-        />
-      </div>
+            {autoOption ? (
+              <SpeakerCircle
+                option={autoOption}
+                active={nextSpeaker === autoOption.id}
+                disabled={textareaDisabled}
+                onChange={onChangeNextSpeaker}
+              />
+            ) : null}
+          </div>
 
-      <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_190px]">
-        <div>
-          <label className="block">
-            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-              Message
-            </span>
-
-            <ParticipantMentionTextarea
-              textareaRef={textareaRef}
-              value={draft}
-              mentionSuggestions={mentionSuggestions}
-              highlightedMentionIndex={highlightedMentionIndex}
-              commandSuggestions={commandSuggestions}
-              highlightedCommandIndex={highlightedCommandIndex}
-              highlightedCommandExact={highlightedCommandExact}
-              locationSuggestions={locationSuggestions}
-              highlightedLocationIndex={highlightedLocationIndex}
-              disabled={textareaDisabled}
-              placeholder={placeholder}
-              rows={2}
-              className="mt-2 max-h-[360px] min-h-[72px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-              onChangeDraft={onChangeDraft}
-              onUpdateSuggestionQueries={onUpdateSuggestionQueries}
-              onMoveMentionHighlight={onMoveMentionHighlight}
-              onSelectHighlightedMention={onSelectHighlightedMention}
-              onSelectMention={onSelectMention}
-              onDismissMentionSuggestions={onDismissMentionSuggestions}
-              onMoveCommandHighlight={onMoveCommandHighlight}
-              onSelectHighlightedCommand={onSelectHighlightedCommand}
-              onSelectCommand={onSelectCommand}
-              onDismissCommandSuggestions={onDismissCommandSuggestions}
-              onMoveLocationHighlight={onMoveLocationHighlight}
-              onSelectHighlightedLocation={onSelectHighlightedLocation}
-              onSelectLocation={onSelectLocation}
-              onDismissLocationSuggestions={onDismissLocationSuggestions}
-              onSend={onSend}
+          <div className="flex shrink-0 items-center gap-[var(--space-2)]">
+            <KitDropdownView
+              label={restingMode.label}
+              ariaLabel="Input mode"
+              labelMode="replace"
+              options={modeOptions}
+              selectedValues={inputMode ? [inputMode] : []}
+              isMultiSelect={false}
+              restingValue={restingMode.value}
+              align="right"
+              isDisabled={textareaDisabled}
+              onToggleOption={(nextValue) => onChangeInputMode?.(nextValue)}
             />
-          </label>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {/* Scene image seat (decision A1): the Chassis serves no
+                scene image operation yet (CR-070), so the seat is
+                visible and honestly disabled. */}
             <button
               type="button"
-              disabled
-              className="cf-btn cf-btn--secondary cf-btn--sm"
-              title="Later this will generate an image of the current scene."
+              disabled={sceneImageState !== "ready"}
+              aria-label={sceneImageLabel}
+              title={sceneImageState === "ready" ? "Scene image" : "Not available yet"}
+              className={`${CIRCLE_BUTTON_CLASS} bg-[var(--step-above)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`}
             >
-              <ImageIcon size={14} />
-              Scene image soon
-            </button>
-
-            <button
-              type="button"
-              disabled
-              className="cf-btn cf-btn--secondary cf-btn--sm"
-              title="Later this can use the last active speaker, room state, and visible scene context."
-            >
-              <Wand2 size={14} />
-              Use current scene
+              <ImageIcon size={18} aria-hidden="true" />
             </button>
           </div>
         </div>
 
-        <div className="grid content-end gap-3">
-          <CrestfallSelect
-            label="Input Mode"
-            value={inputMode}
-            onChange={(nextValue) => onChangeInputMode?.(nextValue)}
-            options={inputModeOptions}
-            placement="top"
+        <div className="flex items-end gap-[var(--space-2)]">
+          <ParticipantMentionTextarea
+            textareaRef={textareaRef}
+            wrapperClassName="min-w-0 flex-1"
+            value={draft}
+            mentionSuggestions={mentionSuggestions}
+            highlightedMentionIndex={highlightedMentionIndex}
+            commandSuggestions={commandSuggestions}
+            highlightedCommandIndex={highlightedCommandIndex}
+            highlightedCommandExact={highlightedCommandExact}
+            locationSuggestions={locationSuggestions}
+            highlightedLocationIndex={highlightedLocationIndex}
+            disabled={textareaDisabled}
+            placeholder={placeholder}
+            rows={1}
+            className="block max-h-[220px] min-h-[var(--control-md)] w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--step-below)] px-[var(--space-3)] py-[var(--space-3)] text-[length:var(--text-input)] leading-[var(--lh-input)] text-[var(--ink)] shadow-[var(--shadow-bed)] transition-colors duration-[var(--dur-hover)] placeholder:text-[var(--ink-faint)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
+            onChangeDraft={onChangeDraft}
+            onUpdateSuggestionQueries={onUpdateSuggestionQueries}
+            onMoveMentionHighlight={onMoveMentionHighlight}
+            onSelectHighlightedMention={onSelectHighlightedMention}
+            onSelectMention={onSelectMention}
+            onDismissMentionSuggestions={onDismissMentionSuggestions}
+            onMoveCommandHighlight={onMoveCommandHighlight}
+            onSelectHighlightedCommand={onSelectHighlightedCommand}
+            onSelectCommand={onSelectCommand}
+            onDismissCommandSuggestions={onDismissCommandSuggestions}
+            onMoveLocationHighlight={onMoveLocationHighlight}
+            onSelectHighlightedLocation={onSelectHighlightedLocation}
+            onSelectLocation={onSelectLocation}
+            onDismissLocationSuggestions={onDismissLocationSuggestions}
+            onSend={onSend}
           />
 
           <button
             type="button"
             onClick={() => onSend?.()}
             disabled={sendDisabled}
-            className="cf-btn cf-btn--primary"
+            aria-label={sendTitle}
+            title={sendTitle}
+            className={`${CIRCLE_BUTTON_CLASS} bg-[var(--gold-action)] text-[var(--tag-fill-ink)] transition-colors duration-[var(--dur-hover)] hover:bg-[var(--gold-bright)] focus-visible:shadow-[var(--focus-ring-ongold)] active:bg-[var(--state-pressed-gold)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`}
           >
-            {submitIsContinuation ? <Sparkles size={15} /> : <Send size={15} />}
-            {isSending ? submitPendingLabel : submitLabel}
+            {submitIsContinuation ? (
+              <Sparkles size={18} aria-hidden="true" />
+            ) : (
+              <ArrowUp size={20} aria-hidden="true" />
+            )}
           </button>
         </div>
       </div>
@@ -271,272 +198,53 @@ function DesktopComposer({
   );
 }
 
-function MobileComposer({
-  inputModeOptions,
-  inputMode,
-  nextSpeakerOptions,
-  nextSpeaker,
-  draft,
-  mentionSuggestions,
-  highlightedMentionIndex,
-  commandSuggestions,
-  highlightedCommandIndex,
-  highlightedCommandExact,
-  locationSuggestions,
-  highlightedLocationIndex,
-  placeholder,
-  disabledReason,
-  textareaDisabled,
-  sendDisabled,
-  isSending,
-  submitIsContinuation,
-  submitLabel,
-  submitPendingLabel,
-  onChangeInputMode,
-  onChangeNextSpeaker,
-  onChangeDraft,
-  onUpdateSuggestionQueries,
-  onMoveMentionHighlight,
-  onSelectHighlightedMention,
-  onSelectMention,
-  onDismissMentionSuggestions,
-  onMoveCommandHighlight,
-  onSelectHighlightedCommand,
-  onSelectCommand,
-  onDismissCommandSuggestions,
-  onMoveLocationHighlight,
-  onSelectHighlightedLocation,
-  onSelectLocation,
-  onDismissLocationSuggestions,
-  onSend,
-  onOpenCast,
-  onOpenState,
-}) {
-  const [toolsOpen, setToolsOpen] = useState(false);
-  const [responderPickerOpen, setResponderPickerOpen] = useState(false);
-  const textareaRef = useRef(null);
-
-  useAutoResizeTextarea(textareaRef, draft, 220);
-
-  const mobileSpeakerOptions = (Array.isArray(nextSpeakerOptions)
-    ? nextSpeakerOptions
-    : []
-  ).filter((option) => option?.id !== "RANDOM");
-  const autoOption = mobileSpeakerOptions.find((option) => option?.id === "AUTO");
-  const responderOptions = mobileSpeakerOptions.filter(
-    (option) => option?.id && option.id !== "AUTO"
-  );
-  const responderOverflow = responderOptions.length > 2;
-  const visibleResponderOptions = responderOverflow ? [] : responderOptions;
-  const selectedResponderIsInOverflow = responderOverflow && responderOptions.some(
-    (option) => option.id === nextSpeaker
-  );
+// A 44px hit area around a 36px circle: the avatar, the narrator glyph,
+// or the initial; the Auto circle carries the sparkle. The active one
+// carries the gold selected ring (gold only for selected and active).
+function SpeakerCircle({ option, active = false, disabled = false, onChange }) {
+  const isAuto = option?.id === "AUTO";
+  const Icon = SPEAKER_ICONS[option?.iconKind] || UserRound;
+  const label = isAuto
+    ? "Auto: the story chooses who speaks next"
+    : `${option?.label || "Character"} speaks next`;
+  const initial = String(option?.label || "?").trim().charAt(0).toUpperCase();
 
   return (
-    <div className="relative z-50 shrink-0 bg-transparent px-3 pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-2 xl:hidden">
-      {toolsOpen ? (
-        <MobileToolsDrawer
-          inputModeOptions={inputModeOptions}
-          inputMode={inputMode}
-          onChangeInputMode={onChangeInputMode}
-          onOpenCast={onOpenCast}
-          onOpenState={onOpenState}
-          onClose={() => setToolsOpen(false)}
-        />
-      ) : null}
-
-      {responderPickerOpen ? (
-        <MobileResponderPicker
-          options={responderOptions}
-          selectedId={nextSpeaker}
-          onSelect={(speakerId) => {
-            setResponderPickerOpen(false);
-            onChangeNextSpeaker?.(speakerId);
-          }}
-          onClose={() => setResponderPickerOpen(false)}
-        />
-      ) : null}
-
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/35 bg-[#080706]/95 p-3 shadow-2xl backdrop-blur-[var(--blur-panel)]">
-        {disabledReason ? (
-          <p className="mb-2 rounded-lg border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 px-3 py-2 text-xs leading-5 text-[var(--ink-dim)]">
-            {disabledReason}
-          </p>
-        ) : null}
-
-        <div className="mb-2 flex min-w-0 items-center gap-2">
-          <div className="flex min-w-0 items-center gap-2">
-            {autoOption ? (
-              <SpeakerButtons
-                options={[autoOption]}
-                selectedId={nextSpeaker}
-                onChange={onChangeNextSpeaker}
-              />
-            ) : null}
-
-            {visibleResponderOptions.length ? (
-              <SpeakerButtons
-                options={visibleResponderOptions}
-                selectedId={nextSpeaker}
-                onChange={onChangeNextSpeaker}
-              />
-            ) : null}
-
-            {responderOverflow ? (
-              <button
-                type="button"
-                onClick={() => setResponderPickerOpen(true)}
-                aria-pressed={selectedResponderIsInOverflow}
-                aria-label={`Choose responder. ${responderOptions.length} responders available.`}
-                title="Choose responder"
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border text-[10px] font-semibold tracking-[0.08em] transition ${
-                  selectedResponderIsInOverflow
-                    ? "border-[var(--gold-ornament)]/70 bg-[var(--gold-ornament)]/20 text-[var(--ink)] ring-2 ring-[var(--gold-ornament)]/20"
-                    : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
-                }`}
-              >
-                3+
-              </button>
-            ) : null}
-          </div>
-
-          <div className="ml-auto flex shrink-0 items-center gap-2">
-            <button
-              type="button"
-              disabled
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[var(--surface-2)] text-pink-300 opacity-70"
-              title="Generate scene image soon"
-              aria-label="Generate scene image soon"
-            >
-              <ImageIcon size={17} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setToolsOpen((current) => !current)}
-              className={`flex h-10 w-10 items-center justify-center rounded-xl border transition ${
-                toolsOpen
-                  ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
-              }`}
-              title="Open tools"
-              aria-label="Open tools"
-            >
-              <SlidersHorizontal size={17} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onSend?.()}
-              disabled={sendDisabled}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/20 text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/30 hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-50"
-              title={isSending ? submitPendingLabel : submitLabel}
-              aria-label={isSending ? submitPendingLabel : submitLabel}
-            >
-              {submitIsContinuation ? <Sparkles size={17} /> : <Send size={17} />}
-            </button>
-          </div>
-        </div>
-
-        <ParticipantMentionTextarea
-          textareaRef={textareaRef}
-          value={draft}
-          mentionSuggestions={mentionSuggestions}
-          highlightedMentionIndex={highlightedMentionIndex}
-          commandSuggestions={commandSuggestions}
-          highlightedCommandIndex={highlightedCommandIndex}
-          highlightedCommandExact={highlightedCommandExact}
-          locationSuggestions={locationSuggestions}
-          highlightedLocationIndex={highlightedLocationIndex}
-          disabled={textareaDisabled}
-          placeholder={placeholder}
-          rows={1}
-          className="max-h-[220px] min-h-[52px] w-full resize-none overflow-y-auto rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
-          onChangeDraft={onChangeDraft}
-          onUpdateSuggestionQueries={onUpdateSuggestionQueries}
-          onMoveMentionHighlight={onMoveMentionHighlight}
-          onSelectHighlightedMention={onSelectHighlightedMention}
-          onSelectMention={onSelectMention}
-          onDismissMentionSuggestions={onDismissMentionSuggestions}
-          onMoveCommandHighlight={onMoveCommandHighlight}
-          onSelectHighlightedCommand={onSelectHighlightedCommand}
-          onSelectCommand={onSelectCommand}
-          onDismissCommandSuggestions={onDismissCommandSuggestions}
-          onMoveLocationHighlight={onMoveLocationHighlight}
-          onSelectHighlightedLocation={onSelectHighlightedLocation}
-          onSelectLocation={onSelectLocation}
-          onDismissLocationSuggestions={onDismissLocationSuggestions}
-          onSend={onSend}
-        />
-      </div>
-    </div>
-  );
-}
-
-function MobileResponderPicker({ options = [], selectedId = "", onSelect, onClose }) {
-  return (
-    <KitModalFrame
-      variant="sheet"
-      sheetGrabber
-      onClose={onClose}
-      ariaLabel="Choose next responder"
+    <button
+      type="button"
+      onClick={() => onChange?.(option.id)}
+      disabled={disabled}
+      aria-pressed={active}
+      aria-label={label}
+      title={label}
+      className={`${CIRCLE_BUTTON_CLASS} disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`}
     >
-      <div className="p-[var(--space-4)]">
-        <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-          Next responder
-        </p>
-        <p className="mt-[var(--space-1)] text-[length:var(--text-body)] text-[var(--ink-dim)]">
-          Choose a Character or Narrator.
-        </p>
-
-        <div className="mt-[var(--space-4)] grid gap-[var(--space-2)]">
-          {options.map((option) => {
-            const active = option.id === selectedId;
-
-            return (
-              <button
-                key={option.id}
-                type="button"
-                onClick={() => onSelect?.(option.id)}
-                aria-pressed={active}
-                className={`flex min-h-[var(--control-lg)] w-full items-center gap-[var(--space-3)] rounded-[var(--radius-md)] border p-[var(--space-3)] text-left transition ${
-                  active
-                    ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15"
-                    : "border-[var(--line-whisper)] bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/35"
-                }`}
-              >
-                {option.avatarUrl ? (
-                  <img
-                    src={option.avatarUrl}
-                    alt=""
-                    className="h-11 w-11 shrink-0 rounded-full border border-white/10 object-cover"
-                  />
-                ) : (
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[var(--surface-2)] font-display text-[var(--gold-ornament)]">
-                    {String(option.label || "?").charAt(0).toUpperCase()}
-                  </span>
-                )}
-
-                <span className="min-w-0 flex-1 truncate text-[length:var(--text-ui)] text-[var(--ink)]">
-                  {option.label}
-                </span>
-
-                {active ? (
-                  <span className="shrink-0 text-[10px] uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
-                    Selected
-                  </span>
-                ) : null}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </KitModalFrame>
+      <span
+        className={`flex h-9 w-9 items-center justify-center overflow-hidden rounded-[var(--radius-full)] bg-[var(--step-above)] transition-shadow duration-[var(--dur-hover)] ${
+          active
+            ? "text-[var(--gold-bright)] ring-2 ring-[var(--gold-action)]"
+            : "text-[var(--ink-dim)]"
+        }`}
+      >
+        {isAuto ? (
+          <Sparkles size={18} aria-hidden="true" />
+        ) : option?.avatarUrl ? (
+          <img src={option.avatarUrl} alt="" className="h-full w-full object-cover" />
+        ) : option?.iconKind === "narrator" ? (
+          <Icon size={18} aria-hidden="true" />
+        ) : (
+          <span className="font-display text-[length:var(--text-ui)] text-[var(--gold-ornament)]">
+            {initial}
+          </span>
+        )}
+      </span>
+    </button>
   );
 }
 
 function ParticipantMentionTextarea({
   textareaRef,
+  wrapperClassName = "",
   value = "",
   mentionSuggestions = [],
   highlightedMentionIndex = 0,
@@ -678,7 +386,7 @@ function ParticipantMentionTextarea({
   }
 
   return (
-    <div className="relative">
+    <div className={`relative ${wrapperClassName}`}>
       <textarea
         ref={textareaRef}
         value={value}
@@ -845,135 +553,6 @@ function ParticipantMentionTextarea({
         </div>
       ) : null}
     </div>
-  );
-}
-
-function SpeakerButtons({ options = [], selectedId = "", onChange, desktop = false }) {
-  return options.map((option) => {
-    const Icon = SPEAKER_ICONS[option.iconKind] || UserRound;
-    const active = selectedId === option.id;
-    const isParticipant = !["AUTO", "RANDOM"].includes(option.id);
-    const title = isParticipant
-      ? `Send to ${option.label}; click with an empty message to yield the next turn`
-      : `Choose ${option.label} speaker routing`;
-
-    return (
-      <button
-        key={option.id}
-        type="button"
-        onClick={() => onChange?.(option.id)}
-        aria-pressed={active}
-        aria-label={title}
-        title={title}
-        className={`${
-          isParticipant
-            ? "relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full"
-            : "inline-flex shrink-0 items-center gap-1.5 rounded-[var(--radius-md)] px-3 py-1.5"
-        } border text-[10px] uppercase transition ${
-          desktop && !isParticipant ? "tracking-[0.14em]" : "tracking-[0.12em]"
-        } ${
-          active
-            ? "border-[var(--gold-ornament)]/70 bg-[var(--gold-ornament)]/20 text-[var(--ink)] ring-2 ring-[var(--gold-ornament)]/20"
-            : desktop
-              ? "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/45 hover:text-[var(--ink)]"
-              : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
-        }`}
-      >
-        {isParticipant ? (
-          option.avatarUrl ? (
-            <img
-              src={option.avatarUrl}
-              alt=""
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <span className="flex h-full w-full items-center justify-center bg-[var(--surface-2)] text-sm font-semibold text-[var(--gold-ornament)]">
-              {String(option.label || "?").charAt(0).toUpperCase()}
-            </span>
-          )
-        ) : (
-          <>
-            <Icon size={12} />
-            {option.label}
-          </>
-        )}
-      </button>
-    );
-  });
-}
-
-function MobileToolsDrawer({
-  inputModeOptions,
-  inputMode,
-  onChangeInputMode,
-  onOpenCast,
-  onOpenState,
-  onClose,
-}) {
-  return (
-    <div className="mb-3 overflow-visible rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706]/95 p-4 shadow-2xl backdrop-blur-[var(--blur-panel)]">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-          Room Tools
-        </p>
-
-        <button
-          type="button"
-          onClick={() => onClose?.()}
-          className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)]"
-          aria-label="Close tools"
-        >
-          <X size={15} />
-        </button>
-      </div>
-
-      <div className="mt-4 grid gap-4">
-        <CrestfallSelect
-          label="Input Mode"
-          value={inputMode}
-          onChange={(nextValue) => onChangeInputMode?.(nextValue)}
-          options={inputModeOptions}
-          placement="top"
-        />
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => onOpenCast?.()}
-            className="cf-btn cf-btn--secondary cf-btn--sm"
-          >
-            <Users size={14} />
-            Cast / room
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onOpenState?.()}
-            className="cf-btn cf-btn--secondary cf-btn--sm"
-          >
-            <Eye size={14} />
-            State
-          </button>
-
-          <DisabledToolButton icon={ImageIcon} label="Scene image" />
-          <DisabledToolButton icon={Wand2} label="Current scene" />
-          <DisabledToolButton icon={Download} label="Export" />
-          <DisabledToolButton icon={Share2} label="Share" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DisabledToolButton({ icon: Icon, label }) {
-  return (
-    <button
-      type="button"
-      disabled
-      className="cf-btn cf-btn--secondary cf-btn--sm"
-    >
-      <Icon size={14} />
-      {label}
-    </button>
   );
 }
 

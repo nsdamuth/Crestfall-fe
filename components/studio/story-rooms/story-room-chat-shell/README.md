@@ -48,7 +48,7 @@ The portable View never imports that hook or any Story Room client.
 
 The conversion preserves:
 
-- `AUTO`, explicit participant, and `RANDOM` next-speaker choices
+- `AUTO` and explicit participant next-speaker choices (the Random choice retired with the composer bar, fe/chat-studio item 2)
 - Character-only `@` mention candidates
 - Location Registry `#` mention options
 - all four input modes supplied to the existing Composer

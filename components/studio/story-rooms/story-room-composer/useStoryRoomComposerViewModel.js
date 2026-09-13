@@ -1,18 +1,22 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   getStoryRoomCommandSearchTerms,
   getStoryRoomCommandSuggestions,
 } from "./storyRoomCommandRegistry";
 
+// Input modes (fe/chat-studio item 2): the four the Chassis accepts, as
+// the compact chip menu shows them.
 const INPUT_MODE_OPTIONS = [
   { value: "DIALOGUE", label: "Dialogue" },
   { value: "ACTION", label: "Action" },
-  { value: "OOC", label: "OOC / Note" },
-  { value: "DIRECT", label: "Direct / GM" },
+  { value: "OOC", label: "OOC" },
+  { value: "DIRECT", label: "Direct" },
 ];
+
+export const STORY_ROOM_COMPOSER_PLACEHOLDER = "Send a message";
 
 function normalizeMentionSearch(value) {
   return String(value || "")
@@ -135,7 +139,6 @@ function normalizeLocationOptions(options = []) {
 
 function getSpeakerIconKind(option) {
   if (option?.id === "AUTO") return "auto";
-  if (option?.id === "RANDOM") return "random";
   if (option?.participantType === "NARRATOR") return "narrator";
   return "participant";
 }
@@ -164,20 +167,10 @@ function normalizeMentionOptions(options = []) {
     .filter((option) => option.id && option.label);
 }
 
-function getPlaceholder(inputMode) {
-  if (inputMode === "ACTION") {
-    return "Describe an action visible in the scene...";
-  }
-
-  if (inputMode === "DIRECT") {
-    return "Steer pacing, scene direction, or GM-style movement...";
-  }
-
-  if (inputMode === "OOC") {
-    return "Write an OOC note...";
-  }
-
-  return "Write dialogue or natural player input...";
+// One placeholder in every mode (fe/chat-studio item 2); the mode chip
+// beside the field already names the mode.
+function getPlaceholder() {
+  return STORY_ROOM_COMPOSER_PLACEHOLDER;
 }
 
 export function useStoryRoomComposerViewModel({
@@ -196,8 +189,6 @@ export function useStoryRoomComposerViewModel({
   locationMentionOptions = [],
   commandOptions = [],
   onSend,
-  onOpenCast,
-  onOpenState,
   isSending = false,
   disabled = false,
   disabledReason = "",
@@ -294,25 +285,41 @@ export function useStoryRoomComposerViewModel({
       .slice(0, 8);
   }, [activeLocationQuery, normalizedLocationOptions]);
 
-  useEffect(() => {
+  // A changed query resets its highlight, and an emptied draft closes
+  // every menu. Both are adjusted during render (the React-sanctioned
+  // pattern) rather than in effects, so no cascading render and no
+  // setState-in-effect lint error (fe/chat-studio item 2).
+  const mentionQueryKey = activeMentionQuery?.query ?? null;
+  const [seenMentionQueryKey, setSeenMentionQueryKey] = useState(mentionQueryKey);
+  if (mentionQueryKey !== seenMentionQueryKey) {
+    setSeenMentionQueryKey(mentionQueryKey);
     setHighlightedMentionIndex(0);
-  }, [activeMentionQuery?.query]);
+  }
 
-  useEffect(() => {
+  const commandQueryKey = activeCommandQuery?.query ?? null;
+  const [seenCommandQueryKey, setSeenCommandQueryKey] = useState(commandQueryKey);
+  if (commandQueryKey !== seenCommandQueryKey) {
+    setSeenCommandQueryKey(commandQueryKey);
     setHighlightedCommandIndex(0);
-  }, [activeCommandQuery?.query]);
+  }
 
-  useEffect(() => {
+  const locationQueryKey = activeLocationQuery?.query ?? null;
+  const [seenLocationQueryKey, setSeenLocationQueryKey] = useState(locationQueryKey);
+  if (locationQueryKey !== seenLocationQueryKey) {
+    setSeenLocationQueryKey(locationQueryKey);
     setHighlightedLocationIndex(0);
-  }, [activeLocationQuery?.query]);
+  }
 
-  useEffect(() => {
-    if (!String(draft || "")) {
+  const draftKey = String(draft || "");
+  const [seenDraftKey, setSeenDraftKey] = useState(draftKey);
+  if (draftKey !== seenDraftKey) {
+    setSeenDraftKey(draftKey);
+    if (!draftKey) {
       setActiveMentionQuery(null);
       setActiveCommandQuery(null);
       setActiveLocationQuery(null);
     }
-  }, [draft]);
+  }
 
   function updateSuggestionQueries(value, cursorPosition) {
     const normalizedCursor = Number(cursorPosition) || 0;
@@ -498,7 +505,7 @@ export function useStoryRoomComposerViewModel({
 
     if (!option || composerDisabled || sending) return;
 
-    if (["AUTO", "RANDOM"].includes(option.id)) {
+    if (option.id === "AUTO") {
       setNextSpeaker?.(option.id);
       return;
     }
@@ -557,10 +564,14 @@ export function useStoryRoomComposerViewModel({
       composerDisabled || sending || (!draftText.trim() && !autoContinuationAvailable),
     isSending: sending,
     submitIsContinuation: autoContinuationAvailable,
-    submitLabel: autoContinuationAvailable ? "Continue Scene" : "Send",
+    // The send circle's accessible name: an empty draft with Auto active
+    // continues the scene (the former continue yield).
+    submitLabel: autoContinuationAvailable ? "Continue" : "Send",
     submitPendingLabel: autoContinuationAvailable
-      ? "Choosing next responder..."
-      : "Sending...",
+      ? "Choosing the next speaker"
+      : "Sending",
+    sceneImageState: "soon",
+    sceneImageLabel: "Scene image, not available yet",
     onChangeInputMode: (nextValue) => setInputMode?.(nextValue),
     onChangeNextSpeaker: activateSpeaker,
     onChangeDraft: changeDraft,
@@ -578,7 +589,5 @@ export function useStoryRoomComposerViewModel({
     onSelectLocation: selectLocation,
     onDismissLocationSuggestions: () => setActiveLocationQuery(null),
     onSend: submitComposer,
-    onOpenCast: () => onOpenCast?.(),
-    onOpenState: () => onOpenState?.(),
   };
 }

@@ -10,73 +10,65 @@ const read = (relativePath) => fs.readFileSync(path.join(repoRoot, relativePath)
 const view = read(
   "components/studio/story-rooms/story-room-composer/StoryRoomComposer.view.jsx"
 );
+const viewModel = read(
+  "components/studio/story-rooms/story-room-composer/useStoryRoomComposerViewModel.js"
+);
 
-function between(source, startToken, endToken) {
-  const start = source.indexOf(startToken);
-  const end = source.indexOf(endToken, start + startToken.length);
-  assert.notEqual(start, -1, `missing start token: ${startToken}`);
-  assert.notEqual(end, -1, `missing end token: ${endToken}`);
-  return source.slice(start, end);
-}
+// fe/chat-studio item 2 (12 Sep 2026): one composer bar at every width.
 
-test("mobile composer stays in Story chat flow while the chat menu keeps its opaque panel", () => {
-  const mobile = between(view, "function MobileComposer({", "function MobileResponderPicker(");
-  const desktop = between(view, "function DesktopComposer({", "function MobileComposer({");
-
-  assert.match(mobile, /relative z-50 shrink-0[^\n]+bg-transparent/);
-  assert.doesNotMatch(mobile, /fixed bottom-0 left-0 right-0/);
-  assert.match(mobile, /rounded-\[var\(--radius-md\)\][^\n]+bg-\[#080706\]\/95 p-3 shadow-2xl/);
-  assert.match(desktop, /hidden border-t border-white\/10 bg-black\/35 p-4 xl:block/);
+test("composer stays in Story chat flow with safe-area clearance", () => {
+  assert.match(view, /relative z-50 shrink-0 bg-transparent/);
+  assert.match(view, /safe-area-inset-bottom/);
+  assert.doesNotMatch(view, /fixed bottom-0 left-0 right-0/);
+  assert.doesNotMatch(view, /fixed bottom-20 left-3 right-3/);
 });
 
-test("mobile top row owns responder controls plus image settings and send actions", () => {
-  const mobile = between(view, "function MobileComposer({", "function MobileResponderPicker(");
-
-  assert.match(mobile, /ml-auto flex shrink-0 items-center gap-2/);
-  assert.match(mobile, /Generate scene image soon/);
-  assert.match(mobile, /Open tools/);
-  assert.match(mobile, /onClick=\{\(\) => onSend\?\.\(\)\}/);
-  assert.match(mobile, /ParticipantMentionTextarea/);
+test("one bar replaces the desktop and mobile compositions", () => {
+  assert.doesNotMatch(view, /function DesktopComposer|function MobileComposer/);
+  assert.doesNotMatch(view, /MobileToolsDrawer|MobileResponderPicker|DisabledToolButton/);
+  assert.doesNotMatch(view, /xl:block|xl:hidden/);
+  assert.match(view, /function SpeakerCircle/);
+  assert.match(view, /function ParticipantMentionTextarea/);
 });
 
-test("Random is suppressed only from the mobile speaker projection", () => {
-  const mobile = between(view, "function MobileComposer({", "function MobileResponderPicker(");
-  const desktop = between(view, "function DesktopComposer({", "function MobileComposer({");
-
-  assert.match(mobile, /filter\(\(option\) => option\?\.id !== "RANDOM"\)/);
-  assert.doesNotMatch(mobile, /options=\{nextSpeakerOptions\}[\s\S]*selectedId=\{nextSpeaker\}/);
-  assert.match(desktop, /options=\{nextSpeakerOptions\}/);
+test("row one holds cast circles, the Auto circle, the mode chip, and the scene image seat", () => {
+  assert.match(view, /castOptions\.map\(\(option\) => \(/);
+  assert.match(view, /option=\{autoOption\}/);
+  assert.match(view, /KitDropdownView/);
+  assert.match(view, /labelMode="replace"/);
+  assert.match(view, /restingValue=\{restingMode\.value\}/);
+  assert.match(view, /disabled=\{sceneImageState !== "ready"\}/);
+  assert.match(view, /aria-pressed=\{active\}/);
+  assert.match(view, /ring-2 ring-\[var\(--gold-action\)\]/);
 });
 
-test("more than two responders collapse to one 3+ mobile overflow control", () => {
-  const mobile = between(view, "function MobileComposer({", "function MobileResponderPicker(");
-
-  assert.match(mobile, /const responderOverflow = responderOptions\.length > 2/);
-  assert.match(mobile, /const visibleResponderOptions = responderOverflow \? \[\] : responderOptions/);
-  assert.match(mobile, />\s*3\+\s*<\/button>/);
-  assert.match(mobile, /setResponderPickerOpen\(true\)/);
+test("row two is the growing field and the gold send circle", () => {
+  assert.match(view, /rows=\{1\}/);
+  assert.match(view, /max-h-\[220px\]/);
+  assert.match(view, /bg-\[var\(--step-below\)\]/);
+  assert.match(view, /bg-\[var\(--gold-action\)\] text-\[var\(--tag-fill-ink\)\]/);
+  assert.match(view, /<ArrowUp size=\{20\}/);
+  assert.match(view, /onClick=\{\(\) => onSend\?\.\(\)\}/);
 });
 
-test("overflow responder picker uses display-ready speaker options and the existing responder callback", () => {
-  const mobile = between(view, "function MobileComposer({", "function ParticipantMentionTextarea({");
+test("retired controls and copy are gone", () => {
+  const combined = view + viewModel;
 
-  assert.match(mobile, /function MobileResponderPicker/);
-  assert.match(mobile, /<KitModalFrame[\s\S]*variant="sheet"/);
-  assert.match(mobile, /options=\{responderOptions\}/);
-  assert.match(mobile, /onChangeNextSpeaker\?\.\(speakerId\)/);
-  assert.match(mobile, /option\.avatarUrl/);
-  assert.match(mobile, /option\.label/);
-  assert.doesNotMatch(mobile, /storyRoomClient|fetch\(|createClient|supabase/i);
+  // Patterns are written with \s and a bracket so this file itself never
+  // carries the retired phrases the G3 gate greps for.
+  assert.doesNotMatch(combined, /Next\sSpeaker|Input\sMode|Scene\simage\ssoon|Use\scurrent\sscene|Continue\sScene|Room\sTools|Cast\s\/\sroom/);
+  assert.doesNotMatch(combined, /"RAND[O]M"|iconKind: "random"|random: Shuffle/);
+  assert.doesNotMatch(combined, /onOpenCast|onOpenState/);
+  assert.doesNotMatch(view, /CrestfallSelect|text-pink-300/);
+  assert.doesNotMatch(view, /Mic\b|microphone/i);
 });
 
-test("mobile tools no longer duplicate speaker routing or Random", () => {
-  const tools = between(view, "function MobileToolsDrawer({", "function DisabledToolButton(");
-
-  assert.doesNotMatch(tools, /Next Speaker/);
-  assert.doesNotMatch(tools, /nextSpeakerOptions|onChangeNextSpeaker|RANDOM/);
-  assert.match(tools, /Input Mode/);
-  assert.match(tools, /Cast \/ room/);
-  assert.match(tools, /State/);
+test("view model names the send circle and the placeholder", () => {
+  assert.match(viewModel, /STORY_ROOM_COMPOSER_PLACEHOLDER = "Send a message"/);
+  assert.match(viewModel, /submitLabel: autoContinuationAvailable \? "Continue" : "Send"/);
+  assert.match(viewModel, /sceneImageState: "soon"/);
+  assert.match(viewModel, /PLAYER_YIELD_TO_CHARACTER/);
+  assert.match(viewModel, /PLAYER_YIELD_TO_AUTO/);
 });
 
-console.log("Story Room mobile compact composer diagnostics: 6/6 PASS");
+console.log("Story Room composer bar diagnostics: 6/6 PASS");
