@@ -279,15 +279,19 @@ function getWrapperClassName(surfaceTone) {
 function getArticleClassName(surfaceTone) {
   const base = "rounded-[var(--radius-bubble)] px-[var(--space-4)] py-[var(--space-3)]";
 
+  // Bubble width (brief 4 item 9): 85 percent of the transcript column
+  // at the shipped 700px breakpoint and up (the player's from the right
+  // edge, every other speaker's from the left, the same percentage);
+  // below it the width stays as shipped.
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER) {
-    return `${base} max-w-[86%] min-[700px]:max-w-[70%] bg-[var(--chat-bubble-fill)]`;
+    return `${base} max-w-[86%] min-[700px]:max-w-[85%] bg-[var(--chat-bubble-fill)]`;
   }
 
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
     return `${base} max-w-xl bg-transparent text-center`;
   }
 
-  return `${base} max-w-[86%] min-[700px]:max-w-[70%] bg-[var(--surface-1)]`;
+  return `${base} max-w-[86%] min-[700px]:max-w-[85%] bg-[var(--surface-1)]`;
 }
 
 // Transcript body type (brief 3 item 6, RULED by Brian, replacing brief

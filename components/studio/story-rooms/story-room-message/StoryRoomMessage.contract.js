@@ -1,4 +1,10 @@
-export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.0.0";
+export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.1.0";
+
+// 2.1.0, fe/chat-studio brief 4 item 9 (13 Sep 2026). Presentation
+// only, no prop changed: character, narrator, and player bubbles widen
+// from 70 to 85 percent of the transcript column at the shipped 700px
+// breakpoint and up (the player's from the right edge, the others from
+// the left); below it the 86 percent width stays as shipped.
 
 export const STORY_ROOM_MESSAGE_SURFACE_TONES = Object.freeze({
   PLAYER: "PLAYER",
