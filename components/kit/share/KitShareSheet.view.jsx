@@ -6,10 +6,27 @@
 // (cf-btn recipes); the link bed, a control you read and select, sinks
 // one step below on --bed-deep. Gold only on the primary action and
 // the status chip. One share action: Copy link, the gold primary, full
-// width (follow-up 2: no native share).
+// width (follow-up 2: no native share). Layout (follow-up 2, item 3):
+// an inside margin of one panel step on every side so nothing sits
+// flush to the panel edge, the header inset past the frame's close
+// control, one consistent step between header, preview, link field,
+// and buttons; every button is the recipe's small variant, which the
+// touch floor already lifts to 44px on coarse pointers, hugging its
+// label with the recipe's padding.
 import { Link as LinkIcon } from "lucide-react";
 
 export const KIT_SHARE_SHEET_TITLE_ID = "kit-share-sheet-title";
+
+// The inside margin: one panel step on every side, the top one step
+// more so the grabber and the frame's close control sit in clear
+// space; one consistent step between every block.
+const SHEET_RECIPE =
+  "flex min-w-0 flex-col gap-[var(--space-4)] p-[var(--space-6)] pt-[var(--space-8)]";
+// The header stops short of the frame's close control (44px at
+// space-3 from the right edge), so a long title never runs under it.
+const HEADER_RECIPE = "flex min-w-0 flex-col gap-[var(--space-1)] pr-[var(--space-14)]";
+const TITLE_RECIPE =
+  "break-words font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]";
 
 function Eyebrow() {
   return (
@@ -77,31 +94,32 @@ export default function KitShareSheetView({
 }) {
   if (blockedMessage) {
     return (
-      <div className="flex min-w-0 flex-col gap-[var(--space-4)] p-[var(--space-6)] pt-[var(--space-8)]">
-        <div className="min-w-0 pr-[var(--space-10)]">
+      <div className={SHEET_RECIPE}>
+        <div className={HEADER_RECIPE}>
           <Eyebrow />
-          <h2
-            id={KIT_SHARE_SHEET_TITLE_ID}
-            className="mt-[var(--space-1)] break-words font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
-          >
+          <h2 id={KIT_SHARE_SHEET_TITLE_ID} className={TITLE_RECIPE}>
             {title || "Untitled"}
           </h2>
         </div>
         <p className="text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]">
           {blockedMessage}
         </p>
-        <div className="flex flex-col gap-[var(--space-2)] sm:flex-row">
+        <div className="flex gap-[var(--space-3)] min-[700px]:justify-end">
+          <button
+            type="button"
+            onClick={() => onClose?.()}
+            className="cf-btn cf-btn--secondary cf-btn--sm flex-1 min-[700px]:flex-none"
+          >
+            Close
+          </button>
           <button
             type="button"
             onClick={() => onSubmitForReview?.()}
             disabled={reviewButtonDisabled}
             aria-disabled={reviewButtonDisabled}
-            className="goldring cf-btn cf-btn--primary flex-1 items-center justify-center"
+            className="goldring cf-btn cf-btn--primary cf-btn--sm flex-1 items-center justify-center min-[700px]:flex-none"
           >
             {reviewButtonLabel}
-          </button>
-          <button type="button" onClick={() => onClose?.()} className="cf-btn cf-btn--secondary flex-1">
-            Close
           </button>
         </div>
         {reviewMessage ? (
@@ -116,13 +134,10 @@ export default function KitShareSheetView({
   const showCard = Boolean(hasCard && cardImageSrc);
 
   return (
-    <div className="flex min-w-0 flex-col gap-[var(--space-4)] p-[var(--space-6)] pt-[var(--space-8)]">
-      <div className="min-w-0 pr-[var(--space-10)]">
+    <div className={SHEET_RECIPE}>
+      <div className={HEADER_RECIPE}>
         <Eyebrow />
-        <h2
-          id={KIT_SHARE_SHEET_TITLE_ID}
-          className="mt-[var(--space-1)] break-words font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
-        >
+        <h2 id={KIT_SHARE_SHEET_TITLE_ID} className={TITLE_RECIPE}>
           {title || "Untitled"}
         </h2>
         {byline ? (
@@ -152,7 +167,7 @@ export default function KitShareSheetView({
       <button
         type="button"
         onClick={() => onCopyLink?.()}
-        className="goldring cf-btn cf-btn--primary w-full items-center justify-center gap-[var(--space-1)]"
+        className="goldring cf-btn cf-btn--primary cf-btn--sm w-full items-center justify-center gap-[var(--space-1)]"
       >
         <LinkIcon size={16} aria-hidden="true" />
         Copy link

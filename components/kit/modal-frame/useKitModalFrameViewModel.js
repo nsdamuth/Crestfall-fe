@@ -50,9 +50,16 @@ const VARIANT_ALIGNMENT = {
 // panelClassName still caps the fixed width down (max-width is a
 // different property and never collides). Under 700px the panel
 // stays full width, bottom-anchored (mobile modal law).
+//
+// Panel radius (1.8.0, 13 Sep 2026, fe/share-og follow-up 2): the
+// modal panel's corner radius reads the --panel-radius variable the
+// same way the width reads --panel-width, defaulting to the large
+// step every modal has always had; a caller sets a squarer step
+// through the panelRadius prop (the share sheet takes the medium
+// step) and no second radius utility ever competes with the recipe.
 const PANEL_RECIPE = {
   modal:
-    "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] [--panel-width:64rem] min-[700px]:max-h-[92dvh] min-[700px]:w-[min(var(--panel-width),calc(100vw-var(--space-8)))] min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b min-[700px]:pb-0",
+    "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--panel-radius)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] [--panel-width:64rem] [--panel-radius:var(--radius-lg)] min-[700px]:max-h-[92dvh] min-[700px]:w-[min(var(--panel-width),calc(100vw-var(--space-8)))] min-[700px]:rounded-[var(--panel-radius)] min-[700px]:border-b min-[700px]:pb-0",
   sheet:
     "relative w-full max-w-[100vw] max-h-[92dvh] overflow-x-hidden overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
   // R2/R5 (10 Aug 2026, kit polish 3 pass, plan 1.2): the viewer is
@@ -104,6 +111,7 @@ export function useKitModalFrameViewModel({
   variant = "modal",
   panelClassName = "",
   panelWidth = "",
+  panelRadius = "",
   panelStyle: callerPanelStyle = null,
   hasUnsavedChanges = false,
   sheetGrabber = false,
@@ -169,10 +177,14 @@ export function useKitModalFrameViewModel({
         resolvedVariant === "modal" && typeof panelWidth === "string" && panelWidth.trim()
           ? { "--panel-width": panelWidth.trim() }
           : null;
+      const radiusStyle =
+        resolvedVariant === "modal" && typeof panelRadius === "string" && panelRadius.trim()
+          ? { "--panel-radius": panelRadius.trim() }
+          : null;
       const ownStyle =
         callerPanelStyle && typeof callerPanelStyle === "object" ? callerPanelStyle : null;
-      if (!widthStyle && !ownStyle) return undefined;
-      return { ...(ownStyle || {}), ...(widthStyle || {}) };
+      if (!widthStyle && !radiusStyle && !ownStyle) return undefined;
+      return { ...(ownStyle || {}), ...(radiusStyle || {}), ...(widthStyle || {}) };
     })(),
     ariaLabelledBy: hasOwnLabelledBy
       ? ariaLabelledBy

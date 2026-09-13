@@ -189,6 +189,18 @@ export const kitModalFrameFixtures = [
     },
   },
   {
+    id: "modalMediumRadius",
+    label: "Modal, medium corner step (fe/share-og follow-up 2, item 3)",
+    props: {
+      variant: "modal",
+      panelWidth: "36rem",
+      panelRadius: "var(--radius-md)",
+      ariaLabelledBy: "kit-modal-frame-sheet-title",
+      sheetGrabber: true,
+      children: sheetContent,
+    },
+  },
+  {
     id: "unsavedDismiss",
     label: "Unsaved dismiss confirm (mobile modal law, condition 3)",
     props: {

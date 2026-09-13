@@ -30,10 +30,14 @@ export const KIT_SHARE_SHEET_VIEW_CONTRACT_VERSION = "2.0.0";
  * the clipboard, never decides whether a share carries the card, and
  * never posts the review submission itself.
  *
- * Mounted on KitModalFrame (variant modal, panelWidth 36rem): under
- * 700px the frame is bottom-anchored full width with the grabber and
- * internal scroll; at 700px and up it is a centered 36rem panel. The
- * frame owns the close control and the three dismissal paths.
+ * Mounted on KitModalFrame (variant modal, panelWidth 36rem,
+ * panelRadius the medium step): under 700px the frame is
+ * bottom-anchored full width with the grabber and internal scroll; at
+ * 700px and up it is a centered 36rem panel. The frame owns the close
+ * control and the three dismissal paths. Every button is the recipe's
+ * small variant (follow-up 2): Copy link full width; on a blocked
+ * share Close left and Submit for public review right, equal widths
+ * at 390, right-aligned at 700px and up.
  *
  * @typedef {Object} KitShareSheetViewProps
  * @property {"image"|"video"|"character"|"story"|"adventure"|"profile"|"link"} kind

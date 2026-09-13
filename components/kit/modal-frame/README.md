@@ -1,6 +1,6 @@
 # Kit Modal Frame LOOM package
 
-**Contract:** `KitModalFrame.contract.js` (`1.7.0`; 1.6.0 adds the optional `panelStyle` passthrough, 12 Sep 2026, so the mobile dropdown sheet can set its surface, hairline, and gutter width as theme values; 1.7.0 extends `sheetGrabber` to the modal variant under 700px, 13 Sep 2026, fe/share-og follow-up 1, so the bottom-docked share sheet carries the bar)
+**Contract:** `KitModalFrame.contract.js` (`1.8.0`; 1.8.0 adds the optional `panelRadius` passthrough, 13 Sep 2026, fe/share-og follow-up 2, so the share sheet can take the medium corner step without a competing radius utility; 1.6.0 adds the optional `panelStyle` passthrough, 12 Sep 2026, so the mobile dropdown sheet can set its surface, hairline, and gutter width as theme values; 1.7.0 extends `sheetGrabber` to the modal variant under 700px, 13 Sep 2026, fe/share-og follow-up 1, so the bottom-docked share sheet carries the bar)
 
 ## Purpose
 

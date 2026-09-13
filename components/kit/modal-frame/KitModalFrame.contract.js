@@ -1,4 +1,4 @@
-export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.7.0";
+export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.8.0";
 
 /**
  * Stable portable UI boundary for the unified modal frame kit piece
@@ -77,6 +77,13 @@ export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.7.0";
  *   ("Discard changes?", Keep editing / Discard, B5 danger-fill
  *   recipe on the destructive action) instead of closing immediately.
  *   With the default false, dismissal behavior is unchanged.
+ * @property {string} [panelRadius] added 1.8.0, 13 Sep 2026
+ *   (fe/share-og follow-up 2, item 3). A CSS length or var() for the
+ *   modal panel's corner radius, landing as the --panel-radius custom
+ *   property the recipe reads (top corners under 700px, all four at
+ *   700px and up). Default empty: the recipe's own large step, so
+ *   every existing modal renders as before. Ignored by the sheet and
+ *   viewer variants.
  * @property {boolean} [sheetGrabber] added 1.3.0, 23 Aug 2026
  *   (build-0823 pass 2). Default false. When true and variant is
  *   "sheet", renders a small decorative grabber bar above the sheet

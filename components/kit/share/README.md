@@ -81,16 +81,23 @@ diagnostics:loom:share`).
   `--bed-deep` (a control you read sinks one step below), Copy link
   (the gold primary, full width, 44px), and a status chip (Link
   copied, Share unavailable) that clears after 1.6 seconds.
-- Mounted on `KitModalFrame` variant modal at 36rem, a popup modal at
+- Mounted on `KitModalFrame` variant modal at 36rem on the frame's
+  medium corner step (`panelRadius`, follow-up 2), a popup modal at
   every width: bottom-docked full width under 700px with the grabber
   and internal scroll, a centered fixed-width panel at 700px and up.
+  An inside margin of one panel step on every side; header, preview,
+  link field, and buttons one consistent step apart; every button the
+  recipe's small variant (44px on coarse pointers through the touch
+  floor), hugging its label.
   The frame owns the close control and every dismissal path. The card
   preview keeps its 1200 by 630 ratio inside the panel and never
   overflows at 390; the title breaks long words; the link field never
   widens the panel.
-- A blocked share renders the eyebrow, the title, the sentence, Submit
-  for public review (gold primary), and Close (secondary), with the
-  failure line beneath when the submission fails.
+- A blocked share renders the eyebrow, the title, the sentence, then
+  Close (secondary, left) and Submit for public review (gold primary,
+  right): the pair fills the row with equal widths at 390 and sits
+  right-aligned hugging its labels at 700px and up, with the failure
+  line beneath when the submission fails.
 
 ## Boundary
 
