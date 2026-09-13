@@ -41,3 +41,17 @@ test("the copy carries no coin number and the View is stateless presentation", (
   assert.doesNotMatch(view, /useEffect|fetch\(|navigator\.|window\.|href=/);
   assert.match(view, /InfoTip/);
 });
+
+// Follow-up 2, item 4: one left-aligned line, label then number then tip.
+test("the row reads label, number, tip left to right with nothing right-justified", () => {
+  const view = read("KitReferralCounter.view.jsx");
+  assert.doesNotMatch(view, /justify-between|justify-end|ml-auto/);
+  assert.match(view, /justify-start/);
+  const labelAt = view.indexOf("{label}");
+  const countAt = view.indexOf("{count}");
+  const tipAt = view.indexOf("<InfoTip");
+  assert.ok(labelAt > -1 && labelAt < countAt && countAt < tipAt);
+  assert.match(view, /gap-\[var\(--space-2\)\]/);
+  assert.match(view, /text-\[length:var\(--text-body\)\][^"]*text-\[var\(--ink\)\]/);
+  assert.equal(formatReferralCount(1284000), "1,284,000");
+});
