@@ -1,7 +1,16 @@
 export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
-  "story-room-chat-shell.view.v4.2";
+  "story-room-chat-shell.view.v4.3";
 
 /**
+ * v4.3, fe/chat-studio review round 6 (13 Sep 2026), additive:
+ * `onRequestDeleteRoom` backs a red trash control (Trash2, the bare
+ * icon recipe, --status-danger ink) at the right end of the details
+ * rail's toggle row while the rail is open, and at the top right of
+ * the details sheet below md; it opens the existing "Delete this
+ * story?" confirm. The details rail's three-dot menu is retired
+ * (details rail contract 1.6.0), and `detailsRailProps` no longer
+ * carries `onDeleteRoom` or `isDeletingRoom`.
+ *
  * v4.2, fe/chat-studio brief 4 (13 Sep 2026), additive. Item 3:
  * `storyListProps` carries `newChat` (display-ready button state) and
  * the ViewModel takes `newChatLaunch`, the launch controller the
@@ -98,7 +107,7 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {{label: string, avatarUrl: string}|null} primaryCharacter The first Character responder, for the mobile bar circle.
  * @property {string} backHref The mobile bar's back link, the Stories page.
  * @property {Object} storyListProps { currentRoomId, refetchKey, newChat }
- * @property {Object} detailsRailProps StoryRoomDetailsRail binding props (room, cast, messages, castPanelProps, statePanelProps, runtimeMechanicsPanelProps, chatColorProps, onDeleteRoom, isDeletingRoom, deleteError).
+ * @property {Object} detailsRailProps StoryRoomDetailsRail binding props (room, cast, messages, castPanelProps, statePanelProps, runtimeMechanicsPanelProps, chatColorProps, deleteError).
  * @property {Object} mobileDetailsRailProps The same bag for the right sheet; its cast roster closes the sheet on a pick.
  * @property {"stories"|"details"|null} mobilePanel
  * @property {"COMMANDS"|"HELP"|null} composerHelpPanel
@@ -118,6 +127,7 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {() => void} onCloseMobilePanel
  * @property {boolean} isConfirmingDeleteRoom
  * @property {boolean} isDeletingRoom
+ * @property {() => void} onRequestDeleteRoom Opens the delete confirm from the trash control (review round 6).
  * @property {() => void} onCloseComposerHelpPanel
  * @property {import("react").ElementType} ComposerComponent
  * @property {import("react").ElementType} DetailsRailComponent

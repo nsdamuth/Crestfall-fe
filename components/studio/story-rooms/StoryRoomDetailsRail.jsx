@@ -27,8 +27,6 @@ export default function StoryRoomDetailsRail({
   statePanelProps = {},
   runtimeMechanicsPanelProps = null,
   chatColorProps = null,
-  onDeleteRoom = null,
-  isDeletingRoom = false,
   deleteError = "",
   autoOpenViewer = false,
 }) {
@@ -37,8 +35,6 @@ export default function StoryRoomDetailsRail({
     cast,
     messages,
     chatColorProps,
-    onDeleteRoom,
-    isDeletingRoom,
     deleteError,
     autoOpenViewer,
   });

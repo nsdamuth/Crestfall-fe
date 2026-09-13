@@ -1,8 +1,6 @@
 "use client";
 
-import { Check, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
-
-import { MENU_PANEL_RECIPE } from "@/components/kit/form-field/menuRecipe";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 
 import StoryRoomMark from "./StoryRoomMark";
 
@@ -13,7 +11,8 @@ const ROW_CLASS =
   "flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-4)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] transition-colors duration-[var(--dur-hover)] hover:bg-[var(--step-above)]";
 
 // The right rail (fe/chat-studio item 6, 12 Sep 2026): gallery on top,
-// then title with the three-dot menu, the rating and visibility chips,
+// then the title (the three-dot menu retired in review round 6; Delete
+// story is the chat shell's trash control), the rating and visibility chips,
 // byline and description when the Chassis serves them, Export and Share,
 // then the drill-in rows. A drill-in replaces the rail content in place
 // under a 44px back row. The same View renders inside the right sheet
@@ -27,7 +26,6 @@ export default function StoryRoomDetailsRailView({
   onToggleDescription = null,
   gallery = null,
   viewerSlot = null,
-  menu = null,
   deleteError = "",
   actionsSlot = null,
   rows = [],
@@ -72,12 +70,12 @@ export default function StoryRoomDetailsRailView({
         <Gallery gallery={gallery} viewerSlot={viewerSlot} />
 
         <div className="px-[var(--space-4)] pt-[var(--space-4)]">
-          <div className="flex items-start gap-[var(--space-2)]">
-            <h2 className="min-w-0 flex-1 font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]">
-              {title}
-            </h2>
-            {menu?.items?.length ? <TitleMenu menu={menu} /> : null}
-          </div>
+          {/* Review round 6: the three-dot menu is gone; Delete story is
+              the red trash control the chat shell renders beside the
+              rail toggle (and at the top of the sheet below md). */}
+          <h2 className="font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]">
+            {title}
+          </h2>
 
           {chips.length ? (
             <div className="mt-[var(--space-2)] flex flex-wrap gap-[var(--space-2)]">
@@ -105,22 +103,32 @@ export default function StoryRoomDetailsRailView({
             </p>
           ) : null}
 
+          {/* Description (review round 6): two lines, with See more on
+              the second line after the text. Collapsed, the block is
+              capped at two ui lines and a one-line float pushes the
+              See more control to the right end of the second line, so
+              the copy wraps around it and stops on a whole word;
+              expanded, the block runs free and See less follows the
+              text. No bed, no gradient: the text simply ends where the
+              control begins. */}
           {description ? (
-            <div className="mt-[var(--space-3)]">
-              <p
-                className={`text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] ${
-                  descriptionExpanded ? "" : "line-clamp-3"
-                }`}
-              >
-                {description}
-              </p>
+            <div
+              className={`relative mt-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] ${
+                descriptionExpanded
+                  ? ""
+                  : "max-h-[calc(var(--lh-ui)*2)] overflow-hidden before:float-right before:h-[var(--lh-ui)] before:w-0 before:content-['']"
+              }`}
+            >
               <button
                 type="button"
                 onClick={() => onToggleDescription?.()}
-                className="mt-[var(--space-1)] min-h-[var(--control-md)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)]"
+                className={`touch-manipulation text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)] ${
+                  descriptionExpanded ? "ml-[var(--space-1)]" : "float-right clear-right pl-[var(--space-1)]"
+                }`}
               >
-                {descriptionExpanded ? "See less" : "See more"}
+                {descriptionExpanded ? "See less" : "… See more"}
               </button>
+              <span>{description}</span>
             </div>
           ) : null}
 
@@ -196,12 +204,17 @@ function Gallery({ gallery, viewerSlot = null }) {
           </button>
         )}
 
+        {/* Review round 6: on the end card the back control sits at the
+            top left, off the card's own copy; on an image it stays at
+            the left middle beside the next arrow. */}
         {canGoPrevious ? (
           <button
             type="button"
             onClick={() => gallery?.onPrevious?.()}
             aria-label={showEndCard ? "Back to the images" : "Previous image"}
-            className={`${CIRCLE_BUTTON_CLASS} absolute left-[var(--space-2)] top-1/2 -translate-y-1/2 bg-[var(--panel-glass)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:text-[var(--art-gold)]`}
+            className={`${CIRCLE_BUTTON_CLASS} absolute left-[var(--space-2)] bg-[var(--panel-glass)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:text-[var(--art-gold)] ${
+              showEndCard ? "top-[var(--space-2)]" : "top-1/2 -translate-y-1/2"
+            }`}
           >
             <ChevronLeft size={20} aria-hidden="true" />
           </button>
@@ -271,56 +284,6 @@ function GalleryEndCard({ backgroundSrc = "", href = "" }) {
           </a>
         </div>
       </div>
-    </div>
-  );
-}
-
-// The three-dot menu beside the title on the shared menu recipe. Its
-// one row today is Delete story; the danger ink uses the ruled running
-// text tier because the base danger token as normal text on the glass
-// surface is blocked by the contrast law.
-function TitleMenu({ menu }) {
-  return (
-    <div className="relative shrink-0">
-      <button
-        type="button"
-        onClick={() => menu.onToggle?.()}
-        aria-haspopup="menu"
-        aria-expanded={Boolean(menu.open)}
-        aria-label="More actions"
-        title="More"
-        className={`${CIRCLE_BUTTON_CLASS} bg-[var(--step-above)] text-[var(--ink-dim)] hover:text-[var(--ink)]`}
-      >
-        <MoreHorizontal size={18} aria-hidden="true" />
-      </button>
-
-      {menu.open ? (
-        <>
-          <button
-            type="button"
-            tabIndex={-1}
-            aria-label="Close menu"
-            onClick={() => menu.onClose?.()}
-            className="fixed inset-0 z-40 cursor-default"
-          />
-          <div role="menu" className={`${MENU_PANEL_RECIPE} right-0 top-full mt-[var(--space-1)] w-[12rem]`}>
-            {menu.items.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                role="menuitem"
-                disabled={Boolean(item.disabled)}
-                onClick={() => item.onSelect?.()}
-                className={`flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-sm)] px-[var(--space-3)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] hover:bg-[var(--state-hover-fill)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] ${
-                  item.tone === "danger" ? "text-[var(--status-danger-text)]" : "text-[var(--ink-dim)] hover:text-[var(--ink)]"
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </>
-      ) : null}
     </div>
   );
 }

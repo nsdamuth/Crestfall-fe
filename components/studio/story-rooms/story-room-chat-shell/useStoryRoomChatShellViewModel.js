@@ -699,8 +699,6 @@ export function useStoryRoomChatShellViewModel({
     statePanelProps: desktopStatePanelProps,
     runtimeMechanicsPanelProps,
     chatColorProps,
-    onDeleteRoom: requestDeleteRoom,
-    isDeletingRoom: deletingRoom,
     deleteError,
   };
 
@@ -814,6 +812,9 @@ export function useStoryRoomChatShellViewModel({
     onCloseComposerHelpPanel: closeComposerHelpPanel,
     isConfirmingDeleteRoom,
     isDeletingRoom: deletingRoom,
+    // Review round 6: the red trash control beside the rail toggle (and
+    // at the top of the sheet below md) opens the confirm dialog.
+    onRequestDeleteRoom: requestDeleteRoom,
     onCancelDeleteRoom: cancelDeleteRoom,
     onConfirmDeleteRoom: confirmDeleteRoom,
   };

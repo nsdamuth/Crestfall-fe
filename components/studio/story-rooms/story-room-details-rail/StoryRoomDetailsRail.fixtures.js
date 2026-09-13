@@ -38,12 +38,6 @@ function makeFixture(overrides = {}) {
     descriptionExpanded: false,
     onToggleDescription: noop,
     gallery: makeGallery(),
-    menu: {
-      open: false,
-      onToggle: noop,
-      onClose: noop,
-      items: [{ id: "delete", label: "Delete story", tone: "danger", disabled: false, onSelect: noop }],
-    },
     deleteError: "",
     actionsSlot: null,
     rows: STORY_ROOM_DETAILS_ROWS,
@@ -67,13 +61,10 @@ export const storyRoomDetailsRailWithBylineFixture = makeFixture({
     "A sealed archive opens beneath the city. The Archivist has waited four hundred years for someone to ask the right question, and the wrong one costs a memory. Mara Vale carries the brass key her grandmother never explained. Every door below remembers who opened it.",
 });
 
-export const storyRoomDetailsRailMenuOpenFixture = makeFixture({
-  menu: {
-    open: true,
-    onToggle: noop,
-    onClose: noop,
-    items: [{ id: "delete", label: "Delete story", tone: "danger", disabled: false, onSelect: noop }],
-  },
+export const storyRoomDetailsRailDescriptionExpandedFixture = makeFixture({
+  description:
+    "A sealed archive opens beneath the city. The Archivist has waited four hundred years for someone to ask the right question, and the wrong one costs a memory. Mara Vale carries the brass key her grandmother never explained. Every door below remembers who opened it.",
+  descriptionExpanded: true,
 });
 
 export const storyRoomDetailsRailDeleteErrorFixture = makeFixture({

@@ -1,9 +1,19 @@
-export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.5.0";
+export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.6.0";
 
 /**
  * Stable portable UI boundary for the story chat page's right rail
  * (fe/chat-studio item 6, 12 Sep 2026), also the content of the right
  * sheet below md.
+ *
+ * 1.6.0, fe/chat-studio review round 6 (13 Sep 2026, Brian's browser
+ * review). BREAKING: `menu` (the three-dot menu with Delete story) is
+ * removed, and the ViewModel no longer takes `onDeleteRoom` or
+ * `isDeletingRoom`; Delete story is the chat shell's red trash control
+ * beside the rail toggle (at the top of the sheet below md), opening
+ * the shell's existing "Delete this story?" confirm. `deleteError`
+ * stays. Presentation: the description clamps to two lines with
+ * "See more" on the second line after the text (a float, no bed);
+ * on the end card the back control sits at the top left.
  *
  * 1.5.0, fe/chat-studio review round 5 (13 Sep 2026, Brian's browser
  * review). Item 1, BREAKING on the gallery bag: `viewerIndex`,
@@ -59,8 +69,8 @@ export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.5.0";
  * on a --surface-2 bed with --radius-md corners, inset by --space-3.
  *
  * Order: gallery (featured image, previous and next, thumbnail strip;
- * tap opens the full-screen viewer), title with the three-dot menu
- * (Delete story), rating and visibility chips, byline and description
+ * tap opens the full-screen viewer), title (the three-dot menu retired
+ * in 1.6.0), rating and visibility chips, byline and description
  * when served (CR-067, CR-068), Export and Share, then the drill-in rows
  * Cast, Narrator, World state, Mechanics, Preferences. A drill-in
  * replaces the rail content in place under a 44px back row. No rows for
@@ -81,7 +91,6 @@ export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.5.0";
  * @property {() => void} onToggleDescription
  * @property {{items: StoryRoomMediaItem[], activeIndex: number, showEndCard: boolean, catalogueHref: string, canGoPrevious: boolean, canGoNext: boolean, onSelect: (index: number) => void, onPrevious: () => void, onNext: () => void, viewerItem: StoryRoomMediaItem|null, onOpenViewer: (index?: number) => void, onCloseViewer: () => void}} gallery `showEndCard` shows the View catalogue end card in the featured slot; `catalogueHref` is the creation page it opens ("" when the story resolves to none, in which case no end card exists); `canGoPrevious` and `canGoNext` show the arrows (never wrapping); `viewerItem` is the image the binding shell opens in the community image viewer.
  * @property {import("react").ReactNode} viewerSlot The community image viewer (KitImageViewer), mounted by the binding shell while `gallery.viewerItem` is set; null otherwise.
- * @property {{open: boolean, onToggle: () => void, onClose: () => void, items: Array<{id: string, label: string, tone: "default"|"danger", disabled: boolean, onSelect: () => void}>}} menu
  * @property {string} deleteError
  * @property {import("react").ReactNode} actionsSlot Export and Share, the state panel's live actions.
  * @property {Array<{id: "cast"|"narrator"|"world"|"mechanics"|"preferences", label: string}>} rows

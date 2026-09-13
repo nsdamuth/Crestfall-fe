@@ -171,8 +171,6 @@ export function useStoryRoomDetailsRailViewModel({
   cast = [],
   messages = [],
   chatColorProps = null,
-  onDeleteRoom = null,
-  isDeletingRoom = false,
   deleteError = "",
   autoOpenViewer = false,
 } = {}) {
@@ -203,7 +201,6 @@ export function useStoryRoomDetailsRailViewModel({
     autoOpenViewer && mediaItems.length ? 0 : null
   );
   const [activeDetail, setActiveDetail] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 
   const count = mediaItems.length;
@@ -269,25 +266,9 @@ export function useStoryRoomDetailsRailViewModel({
       onOpenViewer: (index) => setViewerIndex(Math.max(0, Math.min(index ?? safeActiveIndex, count - 1))),
       onCloseViewer: () => setViewerIndex(null),
     },
-    menu: {
-      open: menuOpen,
-      onToggle: () => setMenuOpen((value) => !value),
-      onClose: () => setMenuOpen(false),
-      items: typeof onDeleteRoom === "function"
-        ? [
-            {
-              id: "delete",
-              label: isDeletingRoom ? "Deleting" : "Delete story",
-              tone: "danger",
-              disabled: Boolean(isDeletingRoom),
-              onSelect: () => {
-                setMenuOpen(false);
-                onDeleteRoom?.();
-              },
-            },
-          ]
-        : [],
-    },
+    // Review round 6: the three-dot menu is gone. Delete story is the
+    // chat shell's red trash control beside the rail toggle (its own
+    // confirm dialog); the rail keeps only the delete error line.
     deleteError: normalizeText(deleteError),
     rows: STORY_ROOM_DETAILS_ROWS,
     activeDetail,
