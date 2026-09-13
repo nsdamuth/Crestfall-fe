@@ -29,21 +29,57 @@ export function buildNextSpeakerOptions(speakerOptions = []) {
   ];
 }
 
-export function buildStoryRoomLayoutClass({ leftOpen, rightOpen }) {
-  return [
-    "grid min-h-0 flex-1 gap-5",
-    leftOpen && rightOpen
-      ? "xl:grid-cols-[280px_minmax(0,1fr)_320px]"
-      : leftOpen && !rightOpen
-        ? "xl:grid-cols-[280px_minmax(0,1fr)_44px]"
-        : !leftOpen && rightOpen
-          ? "xl:grid-cols-[44px_minmax(0,1fr)_320px]"
-          : "xl:grid-cols-[44px_minmax(0,1fr)_44px]",
-  ].join(" ");
+export const STORY_ROOM_BACK_HREF = "/studio/v2/stories";
+
+// Rail geometry lives in app/design-system.css (.cf-story-room-grid,
+// decision K1); the ViewModel only names the state.
+export function buildStoryRoomRailsState({ leftOpen, rightOpen }) {
+  if (leftOpen && rightOpen) return "both";
+  if (leftOpen) return "left";
+  if (rightOpen) return "right";
+  return "none";
 }
+
+const MD_UP_QUERY = "(min-width: 48rem)";
+const XL_UP_QUERY = "(min-width: 80rem)";
+
+// Same shape as components/kit/modal-frame/usePhoneWidth.js: read once
+// at mount, subscribe for changes, no setState in the effect body.
+function useMediaQueryMatch(query) {
+  const [matches, setMatches] = useState(
+    () => typeof window !== "undefined" && window.matchMedia(query).matches
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const mediaQuery = window.matchMedia(query);
+
+    function onChange(event) {
+      setMatches(event.matches);
+    }
+
+    mediaQuery.addEventListener("change", onChange);
+    return () => {
+      mediaQuery.removeEventListener("change", onChange);
+    };
+  }, [query]);
+
+  return matches;
+}
+
+const NOOP_CHROME = Object.freeze({
+  leftOwner: null,
+  claimLeft: () => {},
+  releaseLeft: () => {},
+});
 
 function normalizeChat(chat) {
   return chat && typeof chat === "object" ? chat : {};
+}
+
+function normalizeChrome(chrome) {
+  return chrome && typeof chrome === "object" ? chrome : NOOP_CHROME;
 }
 
 
@@ -63,8 +99,10 @@ export function useStoryRoomChatShellViewModel({
   chat,
   account,
   onRoomDeleted,
+  chrome,
 } = {}) {
   const safeChat = normalizeChat(chat);
+  const safeChrome = normalizeChrome(chrome);
   const { chatAllowed, chatUnavailableReason } =
     getChatCapabilityPresentation(account);
   const {
@@ -108,17 +146,26 @@ export function useStoryRoomChatShellViewModel({
     statusSurfaceError = "",
   } = safeChat;
 
-  const safeSpeakerOptions = Array.isArray(speakerOptions)
-    ? speakerOptions
-    : [];
+  const safeSpeakerOptions = useMemo(
+    () => (Array.isArray(speakerOptions) ? speakerOptions : []),
+    [speakerOptions]
+  );
 
   const [inputMode, setInputMode] = useState("DIALOGUE");
   const [nextSpeaker, setNextSpeaker] = useState("AUTO");
   const [draft, setDraft] = useState("");
   const [participantMentions, setParticipantMentions] = useState([]);
   const [locationMentions, setLocationMentions] = useState([]);
-  const [leftOpen, setLeftOpen] = useState(true);
+  // Rails (decision B1): the story list starts closed and the details
+  // rail open at md and up; below xl the two are mutually exclusive.
+  // The left rail is owned through the studio chrome context (J1): open
+  // means the page holds the left edge and the primary nav reads
+  // collapsed; the nav expanding hands the edge back and closes it.
+  const isMdUp = useMediaQueryMatch(MD_UP_QUERY);
+  const isXlUp = useMediaQueryMatch(XL_UP_QUERY);
   const [rightOpen, setRightOpen] = useState(true);
+  const leftOpen = isMdUp && safeChrome.leftOwner === "page";
+  const { claimLeft, releaseLeft } = safeChrome;
   const [mobilePanel, setMobilePanel] = useState(null);
   const [deletingRoom, setDeletingRoom] = useState(false);
   const [deleteError, setDeleteError] = useState("");
@@ -137,10 +184,46 @@ export function useStoryRoomChatShellViewModel({
     [cast]
   );
 
-  useEffect(() => {
+  // A new room resets the pre-first-message state. Adjusted during
+  // render (the React-sanctioned pattern) rather than in an effect, so
+  // no cascading render and no setState-in-effect lint error.
+  const [seenRoomId, setSeenRoomId] = useState(roomId);
+  if (roomId !== seenRoomId) {
+    setSeenRoomId(roomId);
     setFirstMessageSubmitted(false);
     setPlayerCharacterPickerOpen(false);
-  }, [roomId]);
+  }
+
+  // Leaving the route hands the left edge back to the primary nav.
+  useEffect(() => () => releaseLeft?.(), [releaseLeft]);
+
+  const toggleLeftPanel = useCallback(() => {
+    if (leftOpen) {
+      releaseLeft?.();
+      return;
+    }
+
+    claimLeft?.("page");
+    if (!isXlUp) setRightOpen(false);
+  }, [claimLeft, isXlUp, leftOpen, releaseLeft]);
+
+  const toggleRightPanel = useCallback(() => {
+    setRightOpen((current) => {
+      const next = !current;
+      if (next && !isXlUp && leftOpen) releaseLeft?.();
+      return next;
+    });
+  }, [isXlUp, leftOpen, releaseLeft]);
+
+  const primaryCharacter = useMemo(() => {
+    const option = safeSpeakerOptions.find(
+      (candidate) => candidate?.participantType === "CHARACTER"
+    );
+
+    return option
+      ? { label: option.label || "", avatarUrl: option.avatarUrl || "" }
+      : null;
+  }, [safeSpeakerOptions]);
 
   const nextSpeakerOptions = useMemo(
     () => buildNextSpeakerOptions(safeSpeakerOptions),
@@ -170,19 +253,15 @@ export function useStoryRoomChatShellViewModel({
     );
   }, [chatParticipantMentionOptions, safeSpeakerOptions]);
 
-  useEffect(() => {
-    if (nextSpeaker === "AUTO" || nextSpeaker === "RANDOM") {
-      return;
-    }
-
-    const selectedResponderStillAvailable = safeSpeakerOptions.some(
-      (option) => option?.id === nextSpeaker
-    );
-
-    if (!selectedResponderStillAvailable) {
-      setNextSpeaker("AUTO");
-    }
-  }, [nextSpeaker, safeSpeakerOptions]);
+  // A chosen responder that left the cast falls back to Auto, adjusted
+  // during render for the same reason as the room reset above.
+  const selectedResponderStillAvailable =
+    nextSpeaker === "AUTO" ||
+    nextSpeaker === "RANDOM" ||
+    safeSpeakerOptions.some((option) => option?.id === nextSpeaker);
+  if (!selectedResponderStillAvailable) {
+    setNextSpeaker("AUTO");
+  }
 
   const selectNextResponder = useCallback(
     (participantId, { closeMobile = false } = {}) => {
@@ -322,7 +401,6 @@ export function useStoryRoomChatShellViewModel({
     room,
     cast,
     roomId,
-    onClose: () => setLeftOpen(false),
     onDeleteRoom: requestDeleteRoom,
     isDeletingRoom: deletingRoom,
     deleteError,
@@ -375,9 +453,16 @@ export function useStoryRoomChatShellViewModel({
 
   return {
     room,
-    layoutClass: buildStoryRoomLayoutClass({ leftOpen, rightOpen }),
+    railsState: buildStoryRoomRailsState({ leftOpen, rightOpen }),
     leftOpen,
     rightOpen,
+    swipeEnabled: !isMdUp,
+    primaryCharacter,
+    backHref: STORY_ROOM_BACK_HREF,
+    storyListProps: {
+      currentRoomId: roomId,
+      refetchKey: Array.isArray(messages) ? messages.length : 0,
+    },
     mobilePanel,
     composerHelpPanel,
     commands,
@@ -445,7 +530,7 @@ export function useStoryRoomChatShellViewModel({
       onRevokeTemporaryShare: revokeTemporaryShare,
       onCreatePersistentShare: createPersistentShare,
       onRevokePersistentShare: revokePersistentShare,
-      onClose: () => setRightOpen(false),
+      onClose: toggleRightPanel,
     },
     mobileStatePanelProps: {
       room,
@@ -458,10 +543,8 @@ export function useStoryRoomChatShellViewModel({
       onRevokePersistentShare: revokePersistentShare,
     },
     runtimeMechanicsPanelProps,
-    onToggleLeftPanel: () => setLeftOpen((current) => !current),
-    onToggleRightPanel: () => setRightOpen((current) => !current),
-    onShowLeftPanel: () => setLeftOpen(true),
-    onShowRightPanel: () => setRightOpen(true),
+    onToggleLeftPanel: toggleLeftPanel,
+    onToggleRightPanel: toggleRightPanel,
     onOpenMobileCast: () => setMobilePanel("cast"),
     onOpenMobileState: () => setMobilePanel("state"),
     onCloseMobilePanel: closeMobilePanel,

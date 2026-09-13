@@ -27,16 +27,22 @@ test("mobile dock is suppressed by the StudioMobileNav binding only for active S
   assert.match(studioShellView, /reserveMobileDockSpace \? "pb-24" : "pb-0"/);
 });
 
-test("Story chat claims the mobile content width and height without changing desktop rails", () => {
+test("Story chat runs flush and full height through the shell flush mode, not negative margins", () => {
   const view = read("components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx");
+  const studioShell = read("components/studio/StudioShell.jsx");
+  const studioShellView = read("components/studio/studio-shell/StudioShell.view.jsx");
 
-  assert.match(view, /-mx-\[var\(--space-5\)\]/);
-  assert.match(view, /-mt-\[var\(--topbar-h\)\]/);
-  assert.match(view, /lg:mt-0/);
-  assert.match(view, /sm:-mx-\[var\(--space-8\)\]/);
-  assert.match(view, /h-\[100dvh\]/);
-  assert.match(view, /xl:rounded-\[var\(--radius-lg\)\]/);
-  assert.match(view, /xl:border/);
+  assert.match(view, /flex h-\[100dvh\] md:h-\[calc\(100dvh-var\(--topbar-h\)\)\] min-h-0 flex-col overflow-hidden/);
+  assert.doesNotMatch(view, /-mx-\[var\(--space-5\)\]/);
+  assert.doesNotMatch(view, /-mt-\[var\(--topbar-h\)\]/);
+  assert.doesNotMatch(view, /sm:-mx-\[var\(--space-8\)\]/);
+  assert.doesNotMatch(view, /xl:rounded-\[var\(--radius-lg\)\]/);
+  assert.doesNotMatch(view, /xl:border/);
+  assert.match(view, /cf-story-room-grid/);
+  assert.match(view, /data-rails=\{railsState\}/);
+  assert.match(studioShell, /flush: storyChat/);
+  assert.match(studioShell, /hiddenBelowMd=\{storyChat\}/);
+  assert.match(studioShellView, /flex min-h-0 flex-col overflow-hidden p-0/);
 });
 
 test("mobile composer replaces the dock in Story chat flow with safe-area clearance", () => {

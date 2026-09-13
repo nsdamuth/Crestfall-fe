@@ -579,6 +579,49 @@
   }
 }
 
+/* --- STORY CHAT GRID, fe/chat-studio item 1 (K1) -------------
+   The story chat shell stamps data-rails on its cf-story-room-grid
+   element with the current rail state, so a rail opening changes
+   one attribute and no class string in JS. Below md the route is
+   one column and the page's own 44px bar owns rail access. At md
+   and up the two rails are 17.5rem and 20rem (the pre-existing
+   280 and 320) and a closed rail is the 44px control floor.       */
+
+.cf-story-room-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 48rem) {
+  .cf-story-room-grid[data-rails="none"] {
+    grid-template-columns: var(--control-md) minmax(0, 1fr) var(--control-md);
+  }
+
+  .cf-story-room-grid[data-rails="left"] {
+    grid-template-columns: 17.5rem minmax(0, 1fr) var(--control-md);
+  }
+
+  .cf-story-room-grid[data-rails="right"] {
+    grid-template-columns: var(--control-md) minmax(0, 1fr) 20rem;
+  }
+
+  .cf-story-room-grid[data-rails="both"] {
+    grid-template-columns: 17.5rem minmax(0, 1fr) 20rem;
+  }
+}
+
+/* --- TOP BAR, HIDDEN BELOW MD ON STORY CHAT (I1) --------------
+   StudioTopBar stamps data-studio-top-bar-hidden-below-md when the
+   Binding Shell says the route is story chat. Under md that page
+   renders its own 44px bar, so the sticky bar steps aside; at md
+   and up it stays on every route.                                 */
+
+@media (max-width: 47.99rem) {
+  [data-studio-top-bar-hidden-below-md] {
+    display: none;
+  }
+}
+
 /* --- CREATE ACTION BAR, package MOBILE-SHELLS ----------------
    The create pages carry their primary action (Save Draft) in a
    side panel or a page header row. Below the breakpoint that

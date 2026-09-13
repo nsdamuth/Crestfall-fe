@@ -58,9 +58,15 @@ test("mobile drawer is a directional side sheet with reverse-swipe and fallback 
 
 test("gesture layer remains presentation-only and mobile scoped", () => {
   const view = read("components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx");
+  const vm = read("components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js");
   const gesture = read("components/studio/story-rooms/story-room-chat-shell/storyRoomMobileSwipe.js");
 
-  assert.match(view, /matchMedia\("\(min-width: 1280px\)"\)/);
+  // The viewport read moved into the ViewModel (fe/chat-studio item 1):
+  // rails exist at md and up, so swipes are enabled only below 48rem.
+  assert.doesNotMatch(view, /matchMedia/);
+  assert.match(view, /if \(!swipeEnabled\) return;/);
+  assert.match(vm, /\(min-width: 48rem\)/);
+  assert.match(vm, /swipeEnabled: !isMdUp/);
   assert.match(gesture, /button,a,input,textarea,select/);
   assert.doesNotMatch(gesture, /storyRoomClient|fetch\(|services\/api|supabase|PostGraphile/i);
 });

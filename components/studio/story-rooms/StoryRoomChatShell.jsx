@@ -1,16 +1,19 @@
 "use client";
 
 import { useCallback } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import DefaultPlayerCharacterPickerModal from "@/components/studio/account/DefaultPlayerCharacterPickerModal";
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
+import { useStudioChrome } from "@/components/studio/StudioChromeProvider";
 import StoryRoomCastPanel from "@/components/studio/story-rooms/StoryRoomCastPanel";
 import StoryRoomComposer from "@/components/studio/story-rooms/StoryRoomComposer";
 import StoryRoomMobileDrawer from "@/components/studio/story-rooms/StoryRoomMobileDrawer";
 import StoryRoomRuntimeMechanicsPanel from "@/components/studio/story-rooms/StoryRoomRuntimeMechanicsPanel";
 import StoryRoomStatePanel from "@/components/studio/story-rooms/StoryRoomStatePanel";
 import StoryRoomStatusSurfaceHost from "@/components/studio/story-rooms/story-room-chat-shell/StoryRoomStatusSurfaceHost";
+import StoryRoomStoryList from "@/components/studio/story-rooms/StoryRoomStoryList";
 import StoryRoomTranscript from "@/components/studio/story-rooms/StoryRoomTranscript";
 import useStoryRoomChat from "@/components/studio/story-rooms/hooks/useStoryRoomChat";
 
@@ -21,6 +24,9 @@ export default function StoryRoomChatShell({ roomId }) {
   const router = useRouter();
   const chat = useStoryRoomChat(roomId);
   const account = useStudioAccount();
+  // One left panel at a time: the story list rail claims the left edge
+  // through the studio chrome context and the primary nav collapses.
+  const chrome = useStudioChrome();
 
   const onRoomDeleted = useCallback(() => {
     router.push("/studio/v2/stories");
@@ -31,6 +37,7 @@ export default function StoryRoomChatShell({ roomId }) {
     chat,
     account,
     onRoomDeleted,
+    chrome,
   });
 
   return (
@@ -43,7 +50,9 @@ export default function StoryRoomChatShell({ roomId }) {
         RuntimeMechanicsPanelComponent={StoryRoomRuntimeMechanicsPanel}
         StatePanelComponent={StoryRoomStatePanel}
         StatusSurfaceHostComponent={StoryRoomStatusSurfaceHost}
+        StoryListComponent={StoryRoomStoryList}
         TranscriptComponent={StoryRoomTranscript}
+        LinkComponent={Link}
       />
 
       {viewProps.playerCharacterPickerProps ? (

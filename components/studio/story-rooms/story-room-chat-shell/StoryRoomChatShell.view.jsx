@@ -1,4 +1,5 @@
 import {
+  ChevronLeft,
   Command,
   HelpCircle,
   Keyboard,
@@ -7,6 +8,7 @@ import {
   PanelLeftOpen,
   PanelRightClose,
   PanelRightOpen,
+  Settings,
 } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
@@ -20,11 +22,20 @@ import {
 const EYEBROW_CLASS =
   "text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
+// Three flush columns at md and up (fe/chat-studio item 1, 12 Sep 2026):
+// the grid geometry lives in app/design-system.css under
+// .cf-story-room-grid[data-rails], the rails collapse to one bare 44px
+// edge toggle each, and below md the page is one column under its own
+// 44px bar. The View owns no viewport reads: `swipeEnabled` arrives from
+// the ViewModel.
 export default function StoryRoomChatShellView({
   room = {},
-  layoutClass = "grid min-h-0 flex-1 gap-5",
-  leftOpen = true,
+  railsState = "right",
+  leftOpen = false,
   rightOpen = true,
+  swipeEnabled = false,
+  primaryCharacter = null,
+  backHref = "/studio/v2/stories",
   mobilePanel = null,
   composerHelpPanel = null,
   commands = [],
@@ -33,6 +44,7 @@ export default function StoryRoomChatShellView({
   statusSurfaceError = "",
   castPanelProps = {},
   mobileCastPanelProps = {},
+  storyListProps = {},
   transcriptProps = {},
   composerProps = {},
   desktopStatePanelProps = {},
@@ -40,8 +52,6 @@ export default function StoryRoomChatShellView({
   runtimeMechanicsPanelProps = null,
   onToggleLeftPanel,
   onToggleRightPanel,
-  onShowLeftPanel,
-  onShowRightPanel,
   onOpenMobileCast,
   onOpenMobileState,
   onCloseMobilePanel,
@@ -55,12 +65,12 @@ export default function StoryRoomChatShellView({
   RuntimeMechanicsPanelComponent,
   StatePanelComponent,
   StatusSurfaceHostComponent,
+  StoryListComponent,
   TranscriptComponent,
+  LinkComponent = "a",
 }) {
   function handleSwipeStart(event) {
-    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1280px)").matches) {
-      return;
-    }
+    if (!swipeEnabled) return;
 
     if (isStoryRoomSwipeInteractiveTarget(event.target)) {
       event.currentTarget.dataset.storyRoomSwipeStartX = "";
@@ -103,24 +113,33 @@ export default function StoryRoomChatShellView({
     <section
       onTouchStart={handleSwipeStart}
       onTouchEnd={handleSwipeEnd}
-      className="-mx-[var(--space-5)] -mt-[var(--topbar-h)] flex h-[100dvh] min-h-0 flex-col overflow-hidden sm:-mx-[var(--space-8)] lg:mx-0 lg:mt-0 lg:h-[calc(100dvh-5rem)] xl:h-[calc(100vh-7rem)]"
+      className="flex h-[100dvh] md:h-[calc(100dvh-var(--topbar-h))] min-h-0 flex-col overflow-hidden"
     >
-      <div className={layoutClass}>
-        <div className="hidden min-h-0 xl:block">
-          {leftOpen ? (
-            CastPanelComponent ? (
-              <CastPanelComponent {...castPanelProps} />
-            ) : null
-          ) : (
-            <PanelRevealButton
-              side="left"
-              label="Show Cast"
-              onClick={onShowLeftPanel}
-            />
-          )}
+      <StoryChatMobileBar
+        title={room?.title}
+        primaryCharacter={primaryCharacter}
+        backHref={backHref}
+        onOpenSettings={onOpenMobileState}
+        LinkComponent={LinkComponent}
+      />
+
+      <div className="cf-story-room-grid min-h-0 flex-1" data-rails={railsState}>
+        <div className="hidden min-h-0 flex-col border-r border-[var(--line-whisper)] bg-[var(--surface-1)] md:flex">
+          <RailEdgeToggle
+            side="left"
+            open={leftOpen}
+            onClick={onToggleLeftPanel}
+            openLabel="Open story list"
+            closeLabel="Close story list"
+          />
+          {leftOpen && StoryListComponent ? (
+            <div className="min-h-0 flex-1">
+              <StoryListComponent {...storyListProps} />
+            </div>
+          ) : null}
         </div>
 
-        <main className="flex min-h-0 flex-col overflow-hidden bg-[var(--surface-1)] xl:rounded-[var(--radius-lg)] xl:border xl:border-[var(--line-whisper)]">
+        <main className="flex min-h-0 min-w-0 flex-col overflow-hidden bg-[var(--surface-1)]">
           {StatusSurfaceHostComponent ? (
             <StatusSurfaceHostComponent
               surfaces={statusSurfaces}
@@ -128,14 +147,6 @@ export default function StoryRoomChatShellView({
               room={room}
             />
           ) : null}
-
-          <StoryRoomHeader
-            room={room}
-            leftOpen={leftOpen}
-            rightOpen={rightOpen}
-            onToggleLeftPanel={onToggleLeftPanel}
-            onToggleRightPanel={onToggleRightPanel}
-          />
 
           {TranscriptComponent ? (
             <TranscriptComponent {...transcriptProps} />
@@ -166,25 +177,28 @@ export default function StoryRoomChatShellView({
           </div>
         </main>
 
-        <div className="hidden min-h-0 overflow-y-auto pr-1 xl:block">
+        <div className="hidden min-h-0 flex-col border-l border-[var(--line-whisper)] bg-[var(--surface-1)] md:flex">
+          <RailEdgeToggle
+            side="right"
+            open={rightOpen}
+            onClick={onToggleRightPanel}
+            openLabel="Open story details"
+            closeLabel="Close story details"
+          />
           {rightOpen ? (
-            <div className="min-w-0 pb-4">
-              {StatePanelComponent ? (
-                <StatePanelComponent {...desktopStatePanelProps} />
-              ) : null}
-              {RuntimeMechanicsPanelComponent && runtimeMechanicsPanelProps ? (
-                <RuntimeMechanicsPanelComponent
-                  {...runtimeMechanicsPanelProps}
-                />
-              ) : null}
+            <div className="min-h-0 flex-1 overflow-y-auto">
+              <div className="min-w-0 p-[var(--space-3)] pt-0">
+                {StatePanelComponent ? (
+                  <StatePanelComponent {...desktopStatePanelProps} />
+                ) : null}
+                {RuntimeMechanicsPanelComponent && runtimeMechanicsPanelProps ? (
+                  <RuntimeMechanicsPanelComponent
+                    {...runtimeMechanicsPanelProps}
+                  />
+                ) : null}
+              </div>
             </div>
-          ) : (
-            <PanelRevealButton
-              side="right"
-              label="Show State"
-              onClick={onShowRightPanel}
-            />
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -198,7 +212,7 @@ export default function StoryRoomChatShellView({
 
       {mobilePanel === "cast" && MobileDrawerComponent ? (
         <MobileDrawerComponent
-          title="Room & Cast"
+          title="Cast"
           side="left"
           onClose={onCloseMobilePanel}
         >
@@ -232,6 +246,94 @@ export default function StoryRoomChatShellView({
         />
       ) : null}
     </section>
+  );
+}
+
+// D2 below md: one 44px bar. Back chevron to the Stories page, the
+// primary character's circle, the title truncated, then the settings
+// button that opens the right panel as a sheet. The media button that
+// opens the gallery arrives with the right rail (item 6).
+function StoryChatMobileBar({
+  title = "",
+  primaryCharacter = null,
+  backHref = "/studio/v2/stories",
+  onOpenSettings,
+  LinkComponent = "a",
+}) {
+  const initial = String(primaryCharacter?.label || title || "S")
+    .trim()
+    .charAt(0)
+    .toUpperCase();
+
+  return (
+    <div className="flex h-[var(--control-md)] shrink-0 items-center gap-[var(--space-1)] border-b border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-2)] md:hidden">
+      <LinkComponent
+        href={backHref}
+        aria-label="Back to stories"
+        className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)]"
+      >
+        <ChevronLeft size={20} aria-hidden="true" />
+      </LinkComponent>
+
+      <span className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 items-center justify-center">
+        {primaryCharacter?.avatarUrl ? (
+          <img
+            src={primaryCharacter.avatarUrl}
+            alt=""
+            className="h-8 w-8 rounded-[var(--radius-full)] object-cover"
+          />
+        ) : (
+          <span
+            aria-hidden="true"
+            className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-full)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[var(--gold-ornament)]"
+          >
+            {initial}
+          </span>
+        )}
+      </span>
+
+      <h1 className="min-w-0 flex-1 truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
+        {title}
+      </h1>
+
+      <button
+        type="button"
+        onClick={() => onOpenSettings?.()}
+        aria-label="Story details"
+        className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)]"
+      >
+        <Settings size={20} aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
+// One bare 44px icon per rail, at the rail's own edge, open or closed.
+// A tap control rises one step above its container (--step-above).
+function RailEdgeToggle({ side, open = false, onClick, openLabel, closeLabel }) {
+  const Icon =
+    side === "left"
+      ? open
+        ? PanelLeftClose
+        : PanelLeftOpen
+      : open
+        ? PanelRightClose
+        : PanelRightOpen;
+  const label = open ? closeLabel : openLabel;
+
+  return (
+    <div className="flex shrink-0 justify-center py-[var(--space-2)]">
+      <button
+        type="button"
+        onClick={() => onClick?.()}
+        title={label}
+        aria-label={label}
+        aria-expanded={open}
+        className="flex h-[var(--control-md)] w-[var(--control-md)] touch-manipulation items-center justify-center rounded-[var(--radius-full)] bg-[var(--step-above)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)]"
+      >
+        <Icon size={18} aria-hidden="true" />
+      </button>
+    </div>
   );
 }
 
@@ -286,7 +388,7 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className={EYEBROW_CLASS}>Story Room Composer</p>
+          <p className={EYEBROW_CLASS}>Story composer</p>
           <h2
             id="story-room-composer-help-title"
             className="mt-[var(--space-2)] font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
@@ -319,7 +421,7 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
                 </p>
               ) : null}
               {command.sourceLabel ? (
-                <p className="mt-2 text-[10px] uppercase tracking-[0.13em] text-[var(--ink-dim)]">
+                <p className="mt-2 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
                   {command.sourceLabel}
                   {command.ambiguous ? " · Multiple active definitions" : ""}
                 </p>
@@ -409,100 +511,5 @@ function ComposerHelpItem({ icon: Icon, title, children }) {
         {children}
       </p>
     </div>
-  );
-}
-
-function StoryRoomHeader({
-  room,
-  leftOpen,
-  rightOpen,
-  onToggleLeftPanel,
-  onToggleRightPanel,
-}) {
-  return (
-    <div className="hidden shrink-0 border-b border-[var(--line-fade)] p-[var(--space-5)] xl:block">
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
-        <div className="min-w-0">
-          <p className={EYEBROW_CLASS}>Story</p>
-
-          <h1 className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)]">
-            {room?.title}
-          </h1>
-
-          <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
-            {room?.scenario} · {room?.roomMode}
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-2 lg:items-end">
-          <div className="hidden flex-wrap justify-end gap-2 xl:flex">
-            <button
-              type="button"
-              onClick={() => onToggleLeftPanel?.()}
-              className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
-                leftOpen
-                  ? "border-[var(--gold-action)] bg-[var(--fill-whisper)] text-[var(--ink)]"
-                  : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-              }`}
-            >
-              {leftOpen ? (
-                <PanelLeftClose size={14} />
-              ) : (
-                <PanelLeftOpen size={14} />
-              )}
-              {leftOpen ? "Cast Open" : "Show Cast"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onToggleRightPanel?.()}
-              className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
-                rightOpen
-                  ? "border-[var(--gold-action)] bg-[var(--fill-whisper)] text-[var(--ink)]"
-                  : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-              }`}
-            >
-              {rightOpen ? (
-                <PanelRightClose size={14} />
-              ) : (
-                <PanelRightOpen size={14} />
-              )}
-              {rightOpen ? "State Open" : "Show State"}
-            </button>
-          </div>
-
-          <div className="flex flex-wrap gap-2 lg:justify-end">
-            <StatusPill>{room?.contentRating}</StatusPill>
-            <StatusPill>{room?.visibility}</StatusPill>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PanelRevealButton({ side, label, onClick }) {
-  const Icon = side === "left" ? PanelLeftOpen : PanelRightOpen;
-
-  return (
-    <div className="sticky top-24 flex justify-center">
-      <button
-        type="button"
-        onClick={onClick}
-        title={label}
-        aria-label={label}
-        className="flex h-12 w-11 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--gold-ornament)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
-      >
-        <Icon size={16} />
-      </button>
-    </div>
-  );
-}
-
-function StatusPill({ children }) {
-  return (
-    <span className="whitespace-nowrap rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-3 py-1 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
-      {children}
-    </span>
   );
 }

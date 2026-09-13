@@ -94,8 +94,13 @@ function makeFixture(overrides = {}) {
     error: null,
     deletingRoom: false,
     deleteError: "",
-    leftOpen: true,
+    leftOpen: false,
     rightOpen: true,
+    railsState: "right",
+    swipeEnabled: false,
+    primaryCharacter: { label: "Mara Vale", avatarUrl: "" },
+    backHref: "/studio/v2/stories",
+    storyListProps: { currentRoomId: "room-lantern", refetchKey: 2 },
     mobilePanel: null,
     composerHelpPanel: null,
     ...overrides,
@@ -125,6 +130,23 @@ export const storyRoomChatShellDeleteErrorFixture = makeFixture({
 export const storyRoomChatShellCollapsedFixture = makeFixture({
   leftOpen: false,
   rightOpen: false,
+  railsState: "none",
+});
+
+export const storyRoomChatShellStoryListFixture = makeFixture({
+  leftOpen: true,
+  rightOpen: false,
+  railsState: "left",
+});
+
+export const storyRoomChatShellBothRailsFixture = makeFixture({
+  leftOpen: true,
+  rightOpen: true,
+  railsState: "both",
+});
+
+export const storyRoomChatShellPhoneFixture = makeFixture({
+  swipeEnabled: true,
 });
 
 export const storyRoomChatShellCommandsFixture = makeFixture({

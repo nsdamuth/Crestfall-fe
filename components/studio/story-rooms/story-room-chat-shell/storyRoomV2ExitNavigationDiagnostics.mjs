@@ -76,11 +76,23 @@ test("live Story Room exit navigation still returns to the V2 Stories surface", 
     "components/studio/story-rooms/story-room-cast-panel/StoryRoomCastPanel.view.jsx"
   );
   const shell = read("components/studio/story-rooms/StoryRoomChatShell.jsx");
+  const shellViewModel = read(
+    "components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js"
+  );
+  const shellView = read(
+    "components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx"
+  );
 
   assert.match(castViewModel, /roomListHref: "\/studio\/v2\/stories"/);
   assert.match(castView, /roomListHref = "\/studio\/v2\/stories"/);
   assert.match(castView, /roomListHref \|\| "\/studio\/v2\/stories"/);
   assert.match(shell, /router\.push\("\/studio\/v2\/stories"\)/);
+  // The mobile bar's back chevron (fe/chat-studio item 1) is the phone
+  // path back to the Stories page.
+  assert.match(shellViewModel, /STORY_ROOM_BACK_HREF = "\/studio\/v2\/stories"/);
+  assert.match(shellViewModel, /backHref: STORY_ROOM_BACK_HREF/);
+  assert.match(shellView, /href=\{backHref\}/);
+  assert.match(shellView, /aria-label="Back to stories"/);
 });
 
 test("V2 Stories continues rooms through the canonical V2 Story Chat route", () => {

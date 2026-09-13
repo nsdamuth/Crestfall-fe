@@ -45,6 +45,7 @@ export function useStudioTopBarViewModel({
   themeMode = "dark",
   onToggleTheme = () => {},
   onOpenMenu = () => {},
+  hiddenBelowMd = false,
   navigate = null,
   loadNotifications = fetchStudioNotifications,
 } = {}) {
@@ -103,5 +104,8 @@ export function useStudioTopBarViewModel({
     accountInitial: getStudioTopBarAccountInitial(user),
     openMenuAriaLabel: STUDIO_TOP_BAR_COPY.openMenuAriaLabel,
     onOpenMenu,
+    // Route-driven, passed through untouched (v9): story chat hides the
+    // bar below md and renders its own 44px bar there.
+    hiddenBelowMd: hiddenBelowMd === true,
   };
 }

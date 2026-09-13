@@ -201,8 +201,26 @@ export function useStudioSidebarViewModel({
   user,
   accountProfile,
   pathname = "",
+  leftOwner = null,
+  onClaimLeft = null,
 } = {}) {
   const [collapsed, setCollapsed] = useState(false);
+  // One left panel at a time (fe/chat-studio item 1, decision J1): when
+  // a page owns the left edge (its own rail is open) the nav reads
+  // collapsed regardless of its local state, and expanding it hands
+  // the edge back to the nav, which closes the page rail.
+  const pageOwnsLeft = leftOwner === "page";
+  const effectiveCollapsed = pageOwnsLeft || collapsed;
+
+  function toggleCollapsed() {
+    if (pageOwnsLeft) {
+      onClaimLeft?.("nav");
+      setCollapsed(false);
+      return;
+    }
+
+    setCollapsed((value) => !value);
+  }
   const [socialOpen, setSocialOpen] = useState(false);
   const [legacyOpen, setLegacyOpen] = useState(false);
   const v2Surface = pathname === "/studio" || pathname.startsWith("/studio/v2") ||
@@ -227,8 +245,8 @@ export function useStudioSidebarViewModel({
     signedInUsername: normalizeStudioSidebarPublicUsername(accountProfile),
     logoutLabel: STUDIO_SIDEBAR_COPY.logoutLabel,
     logoutHref: "/logout",
-    collapseAriaLabel: collapsed ? "Expand sidebar" : "Collapse sidebar",
-    collapsed,
+    collapseAriaLabel: effectiveCollapsed ? "Expand sidebar" : "Collapse sidebar",
+    collapsed: effectiveCollapsed,
     socialOpen,
     primaryLinks: buildNavigationLinks(STUDIO_SIDEBAR_PRIMARY_LINKS, pathname),
     utilityLinks: buildNavigationLinks(STUDIO_SIDEBAR_UTILITY_LINKS, pathname).map((link) =>
@@ -241,7 +259,7 @@ export function useStudioSidebarViewModel({
         : link
     ),
     socialLinks: STUDIO_SIDEBAR_SOCIAL_LINKS,
-    onToggleCollapsed: () => setCollapsed((value) => !value),
+    onToggleCollapsed: toggleCollapsed,
     onToggleSocial: () => setSocialOpen((value) => !value),
   };
 }

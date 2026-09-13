@@ -6,12 +6,13 @@ import { usePathname, useRouter } from "next/navigation";
 import StudioTopBarView from "./studio-top-bar/StudioTopBar.view";
 import { useStudioTopBarViewModel } from "./studio-top-bar/useStudioTopBarViewModel";
 
-export default function StudioTopBar({ onOpenMenu, ...props }) {
+export default function StudioTopBar({ onOpenMenu, hiddenBelowMd = false, ...props }) {
   const pathname = usePathname();
   const router = useRouter();
   const viewProps = useStudioTopBarViewModel({
     pathname,
     onOpenMenu,
+    hiddenBelowMd,
     // Global search rows navigate through the app router; the Kit and
     // the top bar View never import next/navigation themselves.
     navigate: (href) => router.push(href),
