@@ -1,29 +1,26 @@
 import KitBreadcrumbs from "@/components/kit/KitBreadcrumbs";
 import KitModalFrame from "@/components/kit/KitModalFrame";
+import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import {
   BUY_COINS_INFO_BODY,
   UtilityModal,
 } from "@/components/studio/studio-economy-widget/StudioEconomyWidget.view";
 import {
-  Bookmark,
   Camera,
   Coins,
   Film,
-  Heart,
   Image as ImageIcon,
   LockKeyhole,
   MessageCircle,
-  Search,
-  ScrollText,
 } from "lucide-react";
 
-const TAB_ICONS = {
-  IMAGE: ImageIcon,
-  VIDEO: Film,
-  HEART: Heart,
-  BOOKMARK: Bookmark,
-  CREDITS: ScrollText,
-};
+// The media filter is the one single-select group in the standard
+// sticky bar (RULED 12 Sep 2026, Brian's browser review): All is the
+// resting value, so the trigger reads "Filter" until another option is
+// picked. No sort on a single creation's catalogue (per-asset ordering
+// ruling, 24 Aug 2026).
+const MEDIA_FILTER_GROUP_ID = "media";
+const MEDIA_FILTER_RESTING_VALUE = "ALL";
 
 export default function CreationProfilePageView({
   shouldRender = false,
@@ -74,8 +71,17 @@ export default function CreationProfilePageView({
 
   if (!creation) return null;
 
-  const activeTabId = mediaTabs.find((tab) => tab.active)?.id || "IMAGES";
+  const activeTabId = mediaTabs.find((tab) => tab.active)?.id || MEDIA_FILTER_RESTING_VALUE;
   const showingCredits = activeTabId === "CREDITS";
+  const mediaFilterGroups = [
+    {
+      id: MEDIA_FILTER_GROUP_ID,
+      label: "Filter",
+      isMultiSelect: false,
+      restingValue: MEDIA_FILTER_RESTING_VALUE,
+      options: mediaTabs.map((tab) => ({ value: tab.id, label: tab.label, count: null })),
+    },
+  ];
 
   return (
     <section className="pb-12">
@@ -164,7 +170,9 @@ export default function CreationProfilePageView({
             ) : null}
           </div>
 
-          <div className="flex flex-wrap gap-3 lg:flex-col">
+          {/* Chat, Generate, Share anchor to the bottom right of the
+              header at lg and up (RULED 12 Sep 2026, browser review). */}
+          <div className="flex flex-wrap gap-3 lg:flex-col lg:items-end lg:self-end">
             {creation.supportsChat ? (
               <button
                 type="button"
@@ -201,36 +209,25 @@ export default function CreationProfilePageView({
       ) : null}
 
       <div className="mt-8 border-t border-[var(--gold-ornament)]/15 pt-5">
-        <div className="flex flex-wrap gap-2">
-          {mediaTabs.map((tab) => {
-            const Icon = TAB_ICONS[tab.icon];
-            return (
-              <FilterButton
-                key={tab.id}
-                active={tab.active}
-                onClick={() => onSelectTab?.(tab.id)}
-              >
-                {Icon ? <Icon size={14} /> : null}
-                {tab.label}
-              </FilterButton>
-            );
-          })}
-        </div>
+        {/* Standard sticky search and filter bar (RULED 12 Sep 2026,
+            browser review): search left, the one media Filter dropdown
+            right (All resting, Images, Videos, Liked, Saved, plus
+            Credits when attribution exists). No sort on this page. */}
+        <KitStudioFilterBarView
+          searchValue={query}
+          searchPlaceholder="Search this creation's media..."
+          onSearchChange={onQueryChange}
+          filterGroups={mediaFilterGroups}
+          selectedValues={{ [MEDIA_FILTER_GROUP_ID]: [activeTabId] }}
+          onFilterToggle={(groupId, value) => onSelectTab?.(value)}
+          filterPresentation="dropdowns"
+          sortOptions={[]}
+        />
 
         {showingCredits ? (
           <div className="mt-5">{creditsSlot}</div>
         ) : (
           <>
-            <div className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
-              <Search size={16} className="text-[var(--gold-ornament)]" />
-              <input
-                value={query}
-                onChange={(event) => onQueryChange?.(event.target.value)}
-                placeholder="Search this creation's media..."
-                className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
-              />
-            </div>
-
             {!visibleMedia.length ? (
           <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
             <ImageIcon size={30} className="mx-auto text-[var(--gold-ornament)]" />
@@ -375,8 +372,11 @@ function LibraryPassViewerPanel({ panel, onUnlock }) {
 
   return (
     <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="max-w-3xl">
+      {/* The Unlock CTA sits on the right at lg and up (RULED 12 Sep
+          2026, browser review): the copy block takes the remaining
+          width and the row no longer wraps the CTA underneath it. */}
+      <div className="flex flex-wrap items-start justify-between gap-4 lg:flex-nowrap lg:items-end">
+        <div className="min-w-0 max-w-3xl lg:flex-1">
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
               <LockKeyhole size={16} />
@@ -429,22 +429,6 @@ function LibraryPassViewerPanel({ panel, onUnlock }) {
         </p>
       ) : null}
     </section>
-  );
-}
-
-function FilterButton({ active, onClick, children }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`inline-flex min-h-[var(--control-md)] items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
-        active
-          ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-          : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
 

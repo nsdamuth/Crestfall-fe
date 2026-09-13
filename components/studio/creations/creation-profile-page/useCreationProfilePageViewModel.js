@@ -33,13 +33,21 @@ export const CREATION_PROFILE_EAGER_MEDIA_COUNT = 4;
 export const CREATION_PROFILE_DESCRIPTION_CLAMP_LINES = 4;
 
 
+// Media filter options, RULED 12 Sep 2026 (Brian's browser review of
+// the eight-fix package): the tab row is replaced by the standard
+// sticky search and filter bar, one single-select Filter dropdown with
+// All as the default (resting) value, then Images, Videos, Liked,
+// Saved. Ids are unchanged so filtering and the Credits option are
+// untouched.
 export const CREATION_PROFILE_MEDIA_TABS = [
+  { id: "ALL", label: "All", icon: "ALL" },
   { id: "IMAGES", label: "Images", icon: "IMAGE" },
   { id: "VIDEOS", label: "Videos", icon: "VIDEO" },
   { id: "LIKED", label: "Liked", icon: "HEART" },
-  { id: "BOOKMARKED", label: "Bookmarked", icon: "BOOKMARK" },
-  { id: "ALL", label: "All", icon: "ALL" },
+  { id: "BOOKMARKED", label: "Saved", icon: "BOOKMARK" },
 ];
+
+export const CREATION_PROFILE_DEFAULT_MEDIA_TAB = "ALL";
 
 export const CREATION_PROFILE_CREDITS_TAB = {
   id: "CREDITS",
@@ -334,7 +342,7 @@ export function useCreationProfilePageViewModel({
     [media]
   );
 
-  const [activeTab, setActiveTab] = useState("IMAGES");
+  const [activeTab, setActiveTab] = useState(CREATION_PROFILE_DEFAULT_MEDIA_TAB);
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(
     CREATION_PROFILE_INITIAL_VISIBLE_MEDIA

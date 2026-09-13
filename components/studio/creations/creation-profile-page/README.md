@@ -27,7 +27,7 @@ semantic callbacks, and rendered slots.
 ## Preserved behavior
 - `LORE` creations continue to delegate to `LorePublicCreationPage`; the standard LOOM catalogue is used for every other creation type.
 
-- Images, Videos, Liked, Bookmarked, and All filters
+- One media Filter dropdown in the standard sticky search and filter bar (All resting, Images, Videos, Liked, Saved; Credits when attribution exists), RULED 12 Sep 2026 in Brian's browser review of the eight-fix package, replacing the tab row and the inline search field. The same review anchored Chat, Generate, and Share to the bottom right of the header and moved the Unlock CTA to the right of the Library Pass panel.
 - Search, four eager images, 12-item pagination, and Load More
 - Like/bookmark optimistic updates with rollback on persistence failure
 - Creation header, attribution, statistics, tags, four-line description clamp with Show more
