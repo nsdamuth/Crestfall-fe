@@ -188,6 +188,29 @@ export const kitModalFrameFixtures = [
     },
   },
   {
+    id: "modalGrabber",
+    label: "Modal, grabber under 700px (fe/share-og follow-up 1, item 2)",
+    props: {
+      variant: "modal",
+      panelWidth: "36rem",
+      ariaLabelledBy: "kit-modal-frame-sheet-title",
+      sheetGrabber: true,
+      children: sheetContent,
+    },
+  },
+  {
+    id: "modalMediumRadius",
+    label: "Modal, medium corner step (fe/share-og follow-up 2, item 3)",
+    props: {
+      variant: "modal",
+      panelWidth: "36rem",
+      panelRadius: "var(--radius-md)",
+      ariaLabelledBy: "kit-modal-frame-sheet-title",
+      sheetGrabber: true,
+      children: sheetContent,
+    },
+  },
+  {
     id: "unsavedDismiss",
     label: "Unsaved dismiss confirm (mobile modal law, condition 3)",
     props: {

@@ -5,6 +5,7 @@ import { ShoppingBag } from "lucide-react";
 
 import KitDropdown from "@/components/kit/KitDropdown";
 import KitModalFrame from "@/components/kit/KitModalFrame";
+import KitReferralCounter from "@/components/kit/KitReferralCounter";
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 
@@ -59,6 +60,7 @@ export default function AccountV2LiveView({
   hasPublicProfile = false,
   publicProfileHref = null,
   coinBalance = 0,
+  referral = null,
   metricItems = [],
   fields = {},
   contentRating = {},
@@ -208,6 +210,13 @@ export default function AccountV2LiveView({
                   <ShoppingBag size={14} aria-hidden="true" />
                   Buy coins soon
                 </button>
+              </div>
+
+              {/* Referral bonus (fe/share-og follow-up 1, item 7): one
+                  row directly under the coins block, the count from the
+                  account snapshot's referral field, 0 until served. */}
+              <div className="mt-[var(--space-4)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+                <KitReferralCounter referral={referral} />
               </div>
             </SectionCard>
 

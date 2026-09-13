@@ -16,6 +16,8 @@ import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
+import KitShareSheet from "@/components/kit/KitShareSheet";
+import { useKitShareController } from "@/components/kit/share/useKitShareController";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import {
@@ -27,6 +29,7 @@ import {
   orderFilterGroups,
 } from "../catalog/creationCatalogFilterTaxonomy.js";
 import FixtureActionNotice from "../FixtureActionNotice";
+import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
 import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
 import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
@@ -173,6 +176,10 @@ export default function CommunityV2Mockup({
 } = {}) {
   const router = useRouter();
   const launchController = useStoryLaunchController();
+  // fe/share-og brief 1: every share button on this page opens the one
+  // Kit share sheet; the sharer's handle rides the link as ref.
+  const { accountProfile } = useStudioAccount();
+  const share = useKitShareController({ sharerUsername: accountProfile?.username || "" });
   const sourceCreations = Array.isArray(creations) ? creations : FIXTURE_CREATIONS;
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
@@ -398,7 +405,10 @@ export default function CommunityV2Mockup({
     await launchController.launch(creation.rawCreation || creation);
   }
 
-  async function handleShare(creation) {
+  // The type rule, the visibility fold, the public-only block, and the
+  // link live in the Kit share package; Community carries the same
+  // rule Vault does.
+  function handleShare(creation) {
     if (!live) {
       setActionNotice({
         label: "Share",
@@ -407,27 +417,16 @@ export default function CommunityV2Mockup({
       return;
     }
 
-    const href = `/studio/creations/${encodeURIComponent(creation.id)}`;
-    const absoluteHref =
-      typeof window !== "undefined"
-        ? new URL(href, window.location.origin).toString()
-        : href;
-
-    try {
-      if (typeof navigator !== "undefined" && navigator.share) {
-        await navigator.share({ title: creation.title, url: absoluteHref });
-      } else if (typeof navigator !== "undefined" && navigator.clipboard) {
-        await navigator.clipboard.writeText(absoluteHref);
-        setActionNotice({ label: "Share", message: "Public catalogue link copied." });
-      }
-    } catch (error) {
-      if (error?.name !== "AbortError") {
-        setActionNotice({
-          label: "Share",
-          message: error?.message || "Share link could not be prepared.",
-        });
-      }
-    }
+    share.open({
+      creationType: creation.type,
+      id: creation.id,
+      title: creation.title,
+      creatorHandle: creation.creatorHandle,
+      visibility: creation.rawCreation?.visibility || creation.rawCreation?.data?.visibility || "PUBLIC",
+      canonStatus: creation.canonStatus,
+      lifecycleStatus: creation.rawCreation?.status || creation.status,
+      featuredImageSrc: creation.imageSrc,
+    });
   }
 
   function handleViewCatalogue(creation) {
@@ -674,6 +673,7 @@ export default function CommunityV2Mockup({
       })()}
 
       <StoryLaunchRequirementsSheet picker={launchController.picker} />
+      <KitShareSheet {...share.sheetProps} />
       <FixtureActionNotice
         notice={
           actionNotice ||

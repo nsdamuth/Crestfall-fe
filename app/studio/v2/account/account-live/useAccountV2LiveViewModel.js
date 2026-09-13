@@ -374,6 +374,9 @@ export function useAccountV2LiveViewModel() {
       ? `/studio/profile/${profile.username}`
       : null,
     coinBalance: Number(account?.coinBalance || 0),
+    // fe/share-og follow-up 1, item 7: the referral field as served
+    // (undefined while CR-073 is open); the counter folds it to 0.
+    referral: account?.referral || null,
     metricItems: buildMetricItems(metrics),
     fields,
     contentRating: {

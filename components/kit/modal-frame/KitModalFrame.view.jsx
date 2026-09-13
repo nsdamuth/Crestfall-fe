@@ -83,6 +83,23 @@ function SheetGrabber() {
   );
 }
 
+// Modal grabber (1.7.0, fe/share-og follow-up 1 item 2): the modal
+// variant is bottom-docked under 700px (mobile modal law), so a caller
+// that asks for the grabber gets the same bar there, and nothing at
+// 700px and up where the panel is a centered popup. Absolute, so the
+// panel's own top padding is untouched; the close control keeps its
+// corner. Default false: every existing modal renders as before.
+function ModalGrabber() {
+  return (
+    <div
+      className="pointer-events-none absolute inset-x-0 top-0 flex justify-center pt-[var(--space-2)] min-[700px]:hidden"
+      aria-hidden="true"
+    >
+      <div className="h-[4px] w-[36px] rounded-[var(--radius-full)] bg-[var(--line-strong)]" />
+    </div>
+  );
+}
+
 // headerSlot (1.4.0, 6 Sep 2026, FE/FILTERS): optional caller content
 // rendered in the sheet header row, beside the close control, so a
 // sheet can carry one header action (the filter panel's Clear).
@@ -192,6 +209,7 @@ export default function KitModalFrameView({
           ) : (
             <AbsoluteCloseControl onClose={onClose} />
           )}
+          {!isViewer && sheetGrabber ? <ModalGrabber /> : null}
           {body}
         </>
       )}

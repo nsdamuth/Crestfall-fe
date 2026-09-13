@@ -9,6 +9,9 @@ import { projectLiveCreatorProfile } from "@/lib/shared/presentation/creatorProf
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
 import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
+import KitShareSheet from "@/components/kit/KitShareSheet";
+import { useKitShareController } from "@/components/kit/share/useKitShareController";
+import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import {
   fetchProfileReactions,
@@ -38,6 +41,11 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
   const projected = useMemo(() => projectLiveCreatorProfile(pageData), [pageData]);
   const { profile, stats, followState, works, badges } = projected;
   const engagementState = useCreationEngagementState(pageData.creations || []);
+  // fe/share-og follow-up 1, item 6: the profile's Share opens the one
+  // Kit share sheet with the profile kind; the signed-in viewer is the
+  // sharer and rides the link as ref.
+  const { accountProfile } = useStudioAccount();
+  const share = useKitShareController({ sharerUsername: accountProfile?.username || "" });
 
   const [isFollowing, setIsFollowing] = useState(followState.isFollowing);
   const [isLiked, setIsLiked] = useState(false);
@@ -111,22 +119,14 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
     }
   }
 
-  async function shareProfile() {
-    const href = `/studio/v2/creators/${encodeURIComponent(profile.handle)}`;
-    const url = typeof window === "undefined" ? href : new URL(href, window.location.origin).toString();
-
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: profile.displayName, url });
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(url);
-        openNotice("Share", "Creator profile link copied.");
-      }
-    } catch (error) {
-      if (error?.name !== "AbortError") {
-        openNotice("Share", error?.message || "Creator profile could not be shared.");
-      }
-    }
+  function shareProfile() {
+    share.open({
+      kind: "profile",
+      id: profile.id,
+      title: profile.displayName,
+      creatorUsername: profile.handle,
+      featuredImageSrc: profile.avatarSrc,
+    });
   }
 
   async function submitDonation() {
@@ -373,6 +373,7 @@ export default function CreatorProfileLive({ pageData = {} } = {}) {
       })()}
 
       <StoryLaunchRequirementsSheet picker={launchController.picker} />
+      <KitShareSheet {...share.sheetProps} />
     </>
   );
 }

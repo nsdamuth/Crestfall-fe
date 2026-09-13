@@ -93,6 +93,12 @@ the details below carry only what is still actionable.
 | CR-065 | Remix a public image into the viewer's library | One Chassis operation: from a public image output, create a new asset owned by the viewer and record it as a new version in both the viewer's and the source creator's libraries with attribution; Remix and Edit on public images ship "soon" until then | open | Nick | non-blocking; filed 12 Sep 2026; KitImageViewer 2.0.0 remix context |
 | CR-064 | Viewer reaction state on the public profile payload | The public profile payload carries no `viewer.isLiked` or `viewer.isBookmarked`; the profile page fetches them from profile-reactions after first paint, so Liked and Saved rest unselected for one round trip | open | Nick | non-blocking; filed 12 Sep 2026; optimistic toggle in place |
 | CR-063 | Public lore approval-state projection | The community lore projection emits only canon or approved, so Draft and Archived never match community lore, and one state carries three names (IN_REVIEW, pending, Reviewing); confirm the states the public feed serves and the canonical name | open | Nick | non-blocking; filed 6 Sep 2026 |
+| CR-072 | Referral attribution from share links | Every share link the Kit share package builds carries `ref=<sharer username>`; the Chassis records first-touch attribution for a visitor arriving with `ref` (cookie or server record, 30-day window), writes a referral row when that visitor creates an account, and credits the sharer's referral bonus on the referred account's first subscription; the sharer need not be the creator; the bonus amount is directional pending research, no coin number in code or copy | open | Nick | non-blocking; filed 13 Sep 2026 by fe/share-og brief 1 (D3); numbered after fe/chat-studio's CR-071 so the two lanes never collide |
+| CR-073 | Referral bonus counter on the account snapshot | `/api/profile/me` carries no referral fields; the profile page wants `referral.creditedCount` (and `pendingCount`) to render a "Referral bonus" counter; the counter renders 0 until served | open | Nick | non-blocking; filed 13 Sep 2026 by fe/share-og brief 1; relates CR-072 |
+| CR-074 | Sign-in return path and ref carry-through | `/login` reads no query parameter and `/auth/callback` always redirects to `/studio`, so a visitor who signs in or signs up from a share link (email, SSO, any path) loses the page and the sharer; the share landing sends `next=<the exact same-origin page, ref included>` and `ref=<username>`; honor `next` on the callback for both destinations, the playable landing (`/c`, `/story`, `/adventure`) and the image destination (`/studio/creations/:id?image=<outputId>`, or the sharer's profile), and persist `ref` into the new account for CR-072 | open | Nick | non-blocking; filed 13 Sep 2026 by fe/share-og brief 1 (D2, D3); the FE already sends both parameters |
+| CR-075 | Internal creations readable by signed-in recipients | `/v1/creations/:id/preview` hardcodes actor null and PUBLIC_VIEW (creationPreviewGraph.js fetchPublicCreation), so an Internal (UNLISTED) link 404s for everyone, signed in or not; serve DIRECT_LINK_VIEW with the actor (or proxy the existing direct-access route) so Internal links open for signed-in players as the Vault copy promises; the share card image and the landing page keep 404 for Internal until then | open | Nick | non-blocking; filed 13 Sep 2026 by fe/share-og brief 1 (D2 "Internal and Public share") |
+| CR-076 | Server-written creation slug | `creations.slug` is selected and served by every projection and written by nothing; the FE derives the share slug from the title (`components/kit/share/shareUrl.js`) and the landing routes redirect a stale slug to the canonical one, until the Chassis writes a slug at publish | open | Nick | non-blocking; filed 13 Sep 2026 by fe/share-og brief 1 |
+| CR-077 | Named image selection on the public creation page | An image share lands on `/studio/creations/:id?image=<outputId>` (RULED at the fe/share-og plan gate, 13 Sep 2026); the creation page cannot open a named image today, so the link lands on the page without selection; open the named image (the viewer, or scrolled into view and marked) when the parameter is present | open | FE, later brief (Brian) | non-blocking; filed 13 Sep 2026 by fe/share-og brief 1; FE work on components/studio/creations, not Chassis. Follow-up 1 (item 5) confirmed `app/studio/creations/[id]/page.js` reads no `image` parameter today, so the page also serves no Open Graph image for an image share; the same brief that opens the named image adds `generateMetadata` there with the shared image's medium derivative, the card route otherwise |
 | CR-066 | Chat color preference | A per-account (or per-story) `chat_color_palette_id` on the profile, one of the 13 character palette ids, so the user's Preferences choice on the story chat page survives a reload; the chat page keeps the override in page state until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 4 |
 | CR-067 | Creator byline on the room snapshot | `GET /v1/studio/story-rooms/{id}` carries `ownerId` only; the story chat details rail wants `room.creator` ({ id, username, displayName }) for the source template's owner so it can render "by @username"; the byline row stays hidden until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
 | CR-068 | Story description on the room snapshot | The room record has no description (room.data.source carries templateId and templateTitle only); the details rail wants `room.description` copied from the source template at launch; the description block stays hidden until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
@@ -1047,6 +1053,77 @@ three names across the stack: backend `IN_REVIEW`, value `pending`,
 label "Reviewing". Needed: confirmation of which states the public
 publications feed serves, and the canonical name for the review
 state.
+
+### CR-072, Referral attribution from share links
+
+Filed 13 Sep 2026 by fe/share-og brief 1 (D3, ruled). The Kit share
+package (`components/kit/share`) appends `ref=<sharer username>` to
+every share link: the playable landing family, the image destination,
+and the plain creation link. Nothing in the Chassis reads it today
+(zero hits for referral, invite, attribution source, or a share token
+on creations). Needed: first-touch attribution on arrival with `ref`
+(30-day window), a referral row on account creation, the credit on the
+referred account's first subscription. The sharer is whoever shared,
+not necessarily the maker; the card still credits the maker. The bonus
+amount stays directional until research; the FE writes no number.
+
+### CR-073, Referral bonus counter on the account snapshot
+
+Filed 13 Sep 2026 by fe/share-og brief 1. The profile page (a later
+brief) renders a "Referral bonus" counter from a served field and
+shows 0 until the field exists. Wanted on `/v1/profile/me`:
+`referral.creditedCount`, `referral.pendingCount`.
+
+### CR-074, Sign-in return path and ref carry-through
+
+Filed 13 Sep 2026 by fe/share-og brief 1 (D2, D3; return-to-the-exact-
+page ruled at the plan gate). Both repos' `/login` pages hardcode
+`${siteUrl}/auth/callback` and read no query parameter; both
+`/auth/callback` handlers redirect to `${siteUrl}/studio`. The share
+landing's "Play free" link is
+`/login?next=<same-origin path with ref>&ref=<username>`. Needed: the
+callback redirects to `next` when it is a same-origin path (the
+playable landing `/c`, `/story`, `/adventure`, or the image
+destination `/studio/creations/:id?image=<outputId>`, or a profile),
+on every sign-in and sign-up path, and `ref` reaches the new account
+record for CR-072.
+
+### CR-075, Internal creations readable by signed-in recipients
+
+Filed 13 Sep 2026 by fe/share-og brief 1. The brief ruled "Internal
+and Public share". The code: `CREATION_VISIBILITIES` is PRIVATE,
+UNLISTED, PUBLIC (Internal is the display word for UNLISTED);
+`isCreationPublishedForAccess` passes only APPROVED plus PUBLIC (or a
+canon status), and `fetchPublicCreation` calls the access authority
+with actor null and PUBLIC_VIEW, so `GET /api/creations/[id]/preview`
+returns 404 for UNLISTED even to a signed-in caller. The
+DIRECT_LINK_VIEW mode that admits an authenticated caller to an
+UNLISTED creation exists in `creationAccessAuthority.js` and is
+reachable only through `/v1/creations/:id` (direct access), which no
+Next route proxies. The FE shares the Internal link with the existing
+Vault note ("Recipients must sign in to Crestfall; ...") and no card;
+the share card image and the landing page answer 404 for Internal.
+Needed: the preview read honors the actor with DIRECT_LINK_VIEW, or a
+proxy for the direct-access route.
+
+### CR-076, Server-written creation slug
+
+Filed 13 Sep 2026 by fe/share-og brief 1. `slug` is a column on
+creations, selected in every projection, and never written or routed
+by. The FE derives a slug from the title (lowercase, a to z and
+digits, hyphens, 60 characters) for the landing URLs and keys the
+route on the id; a mismatched slug redirects 308 to the canonical one.
+Wanted: the Chassis writes a stable slug at publish so the FE can stop
+deriving.
+
+### CR-077, Named image selection on the public creation page
+
+Filed 13 Sep 2026 by fe/share-og brief 1, from Brian's ruling at the
+plan gate: an image share lands on the public page of the creation the
+image was generated from with the shared image selected once that
+page can select one. `/studio/creations/[id]` (CreationProfilePage)
+reads no `image` parameter today. Until it does, the link lands on the
+page without selection. FE work for a later brief; not Chassis.
 
 ### CR-066, Chat color preference
 
