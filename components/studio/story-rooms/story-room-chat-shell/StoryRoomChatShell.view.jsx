@@ -291,7 +291,10 @@ function StoryChatMobileBar({
     .toUpperCase();
 
   return (
-    <div className="flex h-[var(--control-md)] shrink-0 items-center gap-[var(--space-1)] border-b border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-2)] md:hidden">
+    // One tier above the canvas on --surface-1 with --shadow-modal
+    // beneath it (brief 3 item 11, the item 8 token), one layer up so
+    // the shadow falls on the transcript and bubbles and bar never blend.
+    <div className="relative z-10 flex h-[var(--control-md)] shrink-0 items-center gap-[var(--space-1)] border-b border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-2)] shadow-[var(--shadow-modal)] md:hidden">
       <LinkComponent
         href={backHref}
         aria-label="Back to stories"
