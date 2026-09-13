@@ -2,8 +2,9 @@
 
 import { Plus } from "lucide-react";
 
-import KitArtPlaceholder from "@/components/kit/KitArtPlaceholder";
 import KitSearchFieldView from "@/components/kit/studio-filter-bar/KitSearchField.view";
+
+import StoryRoomMark from "../story-room-details-rail/StoryRoomMark";
 
 const ROW_BASE_CLASS =
   "flex w-full min-h-[3.5rem] items-center gap-[var(--space-3)] border-l-2 px-[var(--space-3)] py-[var(--space-2)] text-left transition-[background-color,border-color] duration-[var(--dur-hover)] hover:bg-[var(--step-above)]";
@@ -21,7 +22,10 @@ function StoryListRow({ item, onSelect }) {
         aria-current={item.isCurrent ? "page" : undefined}
         className={rowClass}
       >
-        <span className="h-10 w-10 shrink-0 overflow-hidden rounded-[var(--radius-sm)] bg-[var(--surface-2)]">
+        {/* Placeholder rows carry the circular geometric Crestfall mark
+            (brief 3 item 5, the same StoryRoomMark as the gallery
+            placeholder), never the six-petal rosette. */}
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] bg-[var(--surface-2)]">
           {item.imageSrc ? (
             <img
               src={item.imageSrc}
@@ -30,7 +34,7 @@ function StoryListRow({ item, onSelect }) {
               loading="lazy"
             />
           ) : (
-            <KitArtPlaceholder size="sm" identityKey={item.id} />
+            <StoryRoomMark className="h-[var(--space-7)] w-[var(--space-7)]" />
           )}
         </span>
 
