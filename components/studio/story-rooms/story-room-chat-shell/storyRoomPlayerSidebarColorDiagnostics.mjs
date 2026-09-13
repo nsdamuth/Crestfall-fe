@@ -36,6 +36,7 @@ test("Character opening greetings use the persisted Character palette", () => {
   assert.match(vm, /resolvedSpeakerType/);
   assert.match(vm, /openingCharacterPaletteId/);
   assert.match(vm, /getCharacterColorPalette\(openingCharacterPaletteId\)/);
+  assert.match(vm, /paletteColors: palette\?\.colors/);
   assert.match(vm, /speakerColor:/);
   assert.match(vm, /palette\?\.colors\?\.speaker/);
   assert.match(vm, /return STORY_ROOM_MESSAGE_SURFACE_TONES\.CHARACTER/);
@@ -46,26 +47,22 @@ test("Narrator opening scenes remain on the opening presentation path", () => {
   assert.match(vm, /if \(message\?\.kind === "OPENING_SCENE"\)[\s\S]*STORY_ROOM_MESSAGE_SURFACE_TONES\.OPENING/);
 });
 
-test("speaker ink derives from the character palette anchor through the locked chat tokens", () => {
-  // fe/chat-studio item 4: the seven-role hex object is gone; the View
-  // writes one anchor (--chat-speaker) from contract data and the locked
-  // --chat-* tokens derive the speaker name, avatar fill, and the
-  // player's bubble fill. Body ink stays --ink.
+test("Character semantic palette roles render while player chat color stays independent", () => {
   const view = read("components/studio/story-rooms/story-room-message/StoryRoomMessage.view.jsx");
   const vm = read("components/studio/story-rooms/story-room-message/useStoryRoomMessageViewModel.js");
-  assert.doesNotMatch(view, /paletteColors|DEFAULT_PALETTE_COLORS|#[0-9A-Fa-f]{6}/);
-  assert.match(view, /"--chat-speaker": speakerAnchor\.trim\(\)/);
-  // Brief 4 item 10 and review rounds 4 and 5 (RULED): the speaker name
-  // reads --ink in the display font at the lead step; the anchor still
-  // tints the bubble and the avatar tile, never the name.
-  assert.match(view, /font-display text-\[length:var\(--text-lead\)\] leading-\[var\(--lh-lead\)\] font-\[var\(--weight-medium\)\] text-\[var\(--ink\)\]/);
-  assert.doesNotMatch(view, /text-\[var\(--chat-speaker-name\)\]/);
+
+  assert.match(vm, /paletteColors: palette\?\.colors/);
+  assert.match(vm, /bubbleColor/);
+  assert.match(view, /baseRole = "dialogue"/);
+  assert.match(view, /getPaletteColor\(paletteColors, baseRole\)/);
+  assert.match(view, /getPaletteColor\(paletteColors, "narration"\)/);
+  assert.match(view, /role = "emphasis"/);
+  assert.match(view, /role = "strong"/);
+  assert.match(view, /role = "whisper"/);
+  assert.match(view, /getPaletteColor\(paletteColors, "speaker"\)/);
   assert.match(view, /bg-\[var\(--chat-bubble-fill\)\]/);
   assert.match(view, /bg-\[var\(--chat-avatar-fill\)\]/);
   assert.match(view, /rounded-\[var\(--radius-bubble\)\]/);
-  assert.doesNotMatch(view, /sky-\d|red-\d|pink-\d|purple-\d|border-white\/|bg-black\//);
-  assert.match(vm, /bubbleColor/);
-  assert.doesNotMatch(vm, /paletteColors/);
 });
 
 test("chat color change remains presentation-only", () => {

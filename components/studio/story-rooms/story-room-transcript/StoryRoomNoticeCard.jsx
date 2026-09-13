@@ -2,24 +2,22 @@
 
 import { CircleAlert, UserRound } from "lucide-react";
 
-// One recipe for the transcript's notice cards (fe/chat-studio item 3,
-// 12 Sep 2026): the player character prompt and the story error card.
-// Card tier: --surface-1 with a --line-whisper hairline on the canvas
-// center column (Brian's amendment to item 6), no blue tint anywhere. The danger tone uses
-// the danger border token and the ruled running-text tier
-// (--status-danger-text) for the eyebrow, because the base
-// --status-danger as normal-size text on --surface-2 is blocked by the
-// contrast law. Presentation only: every handler is caller-provided.
+// One recipe for transcript notice cards. Informational/default notices
+// use the established Story system blue language; danger notices remain
+// on the dedicated danger tokens. Geometry and caller-owned handlers stay
+// unchanged.
 const TONE_CLASSES = {
   default: {
-    card: "border-[var(--line-whisper)]",
-    eyebrow: "text-[var(--gold-ornament)]",
-    icon: "text-[var(--gold-ornament)]",
+    card: "border-sky-400/20 bg-sky-400/10",
+    eyebrow: "text-sky-200",
+    icon: "bg-sky-400/10 text-sky-200",
+    body: "text-sky-100/80",
   },
   danger: {
-    card: "border-[var(--status-danger-border)]",
+    card: "border-[var(--status-danger-border)] bg-[var(--surface-1)]",
     eyebrow: "text-[var(--status-danger-text)]",
-    icon: "text-[var(--status-danger)]",
+    icon: "bg-[var(--surface-2)] text-[var(--status-danger)]",
+    body: "text-[var(--ink-dim)]",
   },
 };
 
@@ -39,12 +37,12 @@ export default function StoryRoomNoticeCard({
   return (
     <article
       role={tone === "danger" ? "alert" : undefined}
-      className={`min-w-0 max-w-full rounded-[var(--radius-md)] border bg-[var(--surface-1)] p-[var(--space-4)] ${classes.card}`}
+      className={`min-w-0 max-w-full rounded-[var(--radius-md)] border p-[var(--space-4)] ${classes.card}`}
     >
       <div className={`flex items-start gap-[var(--space-3)] ${centered ? "flex-col items-center text-center" : ""}`}>
         <span
           aria-hidden="true"
-          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-full)] bg-[var(--surface-2)] ${classes.icon}`}
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-full)] ${classes.icon}`}
         >
           <ResolvedIcon size={17} />
         </span>
@@ -69,7 +67,7 @@ export default function StoryRoomNoticeCard({
               ) : null}
 
               {body ? (
-                <p className="mt-[var(--space-2)] text-[length:var(--text-chat)] leading-[var(--lh-chat)] text-[var(--ink-dim)]">
+                <p className={`mt-[var(--space-2)] text-[length:var(--text-chat)] leading-[var(--lh-chat)] ${classes.body}`}>
                   {body}
                 </p>
               ) : null}

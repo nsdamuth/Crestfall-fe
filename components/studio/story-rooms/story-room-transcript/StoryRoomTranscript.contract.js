@@ -1,7 +1,11 @@
-export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.3.0";
+export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.4.0";
 
 /**
  * Portable View contract.
+ *
+ * 1.4.0, Story Chat presentation restoration (13 Sep 2026). ADDITIVE:
+ * authoritative `openingHeroImage` renders before the first transcript
+ * message while the true beginning is visible; pagination never duplicates it.
  *
  * 1.3.0, fe/chat-studio review round 8 (13 Sep 2026, Brian's browser
  * review). Presentation only: the notice cards' inset is --space-4 on
@@ -21,6 +25,7 @@ export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.3.0";
  * @property {Object} message Direct StoryRoomMessage View-contract props.
  *
  * @typedef {Object} StoryRoomTranscriptViewProps
+ * @property {{displayUrl:string,altText:string,width:number|null,height:number|null}|null} openingHeroImage
  * @property {StoryRoomTranscriptMessageItem[]} messageItems
  * @property {boolean} loading
  * @property {boolean} sending

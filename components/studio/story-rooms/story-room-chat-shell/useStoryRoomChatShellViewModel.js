@@ -700,6 +700,8 @@ export function useStoryRoomChatShellViewModel({
     runtimeMechanicsPanelProps,
     chatColorProps,
     deleteError,
+    onRequestDeleteRoom: requestDeleteRoom,
+    isDeletingRoom: deletingRoom,
   };
 
   const mobileDetailsRailProps = {
@@ -730,6 +732,7 @@ export function useStoryRoomChatShellViewModel({
     detailsRailProps,
     mobileDetailsRailProps,
     transcriptProps: {
+      openingHeroImage: room?.openingHeroImage || null,
       messages,
       loading,
       sending,
@@ -812,8 +815,9 @@ export function useStoryRoomChatShellViewModel({
     onCloseComposerHelpPanel: closeComposerHelpPanel,
     isConfirmingDeleteRoom,
     isDeletingRoom: deletingRoom,
-    // Review round 6: the red trash control beside the rail toggle (and
-    // at the top of the sheet below md) opens the confirm dialog.
+    // Delete authority remains in this shell; the Details rail receives
+    // requestDeleteRoom through its binding props and presents the safe
+    // explicit bottom danger action on both desktop and mobile.
     onRequestDeleteRoom: requestDeleteRoom,
     onCancelDeleteRoom: cancelDeleteRoom,
     onConfirmDeleteRoom: confirmDeleteRoom,

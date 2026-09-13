@@ -30,12 +30,11 @@ import {
 // locked --chat-bubble-fill recipe, every other speaker left-aligned on
 // the nested card surface, no borders, --radius-bubble, body one step
 // tighter (the ui step), narration italic, whispers as a quiet inset.
-// The speaker name reads --ink in the display font at the lead step
-// (brief 4 item 10, review rounds 4 and 5 item 1, RULED, off the
-// --chat-speaker-name clamp and off the eyebrow tier); body ink is
-// always --ink. The one inline value
-// the View writes is the --chat-speaker anchor, contract data, never a
-// literal of its own; it still tints the bubble and the avatar tile.
+// The speaker name keeps the redesigned display-font/lead geometry,
+// while Character-authored content restores its authored semantic color
+// palette (dialogue, narration, emphasis, strong, whisper, speaker).
+// The player bubble remains independently driven by the user's chat
+// color through --chat-speaker/--chat-bubble-fill.
 
 const WHISPER_INSET_CLASS =
   "border-l-2 border-[var(--line-strong)] pl-[var(--space-3)] italic text-[var(--ink-dim)]";
@@ -81,31 +80,55 @@ function tokenizeInlineMarkup(text) {
   return tokens;
 }
 
-function renderInlineMarkup(text, keyPrefix) {
+function getPaletteColor(paletteColors, role) {
+  const value = paletteColors?.[role];
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function renderInlineMarkup(text, keyPrefix, paletteColors = null, baseRole = "dialogue") {
   return tokenizeInlineMarkup(text).map((token, index) => {
     const key = `${keyPrefix}-${index}`;
 
     if (token.type === "bold") {
+      const strongColor = getPaletteColor(paletteColors, "strong");
       return (
-        <strong key={key} className="font-[var(--weight-medium)] text-[var(--ink)]">
+        <strong
+          key={key}
+          className="font-[var(--weight-medium)]"
+          style={strongColor ? { color: strongColor } : undefined}
+        >
           {token.value}
         </strong>
       );
     }
 
     if (token.type === "action") {
+      const narrationColor = getPaletteColor(paletteColors, "narration");
       return (
-        <em key={key} className="italic text-[var(--ink-dim)]">
+        <em
+          key={key}
+          className="italic"
+          style={narrationColor ? { color: narrationColor } : undefined}
+        >
           {token.value}
         </em>
       );
     }
 
-    return <span key={key}>{token.value}</span>;
+    const baseColor = getPaletteColor(paletteColors, baseRole);
+    return (
+      <span key={key} style={baseColor ? { color: baseColor } : undefined}>
+        {token.value}
+      </span>
+    );
   });
 }
 
-function LegacyMessageBody({ body = "", allowAutomaticSpacing = false }) {
+function LegacyMessageBody({
+  body = "",
+  allowAutomaticSpacing = false,
+  paletteColors = null,
+}) {
   const text = String(body || "");
   const blocks = allowAutomaticSpacing
     ? buildLegacyMessageParagraphs(text)
@@ -128,7 +151,12 @@ function LegacyMessageBody({ body = "", allowAutomaticSpacing = false }) {
         >
           {quoteLines.map((line, lineIndex) => (
             <span key={`quote-${blockIndex}-${lineIndex}`}>
-              {renderInlineMarkup(line, `quote-${blockIndex}-${lineIndex}`)}
+              {renderInlineMarkup(
+                line,
+                `quote-${blockIndex}-${lineIndex}`,
+                paletteColors,
+                "whisper"
+              )}
               {lineIndex < quoteLines.length - 1 ? <br /> : null}
             </span>
           ))}
@@ -140,7 +168,12 @@ function LegacyMessageBody({ body = "", allowAutomaticSpacing = false }) {
       <p key={`block-${blockIndex}`} className="my-[var(--space-3)] first:mt-0 last:mb-0">
         {lines.map((line, lineIndex) => (
           <span key={`line-${blockIndex}-${lineIndex}`}>
-            {renderInlineMarkup(line, `line-${blockIndex}-${lineIndex}`)}
+            {renderInlineMarkup(
+              line,
+              `line-${blockIndex}-${lineIndex}`,
+              paletteColors,
+              "dialogue"
+            )}
             {lineIndex < lines.length - 1 ? <br /> : null}
           </span>
         ))}
@@ -153,9 +186,7 @@ function getSegmentClassName(segment) {
   const classes = [];
 
   if (segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.NARRATION) {
-    classes.push("italic text-[var(--ink-dim)]");
-  } else {
-    classes.push("text-[var(--ink)]");
+    classes.push("italic");
   }
 
   if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.EMPHASIS) {
@@ -167,10 +198,32 @@ function getSegmentClassName(segment) {
   }
 
   if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.WHISPER) {
-    classes.push("italic text-[var(--ink-dim)]");
+    classes.push("italic");
   }
 
   return classes.join(" ");
+}
+
+function getSegmentStyle(segment, paletteColors) {
+  if (!paletteColors) return undefined;
+
+  let role =
+    segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.NARRATION
+      ? "narration"
+      : segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.DIALOGUE
+        ? "dialogue"
+        : null;
+
+  if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.EMPHASIS) {
+    role = "emphasis";
+  } else if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.STRONG) {
+    role = "strong";
+  } else if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.WHISPER) {
+    role = "whisper";
+  }
+
+  const color = role ? getPaletteColor(paletteColors, role) : null;
+  return color ? { color } : undefined;
 }
 
 function isWhisperParagraph(paragraph) {
@@ -187,6 +240,7 @@ function isWhisperParagraph(paragraph) {
 function SemanticMessageBody({
   segments,
   statusBlocks,
+  paletteColors = null,
   allowAutomaticSpacing = false,
 }) {
   const paragraphs = allowAutomaticSpacing
@@ -207,6 +261,7 @@ function SemanticMessageBody({
               <span
                 key={`presentation-segment-${paragraphIndex}-${segmentIndex}`}
                 className={getSegmentClassName(segment)}
+                style={getSegmentStyle(segment, paletteColors)}
               >
                 {segment.text}
               </span>
@@ -295,7 +350,7 @@ function getArticleClassName(surfaceTone) {
   }
 
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
-    return `${base} max-w-xl bg-transparent text-center`;
+    return `${base} max-w-xl border border-sky-400/20 bg-sky-400/10 text-center`;
   }
 
   return `${base} max-w-[86%] min-[700px]:max-w-[85%] bg-[var(--surface-1)]`;
@@ -312,7 +367,7 @@ function getArticleClassName(surfaceTone) {
 // brief named the body only).
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
-    return "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]";
+    return "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-sky-100/80";
   }
 
   if (
@@ -336,6 +391,7 @@ export default function StoryRoomMessageView({
   legacyBody = "",
   semanticSegments = [],
   statusBlocks = [],
+  paletteColors = null,
   speakerColor = null,
   bubbleColor = null,
   media = null,
@@ -380,6 +436,10 @@ export default function StoryRoomMessageView({
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER;
   const isSystemMessage =
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM;
+  const hasPalettePresentation = Boolean(paletteColors);
+  const speakerPaletteColor =
+    getPaletteColor(paletteColors, "speaker") ||
+    (typeof speakerColor === "string" && speakerColor.trim() ? speakerColor.trim() : null);
   // The anchor the locked --chat-* tokens derive from: the chat color
   // for the player's bubble, the character's palette anchor otherwise.
   const speakerAnchor = isPlayerMessage ? bubbleColor : speakerColor;
@@ -428,7 +488,10 @@ export default function StoryRoomMessageView({
                     reads clearly above the Opening scene eyebrow;
                     display font, medium weight, --ink, no uppercase, no
                     tracking. */}
-                <p className="truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] font-[var(--weight-medium)] text-[var(--ink)]">
+                <p
+                  className="truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] font-[var(--weight-medium)] text-[var(--ink)]"
+                  style={speakerPaletteColor ? { color: speakerPaletteColor } : undefined}
+                >
                   {speakerLabel}
                 </p>
               </div>
@@ -448,6 +511,7 @@ export default function StoryRoomMessageView({
             <SemanticMessageBody
               segments={safeSegments}
               statusBlocks={safeStatusBlocks}
+              paletteColors={hasPalettePresentation ? paletteColors : null}
               allowAutomaticSpacing={allowAutomaticSpacing}
             />
           ) : (
@@ -455,6 +519,7 @@ export default function StoryRoomMessageView({
               <LegacyMessageBody
                 body={legacyBody}
                 allowAutomaticSpacing={allowAutomaticSpacing}
+                paletteColors={hasPalettePresentation ? paletteColors : null}
               />
             </div>
           )}

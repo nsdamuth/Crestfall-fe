@@ -1,4 +1,10 @@
-export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.5.0";
+export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.6.0";
+
+// 2.6.0, Story Chat presentation restoration (13 Sep 2026). ADDITIVE:
+// `paletteColors` returns to the portable boundary so Character opening
+// greetings and ordinary Character messages can render their authored
+// semantic roles again. Player `bubbleColor` remains a separate user
+// preference and the redesigned bubble geometry is unchanged.
 
 // 2.5.0, fe/chat-studio review round 8 (13 Sep 2026, Brian's browser
 // review). Presentation only: every bubble's inset is --space-4 on all
@@ -79,17 +85,12 @@ export const STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS = Object.freeze({
 /**
  * Portable View contract.
  *
- * 2.0.0, fe/chat-studio item 4 (12 Sep 2026). BREAKING: `paletteColors`
- * (the seven-role hex object) is removed; the View no longer writes any
- * palette hex. ADDITIVE: `speakerColor` (the character palette's anchor,
- * already emitted since 1.4.0) now drives the speaker name through the
- * locked --chat-speaker-name token, and `bubbleColor` (the chat color:
- * the creator default from the character palette, or the user's
- * Preferences override) tints the player's bubble through
- * --chat-bubble-fill. Bubbles: player right-aligned, every other speaker
- * left-aligned, no borders, --radius-bubble, body at the ui step,
- * narration italic, whisper paragraphs as a quiet inset, body ink always
- * --ink.
+ * 2.0.0 introduced the independent Player `bubbleColor` chat preference.
+ * 2.6.0 restores Character semantic palette projection without undoing
+ * that separation: Character-authored dialogue/narration/emphasis/strong/
+ * whisper/speaker presentation reads from `paletteColors`, while Player
+ * messages continue to read `bubbleColor`. The current borderless bubble
+ * geometry remains intact.
  *
  * @typedef {Object} StoryRoomMessageViewProps
  * @property {"PLAYER"|"OPENING"|"SYSTEM"|"NARRATOR"|"CHARACTER"|"MEDIA"} surfaceTone
@@ -102,6 +103,7 @@ export const STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS = Object.freeze({
  * @property {string} legacyBody
  * @property {Array<{text:string,type:string,emphasis:string}>} semanticSegments
  * @property {Array<{id:string,text:string}>} statusBlocks
+ * @property {{dialogue:string,narration:string,emphasis:string,strong:string,whisper:string,speaker:string,border:string}|null} paletteColors Character semantic palette roles; null when no authoritative Character/presentation palette exists.
  * @property {string|null} speakerColor The character palette anchor for the speaker name (contract data, applied as the --chat-speaker custom property).
  * @property {string|null} bubbleColor The chat color for the player's bubble; null on every other tone.
  * @property {{subtype:string,displayUrl:string,thumbnailUrl:string|null,width:number|null,height:number|null,altText:string,caption:string,entityLabel:string,contentRating:string}|null} media

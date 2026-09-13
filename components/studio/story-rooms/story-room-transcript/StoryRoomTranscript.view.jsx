@@ -34,6 +34,7 @@ function parseScrollKey(key) {
 }
 
 export default function StoryRoomTranscriptView({
+  openingHeroImage = null,
   messageItems = [],
   loading = false,
   sending = false,
@@ -148,6 +149,21 @@ export default function StoryRoomTranscriptView({
       ) : null}
 
       <div className="space-y-4">
+        {hiddenCount === 0 && openingHeroImage?.displayUrl ? (
+          <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--canvas)]">
+            <div className="flex max-h-[26rem] items-center justify-center overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={openingHeroImage.displayUrl}
+                alt={openingHeroImage.altText || "Story opening image"}
+                width={openingHeroImage.width || undefined}
+                height={openingHeroImage.height || undefined}
+                className="h-auto max-h-[26rem] max-w-full object-contain"
+              />
+            </div>
+          </div>
+        ) : null}
+
         {visibleMessages.map((item) => (
           <div key={item.id} ref={registerMessageNode(item.id)}>
             <StoryRoomMessageView {...item.message} />
@@ -301,8 +317,8 @@ function MessageReportDialog({
 }
 
 // The player character prompt and the story error card share the notice
-// card recipe (fe/chat-studio item 3): nested card tier, gold secondary
-// button, the danger tokens for errors, no blue tint.
+// card recipe: informational prompts use Story system blue; danger/error
+// notices retain the dedicated danger tokens.
 function PlayerCharacterPromptCard({ prompt }) {
   const selectedName = String(prompt?.selectedName || "").trim();
   const buttonLabel = selectedName

@@ -125,6 +125,7 @@ async function writeTextToClipboard(text) {
 }
 
 export function useStoryRoomTranscriptViewModel({
+  openingHeroImage = null,
   messages,
   loading = false,
   sending = false,
@@ -352,6 +353,10 @@ export function useStoryRoomTranscriptViewModel({
   );
 
   return {
+    openingHeroImage:
+      openingHeroImage && typeof openingHeroImage === "object" && openingHeroImage.displayUrl
+        ? openingHeroImage
+        : null,
     messageItems,
     loading: Boolean(loading),
     sending: Boolean(sending),

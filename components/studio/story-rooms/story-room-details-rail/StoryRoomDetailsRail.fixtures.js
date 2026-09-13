@@ -37,9 +37,15 @@ function makeFixture(overrides = {}) {
     description: "",
     descriptionExpanded: false,
     onToggleDescription: noop,
-    gallery: makeGallery(),
+    featuredSpeaker: {
+      displayUrl: "/tmp-mockup-images/canon-character-images/mara-vale.jpg",
+      name: "Mara Vale",
+      altText: "Mara Vale — latest responder",
+    },
+    gallery: makeGallery({ items: baseMedia.slice(1) }),
     deleteError: "",
     actionsSlot: null,
+    dangerAction: { label: "Delete story", busyLabel: "Deleting", busy: false, onPress: noop },
     rows: STORY_ROOM_DETAILS_ROWS,
     activeDetail: null,
     onOpenDetail: noop,
@@ -52,6 +58,7 @@ function makeFixture(overrides = {}) {
 export const storyRoomDetailsRailDefaultFixture = makeFixture();
 
 export const storyRoomDetailsRailEmptyMediaFixture = makeFixture({
+  featuredSpeaker: null,
   gallery: makeGallery({ items: [] }),
 });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronLeft, ChevronRight } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 
 import StoryRoomMark from "./StoryRoomMark";
 
@@ -10,13 +10,12 @@ const CIRCLE_BUTTON_CLASS =
 const ROW_CLASS =
   "flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-4)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] transition-colors duration-[var(--dur-hover)] hover:bg-[var(--step-above)]";
 
-// The right rail (fe/chat-studio item 6, 12 Sep 2026): gallery on top,
-// then the title (the three-dot menu retired in review round 6; Delete
-// story is the chat shell's trash control), the rating and visibility chips,
-// byline and description when the Chassis serves them, Export and Share,
-// then the drill-in rows. A drill-in replaces the rail content in place
-// under a 44px back row. The same View renders inside the right sheet
-// below md. Presentation only: the panels arrive as nodes.
+// The right rail (fe/chat-studio item 6, 12 Sep 2026): the authoritative
+// latest-responder image first, optional secondary gallery, title, metadata,
+// Export and Share, drill-in rows, then the explicit Delete story danger
+// action at the bottom. A drill-in replaces the rail content in place under
+// a 44px back row. The same View renders inside the right sheet below md.
+// Presentation only: the panels and destructive handler arrive as props.
 export default function StoryRoomDetailsRailView({
   title = "",
   chips = [],
@@ -24,10 +23,12 @@ export default function StoryRoomDetailsRailView({
   description = "",
   descriptionExpanded = false,
   onToggleDescription = null,
+  featuredSpeaker = null,
   gallery = null,
   viewerSlot = null,
   deleteError = "",
   actionsSlot = null,
+  dangerAction = null,
   rows = [],
   activeDetail = null,
   onOpenDetail = null,
@@ -67,12 +68,17 @@ export default function StoryRoomDetailsRailView({
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <Gallery gallery={gallery} viewerSlot={viewerSlot} />
+        {featuredSpeaker?.displayUrl ? (
+          <FeaturedSpeakerMedia featuredSpeaker={featuredSpeaker} />
+        ) : null}
+
+        {gallery?.items?.length || !featuredSpeaker?.displayUrl ? (
+          <Gallery gallery={gallery} viewerSlot={viewerSlot} />
+        ) : (
+          viewerSlot
+        )}
 
         <div className="px-[var(--space-4)] pt-[var(--space-4)]">
-          {/* Review round 6: the three-dot menu is gone; Delete story is
-              the red trash control the chat shell renders beside the
-              rail toggle (and at the top of the sheet below md). */}
           <h2 className="font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]">
             {title}
           </h2>
@@ -144,12 +150,6 @@ export default function StoryRoomDetailsRailView({
             </div>
           ) : null}
 
-          {deleteError ? (
-            <p className="mt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger-text)]">
-              {deleteError}
-            </p>
-          ) : null}
-
           {actionsSlot ? <div className="mt-[var(--space-4)]">{actionsSlot}</div> : null}
         </div>
 
@@ -163,6 +163,59 @@ export default function StoryRoomDetailsRailView({
             </li>
           ))}
         </ul>
+
+        {dangerAction || deleteError ? (
+          <div className="mx-[var(--space-4)] mb-[var(--space-6)] mt-[var(--space-6)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
+            {deleteError ? (
+              <p className="mb-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger-text)]">
+                {deleteError}
+              </p>
+            ) : null}
+            {dangerAction ? (
+              <button
+                type="button"
+                onClick={() => dangerAction.onPress?.()}
+                disabled={Boolean(dangerAction.busy)}
+                className="cf-btn cf-btn--danger w-full justify-center disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
+              >
+                <Trash2 size={18} aria-hidden="true" />
+                <span>{dangerAction.busy ? dangerAction.busyLabel || dangerAction.label : dangerAction.label}</span>
+              </button>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+// The primary current-responder media surface is intentionally outside the
+// pageable gallery. It is bound directly to room.featuredSpeakerImageUrl via
+// the ViewModel, so user paging can never strand the visible primary image on
+// a stale speaker after a new Character or Narrator response arrives.
+function FeaturedSpeakerMedia({ featuredSpeaker }) {
+  const src = featuredSpeaker?.displayUrl || "";
+  if (!src) return null;
+
+  return (
+    <div className="px-[var(--space-3)] pt-[var(--space-3)]">
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius-md)] bg-[var(--canvas)]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={featuredSpeaker?.altText || featuredSpeaker?.name || "Latest responder"}
+          className="h-full w-full object-cover"
+        />
+        {featuredSpeaker?.name ? (
+          <div className="absolute inset-x-0 bottom-0 bg-[var(--panel-glass)] px-[var(--space-3)] py-[var(--space-2)] backdrop-blur-[var(--blur-panel)]">
+            <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--art-ink)]">
+              Latest responder
+            </p>
+            <p className="mt-px truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--art-ink)]">
+              {featuredSpeaker.name}
+            </p>
+          </div>
+        ) : null}
       </div>
     </div>
   );

@@ -202,8 +202,12 @@ export function getStoryRoomMessageViewProps(
   const openingCharacterPaletteId = isCharacterOpeningMessage(safeMessage)
     ? safeMessage?.metadata?.openingCharacterPaletteId || "CRESTFALL_DEFAULT"
     : null;
-  const palette = presentation
-    ? getCharacterColorPalette(presentation.paletteId)
+  const presentationPaletteId =
+    typeof presentation?.paletteId === "string" && presentation.paletteId.trim()
+      ? presentation.paletteId.trim()
+      : null;
+  const palette = presentationPaletteId
+    ? getCharacterColorPalette(presentationPaletteId)
     : openingCharacterPaletteId
       ? getCharacterColorPalette(openingCharacterPaletteId)
       : null;
@@ -252,6 +256,7 @@ export function getStoryRoomMessageViewProps(
     legacyBody,
     semanticSegments,
     statusBlocks: presentation?.statusBlocks || [],
+    paletteColors: palette?.colors ? { ...palette.colors } : null,
     speakerColor:
       typeof palette?.colors?.speaker === "string" && palette.colors.speaker.trim()
         ? palette.colors.speaker.trim()

@@ -33,11 +33,11 @@ test("transcript receives a transient Player Character prompt on the notice card
   assert.match(vm, /playerCharacterPrompt:/);
   assert.match(vm, /visible: Boolean\(canSetPlayerCharacter\) && !firstMessageSubmitted/);
   assert.match(transcript, /PlayerCharacterPromptCard/);
-  // fe/chat-studio item 3: the nested card tier, no blue tint, the gold
-  // secondary button, and the danger tokens for the error tone.
+  // Story Chat presentation restoration: informational notices are blue
+  // again while the existing danger tokens remain reserved for errors.
   assert.match(transcript, /StoryRoomNoticeCard/);
-  assert.doesNotMatch(transcript, /sky-\d|red-\d/);
-  assert.match(noticeCard, /bg-\[var\(--surface-1\)\]/);
+  assert.match(noticeCard, /border-sky-400\/20 bg-sky-400\/10/);
+  assert.match(noticeCard, /text-sky-100\/80/);
   assert.match(noticeCard, /cf-btn cf-btn--secondary/);
   assert.match(noticeCard, /--status-danger-border/);
   assert.match(noticeCard, /--status-danger-text/);

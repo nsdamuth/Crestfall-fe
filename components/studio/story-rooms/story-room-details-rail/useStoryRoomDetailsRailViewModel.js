@@ -28,13 +28,14 @@ function humanizeChip(value) {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
-// The story's media set (fe/chat-studio item 6, interim until CR-069
-// serves a list): the featured speaker image first, then every cast
-// member's media images and avatar, then every scene image the
-// transcript carries, deduplicated by url in first-seen order.
+// The story's secondary media set (interim until CR-069 serves a list):
+// the authoritative latest-responder image is owned by the dedicated
+// featured-speaker surface, so this gallery contains the remaining cast
+// media/avatar and scene images, deduplicated by url in first-seen order.
 export function buildStoryMediaItems({ room = {}, cast = [], messages = [] } = {}) {
   const items = [];
-  const seen = new Set();
+  const featuredSpeakerUrl = normalizeText(room?.featuredSpeakerImageUrl);
+  const seen = new Set(featuredSpeakerUrl ? [featuredSpeakerUrl] : []);
 
   function push(url, altText, sourceLabel) {
     const safeUrl = normalizeText(url);
@@ -47,8 +48,6 @@ export function buildStoryMediaItems({ room = {}, cast = [], messages = [] } = {
       sourceLabel: normalizeText(sourceLabel),
     });
   }
-
-  push(room?.featuredSpeakerImageUrl, room?.featuredSpeakerName, room?.featuredSpeakerName);
 
   for (const member of Array.isArray(cast) ? cast : []) {
     const name = normalizeText(member?.name);
@@ -181,6 +180,17 @@ export function useStoryRoomDetailsRailViewModel({
   // when the story launched from one, else the Character's own; hidden
   // only when the story resolves to no creation.
   const description = normalizeText(cataloguePreview?.creation?.description);
+  const featuredSpeakerImageUrl = normalizeText(room?.featuredSpeakerImageUrl);
+  const featuredSpeakerName = normalizeText(room?.featuredSpeakerName);
+  const featuredSpeaker = featuredSpeakerImageUrl
+    ? {
+        displayUrl: featuredSpeakerImageUrl,
+        name: featuredSpeakerName,
+        altText: featuredSpeakerName
+          ? `${featuredSpeakerName} — latest responder`
+          : "Latest responder",
+      }
+    : null;
 
   // The gallery's images (review round 4 item 4): the room-derived set
   // first (CR-069 interim), else the catalogue creation's own featured
@@ -193,8 +203,10 @@ export function useStoryRoomDetailsRailViewModel({
       : projectPreviewFeaturedMedia(cataloguePreview, {
           altText: normalizeText(cataloguePreview?.creation?.title) || normalizeText(room?.title),
         });
-    return items.slice(0, STORY_ROOM_GALLERY_MAX_IMAGES);
-  }, [room, cast, messages, cataloguePreview]);
+    return items
+      .filter((item) => normalizeText(item?.url) !== featuredSpeakerImageUrl)
+      .slice(0, STORY_ROOM_GALLERY_MAX_IMAGES);
+  }, [room, cast, messages, cataloguePreview, featuredSpeakerImageUrl]);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [viewerIndex, setViewerIndex] = useState(() =>
@@ -249,6 +261,7 @@ export function useStoryRoomDetailsRailViewModel({
     descriptionExpanded,
     onToggleDescription: () => setDescriptionExpanded((value) => !value),
     narratorLabel: normalizeText(room?.narrator) || "Crestfall Engine",
+    featuredSpeaker,
     gallery: {
       items: mediaItems,
       activeIndex: safeActiveIndex,
@@ -266,9 +279,9 @@ export function useStoryRoomDetailsRailViewModel({
       onOpenViewer: (index) => setViewerIndex(Math.max(0, Math.min(index ?? safeActiveIndex, count - 1))),
       onCloseViewer: () => setViewerIndex(null),
     },
-    // Review round 6: the three-dot menu is gone. Delete story is the
-    // chat shell's red trash control beside the rail toggle (its own
-    // confirm dialog); the rail keeps only the delete error line.
+    // Delete authority stays in the chat shell; the binding rail receives
+    // that handler separately and places the explicit danger action at
+    // the bottom of the shared desktop/mobile rail content.
     deleteError: normalizeText(deleteError),
     rows: STORY_ROOM_DETAILS_ROWS,
     activeDetail,

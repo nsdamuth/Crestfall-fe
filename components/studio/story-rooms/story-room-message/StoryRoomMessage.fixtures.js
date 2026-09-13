@@ -9,6 +9,15 @@ import {
 // Winter entries); the View applies them as the --chat-speaker anchor.
 const crestfallSpeakerAnchor = "#D6B36A";
 const winterSpeakerAnchor = "#78D7FF";
+const winterPaletteColors = Object.freeze({
+  dialogue: "#D9F3FF",
+  narration: "#A7C9DA",
+  emphasis: "#9FE8FF",
+  strong: "#F6FBFF",
+  whisper: "#86B9D2",
+  speaker: winterSpeakerAnchor,
+  border: "#315E8A",
+});
 
 export const storyRoomMessagePlayerFixture = {
   surfaceTone: STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER,
@@ -119,6 +128,7 @@ export const storyRoomMessageCharacterFixture = {
     },
   ],
   statusBlocks: [],
+  paletteColors: winterPaletteColors,
   speakerColor: winterSpeakerAnchor,
   bubbleColor: null,
   deliveryState: null,
@@ -161,6 +171,7 @@ export const storyRoomMessageMinimalFixture = {
   legacyBody: "",
   semanticSegments: [],
   statusBlocks: [],
+  paletteColors: null,
   speakerColor: null,
   bubbleColor: null,
   deliveryState: null,

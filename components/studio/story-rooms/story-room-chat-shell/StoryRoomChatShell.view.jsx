@@ -1,4 +1,4 @@
-import { ChevronLeft, Command, HelpCircle, Keyboard, MapPin, Trash2 } from "lucide-react";
+import { ChevronLeft, Command, HelpCircle, Keyboard, MapPin } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
@@ -49,7 +49,6 @@ export default function StoryRoomChatShellView({
   onCloseComposerHelpPanel,
   isConfirmingDeleteRoom = false,
   isDeletingRoom = false,
-  onRequestDeleteRoom,
   onCancelDeleteRoom,
   onConfirmDeleteRoom,
   ComposerComponent,
@@ -188,11 +187,6 @@ export default function StoryRoomChatShellView({
             onClick={onToggleRightPanel}
             openLabel="Open story details"
             closeLabel="Close story details"
-            trailing={
-              rightOpen && onRequestDeleteRoom ? (
-                <DeleteStoryButton onPress={onRequestDeleteRoom} disabled={isDeletingRoom} />
-              ) : null
-            }
           />
           {rightOpen && DetailsRailComponent ? (
             <div className="min-h-0 flex-1">
@@ -250,15 +244,9 @@ export default function StoryRoomChatShellView({
           ariaLabel="Story details"
         >
           {/* The frame's sheet caps at 92dvh; the rail scrolls inside a
-              bounded column so the header row never has to. Review
-              round 6: the red trash control sits at the top right of
-              the sheet, where the rail toggle row puts it at md and up. */}
+              bounded column. Delete story is owned by the shared Details
+              rail content at the bottom, safely away from the sheet edge. */}
           <div className="flex h-[84dvh] min-h-0 w-full flex-col">
-            {onRequestDeleteRoom ? (
-              <div className="flex shrink-0 justify-end px-[var(--space-2)]">
-                <DeleteStoryButton onPress={onRequestDeleteRoom} disabled={isDeletingRoom} />
-              </div>
-            ) : null}
             <DetailsRailComponent {...mobileDetailsRailProps} />
           </div>
         </KitModalFrame>
@@ -372,13 +360,13 @@ function StoryChatMobileBar({
 // list toggle anchors to the right edge of its panel and the details
 // toggle to the left edge, so each sits against the center column open
 // or closed.
-function RailEdgeToggle({ side, open = false, onClick, openLabel, closeLabel, trailing = null }) {
+function RailEdgeToggle({ side, open = false, onClick, openLabel, closeLabel }) {
   const label = open ? closeLabel : openLabel;
 
   return (
     <div
       className={`flex shrink-0 items-center py-[var(--space-2)] ${
-        trailing ? "justify-between" : side === "left" ? "justify-end" : "justify-start"
+        side === "left" ? "justify-end" : "justify-start"
       }`}
     >
       <button
@@ -391,30 +379,7 @@ function RailEdgeToggle({ side, open = false, onClick, openLabel, closeLabel, tr
       >
         <RailPanelGlyph side={side} open={open} />
       </button>
-      {trailing}
     </div>
-  );
-}
-
-// Delete story (review round 6): a red trash control on the bare icon
-// recipe at the top right of the details rail, aligned with the rail
-// toggle, and at the top of the details sheet below md. It only opens
-// the existing "Delete this story?" confirm (StoryChatDialog, danger
-// tone), so a tap can still change its mind. The danger ink is the base
-// status token, the one red, on the rail's --surface-2 with its word
-// in the accessible name; disabled while a delete is running.
-function DeleteStoryButton({ onPress, disabled = false }) {
-  return (
-    <button
-      type="button"
-      onClick={() => onPress?.()}
-      disabled={disabled}
-      title="Delete story"
-      aria-label="Delete story"
-      className={`${BARE_ICON_BUTTON_CLASS} text-[var(--status-danger)] hover:text-[var(--status-danger-text)] active:text-[var(--status-danger)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`}
-    >
-      <Trash2 size={20} aria-hidden="true" />
-    </button>
   );
 }
 

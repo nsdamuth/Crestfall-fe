@@ -28,6 +28,8 @@ export default function StoryRoomDetailsRail({
   runtimeMechanicsPanelProps = null,
   chatColorProps = null,
   deleteError = "",
+  onRequestDeleteRoom = null,
+  isDeletingRoom = false,
   autoOpenViewer = false,
 }) {
   const viewProps = useStoryRoomDetailsRailViewModel({
@@ -124,6 +126,16 @@ export default function StoryRoomDetailsRail({
     <StoryRoomDetailsRailView
       {...viewProps}
       actionsSlot={<StoryRoomStatePanel {...statePanelProps} layout="actions" />}
+      dangerAction={
+        onRequestDeleteRoom
+          ? {
+              label: "Delete story",
+              busyLabel: "Deleting",
+              busy: Boolean(isDeletingRoom),
+              onPress: onRequestDeleteRoom,
+            }
+          : null
+      }
       viewerSlot={viewerSlot}
       detailPanels={detailPanels}
       LinkComponent={Link}

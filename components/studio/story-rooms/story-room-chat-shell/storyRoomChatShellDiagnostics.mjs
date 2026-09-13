@@ -179,6 +179,30 @@ test("delete wording and navigation behavior remain explicit", () => {
   assert.match(shell, /\/studio\/v2\/stories/);
 });
 
+test("delete action is separated from rail toggles and bound through the Details rail", () => {
+  const view = read(
+    "components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx"
+  );
+  const viewModel = read(
+    "components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js"
+  );
+  const binding = read("components/studio/story-rooms/StoryRoomDetailsRail.jsx");
+  const railView = read(
+    "components/studio/story-rooms/story-room-details-rail/StoryRoomDetailsRail.view.jsx"
+  );
+
+  assert.doesNotMatch(view, /DeleteStoryButton/);
+  assert.doesNotMatch(view, /trailing=\{/);
+  assert.match(viewModel, /onRequestDeleteRoom: requestDeleteRoom/);
+  assert.match(viewModel, /isDeletingRoom: deletingRoom/);
+  assert.match(binding, /dangerAction=/);
+  assert.match(binding, /label: "Delete story"/);
+  assert.match(railView, /dangerAction/);
+  assert.match(railView, /<Trash2/);
+  assert.match(view, /StoryChatDialog/);
+  assert.match(view, /onPress: onConfirmDeleteRoom/);
+});
+
 test("contract, fixtures, and protected preview cover shell states", () => {
   const contract = read(
     "components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.contract.js"

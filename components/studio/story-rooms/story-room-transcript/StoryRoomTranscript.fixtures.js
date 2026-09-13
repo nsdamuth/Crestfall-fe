@@ -8,6 +8,13 @@ import {
   storyRoomMessageSystemFixture,
 } from "../story-room-message/StoryRoomMessage.fixtures";
 
+const OPENING_HERO_IMAGE = Object.freeze({
+  displayUrl: "/tmp-mockup-images/canon-character-images/lower-reliquary.jpg",
+  altText: "The Lantern Below opening scene",
+  width: null,
+  height: null,
+});
+
 function messageItem(id, message) {
   return { id, message };
 }
@@ -39,6 +46,7 @@ const historyItems = Array.from({ length: 18 }, (_, index) => {
 });
 
 export const storyRoomTranscriptConversationFixture = {
+  openingHeroImage: OPENING_HERO_IMAGE,
   messageItems: conversationItems,
   loading: false,
   sending: false,
@@ -46,6 +54,7 @@ export const storyRoomTranscriptConversationFixture = {
 };
 
 export const storyRoomTranscriptHistoryFixture = {
+  openingHeroImage: OPENING_HERO_IMAGE,
   messageItems: historyItems,
   loading: false,
   sending: false,
