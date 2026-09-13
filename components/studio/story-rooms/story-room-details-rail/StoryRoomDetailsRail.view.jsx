@@ -119,16 +119,28 @@ export default function StoryRoomDetailsRailView({
                   : "max-h-[calc(var(--lh-ui)*2)] overflow-hidden before:float-right before:h-[var(--lh-ui)] before:w-0 before:content-['']"
               }`}
             >
-              <button
-                type="button"
-                onClick={() => onToggleDescription?.()}
-                className={`touch-manipulation text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)] ${
-                  descriptionExpanded ? "ml-[var(--space-1)]" : "float-right clear-right pl-[var(--space-1)]"
-                }`}
-              >
-                {descriptionExpanded ? "See less" : "… See more"}
-              </button>
+              {/* Collapsed, the control comes first in the markup so the
+                  float lands on the second line; open, it follows the
+                  text (review round 7: See less at the end). */}
+              {!descriptionExpanded ? (
+                <button
+                  type="button"
+                  onClick={() => onToggleDescription?.()}
+                  className="float-right clear-right touch-manipulation pl-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)]"
+                >
+                  {"… See more"}
+                </button>
+              ) : null}
               <span>{description}</span>
+              {descriptionExpanded ? (
+                <button
+                  type="button"
+                  onClick={() => onToggleDescription?.()}
+                  className="ml-[var(--space-1)] touch-manipulation text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-action)]"
+                >
+                  See less
+                </button>
+              ) : null}
             </div>
           ) : null}
 
@@ -206,13 +218,16 @@ function Gallery({ gallery, viewerSlot = null }) {
 
         {/* Review round 6: on the end card the back control sits at the
             top left, off the card's own copy; on an image it stays at
-            the left middle beside the next arrow. */}
+            the left middle beside the next arrow. Both arrows sit above
+            the end card's content layer (z-[2] over its z-[1], review
+            round 7: that layer spans the whole card and was taking the
+            tap, so the back control never fired). */}
         {canGoPrevious ? (
           <button
             type="button"
             onClick={() => gallery?.onPrevious?.()}
             aria-label={showEndCard ? "Back to the images" : "Previous image"}
-            className={`${CIRCLE_BUTTON_CLASS} absolute left-[var(--space-2)] bg-[var(--panel-glass)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:text-[var(--art-gold)] ${
+            className={`${CIRCLE_BUTTON_CLASS} absolute left-[var(--space-2)] z-[2] bg-[var(--panel-glass)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:text-[var(--art-gold)] ${
               showEndCard ? "top-[var(--space-2)]" : "top-1/2 -translate-y-1/2"
             }`}
           >
@@ -224,7 +239,7 @@ function Gallery({ gallery, viewerSlot = null }) {
             type="button"
             onClick={() => gallery?.onNext?.()}
             aria-label="Next image"
-            className={`${CIRCLE_BUTTON_CLASS} absolute right-[var(--space-2)] top-1/2 -translate-y-1/2 bg-[var(--panel-glass)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:text-[var(--art-gold)]`}
+            className={`${CIRCLE_BUTTON_CLASS} absolute right-[var(--space-2)] top-1/2 z-[2] -translate-y-1/2 bg-[var(--panel-glass)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:text-[var(--art-gold)]`}
           >
             <ChevronRight size={20} aria-hidden="true" />
           </button>
