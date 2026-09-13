@@ -47,25 +47,20 @@ const UPSCALE_TIP =
 // --viewer-expanded-width is derived from the measured image aspect
 // ratio so portrait and landscape images both grow until they meet
 // either the 78dvh height envelope or the 88vw/76rem width envelope.
-// Image sizing, RULED 12 Sep 2026 (Brian's browser review): the image
-// never takes an explicit width. It keeps its own ratio (aspect-ratio
-// from the stored size, or the intrinsic one) and fits inside the
-// space the column leaves after the header and the bar, capped in
-// width at the standing 88vw / 76rem ceiling. The former explicit
-// width (a 78dvh formula) squashed the image whenever the window was
-// too short for that formula to hold.
-const VIEWER_IMAGE_CLASSES =
-  "block h-auto w-auto max-h-full max-w-full select-none aspect-[var(--viewer-aspect)] min-[700px]:max-w-[min(88vw,76rem)]";
-
-function getViewerExpandedImageStyle(pixelSize) {
-  const width = Number(pixelSize?.width);
-  const height = Number(pixelSize?.height);
-  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
-    return { "--viewer-aspect": "auto" };
-  }
-
-  return { "--viewer-aspect": `${width} / ${height}` };
-}
+// Image sizing, RULED 12 Sep 2026 (Brian's browser review, second
+// pass): the ViewModel measures the frame slot (the column's height
+// after the header and the bar) and fits the image's own ratio into
+// it, publishing the result as --viewer-image-w and --viewer-image-h.
+// The image takes exactly that box, so it keeps its fixed ratio at
+// every window shape, is never cropped, and the hairline hugs it.
+// Until the box exists (the first paint before the slot is measured,
+// or an image with no size yet) the image sits on caps only. The
+// former 78dvh formula squashed the image in short windows, and a
+// percentage cap chain through the nested frames cropped it.
+const VIEWER_IMAGE_FITTED_CLASSES =
+  "block select-none w-[var(--viewer-image-w)] h-[var(--viewer-image-h)] max-w-full";
+const VIEWER_IMAGE_FALLBACK_CLASSES =
+  "block h-auto w-auto max-h-full max-w-full select-none min-[700px]:max-w-[min(88vw,76rem)]";
 
 const GLASS_BAR =
   "pointer-events-auto flex w-full self-stretch rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] backdrop-blur-[var(--blur-panel)]";
@@ -288,6 +283,9 @@ export default function KitImageViewerView({
   title = "",
   pixelSize = null,
   pixelSizeLabel = "",
+  frameSlotRef = null,
+  hasImageBox = false,
+  imageBoxStyle = undefined,
   isSaved = false,
   shareMessage = "",
   downloadOptions = [],
@@ -319,8 +317,6 @@ export default function KitImageViewerView({
   onExitEdit = null,
   onFocusUpscale = null,
 }) {
-  const viewerExpandedImageStyle = getViewerExpandedImageStyle(pixelSize);
-
   if (overlayReplacesBody) {
     return (
       <div className="pointer-events-none flex h-full w-full items-center justify-center px-[var(--space-4)]">
@@ -337,10 +333,10 @@ export default function KitImageViewerView({
     // the header and bars snap to the image's own width (R5). The
     // column is the full viewer height at every width with --space-4
     // above and below (RULED 12 Sep 2026: never flush with the
-    // window); the frame wrapper takes what the header and bar leave,
-    // so the image's max-height is real space, not a viewport formula.
+    // window); the frame slot takes what the header and bar leave and
+    // is measured by the ViewModel, which sizes the image to it.
     <div
-      style={viewerExpandedImageStyle}
+      style={imageBoxStyle}
       className="pointer-events-none flex h-full max-h-full w-fit max-w-full min-h-0 flex-col items-center justify-center gap-[var(--space-3)] px-[var(--space-2)] py-[var(--space-4)] min-[700px]:px-0"
     >
       <ViewerHeader
@@ -381,12 +377,15 @@ export default function KitImageViewerView({
         />
       ) : (
         <>
-          <div className="flex min-h-0 max-w-full flex-1 items-center justify-center">
+          <div
+            ref={frameSlotRef}
+            className="flex min-h-0 max-w-full flex-1 items-center justify-center self-stretch"
+          >
             <ImageFrame
               imageSrc={imageSrc}
               title={title}
               zoomDisabled={!imageSrc}
-              imageClassName={VIEWER_IMAGE_CLASSES}
+              imageClassName={hasImageBox ? VIEWER_IMAGE_FITTED_CLASSES : VIEWER_IMAGE_FALLBACK_CLASSES}
               onImageLoad={onImageLoad}
             />
           </div>
