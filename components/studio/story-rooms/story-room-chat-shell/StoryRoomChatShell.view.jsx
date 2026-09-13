@@ -5,10 +5,6 @@ import {
   Image as ImageIcon,
   Keyboard,
   MapPin,
-  PanelLeftClose,
-  PanelLeftOpen,
-  PanelRightClose,
-  PanelRightOpen,
   Settings,
 } from "lucide-react";
 
@@ -125,7 +121,14 @@ export default function StoryRoomChatShellView({
       />
 
       <div className="cf-story-room-grid min-h-0 flex-1" data-rails={railsState}>
-        <div className="hidden min-h-0 flex-col border-r border-[var(--line-whisper)] bg-[var(--surface-1)] md:flex">
+        {/* A closed rail carries no surface (brief 2 item 5): the toggle
+            is a bare icon on the page canvas, no fill, no border, no
+            column color. The open rail paints its surface here. */}
+        <div
+          className={`hidden min-h-0 flex-col md:flex ${
+            leftOpen ? "border-r border-[var(--line-whisper)] bg-[var(--surface-1)]" : ""
+          }`}
+        >
           <RailEdgeToggle
             side="left"
             open={leftOpen}
@@ -178,7 +181,11 @@ export default function StoryRoomChatShellView({
           </div>
         </main>
 
-        <div className="hidden min-h-0 flex-col border-l border-[var(--line-whisper)] bg-[var(--surface-1)] md:flex">
+        <div
+          className={`hidden min-h-0 flex-col md:flex ${
+            rightOpen ? "border-l border-[var(--line-whisper)] bg-[var(--surface-1)]" : ""
+          }`}
+        >
           <RailEdgeToggle
             side="right"
             open={rightOpen}
@@ -310,30 +317,55 @@ function StoryChatMobileBar({
   );
 }
 
-// One bare 44px icon per rail, at the rail's own edge, open or closed.
-// A tap control rises one step above its container (--step-above).
+// One 44px toggle per rail (brief 2 item 5): the same glyph and recipe
+// as the primary sidebar's collapse toggle
+// (components/studio/studio-sidebar/StudioSidebar.view.jsx, the bare
+// icon ruled 10 Sep 2026: no circle, no fill, dim ink at rest, gold on
+// hover, deep gold pressed, the global focus ring). The story list
+// toggle anchors to the right edge of its panel and the details toggle
+// to the left edge, so each sits against the center column open or
+// closed. The right rail's glyph mirrors the panel line to its own
+// side.
+const RAIL_TOGGLE_CLASS =
+  "grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation place-items-center rounded-[var(--radius-md)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--gold-action)] active:text-[var(--gold-deep)]";
+
+function RailPanelGlyph({ side = "left" }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="20"
+      height="20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d={side === "right" ? "M15 4v16" : "M9 4v16"} />
+    </svg>
+  );
+}
+
 function RailEdgeToggle({ side, open = false, onClick, openLabel, closeLabel }) {
-  const Icon =
-    side === "left"
-      ? open
-        ? PanelLeftClose
-        : PanelLeftOpen
-      : open
-        ? PanelRightClose
-        : PanelRightOpen;
   const label = open ? closeLabel : openLabel;
 
   return (
-    <div className="flex shrink-0 justify-center py-[var(--space-2)]">
+    <div
+      className={`flex shrink-0 py-[var(--space-2)] ${
+        side === "left" ? "justify-end" : "justify-start"
+      }`}
+    >
       <button
         type="button"
         onClick={() => onClick?.()}
         title={label}
         aria-label={label}
         aria-expanded={open}
-        className="flex h-[var(--control-md)] w-[var(--control-md)] touch-manipulation items-center justify-center rounded-[var(--radius-full)] bg-[var(--step-above)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)]"
+        className={RAIL_TOGGLE_CLASS}
       >
-        <Icon size={18} aria-hidden="true" />
+        <RailPanelGlyph side={side} />
       </button>
     </div>
   );

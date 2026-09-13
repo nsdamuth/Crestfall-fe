@@ -25,7 +25,7 @@
 `StoryRoomChatShell.view.jsx` is the portable Skin. It owns:
 
 - the three flush columns at md and up (geometry in `app/design-system.css`, `.cf-story-room-grid[data-rails]`, fe/chat-studio item 1)
-- one bare 44px edge toggle per rail, open or closed
+- one bare 44px edge toggle per rail, open or closed (brief 2 item 5: the primary sidebar's collapse glyph and bare-icon recipe, the story list toggle on the right edge of its panel, the details toggle on the left edge; a closed rail carries no surface, border, or column color)
 - the 44px mobile bar below md (back chevron, primary character circle, title, story details and gallery buttons); there is no desktop header block
 - the right sheet below md (the details rail inside `KitModalFrame variant="sheet"`) and the delete confirm on `StoryChatDialog`
 - Help and Commands overlays

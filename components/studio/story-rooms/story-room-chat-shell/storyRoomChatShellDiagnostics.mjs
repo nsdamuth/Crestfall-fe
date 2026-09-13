@@ -83,8 +83,16 @@ test("portable View owns responsive layout and uses injected children only", () 
   assert.match(view, /StoryListComponent/);
   assert.match(view, /md:h-\[calc\(100dvh-var\(--topbar-h\)\)\]/);
   assert.match(view, /cf-story-room-grid/);
-  assert.match(view, /hidden min-h-0 flex-col border-l border-\[var\(--line-whisper\)\] bg-\[var\(--surface-1\)\] md:flex/);
+  // Brief 2 item 5: a closed rail carries no surface, the open rail
+  // paints its own; the toggle is the sidebar's bare panel glyph and
+  // recipe, anchored to the panel edge nearest the center.
+  assert.match(view, /rightOpen \? "border-l border-\[var\(--line-whisper\)\] bg-\[var\(--surface-\d\)\]" : ""/);
+  assert.match(view, /leftOpen \? "border-r border-\[var\(--line-whisper\)\] bg-\[var\(--surface-\d\)\]" : ""/);
   assert.match(view, /RailEdgeToggle/);
+  assert.match(view, /function RailPanelGlyph/);
+  assert.match(view, /<rect x="3" y="4" width="18" height="16" rx="2" \/>/);
+  assert.match(view, /side === "left" \? "justify-end" : "justify-start"/);
+  assert.doesNotMatch(view, /PanelLeftOpen|PanelRightOpen|bg-\[var\(--step-above\)\] text-\[var\(--ink-dim\)\] transition-colors duration-\[var\(--dur-hover\)\] hover:text-\[var\(--ink\)\]"\n      >\n        <Icon/);
   assert.match(view, /StoryChatMobileBar/);
   assert.doesNotMatch(view, /StoryRoomHeader|PanelRevealButton|Cast Open|State Open/);
   assert.doesNotMatch(view, /matchMedia/);
