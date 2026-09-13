@@ -1,7 +1,15 @@
 export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
-  "story-room-chat-shell.view.v4.1";
+  "story-room-chat-shell.view.v4.2";
 
 /**
+ * v4.2, fe/chat-studio brief 4 (13 Sep 2026), additive. Item 3:
+ * `storyListProps` carries `newChat` (display-ready button state) and
+ * the ViewModel takes `newChatLaunch`, the launch controller the
+ * binding shell owns (`useStoryLaunchController`, the Stories page's);
+ * a tap starts a new chat from the story's source creation
+ * (`resolveStorySourceCreation`: the source template, else the default
+ * Character) and the controller navigates to it.
+ *
  * v4.1, fe/chat-studio brief 3 (13 Sep 2026), additive. Item 1: the
  * composer renders in a full-width shell row beneath the rails grid,
  * its content in the transcript's grid column. Item 10: the mobile bar
@@ -72,7 +80,7 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {boolean} swipeEnabled True below md, where horizontal swipes open the mobile panels.
  * @property {{label: string, avatarUrl: string}|null} primaryCharacter The first Character responder, for the mobile bar circle.
  * @property {string} backHref The mobile bar's back link, the Stories page.
- * @property {Object} storyListProps { currentRoomId, refetchKey }
+ * @property {Object} storyListProps { currentRoomId, refetchKey, newChat }
  * @property {Object} detailsRailProps StoryRoomDetailsRail binding props (room, cast, messages, castPanelProps, statePanelProps, runtimeMechanicsPanelProps, chatColorProps, onDeleteRoom, isDeletingRoom, deleteError).
  * @property {Object} mobileDetailsRailProps The same bag for the right sheet; its cast roster closes the sheet on a pick.
  * @property {"stories"|"details"|null} mobilePanel

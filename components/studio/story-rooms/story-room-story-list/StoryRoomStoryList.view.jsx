@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { MessageSquarePlus, Plus } from "lucide-react";
 
 import KitSearchFieldView from "@/components/kit/studio-filter-bar/KitSearchField.view";
 
@@ -78,6 +78,7 @@ export default function StoryRoomStoryListView({
   onQueryChange = null,
   newStoryHref = "/studio/v2/stories",
   newStoryLabel = "New story",
+  newChat = null,
   searchPlaceholder = "Search stories",
   recentHeading = "Recent",
   emptyMessage = "No stories yet.",
@@ -100,6 +101,30 @@ export default function StoryRoomStoryListView({
           onChange={(nextValue) => onQueryChange?.(nextValue)}
           name="story-room-story-list-search"
         />
+
+        {/* New chat (brief 4 item 3) above New story: starts a fresh
+            chat from this story's source creation through the launch
+            flow the Stories page uses; disabled with "not available
+            yet" when the story resolves to no source creation. */}
+        {newChat ? (
+          <button
+            type="button"
+            onClick={() => newChat.onPress?.()}
+            disabled={Boolean(newChat.disabled)}
+            title={newChat.title || newChat.label || "New chat"}
+            aria-label={newChat.title || newChat.label || "New chat"}
+            className="cf-btn cf-btn--secondary w-full justify-center"
+          >
+            <MessageSquarePlus size={16} aria-hidden="true" />
+            {newChat.pending ? newChat.pendingLabel || "Starting" : newChat.label || "New chat"}
+          </button>
+        ) : null}
+
+        {newChat?.errorMessage ? (
+          <p role="alert" className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger-text)]">
+            {newChat.errorMessage}
+          </p>
+        ) : null}
 
         <LinkComponent
           href={newStoryHref}

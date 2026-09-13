@@ -37,6 +37,43 @@ export function buildNextSpeakerOptions(speakerOptions = []) {
 
 export const STORY_ROOM_BACK_HREF = "/studio/v2/stories";
 
+export const STORY_ROOM_NEW_CHAT_LABEL = "New chat";
+
+// The creation a new chat starts from (brief 4 item 3): the room's
+// source template when it launched from one (room.data.source), else,
+// for a private character chat, the default Character's creation; the
+// shape the launch controller's prepare step reads (id, type, title).
+// Null when the story resolves to neither.
+export function resolveStorySourceCreation({ room = {}, cast = [] } = {}) {
+  const source = room?.rawRoom?.data?.source || {};
+  const templateId = String(source.templateId || source.template_id || "").trim();
+
+  if (templateId) {
+    return {
+      id: templateId,
+      type: "ROOM_TEMPLATE",
+      title: String(source.templateTitle || source.template_title || room?.title || "").trim(),
+    };
+  }
+
+  const members = Array.isArray(cast) ? cast : [];
+  const isCharacter = (member) =>
+    String(member?.participantType || "").toUpperCase() === "CHARACTER" &&
+    String(member?.participant?.creationId || "").trim();
+  const character =
+    members.find((member) => isCharacter(member) && member?.participant?.isDefault) ||
+    members.find(isCharacter) ||
+    null;
+
+  return character
+    ? {
+        id: String(character.participant.creationId).trim(),
+        type: "CHARACTER",
+        title: String(character.name || "").trim(),
+      }
+    : null;
+}
+
 // Rail geometry lives in app/design-system.css (.cf-story-room-grid,
 // decision K1); the ViewModel only names the state.
 export function buildStoryRoomRailsState({ leftOpen, rightOpen }) {
@@ -151,6 +188,7 @@ export function useStoryRoomChatShellViewModel({
   account,
   onRoomDeleted,
   chrome,
+  newChatLaunch = null,
 } = {}) {
   const safeChat = normalizeChat(chat);
   const safeChrome = normalizeChrome(chrome);
@@ -461,6 +499,35 @@ export function useStoryRoomChatShellViewModel({
     []
   );
 
+  // New chat (brief 4 item 3): the story list's button above New story
+  // starts a fresh chat from this story's source creation through the
+  // launch controller the binding shell owns; the controller navigates
+  // to the new chat itself. Disabled with "not available yet" only when
+  // the story resolves to no source creation.
+  const sourceCreation = useMemo(
+    () => resolveStorySourceCreation({ room, cast }),
+    [room, cast]
+  );
+  const launchNewChat = newChatLaunch?.launch;
+  const newChatPending = Boolean(
+    sourceCreation && newChatLaunch?.launchingCreationId === sourceCreation.id
+  );
+  const onNewChat = useCallback(() => {
+    if (!sourceCreation || typeof launchNewChat !== "function") return;
+    void launchNewChat(sourceCreation);
+  }, [launchNewChat, sourceCreation]);
+  const newChat = {
+    label: STORY_ROOM_NEW_CHAT_LABEL,
+    pendingLabel: "Starting",
+    pending: newChatPending,
+    disabled: !sourceCreation || typeof launchNewChat !== "function" || newChatPending,
+    title: sourceCreation
+      ? `${STORY_ROOM_NEW_CHAT_LABEL} from ${sourceCreation.title || "this story"}`
+      : "New chat, not available yet",
+    errorMessage: String(newChatLaunch?.launchError || ""),
+    onPress: onNewChat,
+  };
+
   const castPanelProps = {
     room,
     cast,
@@ -580,6 +647,7 @@ export function useStoryRoomChatShellViewModel({
     storyListProps: {
       currentRoomId: roomId,
       refetchKey: Array.isArray(messages) ? messages.length : 0,
+      newChat,
     },
     mobilePanel,
     composerHelpPanel,

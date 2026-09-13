@@ -15,7 +15,7 @@ The story chat page's left rail (ruling D4, fe/chat-studio item 1, 12 Sep 2026).
 - newest activity first ordering
 - the loading, error, and empty states
 
-`StoryRoomStoryList.view.jsx` is the portable View. It renders the search field (`KitSearchFieldView`, the one shared search field the sticky filter bar and the Filter panel render, so the bed, hairline, glyph, and type are the filter bar's by construction and never restyled here; brief 2 item 7 verified this, no local override exists), the New story link, the Recent heading, and one 56px row per story: art at 40px, or the circular geometric Crestfall mark (`../story-room-details-rail/StoryRoomMark.jsx`, icons-v7 symbol i-59, brief 3 item 5, never the rosette) on the `--surface-2` bed, title at the ui step, last line at the label step, the relative day right-aligned, hover on `--step-above`, the current story on a gold left rule and `--fill-whisper`. Gold marks the selected row only.
+`StoryRoomStoryList.view.jsx` is the portable View. It renders the search field (`KitSearchFieldView`, the one shared search field the sticky filter bar and the Filter panel render, so the bed, hairline, glyph, and type are the filter bar's by construction and never restyled here; brief 2 item 7 verified this, no local override exists), the New chat button (brief 4 item 3, display-ready `newChat` from the chat shell, which owns the launch through `useStoryLaunchController`, the same controller the Stories page uses: prepare, the requirements sheet when a choice is needed, `POST /api/studio/story-rooms/from-template` for a template or `POST /api/studio/story-rooms` for a character, then navigate to the new chat; disabled with "not available yet" when the story resolves to no source creation), the New story link, the Recent heading, and one 56px row per story: art at 40px, or the circular geometric Crestfall mark (`../story-room-details-rail/StoryRoomMark.jsx`, icons-v7 symbol i-59, brief 3 item 5, never the rosette) on the `--surface-2` bed, title at the ui step, last line at the label step, the relative day right-aligned, hover on `--step-above`, the current story on a gold left rule and `--fill-whisper`. Gold marks the selected row only.
 
 ## Placement
 
@@ -23,6 +23,6 @@ Mounted by the story chat shell in its left rail at md and up when the rail is o
 
 ## Not in this package
 
-- creating a story (New story links to the Stories page, where a story begins)
+- creating a story from scratch (New story links to the Stories page, where a story begins; New chat only restarts the current story's source creation, and the chat shell owns that launch)
 - deleting, renaming, or reordering stories
 - any fixture or preview route

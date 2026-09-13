@@ -9,9 +9,11 @@ import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { useStudioChrome } from "@/components/studio/StudioChromeProvider";
 import StoryRoomComposer from "@/components/studio/story-rooms/StoryRoomComposer";
 import StoryRoomDetailsRail from "@/components/studio/story-rooms/StoryRoomDetailsRail";
+import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
 import StoryRoomStatusSurfaceHost from "@/components/studio/story-rooms/story-room-chat-shell/StoryRoomStatusSurfaceHost";
 import StoryRoomStoryList from "@/components/studio/story-rooms/StoryRoomStoryList";
 import StoryRoomTranscript from "@/components/studio/story-rooms/StoryRoomTranscript";
+import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import useStoryRoomChat from "@/components/studio/story-rooms/hooks/useStoryRoomChat";
 
 import StoryRoomChatShellView from "./story-room-chat-shell/StoryRoomChatShell.view";
@@ -26,6 +28,11 @@ export default function StoryRoomChatShell({ roomId }) {
   // One left panel at a time: the story list rail claims the left edge
   // through the studio chrome context and the primary nav collapses.
   const chrome = useStudioChrome();
+  // New chat (brief 4 item 3): the same launch controller the Stories
+  // page uses (prepare, the requirements sheet when a choice is needed,
+  // POST from-template or POST story-rooms, then navigate to the new
+  // chat through the post-create route authority).
+  const launchController = useStoryLaunchController();
 
   const onRoomDeleted = useCallback(() => {
     router.push("/studio/v2/stories");
@@ -37,6 +44,7 @@ export default function StoryRoomChatShell({ roomId }) {
     account,
     onRoomDeleted,
     chrome,
+    newChatLaunch: launchController,
   });
 
   return (
@@ -56,6 +64,8 @@ export default function StoryRoomChatShell({ roomId }) {
           {...viewProps.playerCharacterPickerProps}
         />
       ) : null}
+
+      <StoryLaunchRequirementsSheet picker={launchController.picker} />
     </>
   );
 }

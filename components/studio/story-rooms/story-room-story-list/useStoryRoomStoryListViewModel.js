@@ -64,6 +64,7 @@ export function useStoryRoomStoryListViewModel({
   refetchKey = 0,
   onNavigate = null,
   loadStoryRooms = fetchStoryRooms,
+  newChat = null,
 } = {}) {
   const [rooms, setRooms] = useState([]);
   const [status, setStatus] = useState("loading");
@@ -121,6 +122,9 @@ export function useStoryRoomStoryListViewModel({
     query,
     onQueryChange: (nextValue) => setQuery(String(nextValue ?? "")),
     newStoryHref: STORY_ROOM_STORY_LIST_NEW_STORY_HREF,
+    // New chat (brief 4 item 3) arrives display-ready from the chat
+    // shell, which owns the launch; null hides the button.
+    newChat: newChat && typeof newChat === "object" ? newChat : null,
     isLoading: status === "loading",
     errorMessage: status === "error" ? errorMessage : "",
     onSelect,

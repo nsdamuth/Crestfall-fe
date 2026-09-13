@@ -31,11 +31,22 @@ const baseItems = Object.freeze([
   },
 ]);
 
+const baseNewChat = Object.freeze({
+  label: "New chat",
+  pendingLabel: "Starting",
+  pending: false,
+  disabled: false,
+  title: "New chat from The Lantern Below",
+  errorMessage: "",
+  onPress: () => {},
+});
+
 function makeFixture(overrides = {}) {
   return {
     items: baseItems,
     query: "",
     newStoryHref: "/studio/v2/stories",
+    newChat: baseNewChat,
     isLoading: false,
     errorMessage: "",
     ...overrides,
@@ -72,6 +83,14 @@ export const storyRoomStoryListLongestFixture = makeFixture({
     },
     ...baseItems,
   ],
+});
+
+export const storyRoomStoryListNewChatUnavailableFixture = makeFixture({
+  newChat: { ...baseNewChat, disabled: true, title: "New chat, not available yet" },
+});
+
+export const storyRoomStoryListNewChatErrorFixture = makeFixture({
+  newChat: { ...baseNewChat, errorMessage: "Story could not be started." },
 });
 
 export const storyRoomStoryListFilteredFixture = makeFixture({
