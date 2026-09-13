@@ -9,13 +9,11 @@ const BASE = {
   title: "Kessa Cindervell",
   byline: "by @crestfall",
   shareUrl: "https://crestfall-studio.com/c/creation-1/kessa-cindervell?ref=brian",
-  canNativeShare: false,
   status: "idle",
   statusMessage: "",
   blockedMessage: null,
   reviewState: "idle",
   onCopyLink: noop,
-  onNativeShare: noop,
   onSubmitForReview: noop,
   onClose: noop,
 };
@@ -29,17 +27,6 @@ const BLOCKED = {
 
 export const kitShareSheetFixtures = [
   { id: "playable", label: "Playable character, desktop", props: { ...BASE } },
-  {
-    id: "playable-native",
-    label: "Playable story with the native share action",
-    props: {
-      ...BASE,
-      kind: "story",
-      title: "The Brasswhisker's Workshop",
-      shareUrl: "https://crestfall-studio.com/story/creation-2/the-brasswhiskers-workshop?ref=brian",
-      canNativeShare: true,
-    },
-  },
   {
     id: "image",
     label: "Shared image, no card",
@@ -100,7 +87,7 @@ export const kitShareSheetFixtures = [
     label: "Blocked, review submission failed",
     props: { ...BLOCKED, reviewState: "error" },
   },
-  { id: "copied", label: "Link copied", props: { ...BASE, status: "copied", statusMessage: "Link copied." } },
+  { id: "copied", label: "Link copied", props: { ...BASE, status: "copied", statusMessage: "Link copied" } },
   { id: "error", label: "Share unavailable", props: { ...BASE, status: "error", statusMessage: "Share unavailable." } },
   {
     id: "no-image",

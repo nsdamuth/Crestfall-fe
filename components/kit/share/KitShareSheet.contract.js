@@ -1,5 +1,13 @@
-export const KIT_SHARE_SHEET_VIEW_CONTRACT_VERSION = "1.1.0";
+export const KIT_SHARE_SHEET_VIEW_CONTRACT_VERSION = "2.0.0";
 
+// Version note, 1.1.0 -> 2.0.0 (fe/share-og follow-up 2, RULED 13 Sep
+// 2026, Brian's browser review: one gold Copy link, no native share).
+// Removed: the native share capability flag, its callback, the
+// "shared" status, and the Share... action. Copy link is the one share
+// action, the gold primary, full width, 44px; on copy the status reads
+// "Link copied" and clears after the existing timer. A breaking
+// removal, so the major bumps.
+//
 // Version note, 1.0.0 -> 1.1.0 (fe/share-og follow-up 1, RULED 13 Sep
 // 2026: sharing is public only). The `note` prop (the Internal note)
 // is removed: an Internal creation now takes the blocked state, same
@@ -18,8 +26,7 @@ export const KIT_SHARE_SHEET_VIEW_CONTRACT_VERSION = "1.1.0";
  * keyed by asset type, mounted by every share button). The View
  * receives one share intent already resolved by the type rule
  * (shareTypeRule.js) and renders it: a preview, the link, the copy
- * action, the native share action where the browser offers one, and
- * the status of the last action. It never builds a URL, never reads
+ * action, and the status of the last action. It never builds a URL, never reads
  * the clipboard, never decides whether a share carries the card, and
  * never posts the review submission itself.
  *
@@ -44,9 +51,7 @@ export const KIT_SHARE_SHEET_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} byline "by @maker", the creator, never the sharer;
  *   "@handle" on the profile kind
  * @property {string} shareUrl the absolute link, ref included
- * @property {boolean} canNativeShare true when navigator.share exists;
- *   renders the Share... action beside Copy link
- * @property {"idle"|"copied"|"shared"|"error"} status
+ * @property {"idle"|"copied"|"error"} status
  * @property {string} statusMessage display-ready line for the status
  *   chip; empty renders no chip
  * @property {string|null} blockedMessage when set, the sheet renders
@@ -61,7 +66,6 @@ export const KIT_SHARE_SHEET_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} reviewMessage display-ready failure line under
  *   the actions; empty renders nothing
  * @property {(() => void)|null} onCopyLink
- * @property {(() => void)|null} onNativeShare
  * @property {(() => void)|null} onSubmitForReview
  * @property {(() => void)|null} onClose
  */

@@ -24,7 +24,7 @@ import {
   toShareSlug,
 } from "./shareUrl.js";
 import { buildShareCardModel, toShareCardExcerpt } from "./shareCardModel.js";
-import { getShareReviewCopy } from "./useKitShareSheetViewModel.js";
+import { getShareReviewCopy, getShareStatusMessage } from "./useKitShareSheetViewModel.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -168,7 +168,6 @@ test("a private creation is blocked with the public-only sentence and no link", 
   assert.equal(intent.blockedMessage, SHARE_COPY.blockedNotPublic);
   assert.equal(intent.url, "");
   assert.equal(intent.cardImageSrc, null);
-  assert.equal(intent.nativeShare, null);
   assert.equal(intent.reviewState, SHARE_REVIEW_STATES.IDLE);
   assert.equal(normalizeShareVisibility({}), "PRIVATE");
 });
@@ -183,7 +182,6 @@ test("an Internal creation is blocked the same way, with no note and no link", (
     assert.equal(intent.blockedMessage, SHARE_COPY.blockedNotPublic, visibility);
     assert.equal(intent.url, "", visibility);
     assert.equal(intent.cardImageSrc, null, visibility);
-    assert.equal(intent.nativeShare, null, visibility);
     assert.equal("note" in intent, false, visibility);
   }
   assert.equal(SHARE_COPY.internalNote, undefined);
@@ -293,12 +291,37 @@ test("the card model drops the description sentinel and clips the excerpt", () =
   assert.match(excerpt, /\.\.\.$/);
 });
 
+// Follow-up 2: one gold Copy link, no native share; ref on every kind.
+test("every kind the sheet shows carries ref, and no native share payload exists", () => {
+  const playable = buildShareIntent(
+    { creationType: "CHARACTER", id: "creation-1", title: "Kessa", visibility: "PUBLIC" },
+    CONTEXT
+  );
+  const image = buildShareIntent(
+    { mediaType: "IMAGE", id: "output-9", title: "Kessa", sourceCreationId: "creation-1", media: { cardUrl: "/m" } },
+    CONTEXT
+  );
+  const orphanImage = buildShareIntent({ mediaType: "IMAGE", id: "output-9", title: "Loose" }, CONTEXT);
+  const profile = buildShareIntent({ kind: "profile", id: "profile-1", title: "Crestfall", creatorUsername: "crestfall" }, CONTEXT);
+  const link = buildShareIntent(
+    { creationType: "LOCATION", id: "creation-3", title: "Workshop", visibility: "PUBLIC" },
+    CONTEXT
+  );
+  for (const intent of [playable, image, orphanImage, profile, link]) {
+    assert.match(intent.url, /[?&]ref=brian$/, intent.kind);
+    assert.equal("nativeShare" in intent, false, intent.kind);
+  }
+  assert.equal(getShareStatusMessage("copied"), "Link copied");
+  assert.equal(getShareStatusMessage("shared"), "");
+});
+
 test("the View is stateless presentation and the README names the rule", () => {
   const view = read("KitShareSheet.view.jsx");
   assert.doesNotMatch(view, /useEffect|fetch\(|navigator\.|window\./);
   assert.match(view, /Copy link/);
   assert.match(view, /Close/);
   assert.doesNotMatch(view, /Internal/);
+  assert.doesNotMatch(view, /Share\.\.\.|NativeShare/);
 
   const readme = read("README.md");
   assert.match(readme, /## The type rule/);

@@ -15,9 +15,7 @@ export default function KitShareSheet({
   intent = null,
   status = "idle",
   reviewState = "idle",
-  canNativeShare = false,
   onCopyLink = null,
-  onNativeShare = null,
   onSubmitForReview = null,
   onClose = null,
 }) {
@@ -26,9 +24,7 @@ export default function KitShareSheet({
     shareUrl: intent?.url || "",
     status,
     reviewState,
-    canNativeShare,
     onCopyLink,
-    onNativeShare,
     onSubmitForReview,
     onClose,
   });

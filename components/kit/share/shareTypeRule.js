@@ -248,7 +248,6 @@ export function buildShareIntent(asset = {}, { sharerUsername = "", origin = "" 
     cardImageSrc: null,
     blockedMessage: null,
     reviewState: SHARE_REVIEW_STATES.IDLE,
-    nativeShare: null,
   };
 
   if (!isShareableVisibility(visibility)) {
@@ -289,6 +288,5 @@ export function buildShareIntent(asset = {}, { sharerUsername = "", origin = "" 
     previewImageSrc,
     previewImageLargeSrc,
     cardImageSrc: cardAvailable ? `/api/share-card/${encodeURIComponent(id)}` : null,
-    nativeShare: { title, url },
   };
 }

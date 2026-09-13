@@ -1,12 +1,13 @@
 "use client";
 
 // KitShareSheet.view: stateless presentation of one share intent
-// (contract 1.1.0, fe/share-og brief 1 and follow-up 1). Theme values
-// only. A control you tap rises one step above the panel (cf-btn
-// recipes); the link bed, a control you read and select, sinks one
-// step below on --bed-deep. Gold only on the primary action and the
-// status chip.
-import { Share2, Link as LinkIcon } from "lucide-react";
+// (contract 2.0.0, fe/share-og brief 1, follow-ups 1 and 2). Theme
+// values only. A control you tap rises one step above the panel
+// (cf-btn recipes); the link bed, a control you read and select, sinks
+// one step below on --bed-deep. Gold only on the primary action and
+// the status chip. One share action: Copy link, the gold primary, full
+// width (follow-up 2: no native share).
+import { Link as LinkIcon } from "lucide-react";
 
 export const KIT_SHARE_SHEET_TITLE_ID = "kit-share-sheet-title";
 
@@ -65,14 +66,12 @@ export default function KitShareSheetView({
   title = "",
   byline = "",
   shareUrl = "",
-  canNativeShare = false,
   statusMessage = "",
   blockedMessage = null,
   reviewButtonLabel = "Submit for public review",
   reviewButtonDisabled = false,
   reviewMessage = "",
   onCopyLink = null,
-  onNativeShare = null,
   onSubmitForReview = null,
   onClose = null,
 }) {
@@ -150,26 +149,14 @@ export default function KitShareSheetView({
         />
       </label>
 
-      <div className="flex flex-col gap-[var(--space-2)] sm:flex-row">
-        <button
-          type="button"
-          onClick={() => onCopyLink?.()}
-          className="cf-btn cf-btn--secondary flex-1 items-center justify-center gap-[var(--space-1)]"
-        >
-          <LinkIcon size={16} aria-hidden="true" />
-          Copy link
-        </button>
-        {canNativeShare ? (
-          <button
-            type="button"
-            onClick={() => onNativeShare?.()}
-            className="goldring cf-btn cf-btn--primary flex-1 items-center justify-center gap-[var(--space-1)]"
-          >
-            <Share2 size={16} aria-hidden="true" />
-            Share...
-          </button>
-        ) : null}
-      </div>
+      <button
+        type="button"
+        onClick={() => onCopyLink?.()}
+        className="goldring cf-btn cf-btn--primary w-full items-center justify-center gap-[var(--space-1)]"
+      >
+        <LinkIcon size={16} aria-hidden="true" />
+        Copy link
+      </button>
 
       {statusMessage ? (
         <p

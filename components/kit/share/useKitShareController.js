@@ -4,9 +4,10 @@
 // <KitShareSheet {...share.sheetProps} /> once and calls
 // share.open(asset) from every share button it carries. The type rule
 // decides everything about the intent; this hook owns only the open
-// state, the copy and native actions, the review submission on a
-// blocked share (follow-up 1), and the status timer. No page carries
-// share logic of its own (gate G1).
+// state, the copy action (the one share action since follow-up 2: no
+// native share), the review submission on a blocked share (follow-up
+// 1), and the status timer. No page carries share logic of its own
+// (gate G1).
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -40,7 +41,6 @@ export function useKitShareController({ sharerUsername = "", origin = "" } = {})
   const [intent, setIntent] = useState(null);
   const [status, setStatus] = useState("idle");
   const [reviewState, setReviewState] = useState(SHARE_REVIEW_STATES.IDLE);
-  const [canNativeShare, setCanNativeShare] = useState(false);
   const timerRef = useRef(null);
 
   useEffect(
@@ -62,7 +62,6 @@ export function useKitShareController({ sharerUsername = "", origin = "" } = {})
       const nextIntent = buildShareIntent(asset || {}, { sharerUsername, origin: resolvedOrigin });
       setStatus("idle");
       setReviewState(nextIntent.reviewState || SHARE_REVIEW_STATES.IDLE);
-      setCanNativeShare(typeof navigator !== "undefined" && typeof navigator.share === "function");
       setIntent(nextIntent);
     },
     [origin, sharerUsername]
@@ -81,18 +80,6 @@ export function useKitShareController({ sharerUsername = "", origin = "" } = {})
       settle("copied");
     } catch {
       settle("error");
-    }
-  }, [intent, settle]);
-
-  const nativeShare = useCallback(async () => {
-    if (!intent?.nativeShare || typeof navigator === "undefined" || typeof navigator.share !== "function") {
-      return;
-    }
-    try {
-      await navigator.share(intent.nativeShare);
-      settle("shared");
-    } catch (error) {
-      if (error?.name !== "AbortError") settle("error");
     }
   }, [intent, settle]);
 
@@ -122,14 +109,12 @@ export function useKitShareController({ sharerUsername = "", origin = "" } = {})
             intent,
             status,
             reviewState,
-            canNativeShare,
             onCopyLink: copyLink,
-            onNativeShare: nativeShare,
             onSubmitForReview: submitForReview,
             onClose: close,
           }
         : { intent: null },
-    [canNativeShare, close, copyLink, intent, nativeShare, reviewState, status, submitForReview]
+    [close, copyLink, intent, reviewState, status, submitForReview]
   );
 
   return {
@@ -140,7 +125,6 @@ export function useKitShareController({ sharerUsername = "", origin = "" } = {})
     open,
     close,
     copyLink,
-    nativeShare,
     submitForReview,
     sheetProps,
   };

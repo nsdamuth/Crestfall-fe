@@ -1,6 +1,6 @@
 "use client";
 
-// Pass-through ViewModel for KitShareSheet (contract 1.1.0): every
+// Pass-through ViewModel for KitShareSheet (contract 2.0.0): every
 // prop the View reads is accepted here, normalized, and returned. The
 // status line copy and the review button copy live here, not in the
 // View.
@@ -9,8 +9,7 @@ import { SHARE_COPY, SHARE_REVIEW_STATES } from "./shareTypeRule.js";
 
 const STATUS_MESSAGES = Object.freeze({
   idle: "",
-  copied: "Link copied.",
-  shared: "Shared.",
+  copied: "Link copied",
   error: "Share unavailable.",
 });
 
@@ -57,7 +56,6 @@ export function useKitShareSheetViewModel(props = {}) {
     title: text(props.title),
     byline: text(props.byline),
     shareUrl: text(props.shareUrl),
-    canNativeShare: props.canNativeShare === true,
     status,
     statusMessage: text(props.statusMessage) || getShareStatusMessage(status),
     blockedMessage: text(props.blockedMessage) || null,
@@ -67,7 +65,6 @@ export function useKitShareSheetViewModel(props = {}) {
       typeof props.reviewButtonDisabled === "boolean" ? props.reviewButtonDisabled : review.reviewButtonDisabled,
     reviewMessage: text(props.reviewMessage) || review.reviewMessage,
     onCopyLink: callback(props.onCopyLink),
-    onNativeShare: callback(props.onNativeShare),
     onSubmitForReview: callback(props.onSubmitForReview),
     onClose: callback(props.onClose),
   };

@@ -3,7 +3,9 @@
 The one share package (fe/share-og brief 1, RULED 13 Sep 2026; sharing
 is public only since follow-up 1, RULED 13 Sep 2026). Every share
 button in the app mounts it; no page carries share logic of its own.
-Contract 1.1.0.
+Contract 2.0.0 (follow-up 2 removed native share: `canNativeShare`,
+`onNativeShare`, the "shared" status, and the Share... action are gone;
+Copy link is the one share action, the gold primary, full width).
 
 ## The type rule
 
@@ -77,9 +79,8 @@ diagnostics:loom:share`).
   byline, the preview (the card image for a playable public creation,
   else the link preview row), the link in a read-only field on
   `--bed-deep` (a control you read sinks one step below), Copy link
-  (secondary), Share... (gold primary, only when the browser offers
-  `navigator.share`), and a status chip (Link copied, Shared, Share
-  unavailable).
+  (the gold primary, full width, 44px), and a status chip (Link
+  copied, Share unavailable) that clears after 1.6 seconds.
 - Mounted on `KitModalFrame` variant modal at 36rem, a popup modal at
   every width: bottom-docked full width under 700px with the grabber
   and internal scroll, a centered fixed-width panel at 700px and up.
@@ -95,7 +96,7 @@ diagnostics:loom:share`).
 
 ```text
 VaultV2Mockup.jsx, CommunityV2Mockup.jsx, ImagesV2ImageViewer.jsx, CreatorProfileLive.jsx (later: the story chat page)
-  -> useKitShareController({ sharerUsername })   open(asset), close, copyLink, nativeShare, submitForReview, sheetProps
+  -> useKitShareController({ sharerUsername })   open(asset), close, copyLink, submitForReview, sheetProps
        -> shareTypeRule.buildShareIntent          the rule, the copy, the visibility fold, the review state
             -> shareUrl                            paths, slug, ref, sign-in return
        -> creationClient.submitCreationReview     the existing publication review path (blocked sheet only)
@@ -140,9 +141,8 @@ for review" when the creation is IN_REVIEW. A creator profile passes
 
 ## Copy
 
-- "Share", "Link", "Copy link", "Share...", "Close".
-- "Link copied.", "Shared.", "Share unavailable." (the image viewer's
-  existing status lines).
+- "Share", "Link", "Copy link", "Close".
+- "Link copied", "Share unavailable." (the status chip).
 - Blocked: "This creation can only be shared once it is public."
   (follow-up 1; supersedes the Vault sentence from brief 1).
 - "Submit for public review", "Submitted for review", "Could not
@@ -151,6 +151,6 @@ for review" when the creation is IN_REVIEW. A creator profile passes
 
 ## Fixtures
 
-playable, playable-native, image, profile, link, blocked, blocked-internal,
+playable, image, profile, link, blocked, blocked-internal,
 blocked-submitting, blocked-submitted, blocked-error, copied, error,
 no-image, longest.
