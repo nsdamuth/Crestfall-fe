@@ -59,9 +59,10 @@ density is untouched. Vault's iconKey reverted `castle` to `archive`
 in the same pass (the repo's standing archive/vault glyph).
 
 Studio glyph, RULED 12 Sep 2026 (eight-fix package, FIX 2): Home and
-Studio no longer share the `home` glyph. Studio carries `hammer`, the
-workshop glyph from the same lucide set, which no other sidebar row
-uses.
+Studio no longer share the `home` glyph. Refined the same day after
+Brian's browser review (the hammer read off-theme): Studio carries
+`feather`, the quill from the same lucide set, in the family of the
+scroll and book glyphs beside it, which no other sidebar row uses.
 
 The signed-in area's Discord and Settings icons now sit inline on the
 signed-in row itself (avatar, label, public username, then the two icons); Log
