@@ -3,12 +3,35 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronUp, Flag, Loader2, Sparkles, X } from "lucide-react";
 
+import { STORY_ROOM_MESSAGE_SURFACE_TONES } from "../story-room-message/StoryRoomMessage.contract";
 import StoryRoomMessageView from "../story-room-message/StoryRoomMessage.view";
 import StoryRoomNoticeCard from "./StoryRoomNoticeCard";
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 const DEFAULT_VISIBLE_MESSAGES = 12;
 const LOAD_EARLIER_BATCH_SIZE = 10;
+
+// One line per message, "id\tp" for the player's own messages and
+// "id\to" for every other speaker: the scroll effect's one reactive
+// input, so copy feedback or an action state change never re-runs it.
+function buildScrollKey(items) {
+  return items
+    .map(
+      (item) =>
+        `${item.id}\t${
+          item.message?.surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER ? "p" : "o"
+        }`
+    )
+    .join("\n");
+}
+
+function parseScrollKey(key) {
+  if (!key) return [];
+  return key.split("\n").map((line) => {
+    const [id, tone] = line.split("\t");
+    return { id, isPlayer: tone === "p" };
+  });
+}
 
 export default function StoryRoomTranscriptView({
   messageItems = [],
@@ -21,21 +44,54 @@ export default function StoryRoomTranscriptView({
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_MESSAGES);
   const bottomRef = useRef(null);
   const scrollFrameRef = useRef(null);
+  const messageNodesRef = useRef(new Map());
+  const seenScrollKeyRef = useRef(null);
 
   const safeMessageItems = Array.isArray(messageItems) ? messageItems : [];
   const hiddenCount = Math.max(safeMessageItems.length - visibleCount, 0);
+  const scrollKey = buildScrollKey(safeMessageItems);
 
   const visibleMessages = useMemo(() => {
     const startIndex = Math.max(safeMessageItems.length - visibleCount, 0);
     return safeMessageItems.slice(startIndex);
   }, [safeMessageItems, visibleCount]);
 
+  // Scroll (brief 3 item 7): a newly arrived message from anyone but the
+  // player scrolls so that message's top edge sits at the top of the
+  // scroll region, and the reader scrolls down through it. The player's
+  // own sent messages, the first load, a room change (no id survives),
+  // and every status change still scroll to the bottom. New messages
+  // are the ids not seen on the previous run; the anchor is the first
+  // arrival that is not the player's, taken only when the last arrival
+  // is not the player's either.
   useEffect(() => {
     if (scrollFrameRef.current) {
       cancelAnimationFrame(scrollFrameRef.current);
     }
 
+    const entries = parseScrollKey(scrollKey);
+    const seenIds = seenScrollKeyRef.current;
+    const continuesThread =
+      seenIds instanceof Set && entries.some((entry) => seenIds.has(entry.id));
+    const arrivals = continuesThread
+      ? entries.filter((entry) => !seenIds.has(entry.id))
+      : [];
+    seenScrollKeyRef.current = new Set(entries.map((entry) => entry.id));
+
+    const lastArrival = arrivals[arrivals.length - 1] || null;
+    const anchorId =
+      lastArrival && !lastArrival.isPlayer
+        ? arrivals.find((entry) => !entry.isPlayer)?.id || null
+        : null;
+
     scrollFrameRef.current = requestAnimationFrame(() => {
+      const anchorNode = anchorId ? messageNodesRef.current.get(anchorId) : null;
+
+      if (anchorNode) {
+        anchorNode.scrollIntoView({ block: "start", behavior: "smooth" });
+        return;
+      }
+
       bottomRef.current?.scrollIntoView({
         block: "end",
         behavior: "smooth",
@@ -48,13 +104,23 @@ export default function StoryRoomTranscriptView({
       }
     };
   }, [
-    safeMessageItems.length,
+    scrollKey,
     sending,
     loading,
     errorMessage,
     playerCharacterPrompt?.visible,
     playerCharacterPrompt?.selectedName,
   ]);
+
+  function registerMessageNode(id) {
+    return (node) => {
+      if (node) {
+        messageNodesRef.current.set(id, node);
+      } else {
+        messageNodesRef.current.delete(id);
+      }
+    };
+  }
 
   function loadEarlierMessages() {
     setVisibleCount((current) =>
@@ -64,7 +130,9 @@ export default function StoryRoomTranscriptView({
 
   return (
     <>
-    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 scroll-smooth">
+    {/* scroll-pt-5 matches the region's own p-5, so an anchored message
+        lands where the first message sits at the region's top. */}
+    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 scroll-smooth scroll-pt-5">
       {hiddenCount > 0 ? (
         <div className="mb-4 flex justify-center">
           <button
@@ -81,7 +149,9 @@ export default function StoryRoomTranscriptView({
 
       <div className="space-y-4">
         {visibleMessages.map((item) => (
-          <StoryRoomMessageView key={item.id} {...item.message} />
+          <div key={item.id} ref={registerMessageNode(item.id)}>
+            <StoryRoomMessageView {...item.message} />
+          </div>
         ))}
 
         {playerCharacterPrompt?.visible ? (
