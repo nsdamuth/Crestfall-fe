@@ -37,15 +37,14 @@ test("chat shell wires gestures to existing mobile panel state callbacks", () =>
 
   assert.match(view, /onTouchStart=\{handleSwipeStart\}/);
   assert.match(view, /onTouchEnd=\{handleSwipeEnd\}/);
-  assert.match(view, /onOpenMobileCast/);
-  assert.match(view, /onOpenMobileState/);
-  assert.match(view, /side="left"/);
-  assert.match(view, /side="right"/);
-  assert.match(vm, /onOpenMobileCast: \(\) => setMobilePanel\("cast"\)/);
-  assert.match(vm, /onOpenMobileState: \(\) => setMobilePanel\("state"\)/);
+  // fe/chat-studio item 6: a left swipe opens the story details sheet;
+  // the right swipe retired with the cast drawer.
+  assert.match(view, /if \(action === "OPEN_STATE"\) onOpenMobileDetails\?\.\(\);/);
+  assert.doesNotMatch(view, /onOpenMobileCast|MobileDrawerComponent/);
+  assert.match(vm, /onOpenMobileDetails: \(\) => setMobilePanel\("details"\)/);
 });
 
-test("mobile drawer is a directional side sheet with reverse-swipe and fallback close controls", () => {
+test("the retired mobile drawer package keeps its directional recipe until it is deleted", () => {
   const drawer = read("components/studio/story-rooms/story-room-mobile-drawer/StoryRoomMobileDrawer.view.jsx");
 
   assert.match(drawer, /data-drawer-side=\{normalizedSide\}/);

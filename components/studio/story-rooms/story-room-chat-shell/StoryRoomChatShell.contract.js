@@ -1,7 +1,23 @@
 export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
-  "story-room-chat-shell.view.v2.1";
+  "story-room-chat-shell.view.v3.0";
 
 /**
+ * v3.0, fe/chat-studio item 6 (12 Sep 2026). BREAKING: the right rail is
+ * the details rail (`DetailsRailComponent`, `detailsRailProps`,
+ * `mobileDetailsRailProps`); `CastPanelComponent`, `StatePanelComponent`,
+ * `RuntimeMechanicsPanelComponent`, `MobileDrawerComponent`,
+ * `castPanelProps`, `mobileCastPanelProps`, `desktopStatePanelProps`,
+ * `mobileStatePanelProps`, `runtimeMechanicsPanelProps`,
+ * `onOpenMobileCast`, and `onOpenMobileState` leave the View (the rail's
+ * own binding composes those panels). `mobilePanel` is now
+ * "details" | "gallery" | null: below md the settings button opens the
+ * rail as a bottom sheet and the media button opens it with the gallery
+ * viewer on the featured image (`onOpenMobileDetails`,
+ * `onOpenMobileGallery`). The delete confirm is the shared
+ * StoryChatDialog (ruling D3, danger tone per decision E1). The center
+ * column sits on the canvas and the rails on the card surface (Brian's
+ * amendment).
+ *
  * v2.1, fe/chat-studio item 4 (12 Sep 2026), additive: `chatColorProps`
  * ({ paletteId, creatorPaletteId, isOverridden, options, onChange,
  * onReset }) carries the chat color state the ViewModel owns (creator
@@ -30,32 +46,28 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {{label: string, avatarUrl: string}|null} primaryCharacter The first Character responder, for the mobile bar circle.
  * @property {string} backHref The mobile bar's back link, the Stories page.
  * @property {Object} storyListProps { currentRoomId, refetchKey }
- * @property {"cast"|"state"|null} mobilePanel
+ * @property {Object} detailsRailProps StoryRoomDetailsRail binding props (room, cast, messages, castPanelProps, statePanelProps, runtimeMechanicsPanelProps, chatColorProps, onDeleteRoom, isDeletingRoom, deleteError).
+ * @property {Object} mobileDetailsRailProps The same bag for the right sheet; its cast roster closes the sheet on a pick.
+ * @property {"details"|"gallery"|null} mobilePanel
  * @property {"COMMANDS"|"HELP"|null} composerHelpPanel
  * @property {Array<Object>} commands
  * @property {Array<Object>} statusSurfaces Host-agnostic authoritative readout projections.
  * @property {string} statusSurfaceError Non-fatal persistent surface loading error.
- * @property {Object} castPanelProps
- * @property {Object} mobileCastPanelProps
  * @property {Object} transcriptProps
  * @property {Object|null} playerCharacterPickerProps binding-shell props for the
  *   transient pre-first-message Player Character picker
  * @property {Object} composerProps
- * @property {Object} desktopStatePanelProps
- * @property {Object} mobileStatePanelProps
- * @property {Object|null} runtimeMechanicsPanelProps
  * @property {{paletteId: string, creatorPaletteId: string, isOverridden: boolean, options: Array<{id: string, label: string, family: string, swatch: string}>, onChange: (paletteId: string) => void, onReset: () => void}} chatColorProps
  * @property {() => void} onToggleLeftPanel
  * @property {() => void} onToggleRightPanel
- * @property {() => void} onOpenMobileCast
- * @property {() => void} onOpenMobileState
+ * @property {() => void} onOpenMobileDetails
+ * @property {() => void} onOpenMobileGallery
  * @property {() => void} onCloseMobilePanel
+ * @property {boolean} isConfirmingDeleteRoom
+ * @property {boolean} isDeletingRoom
  * @property {() => void} onCloseComposerHelpPanel
- * @property {import("react").ElementType} CastPanelComponent
  * @property {import("react").ElementType} ComposerComponent
- * @property {import("react").ElementType} MobileDrawerComponent
- * @property {import("react").ElementType} RuntimeMechanicsPanelComponent
- * @property {import("react").ElementType} StatePanelComponent
+ * @property {import("react").ElementType} DetailsRailComponent
  * @property {import("react").ElementType} StatusSurfaceHostComponent
  * @property {import("react").ElementType} StoryListComponent
  * @property {import("react").ElementType} TranscriptComponent
@@ -77,4 +89,5 @@ export const STORY_ROOM_CHAT_SHELL_PORTABILITY_RULES = Object.freeze({
   ownsViewportReads: "ViewModel",
   ownsResponsiveChatLayout: "CSS block plus Portable View",
   ownsHelpAndMobileBarMarkup: "Portable View",
+  ownsDetailsRailComposition: "StoryRoomDetailsRail Binding Shell",
 });

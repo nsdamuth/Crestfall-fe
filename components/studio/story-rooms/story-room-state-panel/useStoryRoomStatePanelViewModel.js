@@ -90,7 +90,7 @@ export function useStoryRoomStatePanelViewModel({
   onRevokeTemporaryShare,
   onCreatePersistentShare,
   onRevokePersistentShare,
-  onClose,
+  layout = "full",
 } = {}) {
   const messageOptions = useMemo(
     () => buildStorySessionVisibleMessageOptions(messages),
@@ -369,12 +369,11 @@ export function useStoryRoomStatePanelViewModel({
   });
 
   return {
-    eyebrow: "Chronicle State",
-    title: "Story Data",
     sections: buildSections(room),
     actions,
-    showCloseControl: typeof onClose === "function",
-    onClosePanel: typeof onClose === "function" ? onClose : null,
+    // 2.0.0 (fe/chat-studio item 6): the details rail mounts the actions
+    // above its rows and the sections inside the World state drill-in.
+    layout: layout === "actions" || layout === "sections" ? layout : "full",
     sessionDialogs: {
       activeDialog: exportOpen ? exportDialog : shareOpen ? shareDialog : null,
       summaryPending: {

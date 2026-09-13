@@ -20,7 +20,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
   onChangePriority = null,
 }) {
   return (
-    <div className="mt-6 min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-4">
+    <div className="min-w-0 overflow-hidden">
       <div className="flex items-start gap-3">
         <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
           <Activity size={18} />

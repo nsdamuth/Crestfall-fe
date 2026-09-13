@@ -7,11 +7,8 @@ import { useRouter } from "next/navigation";
 import DefaultPlayerCharacterPickerModal from "@/components/studio/account/DefaultPlayerCharacterPickerModal";
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { useStudioChrome } from "@/components/studio/StudioChromeProvider";
-import StoryRoomCastPanel from "@/components/studio/story-rooms/StoryRoomCastPanel";
 import StoryRoomComposer from "@/components/studio/story-rooms/StoryRoomComposer";
-import StoryRoomMobileDrawer from "@/components/studio/story-rooms/StoryRoomMobileDrawer";
-import StoryRoomRuntimeMechanicsPanel from "@/components/studio/story-rooms/StoryRoomRuntimeMechanicsPanel";
-import StoryRoomStatePanel from "@/components/studio/story-rooms/StoryRoomStatePanel";
+import StoryRoomDetailsRail from "@/components/studio/story-rooms/StoryRoomDetailsRail";
 import StoryRoomStatusSurfaceHost from "@/components/studio/story-rooms/story-room-chat-shell/StoryRoomStatusSurfaceHost";
 import StoryRoomStoryList from "@/components/studio/story-rooms/StoryRoomStoryList";
 import StoryRoomTranscript from "@/components/studio/story-rooms/StoryRoomTranscript";
@@ -20,6 +17,8 @@ import useStoryRoomChat from "@/components/studio/story-rooms/hooks/useStoryRoom
 import StoryRoomChatShellView from "./story-room-chat-shell/StoryRoomChatShell.view";
 import { useStoryRoomChatShellViewModel } from "./story-room-chat-shell/useStoryRoomChatShellViewModel";
 
+// The cast panel, state panel, and runtime mechanics panel reach the
+// page through StoryRoomDetailsRail's own binding (item 6).
 export default function StoryRoomChatShell({ roomId }) {
   const router = useRouter();
   const chat = useStoryRoomChat(roomId);
@@ -44,11 +43,8 @@ export default function StoryRoomChatShell({ roomId }) {
     <>
       <StoryRoomChatShellView
         {...viewProps}
-        CastPanelComponent={StoryRoomCastPanel}
         ComposerComponent={StoryRoomComposer}
-        MobileDrawerComponent={StoryRoomMobileDrawer}
-        RuntimeMechanicsPanelComponent={StoryRoomRuntimeMechanicsPanel}
-        StatePanelComponent={StoryRoomStatePanel}
+        DetailsRailComponent={StoryRoomDetailsRail}
         StatusSurfaceHostComponent={StoryRoomStatusSurfaceHost}
         StoryListComponent={StoryRoomStoryList}
         TranscriptComponent={StoryRoomTranscript}

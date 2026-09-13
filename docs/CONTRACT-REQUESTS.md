@@ -94,6 +94,9 @@ the details below carry only what is still actionable.
 | CR-064 | Viewer reaction state on the public profile payload | The public profile payload carries no `viewer.isLiked` or `viewer.isBookmarked`; the profile page fetches them from profile-reactions after first paint, so Liked and Saved rest unselected for one round trip | open | Nick | non-blocking; filed 12 Sep 2026; optimistic toggle in place |
 | CR-063 | Public lore approval-state projection | The community lore projection emits only canon or approved, so Draft and Archived never match community lore, and one state carries three names (IN_REVIEW, pending, Reviewing); confirm the states the public feed serves and the canonical name | open | Nick | non-blocking; filed 6 Sep 2026 |
 | CR-066 | Chat color preference | A per-account (or per-story) `chat_color_palette_id` on the profile, one of the 13 character palette ids, so the user's Preferences choice on the story chat page survives a reload; the chat page keeps the override in page state until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 4 |
+| CR-067 | Creator byline on the room snapshot | `GET /v1/studio/story-rooms/{id}` carries `ownerId` only; the story chat details rail wants `room.creator` ({ id, username, displayName }) for the source template's owner so it can render "by @username"; the byline row stays hidden until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
+| CR-068 | Story description on the room snapshot | The room record has no description (room.data.source carries templateId and templateTitle only); the details rail wants `room.description` copied from the source template at launch; the description block stays hidden until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
+| CR-069 | Story media list on the room snapshot | No story-level media list exists; the details rail builds its gallery from each participant's `metadata.mediaImageUrls` and the transcript's scene images until `room.media[]` is served in display order | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
 
 ## Details
 
@@ -1064,6 +1067,46 @@ whether Nick wants the preference per account or per story room, and
 whether the id set stays the character palette catalog. Interim: the
 override is page state in `useStoryRoomChatShellViewModel.js`
 (`chatColorProps`), reset on reload; nothing is faked.
+
+### CR-067, Creator byline on the room snapshot
+
+Filed 12 Sep 2026 by fe/chat-studio item 6 (the story details rail).
+The rail's order is gallery, title, byline, description, actions, rows.
+The room snapshot (`GET /v1/studio/story-rooms/{id}`, the FE proxy at
+`app/api/studio/story-rooms/[id]/route.js`) carries `room.ownerId` and
+nothing that names a person. Call wanted: the same GET adds
+`room.creator` with `{ id, username, displayName }` for the owner of the
+source template (`room.data.source.templateId`). Expected response: the
+snapshot with that object, null for a private character chat with no
+template owner. Unverified: whether a private character chat should
+credit the character's creator instead. Interim: the byline row is
+hidden (`byline: null` in `useStoryRoomDetailsRailViewModel.js`).
+
+### CR-068, Story description on the room snapshot
+
+Filed 12 Sep 2026 by fe/chat-studio item 6. `normalizeRoomRecord` in the
+Chassis has no description field and `room.data.source` holds only
+`templateId` and `templateTitle`, so the rail has nothing to clamp to
+four lines with See more. Call wanted: the same GET adds
+`room.description`, copied from the source template creation's
+description at launch (createChatRoomFromTemplate already reads
+`creation.description` for registry links). Expected response: a string,
+empty when the template has none. Interim: the description block is
+hidden (`description: ""`).
+
+### CR-069, Story media list on the room snapshot
+
+Filed 12 Sep 2026 by fe/chat-studio item 6. The gallery at the top of the
+rail wants the story's media in display order. Today the page builds it
+itself (`buildStoryMediaItems` in `useStoryRoomDetailsRailViewModel.js`):
+the featured speaker image, every participant's `metadata.mediaImageUrls`
+(already SFW-filtered by the Chassis) and avatar, then every scene image
+the transcript carries (`metadata.autoEventMedia.displayUrl`),
+deduplicated by url in first-seen order. Call wanted: the same GET adds
+`room.media[]` of `{ id, url, altText, sourceType, sourceId }`, featured
+first. Expected response: the list, empty when the story has no images.
+Unverified: whether scene images belong in it. Interim: the client-side
+union above; nothing is faked.
 
 ## Closed
 

@@ -41,23 +41,10 @@ function castMember({
   };
 }
 
+// 2.0.0 (fe/chat-studio item 6): the roster and its actions only; the
+// story's media, title, narrator, delete, and the way back live in the
+// details rail fixtures.
 const BASE_FIXTURE = {
-  eyebrow: "Room & Cast",
-  canClose: true,
-  featuredMedia: {
-    imageUrl: "/assets/covers/profile.png",
-    imageAltText: "Mara Venn",
-    speakerName: "Mara Venn",
-    emptyEyebrow: "Room Media",
-    emptyMessage: "Featured room image will appear here.",
-    imageEyebrow: "Last Speaker Media",
-  },
-  roomTitle: "The Lantern District Ledger",
-  roomIdLabel: "room-preview-014",
-  narrator: {
-    label: "Narrator",
-    value: "The Chronicler",
-  },
   castHeading: "Cast",
   castDescription: "",
   castMembers: [
@@ -100,42 +87,21 @@ const BASE_FIXTURE = {
     busy: false,
   },
   randomLikedError: "",
-  deleteAction: {
-    visible: true,
-    disabled: false,
-    busy: false,
-    label: "Delete Story",
-    busyLabel: "Deleting...",
-  },
-  deleteError: "",
-  roomListHref: "#room-list-preview",
-  roomListLabel: "← Room List",
   playerCharacterPickerContent: null,
-  onClosePanel: null,
   onSelectCastMember: null,
   onOpenPlayerCharacterPicker: null,
   onLoadRandomLiked: null,
-  onDeleteRoom: null,
 };
 
 export const storyRoomCastPanelCompleteFixture = BASE_FIXTURE;
 
 export const storyRoomCastPanelNoMediaFixture = {
   ...BASE_FIXTURE,
-  featuredMedia: {
-    ...BASE_FIXTURE.featuredMedia,
-    imageUrl: "",
-  },
   npcParticipantManager: storyRoomNpcParticipantCompleteFixture,
 };
 
 export const storyRoomCastPanelMobileFixture = {
   ...BASE_FIXTURE,
-  canClose: false,
-  deleteAction: {
-    ...BASE_FIXTURE.deleteAction,
-    visible: true,
-  },
 };
 
 export const storyRoomCastPanelSettingFixture = {
@@ -151,7 +117,6 @@ export const storyRoomCastPanelErrorFixture = {
   ...BASE_FIXTURE,
   setPlayerCharacterError:
     "The selected Player Character could not be attached to this Story.",
-  deleteError: "This Story could not be deleted.",
   randomLikedError:
     "No eligible SFW Character remains in your liked Characters for this Story.",
   npcParticipantManager: storyRoomNpcParticipantErrorFixture,
@@ -161,10 +126,6 @@ export const storyRoomCastPanelLockedFixture = {
   ...BASE_FIXTURE,
   playerCharacterAction: {
     ...BASE_FIXTURE.playerCharacterAction,
-    visible: false,
-  },
-  deleteAction: {
-    ...BASE_FIXTURE.deleteAction,
     visible: false,
   },
   castMembers: BASE_FIXTURE.castMembers.map((member) => ({
@@ -177,15 +138,6 @@ export const storyRoomCastPanelLockedFixture = {
 
 export const storyRoomCastPanelLongContentFixture = {
   ...BASE_FIXTURE,
-  roomTitle:
-    "The Lantern District Ledger and the Observatory Correspondence Archive",
-  roomIdLabel:
-    "room-preview-with-an-intentionally-long-identifier-for-responsive-stress",
-  narrator: {
-    label: "Narrator",
-    value:
-      "The Chronicler of the Western Observatory and Keeper of Uncatalogued Testimony",
-  },
   castMembers: BASE_FIXTURE.castMembers.map((member) => ({
     ...member,
     name: `${member.name} of the Lower Lantern District and Western Archive`,

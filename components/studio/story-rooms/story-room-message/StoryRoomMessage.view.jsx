@@ -287,7 +287,7 @@ function getArticleClassName(surfaceTone) {
     return `${base} max-w-xl bg-transparent text-center`;
   }
 
-  return `${base} max-w-[86%] min-[700px]:max-w-[70%] bg-[var(--surface-2)]`;
+  return `${base} max-w-[86%] min-[700px]:max-w-[70%] bg-[var(--surface-1)]`;
 }
 
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {

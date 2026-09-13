@@ -21,10 +21,13 @@ test("player state sidebar exposes only Location, Time, and Weather", () => {
 
 test("runtime Mechanics prompt is omitted once a room binding exists", () => {
   const vm = read("components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js");
-  const view = read("components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx");
+  const railBinding = read("components/studio/story-rooms/StoryRoomDetailsRail.jsx");
   assert.match(vm, /getMechanicsModuleBindings\(room\)\.length > 0/);
   assert.match(vm, /hasRoomMechanicsModule\s*\?\s*null/);
-  assert.equal((view.match(/RuntimeMechanicsPanelComponent && runtimeMechanicsPanelProps/g) || []).length, 2);
+  // fe/chat-studio item 6: the Mechanics drill-in renders the panel only
+  // while the gate hands it props, otherwise one quiet line.
+  assert.match(railBinding, /mechanics: runtimeMechanicsPanelProps \? \(/);
+  assert.match(railBinding, /A mechanics module is attached to this story\./);
 });
 
 test("Character opening greetings use the persisted Character palette", () => {

@@ -37,7 +37,7 @@ test("transcript receives a transient Player Character prompt on the notice card
   // secondary button, and the danger tokens for the error tone.
   assert.match(transcript, /StoryRoomNoticeCard/);
   assert.doesNotMatch(transcript, /sky-\d|red-\d/);
-  assert.match(noticeCard, /bg-\[var\(--surface-2\)\]/);
+  assert.match(noticeCard, /bg-\[var\(--surface-1\)\]/);
   assert.match(noticeCard, /cf-btn cf-btn--secondary/);
   assert.match(noticeCard, /--status-danger-border/);
   assert.match(noticeCard, /--status-danger-text/);

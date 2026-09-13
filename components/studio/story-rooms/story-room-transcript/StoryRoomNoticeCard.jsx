@@ -4,8 +4,8 @@ import { CircleAlert, UserRound } from "lucide-react";
 
 // One recipe for the transcript's notice cards (fe/chat-studio item 3,
 // 12 Sep 2026): the player character prompt and the story error card.
-// Nested card tier: --surface-2 with a --line-whisper hairline inside
-// the --surface-1 column, no blue tint anywhere. The danger tone uses
+// Card tier: --surface-1 with a --line-whisper hairline on the canvas
+// center column (Brian's amendment to item 6), no blue tint anywhere. The danger tone uses
 // the danger border token and the ruled running-text tier
 // (--status-danger-text) for the eyebrow, because the base
 // --status-danger as normal-size text on --surface-2 is blocked by the
@@ -39,12 +39,12 @@ export default function StoryRoomNoticeCard({
   return (
     <article
       role={tone === "danger" ? "alert" : undefined}
-      className={`rounded-[var(--radius-md)] border bg-[var(--surface-2)] p-[var(--space-5)] ${classes.card}`}
+      className={`rounded-[var(--radius-md)] border bg-[var(--surface-1)] p-[var(--space-5)] ${classes.card}`}
     >
       <div className={`flex items-start gap-[var(--space-3)] ${centered ? "flex-col items-center text-center" : ""}`}>
         <span
           aria-hidden="true"
-          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-full)] bg-[var(--surface-3)] ${classes.icon}`}
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-full)] bg-[var(--surface-2)] ${classes.icon}`}
         >
           <ResolvedIcon size={17} />
         </span>

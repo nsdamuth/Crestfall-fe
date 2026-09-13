@@ -157,10 +157,17 @@ export const storyRoomChatShellHelpFixture = makeFixture({
   composerHelpPanel: "HELP",
 });
 
-export const storyRoomChatShellMobileCastFixture = makeFixture({
-  mobilePanel: "cast",
+export const storyRoomChatShellMobileGalleryFixture = makeFixture({
+  swipeEnabled: true,
+  mobilePanel: "gallery",
 });
 
+// The preview harness (app/dev/ui-preview, never edited) imports this
+// name; the cast drawer retired in item 6, so it now names the sheet.
+export const storyRoomChatShellMobileCastFixture = storyRoomChatShellMobileGalleryFixture;
+
+// The right sheet below md (item 6); the name predates the rail.
 export const storyRoomChatShellMobileStateFixture = makeFixture({
-  mobilePanel: "state",
+  swipeEnabled: true,
+  mobilePanel: "details",
 });

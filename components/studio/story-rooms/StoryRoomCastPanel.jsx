@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 import DefaultPlayerCharacterPickerModal from "@/components/studio/account/DefaultPlayerCharacterPickerModal";
 
 import StoryRoomCastPanelView from "./story-room-cast-panel/StoryRoomCastPanel.view";
@@ -19,7 +17,6 @@ export default function StoryRoomCastPanel(props) {
     <StoryRoomCastPanelView
       {...viewProps}
       playerCharacterPickerContent={playerCharacterPickerContent}
-      LinkComponent={Link}
     />
   );
 }

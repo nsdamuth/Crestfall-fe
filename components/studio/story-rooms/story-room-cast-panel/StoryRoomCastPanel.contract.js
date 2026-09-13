@@ -1,12 +1,21 @@
-export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.2.0";
+export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
 
 /**
- * Stable UI boundary for the Story Room Room & Cast panel.
+ * Stable UI boundary for the Story Room cast panel.
  *
- * The portable View owns the room-media presentation, cast cards, compact action
- * rail, Manage Cast modal, errors, room-list link, and composition of the already-portable
- * NPC participant-manager View. It does not receive raw Story Room records,
- * participant lifecycle records, player-character creations, or API clients.
+ * 2.0.0, fe/chat-studio item 6 (12 Sep 2026). BREAKING: the panel is the
+ * roster and its two actions only, rendered inside the details rail's
+ * Cast drill-in. Removed: `eyebrow`, `canClose`, `featuredMedia`,
+ * `roomTitle`, `roomIdLabel`, `narrator`, `deleteAction`, `deleteError`,
+ * `roomListHref`, `roomListLabel`, `onClosePanel`, `onDeleteRoom`,
+ * `LinkComponent`. The story's media, title, delete, and the way back
+ * belong to the rail.
+ *
+ * The portable View owns the cast cards, the Set player character and
+ * Manage Cast actions, errors, the Manage Cast modal, and composition of
+ * the already-portable NPC participant-manager View. It does not receive
+ * raw Story Room records, participant lifecycle records, player-character
+ * creations, or API clients.
  *
  * @typedef {Object} StoryRoomCastMemberViewItem
  * @property {string} id
@@ -24,12 +33,6 @@ export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.2.0";
  * @property {string} selectionAriaLabel
  *
  * @typedef {Object} StoryRoomCastPanelViewProps
- * @property {string} eyebrow
- * @property {boolean} canClose
- * @property {{imageUrl:string,imageAltText:string,speakerName:string,emptyEyebrow:string,emptyMessage:string,imageEyebrow:string}} featuredMedia
- * @property {string} roomTitle
- * @property {string} roomIdLabel
- * @property {{label:string,value:string}} narrator
  * @property {string} castHeading
  * @property {string} castDescription
  * @property {StoryRoomCastMemberViewItem[]} castMembers
@@ -38,21 +41,13 @@ export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1.2.0";
  * @property {Object|null} npcParticipantManager Direct StoryRoomNpcParticipantManager View props.
  * @property {{visible:boolean,disabled:boolean,busy:boolean,label:string,busyLabel:string}} randomLikedAction
  * @property {string} randomLikedError
- * @property {{visible:boolean,disabled:boolean,busy:boolean,label:string,busyLabel:string}} deleteAction
- * @property {string} deleteError
- * @property {string} roomListHref
- * @property {string} roomListLabel
  * @property {import("react").ReactNode} playerCharacterPickerContent Opaque picker overlay slot supplied by the Binding Shell.
  * @property {boolean} manageCastOpen Whether the cast-management modal is visible.
- * @property {()=>void} onClosePanel
  * @property {(participantId:string)=>void} onSelectCastMember
  * @property {()=>void} onOpenPlayerCharacterPicker
  * @property {()=>void} onOpenManageCast
  * @property {()=>void} onCloseManageCast
  * @property {()=>void} onLoadRandomLiked
- * @property {()=>void} onDeleteRoom
- * @property {import("react").ElementType} [LinkComponent] link/anchor component
- *   injected by the host, defaults to "a" in the View.
  */
 
 export {};

@@ -2,6 +2,7 @@ import {
   ChevronLeft,
   Command,
   HelpCircle,
+  Image as ImageIcon,
   Keyboard,
   MapPin,
   PanelLeftClose,
@@ -13,6 +14,7 @@ import {
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
+import StoryChatDialog from "./StoryChatDialog";
 import { STORY_ROOM_DELETE_CONFIRMATION_LINES } from "./useStoryRoomChatShellViewModel";
 import {
   isStoryRoomSwipeInteractiveTarget,
@@ -26,8 +28,10 @@ const EYEBROW_CLASS =
 // the grid geometry lives in app/design-system.css under
 // .cf-story-room-grid[data-rails], the rails collapse to one bare 44px
 // edge toggle each, and below md the page is one column under its own
-// 44px bar. The View owns no viewport reads: `swipeEnabled` arrives from
-// the ViewModel.
+// 44px bar. The two rails sit on the card surface with a hairline
+// against the center, which stays on the canvas, so the three columns
+// read as three surfaces (Brian's amendment to item 6). The View owns
+// no viewport reads: `swipeEnabled` arrives from the ViewModel.
 export default function StoryRoomChatShellView({
   room = {},
   railsState = "right",
@@ -42,28 +46,23 @@ export default function StoryRoomChatShellView({
   statusSurfaces = [],
   commandCatalogError = "",
   statusSurfaceError = "",
-  castPanelProps = {},
-  mobileCastPanelProps = {},
   storyListProps = {},
   transcriptProps = {},
   composerProps = {},
-  desktopStatePanelProps = {},
-  mobileStatePanelProps = {},
-  runtimeMechanicsPanelProps = null,
+  detailsRailProps = {},
+  mobileDetailsRailProps = {},
   onToggleLeftPanel,
   onToggleRightPanel,
-  onOpenMobileCast,
-  onOpenMobileState,
+  onOpenMobileDetails,
+  onOpenMobileGallery,
   onCloseMobilePanel,
   onCloseComposerHelpPanel,
   isConfirmingDeleteRoom = false,
+  isDeletingRoom = false,
   onCancelDeleteRoom,
   onConfirmDeleteRoom,
-  CastPanelComponent,
   ComposerComponent,
-  MobileDrawerComponent,
-  RuntimeMechanicsPanelComponent,
-  StatePanelComponent,
+  DetailsRailComponent,
   StatusSurfaceHostComponent,
   StoryListComponent,
   TranscriptComponent,
@@ -105,8 +104,9 @@ export default function StoryRoomChatShellView({
       deltaY: touch.clientY - startY,
     });
 
-    if (action === "OPEN_CAST") onOpenMobileCast?.();
-    if (action === "OPEN_STATE") onOpenMobileState?.();
+    // Below md a left swipe opens the story details sheet; the right
+    // swipe retired with the cast drawer (item 6).
+    if (action === "OPEN_STATE") onOpenMobileDetails?.();
   }
 
   return (
@@ -119,7 +119,8 @@ export default function StoryRoomChatShellView({
         title={room?.title}
         primaryCharacter={primaryCharacter}
         backHref={backHref}
-        onOpenSettings={onOpenMobileState}
+        onOpenSettings={onOpenMobileDetails}
+        onOpenGallery={onOpenMobileGallery}
         LinkComponent={LinkComponent}
       />
 
@@ -139,7 +140,7 @@ export default function StoryRoomChatShellView({
           ) : null}
         </div>
 
-        <main className="flex min-h-0 min-w-0 flex-col overflow-hidden bg-[var(--surface-1)]">
+        <main className="flex min-h-0 min-w-0 flex-col overflow-hidden bg-[var(--canvas)]">
           {StatusSurfaceHostComponent ? (
             <StatusSurfaceHostComponent
               surfaces={statusSurfaces}
@@ -185,18 +186,9 @@ export default function StoryRoomChatShellView({
             openLabel="Open story details"
             closeLabel="Close story details"
           />
-          {rightOpen ? (
-            <div className="min-h-0 flex-1 overflow-y-auto">
-              <div className="min-w-0 p-[var(--space-3)] pt-0">
-                {StatePanelComponent ? (
-                  <StatePanelComponent {...desktopStatePanelProps} />
-                ) : null}
-                {RuntimeMechanicsPanelComponent && runtimeMechanicsPanelProps ? (
-                  <RuntimeMechanicsPanelComponent
-                    {...runtimeMechanicsPanelProps}
-                  />
-                ) : null}
-              </div>
+          {rightOpen && DetailsRailComponent ? (
+            <div className="min-h-0 flex-1">
+              <DetailsRailComponent {...detailsRailProps} />
             </div>
           ) : null}
         </div>
@@ -210,39 +202,39 @@ export default function StoryRoomChatShellView({
         />
       ) : null}
 
-      {mobilePanel === "cast" && MobileDrawerComponent ? (
-        <MobileDrawerComponent
-          title="Cast"
-          side="left"
+      {(mobilePanel === "details" || mobilePanel === "gallery") && DetailsRailComponent ? (
+        <KitModalFrame
+          variant="sheet"
+          sheetGrabber
           onClose={onCloseMobilePanel}
+          ariaLabel="Story details"
         >
-          {CastPanelComponent ? (
-            <CastPanelComponent {...mobileCastPanelProps} />
-          ) : null}
-        </MobileDrawerComponent>
-      ) : null}
-
-      {mobilePanel === "state" && MobileDrawerComponent ? (
-        <MobileDrawerComponent
-          title="Chronicle State"
-          side="right"
-          onClose={onCloseMobilePanel}
-        >
-          {StatePanelComponent ? (
-            <StatePanelComponent {...mobileStatePanelProps} />
-          ) : null}
-          {RuntimeMechanicsPanelComponent && runtimeMechanicsPanelProps ? (
-            <RuntimeMechanicsPanelComponent
-              {...runtimeMechanicsPanelProps}
+          {/* The frame's sheet caps at 92dvh; the rail scrolls inside a
+              bounded column so the header row never has to. */}
+          <div className="flex h-[84dvh] min-h-0 w-full flex-col">
+            <DetailsRailComponent
+              {...mobileDetailsRailProps}
+              autoOpenViewer={mobilePanel === "gallery"}
             />
-          ) : null}
-        </MobileDrawerComponent>
+          </div>
+        </KitModalFrame>
       ) : null}
 
       {isConfirmingDeleteRoom ? (
-        <DeleteRoomConfirmSheet
-          onCancel={onCancelDeleteRoom}
-          onConfirm={onConfirmDeleteRoom}
+        <StoryChatDialog
+          eyebrow="Story"
+          title={STORY_ROOM_DELETE_CONFIRMATION_LINES[0]}
+          sentence={STORY_ROOM_DELETE_CONFIRMATION_LINES[2]}
+          tone="danger"
+          titleId="story-room-delete-title"
+          secondary={{ label: "Cancel", onPress: onCancelDeleteRoom }}
+          primary={{
+            label: "Delete Story",
+            busyLabel: "Deleting",
+            busy: isDeletingRoom,
+            onPress: onConfirmDeleteRoom,
+          }}
+          onClose={onCancelDeleteRoom}
         />
       ) : null}
     </section>
@@ -250,14 +242,15 @@ export default function StoryRoomChatShellView({
 }
 
 // D2 below md: one 44px bar. Back chevron to the Stories page, the
-// primary character's circle, the title truncated, then the settings
-// button that opens the right panel as a sheet. The media button that
-// opens the gallery arrives with the right rail (item 6).
+// primary character's circle, the title truncated, then two icon
+// buttons: settings opens the story details sheet, media opens the
+// gallery viewer on the featured image.
 function StoryChatMobileBar({
   title = "",
   primaryCharacter = null,
   backHref = "/studio/v2/stories",
   onOpenSettings,
+  onOpenGallery,
   LinkComponent = "a",
 }) {
   const initial = String(primaryCharacter?.label || title || "S")
@@ -304,6 +297,15 @@ function StoryChatMobileBar({
       >
         <Settings size={20} aria-hidden="true" />
       </button>
+
+      <button
+        type="button"
+        onClick={() => onOpenGallery?.()}
+        aria-label="Story gallery"
+        className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)]"
+      >
+        <ImageIcon size={20} aria-hidden="true" />
+      </button>
     </div>
   );
 }
@@ -334,45 +336,6 @@ function RailEdgeToggle({ side, open = false, onClick, openLabel, closeLabel }) 
         <Icon size={18} aria-hidden="true" />
       </button>
     </div>
-  );
-}
-
-// B5 destructive-action modal confirm, RULED (ED1G ruling 5): replaces
-// the room delete flow's prior window.confirm. Same fade-divider,
-// ends-aligned Cancel / danger-filled CTA footer as the chat family's
-// own delete confirms.
-function DeleteRoomConfirmSheet({ onCancel, onConfirm }) {
-  return (
-    <KitModalFrame variant="sheet" onClose={onCancel} ariaLabel="Confirm delete Story">
-      <div className="p-[var(--space-5)]">
-        {STORY_ROOM_DELETE_CONFIRMATION_LINES.map((line, index) =>
-          line ? (
-            <p
-              key={`delete-room-line-${index}`}
-              className={
-                index === 0
-                  ? "font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
-                  : "mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]"
-              }
-            >
-              {line}
-            </p>
-          ) : (
-            <div key={`delete-room-gap-${index}`} className="h-[var(--space-2)]" />
-          )
-        )}
-
-        <div aria-hidden="true" className="mt-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
-        <div className="mt-[var(--space-4)] flex flex-wrap items-center justify-between gap-[var(--space-2)]">
-          <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary">
-            Cancel
-          </button>
-          <button type="button" onClick={() => onConfirm?.()} className="cf-btn cf-btn--danger-filled">
-            Delete Story
-          </button>
-        </div>
-      </div>
-    </KitModalFrame>
   );
 }
 

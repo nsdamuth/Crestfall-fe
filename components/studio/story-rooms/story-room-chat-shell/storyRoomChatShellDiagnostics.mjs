@@ -18,8 +18,8 @@ test("Story Room Chat Shell stays thin and owns app bindings", () => {
   assert.match(shell, /useStoryRoomChat\(roomId\)/);
   assert.match(shell, /useStoryRoomChatShellViewModel/);
   assert.match(shell, /StoryRoomChatShellView/);
-  assert.match(shell, /CastPanelComponent=\{StoryRoomCastPanel\}/);
-  assert.match(shell, /RuntimeMechanicsPanelComponent=\{StoryRoomRuntimeMechanicsPanel\}/);
+  assert.match(shell, /DetailsRailComponent=\{StoryRoomDetailsRail\}/);
+  assert.match(shell, /StoryListComponent=\{StoryRoomStoryList\}/);
   assert.doesNotMatch(shell, /window\.confirm/);
   assert.match(shell, /router\.push\("\/studio\/v2\/stories"\)/);
   assert.doesNotMatch(shell, /useState|deleteStoryRoom|resolveLocalStoryRoomCommand/);
@@ -75,11 +75,10 @@ test("portable View owns responsive layout and uses injected children only", () 
     "components/studio/story-rooms/story-room-cast-panel/StoryRoomCastPanel.view.jsx"
   );
 
-  assert.match(view, /CastPanelComponent/);
+  assert.match(view, /DetailsRailComponent/);
   assert.match(view, /ComposerComponent/);
-  assert.match(view, /MobileDrawerComponent/);
-  assert.match(view, /RuntimeMechanicsPanelComponent/);
-  assert.match(view, /StatePanelComponent/);
+  assert.match(view, /StoryChatDialog/);
+  assert.doesNotMatch(view, /MobileDrawerComponent|CastPanelComponent|StatePanelComponent|RuntimeMechanicsPanelComponent/);
   assert.match(view, /TranscriptComponent/);
   assert.match(view, /StoryListComponent/);
   assert.match(view, /md:h-\[calc\(100dvh-var\(--topbar-h\)\)\]/);
@@ -89,11 +88,12 @@ test("portable View owns responsive layout and uses injected children only", () 
   assert.match(view, /StoryChatMobileBar/);
   assert.doesNotMatch(view, /StoryRoomHeader|PanelRevealButton|Cast Open|State Open/);
   assert.doesNotMatch(view, /matchMedia/);
-  assert.doesNotMatch(statePanelView, /2xl:sticky|2xl:top-24/);
-  assert.match(castPanelView, /xl:sticky xl:top-0/);
-  assert.doesNotMatch(castPanelView, /xl:top-24/);
-  assert.match(view, /title="Cast"/);
-  assert.match(view, /Chronicle State/);
+  assert.doesNotMatch(statePanelView, /2xl:sticky|2xl:top-24|<aside/);
+  // fe/chat-studio item 6: the cast panel is a roster inside the details
+  // rail's Cast drill-in, no card or sticky chrome of its own.
+  assert.doesNotMatch(castPanelView, /xl:sticky|xl:top-24|<aside/);
+  assert.match(view, /variant="sheet"/);
+  assert.match(view, /mobilePanel === "details" \|\| mobilePanel === "gallery"/);
   assert.match(view, /Available Commands/);
   assert.match(view, /Quick Help/);
   assert.doesNotMatch(
@@ -111,8 +111,8 @@ test("ViewModel preserves responder, mention, and mobile panel projection", () =
   assert.doesNotMatch(viewModel, /label: "Random"/);
   assert.match(viewModel, /participantType === "CHARACTER"/);
   assert.match(viewModel, /locationMentionOptions/);
-  assert.match(viewModel, /onOpenMobileCast: \(\) => setMobilePanel\("cast"\)/);
-  assert.match(viewModel, /onOpenMobileState: \(\) => setMobilePanel\("state"\)/);
+  assert.match(viewModel, /onOpenMobileDetails: \(\) => setMobilePanel\("details"\)/);
+  assert.match(viewModel, /onOpenMobileGallery: \(\) => setMobilePanel\("gallery"\)/);
   assert.match(viewModel, /onUpdated: reloadStoryRoom/);
   assert.match(viewModel, /disabled: loading \|\| Boolean\(error\) \|\| !chatAllowed/);
 });

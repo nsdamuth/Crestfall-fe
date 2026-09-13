@@ -49,9 +49,7 @@ function normalizeCastMember(member, selectedResponderId, canSelectResponder) {
 }
 
 function buildCastPanelState({
-  room,
   cast,
-  roomId,
   selectedResponderId,
   canSelectResponder,
   canSetPlayerCharacter,
@@ -60,41 +58,15 @@ function buildCastPanelState({
   canLoadRandomLiked,
   randomLikedLoading,
   randomLikedError,
-  canDeleteRoom,
-  isDeletingRoom,
-  deleteError,
-  canClose,
 }) {
-  const safeRoom = room && typeof room === "object" ? room : {};
   const castMembers = (Array.isArray(cast) ? cast : []).map((member) =>
     normalizeCastMember(member, selectedResponderId, canSelectResponder)
   );
-  const featuredImageUrl = displayText(safeRoom.featuredSpeakerImageUrl);
-  const featuredSpeakerName = displayText(
-    safeRoom.featuredSpeakerName,
-    "Story"
-  );
 
+  // 2.0.0 (fe/chat-studio item 6): the roster and its actions only. The
+  // story's media, title, id line, narrator line, delete, and the way
+  // back belong to the details rail.
   return {
-    eyebrow: "Room & Cast",
-    canClose,
-    featuredMedia: {
-      imageUrl: featuredImageUrl,
-      imageAltText: displayText(
-        safeRoom.featuredSpeakerName,
-        "Room media"
-      ),
-      speakerName: featuredSpeakerName,
-      emptyEyebrow: "Room Media",
-      emptyMessage: "Featured room image will appear here.",
-      imageEyebrow: "Last Speaker Media",
-    },
-    roomTitle: displayText(safeRoom.title, "Untitled Story"),
-    roomIdLabel: displayText(roomId),
-    narrator: {
-      label: "Narrator",
-      value: displayText(safeRoom.narrator),
-    },
     castHeading: "Cast",
     castDescription: "",
     castMembers,
@@ -102,8 +74,8 @@ function buildCastPanelState({
       visible: canSetPlayerCharacter,
       disabled: isSettingPlayerCharacter,
       busy: isSettingPlayerCharacter,
-      label: "Set Player Character",
-      busyLabel: "Setting...",
+      label: "Set player character",
+      busyLabel: "Setting",
     },
     setPlayerCharacterError: displayText(setPlayerCharacterError),
     randomLikedAction: {
@@ -111,30 +83,14 @@ function buildCastPanelState({
       disabled: !canLoadRandomLiked || randomLikedLoading,
       busy: randomLikedLoading,
       label: "Random Liked",
-      busyLabel: "Loading...",
+      busyLabel: "Loading",
     },
     randomLikedError: displayText(randomLikedError),
-    deleteAction: {
-      visible: canDeleteRoom,
-      disabled: isDeletingRoom,
-      busy: isDeletingRoom,
-      label: "Delete Story",
-      busyLabel: "Deleting...",
-    },
-    deleteError: displayText(deleteError),
-    roomListHref: "/studio/v2/stories",
-    roomListLabel: "← Room List",
   };
 }
 
 export function useStoryRoomCastPanelViewModel({
-  room,
   cast,
-  roomId,
-  onClose,
-  onDeleteRoom,
-  isDeletingRoom = false,
-  deleteError = "",
   canSetPlayerCharacter = false,
   onSetPlayerCharacter,
   isSettingPlayerCharacter = false,
@@ -168,9 +124,7 @@ export function useStoryRoomCastPanelViewModel({
   const state = useMemo(
     () =>
       buildCastPanelState({
-        room,
         cast,
-        roomId,
         selectedResponderId,
         canSelectResponder: typeof onSelectResponder === "function",
         canSetPlayerCharacter:
@@ -181,26 +135,16 @@ export function useStoryRoomCastPanelViewModel({
         canLoadRandomLiked: typeof onLoadRandomLiked === "function",
         randomLikedLoading: Boolean(randomLikedLoading),
         randomLikedError,
-        canDeleteRoom: typeof onDeleteRoom === "function",
-        isDeletingRoom: Boolean(isDeletingRoom),
-        deleteError,
-        canClose: typeof onClose === "function",
       }),
     [
       canSetPlayerCharacter,
       cast,
-      deleteError,
-      isDeletingRoom,
       isSettingPlayerCharacter,
-      onClose,
-      onDeleteRoom,
       onSelectResponder,
       onSetPlayerCharacter,
       onLoadRandomLiked,
       randomLikedError,
       randomLikedLoading,
-      room,
-      roomId,
       selectedResponderId,
       setPlayerCharacterError,
     ]
@@ -256,13 +200,11 @@ export function useStoryRoomCastPanelViewModel({
       ...state,
       npcParticipantManager,
       manageCastOpen,
-      onClosePanel: onClose,
       onSelectCastMember,
       onOpenPlayerCharacterPicker,
       onOpenManageCast,
       onCloseManageCast,
       onLoadRandomLiked,
-      onDeleteRoom,
     },
     playerCharacterPickerProps: playerCharacterPickerOpen
       ? {

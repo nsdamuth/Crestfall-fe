@@ -460,9 +460,6 @@ export function useStoryRoomChatShellViewModel({
     room,
     cast,
     roomId,
-    onDeleteRoom: requestDeleteRoom,
-    isDeletingRoom: deletingRoom,
-    deleteError,
     selectedResponderId: nextSpeaker,
     onSelectResponder: selectNextResponder,
     registryNpcs,
@@ -476,9 +473,9 @@ export function useStoryRoomChatShellViewModel({
     onLoadRandomLiked: loadRandomLikedCharacter,
   };
 
+  // Inside the mobile sheet, choosing a responder closes the sheet.
   const mobileCastPanelProps = {
     ...castPanelProps,
-    onClose: undefined,
     onSelectResponder: (participantId) =>
       selectNextResponder(participantId, { closeMobile: true }),
   };
@@ -510,6 +507,63 @@ export function useStoryRoomChatShellViewModel({
     [storyStatusSurfaces]
   );
 
+  const desktopStatePanelProps = {
+    room,
+    roomId,
+    messages,
+    onExportTranscript: exportTranscript,
+    onCreateTemporaryShare: createTemporaryShare,
+    onRevokeTemporaryShare: revokeTemporaryShare,
+    onCreatePersistentShare: createPersistentShare,
+    onRevokePersistentShare: revokePersistentShare,
+  };
+
+  const mobileStatePanelProps = {
+    room,
+    roomId,
+    messages,
+    onExportTranscript: exportTranscript,
+    onCreateTemporaryShare: createTemporaryShare,
+    onRevokeTemporaryShare: revokeTemporaryShare,
+    onCreatePersistentShare: createPersistentShare,
+    onRevokePersistentShare: revokePersistentShare,
+  };
+
+  const chatColorProps = {
+    paletteId: chatColorPaletteId,
+    creatorPaletteId: creatorChatColorPaletteId,
+    isOverridden: Boolean(chatColorOverrideId),
+    options: CHAT_COLOR_OPTIONS,
+    onChange: (paletteId) =>
+      setChatColorOverrideId(
+        normalizePaletteId(paletteId) === creatorChatColorPaletteId
+          ? null
+          : normalizePaletteId(paletteId) || null
+      ),
+    onReset: () => setChatColorOverrideId(null),
+  };
+
+  // The right rail (item 6) and the right sheet below md compose the
+  // same panels; the sheet's cast roster closes the sheet on a pick.
+  const detailsRailProps = {
+    room,
+    cast,
+    messages,
+    castPanelProps,
+    statePanelProps: desktopStatePanelProps,
+    runtimeMechanicsPanelProps,
+    chatColorProps,
+    onDeleteRoom: requestDeleteRoom,
+    isDeletingRoom: deletingRoom,
+    deleteError,
+  };
+
+  const mobileDetailsRailProps = {
+    ...detailsRailProps,
+    castPanelProps: mobileCastPanelProps,
+    statePanelProps: mobileStatePanelProps,
+  };
+
   return {
     room,
     railsState: buildStoryRoomRailsState({ leftOpen, rightOpen }),
@@ -528,8 +582,8 @@ export function useStoryRoomChatShellViewModel({
     statusSurfaces: storyStatusSurfaces,
     commandCatalogError,
     statusSurfaceError,
-    castPanelProps,
-    mobileCastPanelProps,
+    detailsRailProps,
+    mobileDetailsRailProps,
     transcriptProps: {
       messages,
       loading,
@@ -579,48 +633,15 @@ export function useStoryRoomChatShellViewModel({
       disabled: loading || Boolean(error) || !chatAllowed,
       disabledReason: chatUnavailableReason,
     },
-    desktopStatePanelProps: {
-      room,
-      roomId,
-      messages,
-      onExportTranscript: exportTranscript,
-      onCreateTemporaryShare: createTemporaryShare,
-      onRevokeTemporaryShare: revokeTemporaryShare,
-      onCreatePersistentShare: createPersistentShare,
-      onRevokePersistentShare: revokePersistentShare,
-      onClose: toggleRightPanel,
-    },
-    mobileStatePanelProps: {
-      room,
-      roomId,
-      messages,
-      onExportTranscript: exportTranscript,
-      onCreateTemporaryShare: createTemporaryShare,
-      onRevokeTemporaryShare: revokeTemporaryShare,
-      onCreatePersistentShare: createPersistentShare,
-      onRevokePersistentShare: revokePersistentShare,
-    },
-    runtimeMechanicsPanelProps,
-    chatColorProps: {
-      paletteId: chatColorPaletteId,
-      creatorPaletteId: creatorChatColorPaletteId,
-      isOverridden: Boolean(chatColorOverrideId),
-      options: CHAT_COLOR_OPTIONS,
-      onChange: (paletteId) =>
-        setChatColorOverrideId(
-          normalizePaletteId(paletteId) === creatorChatColorPaletteId
-            ? null
-            : normalizePaletteId(paletteId) || null
-        ),
-      onReset: () => setChatColorOverrideId(null),
-    },
+    chatColorProps,
     onToggleLeftPanel: toggleLeftPanel,
     onToggleRightPanel: toggleRightPanel,
-    onOpenMobileCast: () => setMobilePanel("cast"),
-    onOpenMobileState: () => setMobilePanel("state"),
+    onOpenMobileDetails: () => setMobilePanel("details"),
+    onOpenMobileGallery: () => setMobilePanel("gallery"),
     onCloseMobilePanel: closeMobilePanel,
     onCloseComposerHelpPanel: closeComposerHelpPanel,
     isConfirmingDeleteRoom,
+    isDeletingRoom: deletingRoom,
     onCancelDeleteRoom: cancelDeleteRoom,
     onConfirmDeleteRoom: confirmDeleteRoom,
   };

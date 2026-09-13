@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  CloudSun,
-  Download,
-  Eye,
-  Flag,
-  Lock,
-  PanelRightClose,
-  Share2,
-} from "lucide-react";
+import { CloudSun, Download, Eye, Flag, Lock, Share2 } from "lucide-react";
 
 const SECTION_ICONS = {
   scenario: Flag,
@@ -22,47 +14,33 @@ const ACTION_ICONS = {
   share: Share2,
 };
 
+// 2.0.0 (fe/chat-studio item 6): no card chrome, no eyebrow or title, no
+// close control. The details rail names the section; this View renders
+// the world state rows (`layout="sections"`), the Export and Share
+// actions (`layout="actions"`), or both (the default), inside whatever
+// container mounts it.
 export default function StoryRoomStatePanelView({
-  eyebrow = "Chronicle State",
-  title = "Story Data",
   sections = [],
   actions = [],
-  showCloseControl = false,
-  onClosePanel = null,
+  layout = "full",
 }) {
   const safeSections = Array.isArray(sections) ? sections : [];
   const safeActions = Array.isArray(actions) ? actions : [];
+  const showSections = layout !== "actions";
+  const showActions = layout !== "sections";
 
   return (
-    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5">
-      <div className="mb-4 flex items-center justify-between gap-3">
-        <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
-          {eyebrow}
-        </p>
+    <div className="min-w-0">
+      {showSections ? (
+        <div className="space-y-[var(--space-4)]">
+          {safeSections.map((section) => (
+            <StateSection key={section.id} section={section} />
+          ))}
+        </div>
+      ) : null}
 
-        {showCloseControl ? (
-          <button
-            type="button"
-            onClick={() => onClosePanel?.()}
-            className="rounded-lg border border-white/10 p-2 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-            aria-label="Hide state panel"
-            title="Hide state panel"
-          >
-            <PanelRightClose size={15} />
-          </button>
-        ) : null}
-      </div>
-
-      <h2 className="mt-2 font-display text-3xl">{title}</h2>
-
-      <div className="mt-6 space-y-4">
-        {safeSections.map((section) => (
-          <StateCard key={section.id} section={section} />
-        ))}
-      </div>
-
-      {safeActions.length ? (
-        <div className="mt-6 grid gap-3">
+      {showActions && safeActions.length ? (
+        <div className={`grid grid-cols-2 gap-[var(--space-2)] ${showSections ? "mt-[var(--space-5)]" : ""}`}>
           {safeActions.map((action) => {
             const ActionIcon = ACTION_ICONS[action.iconKey] || Download;
 
@@ -72,43 +50,42 @@ export default function StoryRoomStatePanelView({
                 type="button"
                 disabled={action.disabled !== false}
                 onClick={() => action.onPress?.()}
-                className="cf-btn cf-btn--secondary"
+                className="cf-btn cf-btn--secondary w-full justify-center disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
               >
-                <ActionIcon size={14} />
+                <ActionIcon size={14} aria-hidden="true" />
                 {action.label}
               </button>
             );
           })}
         </div>
       ) : null}
-    </aside>
+    </div>
   );
 }
 
-function StateCard({ section }) {
+function StateSection({ section }) {
   const Icon = SECTION_ICONS[section?.iconKey] || Flag;
   const rows = Array.isArray(section?.rows) ? section.rows : [];
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
-      <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-        <Icon size={14} />
+    <div className="min-w-0">
+      <p className="inline-flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+        <Icon size={14} aria-hidden="true" />
         {section?.title || "State"}
       </p>
 
-      <div className="mt-3 space-y-3">
+      <dl className="mt-[var(--space-3)] space-y-[var(--space-3)]">
         {rows.map((row) => (
           <div key={row.id}>
-            <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+            <dt className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
               {row.label}
-            </p>
-
-            <p className="mt-1 text-sm leading-5 text-[var(--ink)]">
+            </dt>
+            <dd className="mt-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">
               {row.value}
-            </p>
+            </dd>
           </div>
         ))}
-      </div>
+      </dl>
     </div>
   );
 }
