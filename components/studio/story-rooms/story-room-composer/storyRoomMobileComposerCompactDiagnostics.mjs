@@ -33,10 +33,15 @@ test("one bar replaces the desktop and mobile compositions", () => {
 
 // Brief 2 item 1 (13 Sep 2026): the Auto circle left the cast row for
 // the send row, between the field and the gold send circle.
-test("row one holds cast circles, the mode chip, and the scene image seat", () => {
+test("row one holds the scene image seat, the cast circles, then the mode chip", () => {
   assert.match(view, /castOptions\.map\(\(option\) => \(/);
   assert.doesNotMatch(view, /option=\{autoOption\}/);
   assert.match(view, /KitDropdownView/);
+  // Brief 2 item 2: scene image first, cast circles, chip pinned right.
+  const sceneIndex = view.indexOf("disabled={sceneImageState !== \"ready\"}");
+  const castIndex = view.indexOf("castOptions.map((option) => (");
+  const chipIndex = view.indexOf("<KitDropdownView");
+  assert.ok(sceneIndex > 0 && sceneIndex < castIndex && castIndex < chipIndex);
   assert.match(view, /labelMode="replace"/);
   assert.match(view, /restingValue=\{restingMode\.value\}/);
   assert.match(view, /disabled=\{sceneImageState !== "ready"\}/);

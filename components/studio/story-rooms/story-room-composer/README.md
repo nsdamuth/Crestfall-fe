@@ -19,10 +19,11 @@ components/studio/story-rooms/story-room-composer/StoryRoomComposer.view.jsx
 One composer bar at every width (fe/chat-studio item 2, 12 Sep 2026;
 send row and Auto reshaped by brief 2 item 1, 13 Sep 2026):
 
-- row one, left to right: a 44px circle per cast member (avatar, narrator
-  glyph, or initial), then the input mode chip (Dialogue, Action, OOC,
-  Direct on the shared KitDropdown menu, the first mode resting) and the
-  scene image seat at the right end;
+- row one, left to right (brief 2 item 2): the scene image seat at the
+  left edge, a 44px circle per cast member (avatar, narrator glyph, or
+  initial), then the input mode chip (Dialogue, Action, OOC, Direct on
+  the shared KitDropdown menu, the first mode resting) pinned right, and
+  nothing else;
 - row two: the growing message field (placeholder "Send a message"), the
   Auto circle (sparkle glyph, secondary circle on `--step-above`), and the
   circular gold send button with the arrow glyph at the row's right edge.

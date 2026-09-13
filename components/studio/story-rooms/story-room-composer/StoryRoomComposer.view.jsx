@@ -46,9 +46,10 @@ const CIRCLE_BUTTON_CLASS =
 const SECONDARY_CIRCLE_CLASS = `${CIRCLE_BUTTON_CLASS} bg-[var(--step-above)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`;
 
 // One composer bar at every width (fe/chat-studio item 2, 12 Sep 2026).
-// Row one: the scene image seat, then a 44px circle per cast member
-// (tap: that character speaks next, through the existing next-speaker
-// handler), then the input mode chip pinned right. Row two: the growing
+// Row one (brief 2 item 2): the scene image seat at the left edge, then
+// a 44px circle per cast member (tap: that character speaks next,
+// through the existing next-speaker handler), then the input mode chip
+// pinned right and nothing else. Row two: the growing
 // message field, the Auto circle (brief 2 item 1: the sparkle moved off
 // the cast row; a tap runs the existing continuation with the AUTO
 // speaker and never reads the draft), and the gold send circle, which
@@ -123,7 +124,23 @@ export default function StoryRoomComposerView({
           </p>
         ) : null}
 
+        {/* Cast row order (brief 2 item 2): the scene image seat at the
+            left edge, the cast circles, the input mode chip pinned
+            right. Nothing else on the row. */}
         <div className="mb-[var(--space-2)] flex items-center gap-[var(--space-2)]">
+          {/* Scene image seat (decision A1): the Chassis serves no scene
+              image operation yet (CR-070), so the seat is visible and
+              honestly disabled. */}
+          <button
+            type="button"
+            disabled={sceneImageState !== "ready"}
+            aria-label={sceneImageLabel}
+            title={sceneImageState === "ready" ? "Scene image" : "Not available yet"}
+            className={SECONDARY_CIRCLE_CLASS}
+          >
+            <ImageIcon size={18} aria-hidden="true" />
+          </button>
+
           <div className="flex min-w-0 flex-1 items-center gap-[var(--space-2)] overflow-x-auto">
             {castOptions.map((option) => (
               <SpeakerCircle
@@ -136,33 +153,18 @@ export default function StoryRoomComposerView({
             ))}
           </div>
 
-          <div className="flex shrink-0 items-center gap-[var(--space-2)]">
-            <KitDropdownView
-              label={restingMode.label}
-              ariaLabel="Input mode"
-              labelMode="replace"
-              options={modeOptions}
-              selectedValues={inputMode ? [inputMode] : []}
-              isMultiSelect={false}
-              restingValue={restingMode.value}
-              align="right"
-              isDisabled={textareaDisabled}
-              onToggleOption={(nextValue) => onChangeInputMode?.(nextValue)}
-            />
-
-            {/* Scene image seat (decision A1): the Chassis serves no
-                scene image operation yet (CR-070), so the seat is
-                visible and honestly disabled. */}
-            <button
-              type="button"
-              disabled={sceneImageState !== "ready"}
-              aria-label={sceneImageLabel}
-              title={sceneImageState === "ready" ? "Scene image" : "Not available yet"}
-              className={SECONDARY_CIRCLE_CLASS}
-            >
-              <ImageIcon size={18} aria-hidden="true" />
-            </button>
-          </div>
+          <KitDropdownView
+            label={restingMode.label}
+            ariaLabel="Input mode"
+            labelMode="replace"
+            options={modeOptions}
+            selectedValues={inputMode ? [inputMode] : []}
+            isMultiSelect={false}
+            restingValue={restingMode.value}
+            align="right"
+            isDisabled={textareaDisabled}
+            onToggleOption={(nextValue) => onChangeInputMode?.(nextValue)}
+          />
         </div>
 
         <div className="flex items-end gap-[var(--space-2)]">
