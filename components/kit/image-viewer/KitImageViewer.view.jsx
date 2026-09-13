@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 
 import KitImageEditor from "../KitImageEditor";
+import { ImageDetailsPanel } from "../../studio/media/media-lightbox/MediaLightbox.view";
 import { ImageFrame } from "../image-overlay/ImageFrame";
 import { InfoTip } from "../form-field/InfoTip";
 import { MENU_PANEL_RECIPE, MenuRow } from "../form-field/menuRecipe";
@@ -175,6 +176,8 @@ function ViewerHeader({
   onDelete,
   onReport,
   onDetails,
+  detailsActive = false,
+  detailsLabel = "Details",
   downloadOptions,
   downloadMenuOpen,
   onToggleDownloadMenu,
@@ -205,7 +208,7 @@ function ViewerHeader({
         <ViewerIconButton label="Report" onClick={onReport}>
           <Flag size={17} aria-hidden="true" />
         </ViewerIconButton>
-        <ViewerIconButton label="Details" onClick={onDetails}>
+        <ViewerIconButton label={detailsLabel} active={detailsActive} onClick={onDetails}>
           <Info size={17} aria-hidden="true" />
         </ViewerIconButton>
         <DownloadMenu
@@ -301,6 +304,8 @@ export default function KitImageViewerView({
   upscaleRef = null,
   overlaySlot = null,
   overlayReplacesBody = false,
+  detailsOpen = false,
+  detailsPanel = null,
   onImageLoad = null,
   onSave = null,
   onDelete = null,
@@ -311,6 +316,7 @@ export default function KitImageViewerView({
   onRemix = null,
   onUpscale = null,
   onSubmitEdit = null,
+  onCloseDetails = null,
   onToggleDownloadMenu = null,
   onCloseDownloadMenu = null,
   onEnterEdit = null,
@@ -351,6 +357,8 @@ export default function KitImageViewerView({
         onDelete={onDelete}
         onReport={onReport}
         onDetails={onDetails}
+        detailsActive={detailsOpen}
+        detailsLabel={detailsOpen ? "Back to image" : "Details"}
         downloadOptions={downloadOptions}
         downloadMenuOpen={downloadMenuOpen}
         onToggleDownloadMenu={onToggleDownloadMenu}
@@ -379,15 +387,21 @@ export default function KitImageViewerView({
         <>
           <div
             ref={frameSlotRef}
-            className="flex min-h-0 max-w-full flex-1 items-center justify-center self-stretch"
+            className={`flex min-h-0 max-w-full flex-1 self-stretch ${detailsOpen ? "items-stretch justify-stretch" : "items-center justify-center"}`}
           >
-            <ImageFrame
-              imageSrc={imageSrc}
-              title={title}
-              zoomDisabled={!imageSrc}
-              imageClassName={hasImageBox ? VIEWER_IMAGE_FITTED_CLASSES : VIEWER_IMAGE_FALLBACK_CLASSES}
-              onImageLoad={onImageLoad}
-            />
+            {detailsOpen ? (
+              <div className="pointer-events-auto h-full w-full">
+                <ImageDetailsPanel embedded {...detailsPanel} onClose={onCloseDetails} />
+              </div>
+            ) : (
+              <ImageFrame
+                imageSrc={imageSrc}
+                title={title}
+                zoomDisabled={!imageSrc}
+                imageClassName={hasImageBox ? VIEWER_IMAGE_FITTED_CLASSES : VIEWER_IMAGE_FALLBACK_CLASSES}
+                onImageLoad={onImageLoad}
+              />
+            )}
           </div>
 
           <ViewerBottomBar
