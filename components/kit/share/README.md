@@ -91,7 +91,7 @@ diagnostics:loom:share`).
 ## Boundary
 
 ```text
-VaultV2Mockup.jsx, CommunityV2Mockup.jsx (later: the image viewer, the story chat page)
+VaultV2Mockup.jsx, CommunityV2Mockup.jsx, ImagesV2ImageViewer.jsx (later: the creator profile, the story chat page)
   -> useKitShareController({ sharerUsername })   open(asset), close, copyLink, nativeShare, submitForReview, sheetProps
        -> shareTypeRule.buildShareIntent          the rule, the copy, the visibility fold, the review state
             -> shareUrl                            paths, slug, ref, sign-in return
@@ -126,7 +126,10 @@ const share = useKitShareController({ sharerUsername: accountProfile?.username }
 ```
 
 An image passes `mediaType: "IMAGE"`, `id` (the output id),
-`sourceCreationId`, and `media` (the served derivative fields).
+`sourceCreationId`, and `media` (the served derivative fields:
+`cardUrl` the medium size, `displayUrl` the large one, never the
+original). The image viewer on /studio/v2/images builds both from the
+file proxy's `card` and `display` variants.
 `lifecycleStatus` lets a blocked sheet open already reading "Submitted
 for review" when the creation is IN_REVIEW.
 

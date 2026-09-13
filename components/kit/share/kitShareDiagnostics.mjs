@@ -210,6 +210,39 @@ test("a blocked share already in review reads as submitted and the button disabl
   assert.equal(failed.reviewButtonDisabled, false);
 });
 
+// Follow-up 1, item 5: the image viewer's share, the image kind.
+test("the image kind carries no card, never the original, and rides with ref", () => {
+  const base = "/api/studio/image-generation/outputs/output-9/file";
+  const intent = buildShareIntent(
+    {
+      mediaType: "IMAGE",
+      id: "output-9",
+      title: "Kessa at the counter",
+      creatorUsername: "brian",
+      sourceCreationId: "creation-1",
+      media: { cardUrl: `${base}?variant=card`, displayUrl: `${base}?variant=display`, originalUrl: base, upscaledUrl: `${base}?variant=upscaled` },
+    },
+    CONTEXT
+  );
+  assert.equal(intent.hasCard, false);
+  assert.equal(intent.cardImageSrc, null);
+  assert.equal(intent.previewImageSrc, `${base}?variant=card`);
+  assert.equal(intent.previewImageLargeSrc, `${base}?variant=display`);
+  assert.notEqual(intent.previewImageSrc, base);
+  assert.notEqual(intent.previewImageLargeSrc, base);
+  assert.doesNotMatch(intent.previewImageSrc, /upscaled/);
+  assert.match(intent.url, /[?&]ref=brian$/);
+  assert.equal(intent.blockedMessage, null);
+
+  const originalOnly = buildShareIntent(
+    { mediaType: "IMAGE", id: "output-9", title: "Original only", media: { originalUrl: base } },
+    CONTEXT
+  );
+  assert.equal(originalOnly.previewImageSrc, "");
+  assert.equal(originalOnly.previewImageLargeSrc, "");
+  assert.match(originalOnly.url, /[?&]ref=brian$/);
+});
+
 test("an image source is medium then large, never the original", () => {
   assert.deepEqual(selectShareImageSource({ cardUrl: "/m", displayUrl: "/l", originalUrl: "/o" }), {
     src: "/m",
