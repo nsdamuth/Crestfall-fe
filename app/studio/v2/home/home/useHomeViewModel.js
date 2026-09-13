@@ -45,8 +45,9 @@ const SECTIONS = Object.freeze([
 // a field is absent, the option is shown and selectable and leaves
 // the rail in its current order (no invented values). Labels
 // shortened 6 Sep 2026 (Home quick fix): "Most" dropped. Trigger
-// label re-ruled 12 Sep 2026 (FIX 5): "Filter" on the default sort,
-// the chosen option's label once the user picks another.
+// label re-ruled 12 Sep 2026 (FIX 5, then fe/chat-studio item 9): "Sort"
+// on the default sort, the chosen option's label once the user picks
+// another.
 const SORT_OPTIONS = Object.freeze([
   Object.freeze({ value: "plays", label: "Plays" }),
   Object.freeze({ value: "likes", label: "Likes" }),

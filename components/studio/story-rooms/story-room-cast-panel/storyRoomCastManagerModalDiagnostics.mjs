@@ -23,7 +23,8 @@ assert.match(view, /<StoryChatDialog/);
 assert.match(view, /primary=\{\{ label: "Done"/);
 assert.match(view, /panelWidth="42rem"/);
 assert.match(view, /Registry NPCs/);
-assert.match(view, /Quick add/);
+// Item 8: Random liked is the dialog footer's secondary action, no Quick add section.
+assert.match(view, /label: safeRandomLikedAction\.label \|\| "Random liked"/);
 assert.match(view, /<StoryRoomNpcParticipantManagerView \{\.\.\.npcParticipantManager\} \/>/);
 assert.match(view, /onLoadRandomLiked\?\.\(\)/);
 assert.match(view, /safeRandomLikedAction\.busy/);

@@ -73,12 +73,13 @@ function SectionRail({ rail }) {
         sortControl?.options?.length ? (
           // Trigger label, RULED 12 Sep 2026 (eight-fix package FIX 5,
           // supersedes the 6 Sep sort-prefix ruling): reads
-          // "Filter" while the rail sits on its default sort, and the
-          // chosen option's label alone once the user picks another
-          // (KitDropdown 1.4.0 labelMode "replace" with the default as
-          // restingValue). The menu still marks the default.
+          // "Sort" while the rail sits on its default sort (fe/chat-studio
+          // item 9, 12 Sep 2026), and the chosen option's label alone once
+          // the user picks another (KitDropdown 1.4.0 labelMode "replace"
+          // with the default as restingValue). The menu still marks the
+          // default.
           <KitDropdownView
-            label="Filter"
+            label="Sort"
             ariaLabel="Sort"
             labelMode="replace"
             restingValue={sortControl.defaultValue ?? null}
