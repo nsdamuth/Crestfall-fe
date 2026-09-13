@@ -73,9 +73,13 @@ diagnostics:loom:share`).
   (secondary), Share... (gold primary, only when the browser offers
   `navigator.share`), and a status chip (Link copied, Shared, Share
   unavailable).
-- Mounted on `KitModalFrame` variant modal at 36rem: bottom-anchored
-  full width under 700px with internal scroll, centered at 700px and
-  up. The frame owns the close control and every dismissal path.
+- Mounted on `KitModalFrame` variant modal at 36rem, a popup modal at
+  every width: bottom-docked full width under 700px with the grabber
+  and internal scroll, a centered fixed-width panel at 700px and up.
+  The frame owns the close control and every dismissal path. The card
+  preview keeps its 1200 by 630 ratio inside the panel and never
+  overflows at 390; the title breaks long words; the link field never
+  widens the panel.
 - A blocked share renders the eyebrow, the title, the sentence, Submit
   for public review (gold primary), and Close (secondary), with the
   failure line beneath when the submission fails.

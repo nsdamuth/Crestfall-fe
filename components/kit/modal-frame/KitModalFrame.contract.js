@@ -1,4 +1,4 @@
-export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.6.0";
+export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.7.0";
 
 /**
  * Stable portable UI boundary for the unified modal frame kit piece
@@ -81,7 +81,12 @@ export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.6.0";
  *   (build-0823 pass 2). Default false. When true and variant is
  *   "sheet", renders a small decorative grabber bar above the sheet
  *   header row (aria-hidden, no drag behavior). With the default
- *   false, sheet rendering is unchanged.
+ *   false, sheet rendering is unchanged. Extended 1.7.0, 13 Sep 2026
+ *   (fe/share-og follow-up 1, item 2): when true and variant is
+ *   "modal", the same bar renders at the top of the bottom-docked
+ *   panel under 700px and not at all at 700px and up; the viewer
+ *   variant ignores it. Additive; every existing modal caller leaves
+ *   it false and renders as before.
  * @property {import("react").ReactNode|null} [headerSlot] added 1.4.0,
  *   6 Sep 2026 (FE/FILTERS, Brian's panel-header ruling). Default
  *   null. When variant is "sheet", rendered inside the sheet header
