@@ -11,7 +11,6 @@
 import KitImageViewer from "@/components/kit/KitImageViewer";
 import {
   DeleteConfirmPanel,
-  DetailsDialog,
   ReassignDialog,
   ReportDialog,
 } from "@/components/studio/media/media-lightbox/MediaLightbox.view";
@@ -58,9 +57,6 @@ export default function ImagesV2ImageViewer({ viewerCoinCosts = null, ...lightbo
           onConfirmDelete={() => lightbox.onConfirmDelete?.()}
         />
       ) : null}
-      {lightbox.detailsDialog.open ? (
-        <DetailsDialog {...lightbox.detailsDialog} onClose={() => lightbox.onCloseDetails?.()} />
-      ) : null}
       {lightbox.reassignDialog.open ? (
         <ReassignDialog
           eyebrow="Assign"
@@ -92,7 +88,7 @@ export default function ImagesV2ImageViewer({ viewerCoinCosts = null, ...lightbo
       onSave={lightbox.onBookmark}
       onDelete={lightbox.showDeleteAction ? lightbox.onRequestDelete : null}
       onReport={lightbox.onOpenReport}
-      onDetails={lightbox.onOpenDetails}
+      onDetails={lightbox.detailsDialog.open ? lightbox.onCloseDetails : lightbox.onOpenDetails}
       onShare={lightbox.onShare}
       shareMessage={lightbox.shareMessage}
       downloadOptions={
@@ -110,6 +106,9 @@ export default function ImagesV2ImageViewer({ viewerCoinCosts = null, ...lightbo
       onSubmitEdit={null}
       overlaySlot={overlaySlot}
       overlayReplacesBody={Boolean(lightbox.deleteConfirmOpen)}
+      detailsOpen={Boolean(lightbox.detailsDialog.open)}
+      detailsPanel={lightbox.detailsDialog}
+      onCloseDetails={lightbox.onCloseDetails}
       onClose={lightbox.onClose}
     />
   );
