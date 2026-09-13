@@ -12,18 +12,22 @@ import { useKitShareSheetViewModel } from "./share/useKitShareSheetViewModel";
 export default function KitShareSheet({
   intent = null,
   status = "idle",
+  reviewState = "idle",
   canNativeShare = false,
   onCopyLink = null,
   onNativeShare = null,
+  onSubmitForReview = null,
   onClose = null,
 }) {
   const viewProps = useKitShareSheetViewModel({
     ...(intent || {}),
     shareUrl: intent?.url || "",
     status,
+    reviewState,
     canNativeShare,
     onCopyLink,
     onNativeShare,
+    onSubmitForReview,
     onClose,
   });
 

@@ -4,12 +4,15 @@
 // <KitShareSheet {...share.sheetProps} /> once and calls
 // share.open(asset) from every share button it carries. The type rule
 // decides everything about the intent; this hook owns only the open
-// state, the copy and native actions, and the status timer. No page
-// carries share logic of its own (gate G1).
+// state, the copy and native actions, the review submission on a
+// blocked share (follow-up 1), and the status timer. No page carries
+// share logic of its own (gate G1).
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { buildShareIntent } from "./shareTypeRule.js";
+import { submitCreationReview } from "@/lib/client/studio/creations/creationClient";
+
+import { SHARE_REVIEW_STATES, buildShareIntent } from "./shareTypeRule.js";
 
 const STATUS_RESET_MS = 1600;
 
@@ -36,6 +39,7 @@ async function copyText(value) {
 export function useKitShareController({ sharerUsername = "", origin = "" } = {}) {
   const [intent, setIntent] = useState(null);
   const [status, setStatus] = useState("idle");
+  const [reviewState, setReviewState] = useState(SHARE_REVIEW_STATES.IDLE);
   const [canNativeShare, setCanNativeShare] = useState(false);
   const timerRef = useRef(null);
 
@@ -55,9 +59,11 @@ export function useKitShareController({ sharerUsername = "", origin = "" } = {})
   const open = useCallback(
     (asset) => {
       const resolvedOrigin = origin || (typeof window !== "undefined" ? window.location.origin : "");
+      const nextIntent = buildShareIntent(asset || {}, { sharerUsername, origin: resolvedOrigin });
       setStatus("idle");
+      setReviewState(nextIntent.reviewState || SHARE_REVIEW_STATES.IDLE);
       setCanNativeShare(typeof navigator !== "undefined" && typeof navigator.share === "function");
-      setIntent(buildShareIntent(asset || {}, { sharerUsername, origin: resolvedOrigin }));
+      setIntent(nextIntent);
     },
     [origin, sharerUsername]
   );
@@ -65,6 +71,7 @@ export function useKitShareController({ sharerUsername = "", origin = "" } = {})
   const close = useCallback(() => {
     setIntent(null);
     setStatus("idle");
+    setReviewState(SHARE_REVIEW_STATES.IDLE);
   }, []);
 
   const copyLink = useCallback(async () => {
@@ -89,29 +96,52 @@ export function useKitShareController({ sharerUsername = "", origin = "" } = {})
     }
   }, [intent, settle]);
 
+  // The blocked sheet's primary: the existing publication review path
+  // (the creation editor's Publishing section posts the same call),
+  // PUBLIC review only. A payload that answers 200 with an error body
+  // (CR-005) reads as a failure here, never as a submission.
+  const submitForReview = useCallback(async () => {
+    if (!intent?.id || !intent?.blockedMessage) return;
+    if (reviewState === SHARE_REVIEW_STATES.SUBMITTING || reviewState === SHARE_REVIEW_STATES.SUBMITTED) {
+      return;
+    }
+    setReviewState(SHARE_REVIEW_STATES.SUBMITTING);
+    try {
+      const payload = await submitCreationReview(intent.id, "PUBLIC");
+      if (payload?.error) throw new Error(payload.error.message || "Could not submit for review.");
+      setReviewState(SHARE_REVIEW_STATES.SUBMITTED);
+    } catch {
+      setReviewState(SHARE_REVIEW_STATES.ERROR);
+    }
+  }, [intent, reviewState]);
+
   const sheetProps = useMemo(
     () =>
       intent
         ? {
             intent,
             status,
+            reviewState,
             canNativeShare,
             onCopyLink: copyLink,
             onNativeShare: nativeShare,
+            onSubmitForReview: submitForReview,
             onClose: close,
           }
         : { intent: null },
-    [canNativeShare, close, copyLink, intent, nativeShare, status]
+    [canNativeShare, close, copyLink, intent, nativeShare, reviewState, status, submitForReview]
   );
 
   return {
     isOpen: Boolean(intent),
     intent,
     status,
+    reviewState,
     open,
     close,
     copyLink,
     nativeShare,
+    submitForReview,
     sheetProps,
   };
 }

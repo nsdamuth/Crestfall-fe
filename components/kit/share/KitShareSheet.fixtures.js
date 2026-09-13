@@ -5,6 +5,7 @@ const BASE = {
   hasCard: true,
   cardImageSrc: "/assets/branding/crestfall-og-v2.png",
   previewImageSrc: "/assets/covers/crestfall-camellia-cover.png",
+  previewImageLargeSrc: "",
   title: "Kessa Cindervell",
   byline: "by @crestfall",
   shareUrl: "https://crestfall-studio.com/c/creation-1/kessa-cindervell?ref=brian",
@@ -12,10 +13,18 @@ const BASE = {
   status: "idle",
   statusMessage: "",
   blockedMessage: null,
-  note: null,
+  reviewState: "idle",
   onCopyLink: noop,
   onNativeShare: noop,
+  onSubmitForReview: noop,
   onClose: noop,
+};
+
+const BLOCKED = {
+  ...BASE,
+  cardImageSrc: null,
+  shareUrl: "",
+  blockedMessage: "This creation can only be shared once it is public.",
 };
 
 export const kitShareSheetFixtures = [
@@ -39,6 +48,8 @@ export const kitShareSheetFixtures = [
       kind: "image",
       hasCard: false,
       cardImageSrc: null,
+      previewImageSrc: "/assets/covers/crestfall-camellia-cover.png",
+      previewImageLargeSrc: "/assets/covers/crestfall-camellia-cover.png",
       title: "Kessa at the appraisal counter",
       shareUrl: "https://crestfall-studio.com/studio/creations/creation-1?image=output-9&ref=brian",
     },
@@ -55,25 +66,26 @@ export const kitShareSheetFixtures = [
       shareUrl: "https://crestfall-studio.com/studio/creations/creation-3?ref=brian",
     },
   },
+  { id: "blocked", label: "Private creation, blocked", props: { ...BLOCKED } },
   {
-    id: "internal",
-    label: "Internal creation, link with the note",
-    props: {
-      ...BASE,
-      cardImageSrc: null,
-      note: "Recipients must sign in to Crestfall; this creation will not appear in search or public discovery.",
-    },
+    id: "blocked-internal",
+    label: "Internal creation, blocked (sharing is public only)",
+    props: { ...BLOCKED, title: "Corwin Bex" },
   },
   {
-    id: "blocked",
-    label: "Private creation, blocked",
-    props: {
-      ...BASE,
-      cardImageSrc: null,
-      shareUrl: "",
-      blockedMessage:
-        "Private creations are owner-only. Change visibility to Internal or Public before sharing a link.",
-    },
+    id: "blocked-submitting",
+    label: "Blocked, review submission in flight",
+    props: { ...BLOCKED, reviewState: "submitting" },
+  },
+  {
+    id: "blocked-submitted",
+    label: "Blocked, submitted for review",
+    props: { ...BLOCKED, reviewState: "submitted" },
+  },
+  {
+    id: "blocked-error",
+    label: "Blocked, review submission failed",
+    props: { ...BLOCKED, reviewState: "error" },
   },
   { id: "copied", label: "Link copied", props: { ...BASE, status: "copied", statusMessage: "Link copied." } },
   { id: "error", label: "Share unavailable", props: { ...BASE, status: "error", statusMessage: "Share unavailable." } },

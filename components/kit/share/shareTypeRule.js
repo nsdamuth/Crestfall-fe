@@ -1,8 +1,9 @@
 // The share type rule, one place (fe/share-og brief 1, D4, RULED 13 Sep
-// 2026). Every share button in the app hands an asset to
-// buildShareIntent and renders what comes back. Nothing outside this
-// file decides whether a share carries the stylized card or the plain
-// link preview.
+// 2026; sharing is public only since follow-up 1, RULED 13 Sep 2026).
+// Every share button in the app hands an asset to buildShareIntent and
+// renders what comes back. Nothing outside this file decides whether a
+// share carries the stylized card, the plain link preview, or the
+// blocked state.
 //
 // The rule:
 // - An image (and video later) shares the actual image at the medium
@@ -19,9 +20,10 @@
 // - The byline is the creator. The ref on the link is the sharer.
 //   Sharing a creation you did not make still credits the maker on the
 //   card and still earns the sharer the referral.
-// - Private creations are blocked with the Vault sentence. Internal
-//   creations share the link with the Internal note and no card until
-//   the Chassis serves them to signed-in recipients (CR-075).
+// - Sharing is public only. A private creation and an Internal one
+//   (data-layer UNLISTED) both take the blocked state: one sentence,
+//   Submit for public review through the existing publication review
+//   path, and Close. No link is built for either.
 
 import {
   appendShareRef,
@@ -31,7 +33,7 @@ import {
   normalizeShareUsername,
 } from "./shareUrl.js";
 
-export const SHARE_TYPE_RULE_VERSION = "1.0.0";
+export const SHARE_TYPE_RULE_VERSION = "1.1.0";
 
 export const SHARE_KINDS = Object.freeze({
   IMAGE: "image",
@@ -49,17 +51,25 @@ export const SHARE_VISIBILITIES = Object.freeze({
   CANON: "CANON",
 });
 
+export const SHARE_REVIEW_STATES = Object.freeze({
+  IDLE: "idle",
+  SUBMITTING: "submitting",
+  SUBMITTED: "submitted",
+  ERROR: "error",
+});
+
 export const SHARE_COPY = Object.freeze({
-  blockedPrivate:
-    "Private creations are owner-only. Change visibility to Internal or Public before sharing a link.",
-  internalNote:
-    "Recipients must sign in to Crestfall; this creation will not appear in search or public discovery.",
+  blockedNotPublic: "This creation can only be shared once it is public.",
+  submitForReview: "Submit for public review",
+  submittedForReview: "Submitted for review",
+  submitFailed: "Could not submit for review.",
   invitation: "Play free on Crestfall",
 });
 
 const PLAYABLE_KINDS = new Set([SHARE_KINDS.CHARACTER, SHARE_KINDS.STORY, SHARE_KINDS.ADVENTURE]);
 const MEDIA_KINDS = new Set([SHARE_KINDS.IMAGE, SHARE_KINDS.VIDEO]);
 const KNOWN_KINDS = new Set(Object.values(SHARE_KINDS));
+const ALWAYS_PUBLIC_KINDS = new Set(MEDIA_KINDS);
 
 // Data-layer type to share kind. Story and Adventure are the display
 // words for the two template types (docs/CRESTFALL-PRODUCT-MODEL-UXUI.md
@@ -129,10 +139,23 @@ export function normalizeShareVisibility({ visibility = "", canonStatus = "" } =
   return SHARE_VISIBILITIES.PRIVATE;
 }
 
+// Sharing is public only: PUBLIC and CANON share, PRIVATE and
+// INTERNAL are blocked.
+export function isShareableVisibility(visibility) {
+  return visibility === SHARE_VISIBILITIES.PUBLIC || visibility === SHARE_VISIBILITIES.CANON;
+}
+
+// A creation already in the review queue reads as submitted so the
+// blocked sheet never offers a second submission.
+export function normalizeShareReviewState({ lifecycleStatus = "", reviewStatus = "" } = {}) {
+  const status = upper(lifecycleStatus) || upper(reviewStatus);
+  return status === "IN_REVIEW" ? SHARE_REVIEW_STATES.SUBMITTED : SHARE_REVIEW_STATES.IDLE;
+}
+
 // Medium first (the stored card derivative), large second (the stored
 // display derivative), never the original and never an upscale. The
 // keys are the served payload's own names and their snake_case and
-// presentation aliases.
+// presentation aliases; originalUrl and upscaledUrl are never read.
 export function selectShareImageSource(media = {}) {
   const source = media && typeof media === "object" ? media : {};
   const medium = text(source.cardUrl || source.card_url || source.cardSrc);
@@ -146,15 +169,29 @@ export function selectShareImageSource(media = {}) {
   return { src: "", variant: null };
 }
 
+// Both derivatives the sheet may show: the medium one in the preview,
+// the large one behind it. Neither is ever the original.
+export function selectShareImageSources(media = {}) {
+  const source = media && typeof media === "object" ? media : {};
+  const medium = text(source.cardUrl || source.card_url || source.cardSrc);
+  const large = text(source.displayUrl || source.display_url || source.displaySrc);
+  return { medium, large };
+}
+
 export function stripDescriptionSentinel(description) {
   const value = text(description);
   return value === DESCRIPTION_SENTINEL ? "" : value;
 }
 
-function formatByline({ creatorHandle = "", creatorUsername = "" } = {}) {
+function formatHandle({ creatorHandle = "", creatorUsername = "" } = {}) {
   const username = normalizeShareUsername(creatorUsername);
   const handle = username ? `@${username}` : text(creatorHandle).replace(/^@?/, "@");
-  return handle && handle !== "@" ? `by ${handle}` : "";
+  return handle && handle !== "@" ? handle : "";
+}
+
+function formatByline(asset) {
+  const handle = formatHandle(asset);
+  return handle ? `by ${handle}` : "";
 }
 
 /**
@@ -168,6 +205,7 @@ function formatByline({ creatorHandle = "", creatorUsername = "" } = {}) {
  * @param {string} [asset.creatorUsername] bare username, preferred
  * @param {string} [asset.visibility] PRIVATE, UNLISTED, INTERNAL, PUBLIC, CANON
  * @param {string} [asset.canonStatus]
+ * @param {string} [asset.lifecycleStatus] DRAFT, IN_REVIEW, APPROVED, ...
  * @param {string} [asset.featuredImageSrc] creation preview image (card derivative)
  * @param {Object} [asset.media] served derivative fields for a media output
  * @param {string} [asset.sourceCreationId] the creation an image was generated from
@@ -183,7 +221,9 @@ export function buildShareIntent(asset = {}, { sharerUsername = "", origin = "" 
   const sharer = normalizeShareUsername(sharerUsername);
   const isMedia = isMediaShareKind(kind);
   const hasCard = shareCarriesCard(kind);
-  const visibility = isMedia ? SHARE_VISIBILITIES.PUBLIC : normalizeShareVisibility(asset);
+  const visibility = ALWAYS_PUBLIC_KINDS.has(kind)
+    ? SHARE_VISIBILITIES.PUBLIC
+    : normalizeShareVisibility(asset);
 
   const base = {
     kind,
@@ -195,18 +235,24 @@ export function buildShareIntent(asset = {}, { sharerUsername = "", origin = "" 
     sharerUsername: sharer,
     url: "",
     previewImageSrc: "",
+    previewImageLargeSrc: "",
     cardImageSrc: null,
     blockedMessage: null,
-    note: null,
+    reviewState: SHARE_REVIEW_STATES.IDLE,
     nativeShare: null,
   };
 
-  if (visibility === SHARE_VISIBILITIES.PRIVATE) {
-    return { ...base, blockedMessage: SHARE_COPY.blockedPrivate };
+  if (!isShareableVisibility(visibility)) {
+    return {
+      ...base,
+      blockedMessage: SHARE_COPY.blockedNotPublic,
+      reviewState: normalizeShareReviewState(asset),
+    };
   }
 
   let path = "";
   let previewImageSrc = "";
+  let previewImageLargeSrc = "";
 
   if (isMedia) {
     path = buildImageSharePath({
@@ -214,21 +260,23 @@ export function buildShareIntent(asset = {}, { sharerUsername = "", origin = "" 
       imageOutputId: id,
       sharerUsername: sharer,
     });
+    const sources = selectShareImageSources(asset.media || asset);
     previewImageSrc = selectShareImageSource(asset.media || asset).src;
+    previewImageLargeSrc = sources.large;
   } else {
     path = buildCreationSharePath({ kind, id, title });
     previewImageSrc = text(asset.featuredImageSrc);
   }
 
   const url = buildShareUrl({ path: appendShareRef(path, sharer), origin });
-  const cardAvailable = hasCard && visibility !== SHARE_VISIBILITIES.INTERNAL && Boolean(id);
+  const cardAvailable = hasCard && Boolean(id);
 
   return {
     ...base,
     url,
     previewImageSrc,
+    previewImageLargeSrc,
     cardImageSrc: cardAvailable ? `/api/share-card/${encodeURIComponent(id)}` : null,
-    note: visibility === SHARE_VISIBILITIES.INTERNAL ? SHARE_COPY.internalNote : null,
     nativeShare: { title, url },
   };
 }

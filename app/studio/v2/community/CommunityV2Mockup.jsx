@@ -405,9 +405,9 @@ export default function CommunityV2Mockup({
     await launchController.launch(creation.rawCreation || creation);
   }
 
-  // The type rule, the visibility fold, and the link live in the Kit
-  // share package; Community gains the same private and Internal rule
-  // Vault carries.
+  // The type rule, the visibility fold, the public-only block, and the
+  // link live in the Kit share package; Community carries the same
+  // rule Vault does.
   function handleShare(creation) {
     if (!live) {
       setActionNotice({
@@ -424,6 +424,7 @@ export default function CommunityV2Mockup({
       creatorHandle: creation.creatorHandle,
       visibility: creation.rawCreation?.visibility || creation.rawCreation?.data?.visibility || "PUBLIC",
       canonStatus: creation.canonStatus,
+      lifecycleStatus: creation.rawCreation?.status || creation.status,
       featuredImageSrc: creation.imageSrc,
     });
   }

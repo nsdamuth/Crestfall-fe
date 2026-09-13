@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import {
   SHARE_COPY,
   SHARE_KINDS,
+  SHARE_REVIEW_STATES,
   buildShareIntent,
   getShareKind,
   normalizeShareVisibility,
@@ -22,6 +23,7 @@ import {
   toShareSlug,
 } from "./shareUrl.js";
 import { buildShareCardModel, toShareCardExcerpt } from "./shareCardModel.js";
+import { getShareReviewCopy } from "./useKitShareSheetViewModel.js";
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -155,30 +157,57 @@ test("the slug is lowercase, hyphenated, accent-free, and bounded", () => {
   assert.doesNotMatch(long, /-$/);
 });
 
-test("a private creation is blocked with the Vault sentence and no link", () => {
+// Sharing is public only (follow-up 1, RULED 13 Sep 2026): a private
+// creation and an Internal one both take the blocked state with no URL.
+test("a private creation is blocked with the public-only sentence and no link", () => {
   const intent = buildShareIntent(
     { creationType: "CHARACTER", id: "creation-1", title: "Kessa", visibility: "PRIVATE" },
     CONTEXT
   );
-  assert.equal(intent.blockedMessage, SHARE_COPY.blockedPrivate);
+  assert.equal(intent.blockedMessage, SHARE_COPY.blockedNotPublic);
   assert.equal(intent.url, "");
   assert.equal(intent.cardImageSrc, null);
+  assert.equal(intent.nativeShare, null);
+  assert.equal(intent.reviewState, SHARE_REVIEW_STATES.IDLE);
   assert.equal(normalizeShareVisibility({}), "PRIVATE");
 });
 
-test("an Internal creation shares the link with the note and no card until CR-075", () => {
+test("an Internal creation is blocked the same way, with no note and no link", () => {
   for (const visibility of ["UNLISTED", "INTERNAL", "internal"]) {
     const intent = buildShareIntent(
       { creationType: "ROOM_TEMPLATE", id: "creation-2", title: "The Workshop", visibility },
       CONTEXT
     );
     assert.equal(intent.visibility, "INTERNAL", visibility);
-    assert.equal(intent.hasCard, true);
-    assert.equal(intent.cardImageSrc, null);
-    assert.equal(intent.note, SHARE_COPY.internalNote);
-    assert.equal(intent.url, "https://crestfall-studio.com/story/creation-2/the-workshop?ref=brian");
+    assert.equal(intent.blockedMessage, SHARE_COPY.blockedNotPublic, visibility);
+    assert.equal(intent.url, "", visibility);
+    assert.equal(intent.cardImageSrc, null, visibility);
+    assert.equal(intent.nativeShare, null, visibility);
+    assert.equal("note" in intent, false, visibility);
   }
+  assert.equal(SHARE_COPY.internalNote, undefined);
   assert.equal(normalizeShareVisibility({ visibility: "PRIVATE", canonStatus: "OFFICIAL" }), "CANON");
+});
+
+test("a blocked share already in review reads as submitted and the button disables", () => {
+  const intent = buildShareIntent(
+    { creationType: "CHARACTER", id: "creation-1", title: "Kessa", visibility: "PRIVATE", lifecycleStatus: "IN_REVIEW" },
+    CONTEXT
+  );
+  assert.equal(intent.reviewState, SHARE_REVIEW_STATES.SUBMITTED);
+
+  const submitted = getShareReviewCopy(SHARE_REVIEW_STATES.SUBMITTED);
+  assert.equal(submitted.reviewButtonLabel, SHARE_COPY.submittedForReview);
+  assert.equal(submitted.reviewButtonDisabled, true);
+
+  const idle = getShareReviewCopy(SHARE_REVIEW_STATES.IDLE);
+  assert.equal(idle.reviewButtonLabel, SHARE_COPY.submitForReview);
+  assert.equal(idle.reviewButtonDisabled, false);
+  assert.equal(idle.reviewMessage, "");
+
+  const failed = getShareReviewCopy(SHARE_REVIEW_STATES.ERROR);
+  assert.equal(failed.reviewMessage, SHARE_COPY.submitFailed);
+  assert.equal(failed.reviewButtonDisabled, false);
 });
 
 test("an image source is medium then large, never the original", () => {
@@ -217,9 +246,12 @@ test("the View is stateless presentation and the README names the rule", () => {
   const view = read("KitShareSheet.view.jsx");
   assert.doesNotMatch(view, /useEffect|fetch\(|navigator\.|window\./);
   assert.match(view, /Copy link/);
+  assert.match(view, /Close/);
+  assert.doesNotMatch(view, /Internal/);
 
   const readme = read("README.md");
   assert.match(readme, /## The type rule/);
   assert.match(readme, /carries no card/);
   assert.match(readme, /carries the card/);
+  assert.match(readme, /public only/);
 });

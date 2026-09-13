@@ -1,18 +1,20 @@
 # KitShareSheet
 
-The one share package (fe/share-og brief 1, RULED 13 Sep 2026). Every
-share button in the app mounts it; no page carries share logic of its
-own. Contract 1.0.0.
+The one share package (fe/share-og brief 1, RULED 13 Sep 2026; sharing
+is public only since follow-up 1, RULED 13 Sep 2026). Every share
+button in the app mounts it; no page carries share logic of its own.
+Contract 1.1.0.
 
 ## The type rule
 
 Lives in `shareTypeRule.js` and nowhere else.
 
 - An image (and video later) carries no card. It shares the actual
-  image at the medium stored derivative (the served `cardUrl`), or the
-  large one (`displayUrl`) when medium is absent, never the original
-  and never an upscale. The preview shows the image, the title, the
-  creator, and the link.
+  image at the medium stored derivative (the served `cardUrl`, the
+  file proxy's `card` variant), with the large one (`displayUrl`, the
+  `display` variant) behind it, never the original and never an
+  upscale. The preview shows the image, the title, the creator, and
+  the link.
 - A playable asset (character, story, adventure) carries the card: the
   stylized 1200 by 630 image the share-card route composes from public
   creation data (`app/api/share-card/[id]/route.js`), built on the
@@ -23,13 +25,25 @@ Lives in `shareTypeRule.js` and nowhere else.
 - The byline is the creator. The `ref` on the link is the sharer.
   Sharing a creation you did not make still credits the maker on the
   card and still earns the sharer the referral.
-- Private creations are blocked with the Vault sentence. Internal
-  creations (data-layer UNLISTED) share the link with the Internal note
-  and no card until the Chassis serves them to signed-in recipients
-  (CR-075).
+- Sharing is public only. A private creation and an Internal one
+  (data-layer UNLISTED) both take the blocked state: the sentence
+  "This creation can only be shared once it is public.", the primary
+  "Submit for public review", and Close. No link, no card, no native
+  share is built for either. The primary posts the existing
+  publication review path (`submitCreationReview` in
+  `lib/client/studio/creations/creationClient.js`, the same call the
+  creation editor's Publishing section makes, PUBLIC review only); on
+  success the button reads "Submitted for review" and disables. A
+  creation already in review opens in that state. A failure keeps the
+  button live and shows "Could not submit for review." beneath the
+  actions. The Chassis honors the call for the owner's own draft or
+  rejected creation; Internal links open for signed-in recipients only
+  once CR-075 lands, which is why an Internal creation is blocked here
+  rather than shared.
 
-`kitShareDiagnostics.mjs` asserts both branches
-(`npm run diagnostics:loom:share`).
+`kitShareDiagnostics.mjs` asserts every branch, the blocked state for
+a private and an Internal creation included (`npm run
+diagnostics:loom:share`).
 
 ## Link destinations (RULED at the plan gate, 13 Sep 2026)
 
@@ -54,26 +68,28 @@ Lives in `shareTypeRule.js` and nowhere else.
 
 - `KitShareSheet.view.jsx`: eyebrow "Share", the title, the creator
   byline, the preview (the card image for a playable public creation,
-  else the link preview row), an optional note, the link in a read-only
-  field on `--bed-deep` (a control you read sinks one step below), Copy
-  link (secondary), Share... (gold primary, only when the browser
-  offers `navigator.share`), and a status chip (Link copied, Shared,
-  Share unavailable).
+  else the link preview row), the link in a read-only field on
+  `--bed-deep` (a control you read sinks one step below), Copy link
+  (secondary), Share... (gold primary, only when the browser offers
+  `navigator.share`), and a status chip (Link copied, Shared, Share
+  unavailable).
 - Mounted on `KitModalFrame` variant modal at 36rem: bottom-anchored
   full width under 700px with internal scroll, centered at 700px and
   up. The frame owns the close control and every dismissal path.
-- A blocked share renders the eyebrow, the title, the sentence, and
-  Close only.
+- A blocked share renders the eyebrow, the title, the sentence, Submit
+  for public review (gold primary), and Close (secondary), with the
+  failure line beneath when the submission fails.
 
 ## Boundary
 
 ```text
 VaultV2Mockup.jsx, CommunityV2Mockup.jsx (later: the image viewer, the story chat page)
-  -> useKitShareController({ sharerUsername })   open(asset), close, copyLink, nativeShare, sheetProps
-       -> shareTypeRule.buildShareIntent          the rule, the copy, the visibility fold
+  -> useKitShareController({ sharerUsername })   open(asset), close, copyLink, nativeShare, submitForReview, sheetProps
+       -> shareTypeRule.buildShareIntent          the rule, the copy, the visibility fold, the review state
             -> shareUrl                            paths, slug, ref, sign-in return
+       -> creationClient.submitCreationReview     the existing publication review path (blocked sheet only)
   -> KitShareSheet (Binding Shell, components/kit/KitShareSheet.jsx)
-       -> useKitShareSheetViewModel               normalization, status copy
+       -> useKitShareSheetViewModel               normalization, status copy, review button copy
        -> KitShareSheet.view.jsx                  presentation only
             -> ../KitModalFrame
 app/api/share-card/[id]/route.js
@@ -94,6 +110,7 @@ const share = useKitShareController({ sharerUsername: accountProfile?.username }
   creatorHandle: item.creatorHandle,
   visibility: item.rawCreation?.visibility,
   canonStatus: item.canonStatus,
+  lifecycleStatus: item.status,
   featuredImageSrc: item.imageSrc,
 })}>Share</button>
 
@@ -102,21 +119,22 @@ const share = useKitShareController({ sharerUsername: accountProfile?.username }
 
 An image passes `mediaType: "IMAGE"`, `id` (the output id),
 `sourceCreationId`, and `media` (the served derivative fields).
+`lifecycleStatus` lets a blocked sheet open already reading "Submitted
+for review" when the creation is IN_REVIEW.
 
 ## Copy
 
 - "Share", "Link", "Copy link", "Share...", "Close".
 - "Link copied.", "Shared.", "Share unavailable." (the image viewer's
   existing status lines).
-- Blocked: "Private creations are owner-only. Change visibility to
-  Internal or Public before sharing a link." (the Vault sentence with
-  the ruled word Internal, decision 6A).
-- Internal note: "Recipients must sign in to Crestfall; this creation
-  will not appear in search or public discovery." (the existing Vault
-  sentence).
+- Blocked: "This creation can only be shared once it is public."
+  (follow-up 1; supersedes the Vault sentence from brief 1).
+- "Submit for public review", "Submitted for review", "Could not
+  submit for review."
 - Invitation on the card: "Play free on Crestfall".
 
 ## Fixtures
 
-playable, playable-native, image, link, internal, blocked, copied,
-error, no-image, longest.
+playable, playable-native, image, link, blocked, blocked-internal,
+blocked-submitting, blocked-submitted, blocked-error, copied, error,
+no-image, longest.

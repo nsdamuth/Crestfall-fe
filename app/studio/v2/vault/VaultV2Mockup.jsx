@@ -334,7 +334,8 @@ export default function VaultV2Mockup({
   }
 
   // The type rule, the visibility fold (raw UNLISTED reads as Internal),
-  // the private block, and the link all live in the Kit share package.
+  // the public-only block with its review submission, and the link all
+  // live in the Kit share package.
   function handleShare(item) {
     if (!live) {
       setActionNotice({
@@ -351,6 +352,7 @@ export default function VaultV2Mockup({
       creatorHandle: item.creatorHandle,
       visibility: item.rawCreation?.visibility || item.rawCreation?.data?.visibility || item.visibility,
       canonStatus: item.canonStatus,
+      lifecycleStatus: item.rawCreation?.status || item.status,
       featuredImageSrc: item.imageSrc,
     });
   }
