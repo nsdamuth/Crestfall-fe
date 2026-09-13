@@ -320,7 +320,7 @@ Scale (all locked; ratio 1.2 from 16px, leadings on the 4px grid):
 | `--text-eyebrow` / `--lh-eyebrow` / `--track-eyebrow` | 13 / 20 / .16em | Eyebrows (aliases of the ui step) |
 | `--text-cta` / `--lh-cta` | 16 / 24 | Button text (aliases of the body step) |
 | `--text-hero` / `--lh-hero` | fluid | Hero only, never product UI |
-| `--text-chat` / `--lh-chat` | 14 / 22 | Transcript body tier, RULED by Brian 13 Sep 2026 (fe/chat-studio brief 3 item 6): the story transcript's message body ONLY. Legal only in `components/studio/story-rooms/story-room-message`; meta stays at `--text-label` and the speaker name reads `--text-ui` in the display font (RULED 13 Sep 2026, brief 4 item 10); never a field bed (that is `--text-input`), never any other surface. Check: `grep -rn 'text-chat\|lh-chat' app/ components/ docs/` returns only `app/theme.css`, this file, and that package |
+| `--text-chat` / `--lh-chat` | 14 / 22 | Transcript body tier, RULED by Brian 13 Sep 2026 (fe/chat-studio brief 3 item 6): the story transcript's message body ONLY. Legal only in `components/studio/story-rooms/story-room-message`; meta stays at `--text-label` and the speaker name reads `--text-body` in the display font (RULED 13 Sep 2026, brief 4 item 10, raised one step by review round 4 item 1); never a field bed (that is `--text-input`), never any other surface. Check: `grep -rn 'text-chat\|lh-chat' app/ components/ docs/` returns only `app/theme.css`, this file, and that package |
 
 Weights `--weight-regular/medium/bold` (400/500/700; 800 and 900 are
 banned), joined 22 Aug 2026 by `--weight-light` (300, A1, Fable law
@@ -376,9 +376,10 @@ inside a bubble is NEVER speaker-colored; it stays the standard `--ink`
 token regardless of the speaker's anchor. RULED 13 Sep 2026 (Brian,
 fe/chat-studio brief 4 item 10): the story transcript's speaker name
 (`components/studio/story-rooms/story-room-message`) leaves this ink
-and reads `--ink` in the display font at `--text-ui`,
-`--weight-medium`, no uppercase, no tracking, so it no longer matches
-the Opening scene eyebrow; `--chat-speaker-name` stays the speaker-name
+and reads `--ink` in the display font at `--text-body` (raised from
+`--text-ui` by Brian's review round 4 item 1, same day),
+`--weight-medium`, no uppercase, no tracking, so it reads larger than
+the Opening scene eyebrow and never matches it; `--chat-speaker-name` stays the speaker-name
 ink for the `components/studio/chat` packages, and the anchor still
 tints that transcript's bubble and avatar tile. This supersedes, on the
 display side only, the fixture-only `--chat-msg-*` palette family

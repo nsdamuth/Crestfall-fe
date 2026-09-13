@@ -33,9 +33,10 @@ message record, including:
   item 8's body step): the body at `--text-chat` and `--lh-chat`, the
   transcript body tier (14 over 22) minted in `app/theme.css` and legal
   only in this package; the opening label, mode pill, and delivery
-  lines at `--text-label`; the speaker name (brief 4 item 10, RULED) in
-  the display font at `--text-ui`, `--weight-medium`, `--ink`, no
-  uppercase, no tracking, so it never matches the eyebrow above it;
+  lines at `--text-label`; the speaker name (brief 4 item 10 and review
+  round 4 item 1, RULED) in the display font at `--text-body`,
+  `--weight-medium`, `--ink`, no uppercase, no tracking, so it reads
+  larger than the eyebrow above it and never matches it;
   system notices stay at the ui step;
 - speaker identity, mode pill, and opening-scene label;
 - legacy inline bold/action/quote rendering;

@@ -1,5 +1,11 @@
-export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.2.0";
+export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.3.0";
 
+// 2.3.0, fe/chat-studio review round 4 item 1 (13 Sep 2026, Brian's
+// browser review). Presentation only: the speaker name rises one scale
+// step, from --text-ui (13) to --text-body (16), about 20 percent, so
+// it reads larger than the Opening scene eyebrow above it. Font,
+// weight, ink, case, and tracking as 2.2.0.
+//
 // 2.2.0, fe/chat-studio brief 4 item 10 (13 Sep 2026, RULED by Brian).
 // Presentation only, no prop changed: the speaker name on every bubble
 // (character, narrator, the player's "You") leaves the eyebrow tier and

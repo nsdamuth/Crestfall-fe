@@ -30,9 +30,10 @@ import {
 // locked --chat-bubble-fill recipe, every other speaker left-aligned on
 // the nested card surface, no borders, --radius-bubble, body one step
 // tighter (the ui step), narration italic, whispers as a quiet inset.
-// The speaker name reads --ink in the display font at the ui step
-// (brief 4 item 10, RULED, off the --chat-speaker-name clamp and off
-// the eyebrow tier); body ink is always --ink. The one inline value
+// The speaker name reads --ink in the display font at the body step
+// (brief 4 item 10 and review round 4 item 1, RULED, off the
+// --chat-speaker-name clamp and off the eyebrow tier); body ink is
+// always --ink. The one inline value
 // the View writes is the --chat-speaker anchor, contract data, never a
 // literal of its own; it still tints the bubble and the avatar tile.
 
@@ -300,7 +301,8 @@ function getArticleClassName(surfaceTone) {
 // --lh-chat (14 over 22), the transcript body tier minted in
 // app/theme.css and legal only in this package; the opening label, the
 // mode pill, and the delivery lines stay at --text-label, and the
-// speaker name reads the display font at --text-ui (brief 4 item 10).
+// speaker name reads the display font at --text-body (brief 4 item 10,
+// raised one step by review round 4 item 1).
 // System notices are meta, not body, and stay at the ui step (the
 // brief named the body only).
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {
@@ -414,11 +416,13 @@ export default function StoryRoomMessageView({
                   </p>
                 ) : null}
 
-                {/* The speaker name (brief 4 item 10): off the eyebrow
-                    tier so it never matches the Opening scene eyebrow
-                    above it; display font, the ui step, medium weight,
-                    --ink, no uppercase, no tracking. */}
-                <p className="truncate font-display text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-medium)] text-[var(--ink)]">
+                {/* The speaker name (brief 4 item 10, review round 4
+                    item 1): off the eyebrow tier and one step larger
+                    than it, the body step (16, about 20 percent over the
+                    ui step), so it reads above the Opening scene eyebrow;
+                    display font, medium weight, --ink, no uppercase, no
+                    tracking. */}
+                <p className="truncate font-display text-[length:var(--text-body)] leading-[var(--lh-body)] font-[var(--weight-medium)] text-[var(--ink)]">
                   {speakerLabel}
                 </p>
               </div>
