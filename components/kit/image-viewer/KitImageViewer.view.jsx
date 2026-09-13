@@ -45,6 +45,12 @@ const UPSCALE_TIP =
 // cap its intrinsic dimensions. The prior h-auto/w-auto + max-* recipe
 // never enlarged an 832x1040 source, which is why the new Kit viewer
 // appeared much smaller than the legacy full-screen MediaLightbox.
+//
+// Details restoration, RULED 13 Sep 2026: Details is the reverse face of
+// the exact fitted image box. The image stays mounted so zoom/pan state
+// survives the flip; the hidden face cannot receive pointer input, and
+// the details face owns its own vertical scroll. Reduced-motion users get
+// the same face swap with no transition.
 // --viewer-expanded-width is derived from the measured image aspect
 // ratio so portrait and landscape images both grow until they meet
 // either the 78dvh height envelope or the 88vw/76rem width envelope.
@@ -387,21 +393,50 @@ export default function KitImageViewerView({
         <>
           <div
             ref={frameSlotRef}
-            className={`flex min-h-0 max-w-full flex-1 self-stretch ${detailsOpen ? "items-stretch justify-stretch" : "items-center justify-center"}`}
+            className="flex min-h-0 max-w-full flex-1 items-center justify-center self-stretch"
           >
-            {detailsOpen ? (
-              <div className="pointer-events-auto h-full w-full">
-                <ImageDetailsPanel embedded {...detailsPanel} onClose={onCloseDetails} />
+            <div
+              className={`relative max-h-full max-w-full [perspective:1200px] ${
+                hasImageBox
+                  ? "h-[var(--viewer-image-h)] w-[var(--viewer-image-w)]"
+                  : "h-full w-full min-h-[16rem] max-w-[40rem]"
+              }`}
+            >
+              <div
+                data-viewer-flip-surface
+                className="relative h-full w-full transition-transform duration-300 ease-out [transform-style:preserve-3d] motion-reduce:transition-none"
+                style={{
+                  transform: detailsOpen ? "rotateY(180deg)" : "rotateY(0deg)",
+                  willChange: "transform",
+                }}
+              >
+                <div
+                  aria-hidden={detailsOpen}
+                  inert={detailsOpen ? true : undefined}
+                  className={`absolute inset-0 flex items-center justify-center [backface-visibility:hidden] ${
+                    detailsOpen ? "pointer-events-none" : "pointer-events-auto"
+                  }`}
+                >
+                  <ImageFrame
+                    imageSrc={imageSrc}
+                    title={title}
+                    zoomDisabled={!imageSrc}
+                    imageClassName={hasImageBox ? VIEWER_IMAGE_FITTED_CLASSES : VIEWER_IMAGE_FALLBACK_CLASSES}
+                    onImageLoad={onImageLoad}
+                  />
+                </div>
+
+                <div
+                  aria-hidden={!detailsOpen}
+                  inert={!detailsOpen ? true : undefined}
+                  className={`absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] ${
+                    detailsOpen ? "pointer-events-auto" : "pointer-events-none"
+                  }`}
+                >
+                  <ImageDetailsPanel embedded {...detailsPanel} onClose={onCloseDetails} />
+                </div>
               </div>
-            ) : (
-              <ImageFrame
-                imageSrc={imageSrc}
-                title={title}
-                zoomDisabled={!imageSrc}
-                imageClassName={hasImageBox ? VIEWER_IMAGE_FITTED_CLASSES : VIEWER_IMAGE_FALLBACK_CLASSES}
-                onImageLoad={onImageLoad}
-              />
-            )}
+            </div>
           </div>
 
           <ViewerBottomBar

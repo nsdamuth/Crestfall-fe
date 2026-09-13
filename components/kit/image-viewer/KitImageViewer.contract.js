@@ -1,6 +1,11 @@
-export const KIT_IMAGE_VIEWER_VIEW_CONTRACT_VERSION = "2.0.0";
+export const KIT_IMAGE_VIEWER_VIEW_CONTRACT_VERSION = "2.1.0";
 
 /**
+ * 2.1.0, RULED 13 Sep 2026: additive Details face contract. Details can
+ * be driven as an in-view flip surface with `detailsOpen`, `detailsPanel`,
+ * and `onCloseDetails`; the reverse face uses the exact fitted image box,
+ * scrolls internally, and keeps the image mounted so zoom/pan survives.
+ *
  * 2.0.0, RULED 12 Sep 2026 (Brian's browser review of the media
  * viewer and the creator cards). BREAKING: the thumbnail strip is
  * removed together with `items`, `activeId`, and `onSelectItem`; the
@@ -66,6 +71,9 @@ export const KIT_IMAGE_VIEWER_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {() => void} onDelete opens the page's delete confirm; absent hides the control
  * @property {() => void} onReport
  * @property {() => void} onDetails
+ * @property {boolean} [detailsOpen] when true the fitted image box shows its Details reverse face
+ * @property {Object|null} [detailsPanel] display-ready payload for the embedded ImageDetailsPanel
+ * @property {() => void} [onCloseDetails] returns the fitted surface to the image face
  * @property {() => void} onShare
  * @property {string} shareMessage the chip under the header after Share (copied link, etc.)
  * @property {KitImageViewerDownloadOption[]} downloadOptions empty hides the Download control
