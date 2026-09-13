@@ -51,7 +51,9 @@ test("row one holds the scene image seat, the cast circles, then the mode chip",
   assert.match(view, /placement="up"/);
   assert.match(view, /disabled=\{sceneImageState !== "ready"\}/);
   assert.match(view, /aria-pressed=\{active\}/);
-  assert.match(view, /ring-2 ring-\[var\(--gold-action\)\]/);
+  // Review round 4 item 2: the chosen speaker's gold outline sits inside
+  // the 44px circle.
+  assert.match(view, /ring-2 ring-inset ring-\[var\(--gold-action\)\]/);
 });
 
 test("row two is the growing field, the Auto circle, and the gold send circle", () => {
