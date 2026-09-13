@@ -24,9 +24,12 @@ import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
 import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
+import KitShareSheet from "@/components/kit/KitShareSheet";
+import { useKitShareController } from "@/components/kit/share/useKitShareController";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import FixtureActionNotice from "../FixtureActionNotice";
+import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
 import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
 import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
@@ -163,6 +166,10 @@ export default function VaultV2Mockup({
 } = {}) {
   const router = useRouter();
   const launchController = useStoryLaunchController();
+  // fe/share-og brief 1: every share button on this page opens the one
+  // Kit share sheet; the sharer's handle rides the link as ref.
+  const { accountProfile } = useStudioAccount();
+  const share = useKitShareController({ sharerUsername: accountProfile?.username || "" });
   const ownedItems = Array.isArray(items) ? items : FIXTURE_VAULT_ITEMS;
   const [fixtureMode, setFixtureMode] = useState("default");
   const [layout, setLayout] = useState("grid");
@@ -326,7 +333,9 @@ export default function VaultV2Mockup({
     router.push(`/studio/v2/images?creation=${encodeURIComponent(item.id)}`);
   }
 
-  async function handleShare(item) {
+  // The type rule, the visibility fold (raw UNLISTED reads as Internal),
+  // the private block, and the link all live in the Kit share package.
+  function handleShare(item) {
     if (!live) {
       setActionNotice({
         label: "Share",
@@ -335,53 +344,15 @@ export default function VaultV2Mockup({
       return;
     }
 
-    const sourceVisibility = String(
-      item.rawCreation?.visibility || item.rawCreation?.data?.visibility || ""
-    )
-      .trim()
-      .toUpperCase();
-    const isUnlisted = sourceVisibility === "UNLISTED";
-
-    if (sourceVisibility === "PRIVATE" || item.visibility === "PRIVATE") {
-      setActionNotice({
-        label: "Share",
-        message: "Private creations are owner-only. Change visibility to Unlisted or Public before sharing a link.",
-      });
-      return;
-    }
-
-    if (!isUnlisted && !["PUBLIC", "CANON"].includes(item.visibility)) {
-      setActionNotice({
-        label: "Share",
-        message: "This creation cannot be shared in its current visibility state.",
-      });
-      return;
-    }
-
-    const href = `/studio/creations/${encodeURIComponent(item.id)}`;
-    const absoluteHref = typeof window !== "undefined" ? new URL(href, window.location.origin).toString() : href;
-    const successMessage = isUnlisted
-      ? "Authenticated link copied. Recipients must sign in to Crestfall; this Creation will not appear in search or public discovery."
-      : "Public catalogue link copied.";
-
-    try {
-      if (typeof navigator !== "undefined" && navigator.share) {
-        await navigator.share({ title: item.title, url: absoluteHref });
-        setActionNotice({
-          label: "Share",
-          message: isUnlisted
-            ? "Authenticated Crestfall link shared. Recipients must sign in; this Creation remains undiscoverable."
-            : "Public catalogue link shared.",
-        });
-      } else if (typeof navigator !== "undefined" && navigator.clipboard) {
-        await navigator.clipboard.writeText(absoluteHref);
-        setActionNotice({ label: "Share", message: successMessage });
-      }
-    } catch (error) {
-      if (error?.name !== "AbortError") {
-        setActionNotice({ label: "Share", message: error?.message || "Share link could not be prepared." });
-      }
-    }
+    share.open({
+      creationType: item.type,
+      id: item.id,
+      title: item.title,
+      creatorHandle: item.creatorHandle,
+      visibility: item.rawCreation?.visibility || item.rawCreation?.data?.visibility || item.visibility,
+      canonStatus: item.canonStatus,
+      featuredImageSrc: item.imageSrc,
+    });
   }
 
   function handleViewCatalogue(item) {
@@ -699,6 +670,7 @@ export default function VaultV2Mockup({
     })()}
 
     <StoryLaunchRequirementsSheet picker={launchController.picker} />
+    <KitShareSheet {...share.sheetProps} />
     <FixtureActionNotice
       notice={
         actionNotice ||
