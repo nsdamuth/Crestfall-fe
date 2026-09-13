@@ -1,7 +1,18 @@
 export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
-  "story-room-chat-shell.view.v4.0";
+  "story-room-chat-shell.view.v4.1";
 
 /**
+ * v4.1, fe/chat-studio brief 3 (13 Sep 2026), additive. Item 1: the
+ * composer renders in a full-width shell row beneath the rails grid,
+ * its content in the transcript's grid column. Item 10: the mobile bar
+ * carries the story list and settings buttons again, pinned right after
+ * the title (`onOpenMobileStoryList` and `onOpenMobileDetails`, both
+ * already on the View); `composerProps` no longer carries
+ * `onOpenStoryList` or `onOpenSettings` (composer contract 4.0.0) and
+ * carries `playerCharacter`, `playerCharacterPickerAvailable`, and
+ * `onOpenPlayerCharacterPicker` for the player circle (item 2). Item 3:
+ * the rail toggles' glyph turns 180 degrees between open and closed.
+ *
  * v4.0, fe/chat-studio brief 2 item 11 (13 Sep 2026). BREAKING:
  * `onOpenMobileGallery` and the "gallery" mobile panel are removed with
  * the mobile bar's media button; the mobile bar keeps the back chevron,

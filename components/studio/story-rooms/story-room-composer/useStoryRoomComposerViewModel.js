@@ -195,8 +195,6 @@ export function useStoryRoomComposerViewModel({
   playerCharacter = null,
   playerCharacterPickerAvailable = false,
   onOpenPlayerCharacterPicker,
-  onOpenStoryList,
-  onOpenSettings,
 } = {}) {
   const [activeMentionQuery, setActiveMentionQuery] = useState(null);
   const [highlightedMentionIndex, setHighlightedMentionIndex] = useState(0);
@@ -589,10 +587,6 @@ export function useStoryRoomComposerViewModel({
       onPick: () => onOpenPlayerCharacterPicker?.(),
     },
     onAuto: continueAuto,
-    // Below md the composer carries the story list and settings
-    // buttons (brief 2 item 11); the chat shell owns both sheets.
-    onOpenStoryList: () => onOpenStoryList?.(),
-    onOpenSettings: () => onOpenSettings?.(),
     onChangeInputMode: (nextValue) => setInputMode?.(nextValue),
     onChangeNextSpeaker: activateSpeaker,
     onChangeDraft: changeDraft,

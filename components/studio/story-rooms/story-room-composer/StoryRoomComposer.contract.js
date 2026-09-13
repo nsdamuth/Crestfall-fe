@@ -1,7 +1,16 @@
-export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "3.2.0";
+export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "4.0.0";
 
 /**
  * Stable UI boundary for the Story Room message composer.
+ *
+ * 4.0.0, fe/chat-studio brief 3 item 10 (13 Sep 2026). BREAKING:
+ * `onOpenStoryList` and `onOpenSettings` are removed with the below-md
+ * story list and settings buttons, which return to the story chat
+ * page's top bar (the chat shell's mobile bar). Below md the rows hold
+ * only the scene image seat, the player circle, the character circles,
+ * and the mode chip on row one; the field, Auto, and send on row two,
+ * Auto and send pinned to the right edge. The row widths at 390 are
+ * measured in storyRoomComposerMobileRowBudgetDiagnostics.mjs.
  *
  * 3.2.0, fe/chat-studio brief 3 item 2 (13 Sep 2026). ADDITIVE:
  * `playerCircle` ({ label, avatarUrl, canPick, onPick }) backs the
@@ -100,8 +109,6 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "3.2.0";
  * @property {string} sceneImageLabel The scene image seat's accessible name.
  * @property {{ label: string, avatarUrl: string, canPick: boolean, onPick: () => void }} playerCircle The player circle: the selected player character (or "You"), a button opening the select player character flow while canPick is true.
  * @property {() => void} onAuto Runs the existing continuation with the AUTO speaker.
- * @property {() => void} onOpenStoryList Below md: opens the story list as a left sheet.
- * @property {() => void} onOpenSettings Below md: opens the story details sheet.
  * @property {(nextValue: string) => void} onChangeInputMode
  * @property {(speakerId: string) => void} onChangeNextSpeaker
  * @property {(nextValue: string, cursorPosition: number) => void} onChangeDraft

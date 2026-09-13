@@ -650,11 +650,6 @@ export function useStoryRoomChatShellViewModel({
       playerCharacterPickerAvailable:
         Boolean(canSetPlayerCharacter) && !firstMessageSubmitted,
       onOpenPlayerCharacterPicker: openPlayerCharacterPicker,
-      // Below md the composer carries the story list and settings
-      // buttons (brief 2 item 11): the story list opens as a left
-      // sheet, settings opens the details sheet.
-      onOpenStoryList: () => setMobilePanel("stories"),
-      onOpenSettings: () => setMobilePanel("details"),
     },
     chatColorProps,
     onToggleLeftPanel: toggleLeftPanel,

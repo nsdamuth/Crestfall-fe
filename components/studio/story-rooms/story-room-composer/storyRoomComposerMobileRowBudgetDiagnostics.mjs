@@ -4,14 +4,15 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
-// fe/chat-studio brief 2 item 11 (13 Sep 2026): the placement of the
-// mobile story list and settings buttons is decided by measurement in
-// code, not by taste. The starred placement (story list at the far left
-// of the cast row, settings at the far right of the send row) ships
-// only if the cast row at 390 with two cast circles plus the input mode
-// chip fits inside 390 minus the composer gutters. Every length below
-// is read from app/theme.css or from the rendered class strings; the
-// only estimate is the chip label's glyph advance, and the decision is
+// fe/chat-studio brief 2 item 11 (13 Sep 2026) measured the composer's
+// rows at 390 to place the mobile story list and settings buttons; brief
+// 3 item 10 returned both buttons to the page's top bar and brief 3 item
+// 2 added the player circle, so the same measurement now reports the two
+// rows the composer ships below md: row one is the scene image seat,
+// the player circle, the cast circles, and the input mode chip; row two
+// is the field with the Auto and send circles pinned right. Every length
+// below is read from app/theme.css or from the rendered class strings;
+// the only estimate is the chip label's glyph advance, and the check is
 // taken on its ceiling (one em per glyph), which no Latin text face
 // exceeds.
 
@@ -22,6 +23,13 @@ const composerView = fs.readFileSync(
   path.join(
     repoRoot,
     "components/studio/story-rooms/story-room-composer/StoryRoomComposer.view.jsx"
+  ),
+  "utf8"
+);
+const shellView = fs.readFileSync(
+  path.join(
+    repoRoot,
+    "components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx"
   ),
   "utf8"
 );
@@ -48,6 +56,7 @@ const textUi = readRem("--text-ui");
 // The composer's horizontal gutter and the row gap, as written.
 assert.match(composerView, /px-\[var\(--space-3\)\]/);
 assert.match(composerView, /flex items-center gap-\[var\(--space-2\)\]/);
+assert.match(composerView, /flex items-end gap-\[var\(--space-2\)\]/);
 // The chip: 1px hairline, --space-3 side padding, --space-1 gap, a
 // 14px chevron, the label at --text-ui.
 assert.match(dropdownView, /border border-\[var\(--line-whisper\)\] bg-\[var\(--step-above\)\] px-\[var\(--space-3\)\]/);
@@ -64,41 +73,60 @@ function chipWidth(labelPx) {
   return chipBorderPx + space3 * 2 + labelPx + space1 + chevronPx;
 }
 
-const circles = 4; // story list, scene image, two cast circles
-const gaps = 4;
 const available = VIEWPORT_PX - space3 * 2;
-const rowCeiling = circles * controlMd + gaps * space2 + chipWidth(labelCeilingPx);
-const rowTypical = circles * controlMd + gaps * space2 + chipWidth(labelTypicalPx);
-const starredPlacementFits = rowCeiling <= available;
 
-test("cast row at 390 with two cast circles plus the chip fits the gutters", () => {
+// Row one: scene image seat, player circle, two cast circles, the chip.
+const rowOneCircles = 4;
+const rowOneGaps = 4;
+const rowOneCeiling =
+  rowOneCircles * controlMd + rowOneGaps * space2 + chipWidth(labelCeilingPx);
+const rowOneTypical =
+  rowOneCircles * controlMd + rowOneGaps * space2 + chipWidth(labelTypicalPx);
+const rowOneFits = rowOneCeiling <= available;
+
+// Row two: the field, then Auto and send pinned right.
+const rowTwoCircles = 2;
+const rowTwoGaps = 2;
+const rowTwoFieldWidth = available - rowTwoCircles * controlMd - rowTwoGaps * space2;
+
+test("row one at 390 with two cast circles plus the chip fits the gutters", () => {
   assert.equal(controlMd, 44);
   assert.equal(space2, 8);
   assert.equal(space3, 12);
   assert.equal(available, 366);
   assert.ok(
-    starredPlacementFits,
-    `row ceiling ${rowCeiling}px exceeds the ${available}px budget`
+    rowOneFits,
+    `row one ceiling ${rowOneCeiling}px exceeds the ${available}px budget`
   );
 });
 
-test("the starred placement is the one the composer ships", () => {
-  // Story list at the far left of the cast row, before the scene image
-  // seat; settings at the far right of the send row, after send.
-  const storyListIndex = composerView.indexOf("onOpenStoryList?.()");
+test("the rows the composer ships are the ones measured", () => {
+  // Row one: scene image seat, player circle, cast circles, chip; no
+  // story list button (brief 3 item 10 returned it to the top bar).
   const sceneIndex = composerView.indexOf('disabled={sceneImageState !== "ready"}');
+  const playerIndex = composerView.indexOf("<PlayerCircle circle={playerCircle} />");
+  const castIndex = composerView.indexOf("castOptions.map((option) => (");
+  const chipIndex = composerView.indexOf("<KitDropdownView");
+  assert.ok(sceneIndex > 0 && sceneIndex < playerIndex && playerIndex < castIndex && castIndex < chipIndex);
+  assert.doesNotMatch(composerView, /onOpenStoryList|onOpenSettings|md:hidden/);
+  // Row two: field, Auto, send, and nothing after send.
+  const autoIndex = composerView.indexOf("onClick={() => onAuto?.()}");
   const sendIndex = composerView.indexOf("onClick={() => onSend?.()}");
-  const settingsIndex = composerView.indexOf("onOpenSettings?.()");
-  assert.ok(storyListIndex > 0 && storyListIndex < sceneIndex);
-  assert.ok(sendIndex > 0 && sendIndex < settingsIndex);
+  assert.ok(autoIndex > 0 && autoIndex < sendIndex);
+  // The two buttons sit on the mobile bar after the title.
+  const titleIndex = shellView.indexOf("{title}\n      </h1>");
+  const barStoryListIndex = shellView.indexOf("onClick={() => onOpenStoryList?.()}");
+  const barSettingsIndex = shellView.indexOf("onClick={() => onOpenDetails?.()}");
+  assert.ok(titleIndex > 0 && titleIndex < barStoryListIndex && barStoryListIndex < barSettingsIndex);
 });
 
 console.log(
   [
-    "Story chat mobile row budget at 390:",
+    "Story chat composer row widths at 390 (brief 3 item 10):",
     `  available inside the gutters: ${available}px`,
-    `  cast row, label at the 1em-per-glyph ceiling: ${rowCeiling}px`,
-    `  cast row, label at a typical 0.55em advance: ${rowTypical}px`,
-    `  starred placement ${starredPlacementFits ? "SHIPS" : "FALLS BACK to the top bar"}`,
+    `  row one, label at the 1em-per-glyph ceiling: ${rowOneCeiling}px`,
+    `  row one, label at a typical 0.55em advance: ${rowOneTypical}px`,
+    `  row one ${rowOneFits ? "FITS" : "OVERFLOWS"}`,
+    `  row two: field ${rowTwoFieldWidth}px, Auto ${controlMd}px, send ${controlMd}px, two ${space2}px gaps`,
   ].join("\n")
 );

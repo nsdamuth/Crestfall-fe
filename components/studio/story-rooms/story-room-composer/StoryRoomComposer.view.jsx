@@ -6,16 +6,12 @@ import {
   Image as ImageIcon,
   MapPin,
   Send,
-  Settings,
   Sparkles,
   UserRound,
 } from "lucide-react";
 
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import { MENU_PANEL_RECIPE } from "@/components/kit/form-field/menuRecipe";
-import RailPanelGlyph, {
-  BARE_ICON_BUTTON_CLASS,
-} from "../story-room-chat-shell/RailPanelGlyph";
 
 // The three menus above the field (commands, locations, mentions) share
 // the composer menu recipe by construction (fe/chat-studio item 5):
@@ -50,16 +46,18 @@ const CIRCLE_BUTTON_CLASS =
 const SECONDARY_CIRCLE_CLASS = `${CIRCLE_BUTTON_CLASS} bg-[var(--step-above)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`;
 
 // One composer bar at every width (fe/chat-studio item 2, 12 Sep 2026).
-// Row one (brief 2 item 2): the scene image seat at the left edge, then
-// a 44px circle per cast member (tap: that character speaks next,
-// through the existing next-speaker handler), then the input mode chip
-// pinned right and nothing else. Row two: the growing
-// message field, the Auto circle (brief 2 item 1: the sparkle moved off
-// the cast row; a tap runs the existing continuation with the AUTO
-// speaker and never reads the draft), and the gold send circle, which
-// posts the draft. The former speaker and mode eyebrow labels, the
-// Random speaker, the two Soon scene buttons, the mobile tools drawer,
-// and the old continue label are retired.
+// Row one (brief 2 item 2, brief 3 item 2): the scene image seat at the
+// left edge, the player circle, then a 44px circle per cast member
+// (tap: that character speaks next, through the existing next-speaker
+// handler), then the input mode chip pinned right and nothing else. Row
+// two: the growing message field, the Auto circle (brief 2 item 1: the
+// sparkle moved off the cast row; a tap runs the existing continuation
+// with the AUTO speaker and never reads the draft), and the gold send
+// circle, which posts the draft, Auto and send pinned to the right
+// edge. The former speaker and mode eyebrow labels, the Random speaker,
+// the two Soon scene buttons, the mobile tools drawer, the old continue
+// label, and the below-md story list and settings buttons (back on the
+// page's top bar, brief 3 item 10) are retired.
 export default function StoryRoomComposerView({
   inputModeOptions = [],
   inputMode = "DIALOGUE",
@@ -87,8 +85,6 @@ export default function StoryRoomComposerView({
   sceneImageLabel = "Scene image, not available yet",
   playerCircle = null,
   onAuto,
-  onOpenStoryList,
-  onOpenSettings,
   onChangeInputMode,
   onChangeNextSpeaker,
   onChangeDraft,
@@ -136,25 +132,14 @@ export default function StoryRoomComposerView({
           </p>
         ) : null}
 
-        {/* Cast row order (brief 2 item 2): the scene image seat at the
-            left edge, the cast circles, the input mode chip pinned
-            right. Nothing else on the row at md and up. Below md the
-            story list button leads the row (brief 2 item 11, starred
-            placement, the row budget measured in
-            storyRoomComposerMobileRowBudgetDiagnostics.mjs): the left
-            rail toggle's glyph, opening the story list as a left
-            sheet. */}
+        {/* Cast row order (brief 2 item 2, brief 3 items 2 and 10): the
+            scene image seat at the left edge, the player circle, the
+            cast circles, the input mode chip pinned right. Nothing else
+            on the row at any width; below md the story list and
+            settings buttons live on the page's top bar again (brief 3
+            item 10), and the row widths at 390 are measured in
+            storyRoomComposerMobileRowBudgetDiagnostics.mjs. */}
         <div className="mb-[var(--space-2)] flex items-center gap-[var(--space-2)]">
-          <button
-            type="button"
-            onClick={() => onOpenStoryList?.()}
-            aria-label="Open story list"
-            title="Stories"
-            className={`${BARE_ICON_BUTTON_CLASS} md:hidden`}
-          >
-            <RailPanelGlyph side="left" />
-          </button>
-
           {/* Scene image seat (decision A1): the Chassis serves no scene
               image operation yet (CR-070), so the seat is visible and
               honestly disabled. */}
@@ -259,18 +244,6 @@ export default function StoryRoomComposerView({
           >
             {/* The paper plane (brief 3 item 9); Auto keeps the sparkle. */}
             <Send size={20} aria-hidden="true" />
-          </button>
-
-          {/* Settings, below md only (brief 2 item 11): the story details
-              sheet, at the far right of the send row after send. */}
-          <button
-            type="button"
-            onClick={() => onOpenSettings?.()}
-            aria-label="Story details"
-            title="Story details"
-            className={`${BARE_ICON_BUTTON_CLASS} md:hidden`}
-          >
-            <Settings size={20} aria-hidden="true" />
           </button>
         </div>
       </div>

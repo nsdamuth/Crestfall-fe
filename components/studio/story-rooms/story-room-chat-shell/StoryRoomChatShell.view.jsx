@@ -1,4 +1,4 @@
-import { ChevronLeft, Command, HelpCircle, Keyboard, MapPin } from "lucide-react";
+import { ChevronLeft, Command, HelpCircle, Keyboard, MapPin, Settings } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
@@ -44,6 +44,7 @@ export default function StoryRoomChatShellView({
   onToggleLeftPanel,
   onToggleRightPanel,
   onOpenMobileDetails,
+  onOpenMobileStoryList,
   onCloseMobilePanel,
   onCloseComposerHelpPanel,
   isConfirmingDeleteRoom = false,
@@ -108,6 +109,8 @@ export default function StoryRoomChatShellView({
         title={room?.title}
         primaryCharacter={primaryCharacter}
         backHref={backHref}
+        onOpenStoryList={onOpenMobileStoryList}
+        onOpenDetails={onOpenMobileDetails}
         LinkComponent={LinkComponent}
       />
 
@@ -221,8 +224,9 @@ export default function StoryRoomChatShellView({
       ) : null}
 
       {/* Below md the story list opens as a left sheet (brief 2 item 11)
-          from the composer's story list button, on the frame's drawer
-          variant; the same story list package the left rail mounts. */}
+          from the mobile bar's story list button (brief 3 item 10), on
+          the frame's drawer variant; the same story list package the
+          left rail mounts. */}
       {mobilePanel === "stories" && StoryListComponent ? (
         <KitModalFrame variant="drawer" onClose={onCloseMobilePanel} ariaLabel="Stories">
           <div className="flex min-h-0 flex-1 flex-col">
@@ -268,14 +272,17 @@ export default function StoryRoomChatShellView({
 }
 
 // D2 below md: one 44px bar. Back chevron to the Stories page, the
-// primary character's circle, the title truncated. The media button is
-// retired and the story list and settings buttons moved to the
-// composer's rows (brief 2 item 11, starred placement, the cast row
-// budget measured in storyRoomComposerMobileRowBudgetDiagnostics.mjs).
+// primary character's circle, the title truncated, then the story list
+// and settings buttons pinned right (brief 3 item 10 returns them from
+// the composer's rows; the media button stays retired). The story list
+// button carries the shared panel glyph in its closed turn and opens the
+// story list as the left sheet; settings opens the details sheet.
 function StoryChatMobileBar({
   title = "",
   primaryCharacter = null,
   backHref = "/studio/v2/stories",
+  onOpenStoryList,
+  onOpenDetails,
   LinkComponent = "a",
 }) {
   const initial = String(primaryCharacter?.label || title || "S")
@@ -313,6 +320,26 @@ function StoryChatMobileBar({
       <h1 className="min-w-0 flex-1 truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
         {title}
       </h1>
+
+      <button
+        type="button"
+        onClick={() => onOpenStoryList?.()}
+        aria-label="Open story list"
+        title="Stories"
+        className={BARE_ICON_BUTTON_CLASS}
+      >
+        <RailPanelGlyph side="left" open={false} />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => onOpenDetails?.()}
+        aria-label="Story details"
+        title="Story details"
+        className={BARE_ICON_BUTTON_CLASS}
+      >
+        <Settings size={20} aria-hidden="true" />
+      </button>
     </div>
   );
 }

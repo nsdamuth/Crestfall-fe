@@ -75,17 +75,25 @@ test("row two is the growing field, the Auto circle, and the gold send circle", 
   assert.ok(view.indexOf("onAuto?.()") < view.indexOf("onSend?.()}\n            disabled={sendDisabled}"));
 });
 
-test("below md the composer carries the story list and settings buttons", () => {
-  // Brief 2 item 11, starred placement: story list at the far left of
-  // the cast row before the scene image seat, settings at the far
-  // right of the send row after send, both hidden at md and up, both
-  // on the sidebar's bare icon recipe.
-  assert.match(view, /onClick=\{\(\) => onOpenStoryList\?\.\(\)\}/);
-  assert.match(view, /onClick=\{\(\) => onOpenSettings\?\.\(\)\}/);
-  assert.match(view, /<RailPanelGlyph side="left" \/>/);
-  assert.equal((view.match(/\$\{BARE_ICON_BUTTON_CLASS\} md:hidden/g) || []).length, 2);
-  assert.match(viewModel, /onOpenStoryList: \(\) => onOpenStoryList\?\.\(\)/);
-  assert.match(viewModel, /onOpenSettings: \(\) => onOpenSettings\?\.\(\)/);
+test("below md the composer rows hold no story list or settings button", () => {
+  // Brief 3 item 10: both buttons returned to the page's top bar (the
+  // chat shell's mobile bar). Row one is scene image, player circle,
+  // character circles, mode chip; row two is field, Auto, send.
+  assert.doesNotMatch(view, /onOpenStoryList|onOpenSettings|RailPanelGlyph|BARE_ICON_BUTTON_CLASS|md:hidden/);
+  assert.doesNotMatch(viewModel, /onOpenStoryList|onOpenSettings/);
+  // Brief 3 item 2: the player circle sits between the seat and the cast.
+  const sceneIndex = view.indexOf('disabled={sceneImageState !== "ready"}');
+  const playerIndex = view.indexOf("<PlayerCircle circle={playerCircle} />");
+  const castIndex = view.indexOf("castOptions.map((option) => (");
+  assert.ok(sceneIndex > 0 && sceneIndex < playerIndex && playerIndex < castIndex);
+  assert.match(view, /function PlayerCircle/);
+  const shell = read(
+    "components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx"
+  );
+  const titleIndex = shell.indexOf("{title}\n      </h1>");
+  const barStoryListIndex = shell.indexOf("onClick={() => onOpenStoryList?.()}");
+  const barSettingsIndex = shell.indexOf("onClick={() => onOpenDetails?.()}");
+  assert.ok(titleIndex > 0 && titleIndex < barStoryListIndex && barStoryListIndex < barSettingsIndex);
 });
 
 test("retired controls and copy are gone", () => {

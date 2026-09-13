@@ -143,8 +143,18 @@ test("ViewModel preserves responder, mention, and mobile panel projection", () =
   assert.match(viewModel, /locationMentionOptions/);
   assert.match(viewModel, /onOpenMobileDetails: \(\) => setMobilePanel\("details"\)/);
   assert.match(viewModel, /onOpenMobileStoryList: \(\) => setMobilePanel\("stories"\)/);
-  assert.match(viewModel, /onOpenStoryList: \(\) => setMobilePanel\("stories"\)/);
-  assert.match(viewModel, /onOpenSettings: \(\) => setMobilePanel\("details"\)/);
+  // Brief 3 item 10: the composer no longer carries the story list and
+  // settings callbacks; the mobile bar opens both sheets through the
+  // View's own onOpenMobileStoryList and onOpenMobileDetails.
+  assert.doesNotMatch(viewModel, /onOpenStoryList: \(\) =>|onOpenSettings: \(\) =>/);
+  const shellView = read(
+    "components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx"
+  );
+  assert.match(shellView, /onOpenStoryList=\{onOpenMobileStoryList\}/);
+  assert.match(shellView, /onOpenDetails=\{onOpenMobileDetails\}/);
+  // Brief 3 item 2: the player circle's props ride composerProps.
+  assert.match(viewModel, /onOpenPlayerCharacterPicker: openPlayerCharacterPicker/);
+  assert.match(viewModel, /playerCharacterPickerAvailable:/);
   assert.doesNotMatch(viewModel, /onOpenMobileGallery|"gallery"/);
   assert.match(viewModel, /onUpdated: reloadStoryRoom/);
   assert.match(viewModel, /disabled: loading \|\| Boolean\(error\) \|\| !chatAllowed/);

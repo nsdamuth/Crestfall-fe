@@ -27,8 +27,8 @@
 - the three flush columns at md and up (geometry in `app/design-system.css`, `.cf-story-room-grid[data-rails]`, fe/chat-studio item 1)
 - the full-width composer row beneath both rails (brief 3 item 1): the rails end at the row's top edge, the shell paints the row's canvas surface and top hairline edge to edge, and the composer's content sits in the transcript's grid column so the field and its buttons keep the transcript's width
 - one bare 44px edge toggle per rail, open or closed (brief 2 item 5: the primary sidebar's collapse glyph and bare-icon recipe, the story list toggle on the right edge of its panel, the details toggle on the left edge; a closed rail carries no surface, border, or column color)
-- the 44px mobile bar below md (back chevron, primary character circle, title; brief 2 item 11 retired the media button and moved the story list and settings buttons to the composer's rows); there is no desktop header block
-- the two sheets below md: the story list as a left sheet (`KitModalFrame variant="drawer"`, opened from the composer's story list button) and the details rail as the bottom sheet (`variant="sheet"`, opened from the composer's settings button), plus the delete confirm on `StoryChatDialog`
+- the 44px mobile bar below md (back chevron, primary character circle, title, then the story list and settings buttons pinned right; brief 2 item 11 retired the media button, brief 3 item 10 returned the two buttons from the composer's rows); there is no desktop header block
+- the two sheets below md: the story list as a left sheet (`KitModalFrame variant="drawer"`, opened from the mobile bar's story list button) and the details rail as the bottom sheet (`variant="sheet"`, opened from the mobile bar's settings button), plus the delete confirm on `StoryChatDialog`
 - Help and Commands overlays
 - desktop and mobile placement of injected child components
 
