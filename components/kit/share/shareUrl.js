@@ -92,6 +92,13 @@ export function buildImageSharePath({
   return sharer ? `/studio/profile/${encodeURIComponent(sharer)}` : "/";
 }
 
+// A creator profile lands on the public profile route (follow-up 1,
+// item 6), the same route the account page and the landing byline use.
+export function buildProfileSharePath({ username = "" } = {}) {
+  const handle = normalizeShareUsername(username);
+  return handle ? `/studio/profile/${encodeURIComponent(handle)}` : "";
+}
+
 export function appendShareRef(path, sharerUsername) {
   const target = text(path);
   const sharer = normalizeShareUsername(sharerUsername);

@@ -55,6 +55,19 @@ export const kitShareSheetFixtures = [
     },
   },
   {
+    id: "profile",
+    label: "Creator profile, plain link",
+    props: {
+      ...BASE,
+      kind: "profile",
+      hasCard: false,
+      cardImageSrc: null,
+      title: "Crestfall",
+      byline: "@crestfall",
+      shareUrl: "https://crestfall-studio.com/studio/profile/crestfall?ref=brian",
+    },
+  },
+  {
     id: "link",
     label: "Non-playable creation, plain link",
     props: {

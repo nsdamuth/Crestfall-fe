@@ -8,8 +8,9 @@ export const KIT_SHARE_SHEET_VIEW_CONTRACT_VERSION = "1.1.0";
 // reviewButtonDisabled, reviewMessage, and onSubmitForReview. The
 // blocked sentence itself changes (SHARE_COPY.blockedNotPublic).
 // previewImageLargeSrc is added for the image kind (the display
-// derivative behind the medium preview). Every other prop and
-// callback is unchanged.
+// derivative behind the medium preview). The kind enum gains "profile"
+// (the creator profile's share: plain link preview, no card). Every
+// other prop and callback is unchanged.
 
 /**
  * Stable portable UI boundary for the share sheet kit piece
@@ -28,7 +29,7 @@ export const KIT_SHARE_SHEET_VIEW_CONTRACT_VERSION = "1.1.0";
  * frame owns the close control and the three dismissal paths.
  *
  * @typedef {Object} KitShareSheetViewProps
- * @property {"image"|"video"|"character"|"story"|"adventure"|"link"} kind
+ * @property {"image"|"video"|"character"|"story"|"adventure"|"profile"|"link"} kind
  * @property {boolean} hasCard true only for a playable kind (the type
  *   rule); the sheet shows the card image when cardImageSrc is also
  *   set, else the plain link preview row
@@ -40,7 +41,8 @@ export const KIT_SHARE_SHEET_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} previewImageLargeSrc the display derivative of a
  *   shared image, never the original; empty for every other kind
  * @property {string} title
- * @property {string} byline "by @maker", the creator, never the sharer
+ * @property {string} byline "by @maker", the creator, never the sharer;
+ *   "@handle" on the profile kind
  * @property {string} shareUrl the absolute link, ref included
  * @property {boolean} canNativeShare true when navigator.share exists;
  *   renders the Share... action beside Copy link

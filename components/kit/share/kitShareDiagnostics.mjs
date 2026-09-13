@@ -18,6 +18,7 @@ import {
   appendShareRef,
   buildCreationSharePath,
   buildImageSharePath,
+  buildProfileSharePath,
   buildSignInReturnPath,
   getShareFamilyKind,
   toShareSlug,
@@ -241,6 +242,23 @@ test("the image kind carries no card, never the original, and rides with ref", (
   assert.equal(originalOnly.previewImageSrc, "");
   assert.equal(originalOnly.previewImageLargeSrc, "");
   assert.match(originalOnly.url, /[?&]ref=brian$/);
+});
+
+// Follow-up 1, item 6: the creator profile's share, the profile kind.
+test("the profile kind carries no card, lands on the public profile route, and rides with ref", () => {
+  const intent = buildShareIntent(
+    { kind: "profile", id: "profile-1", title: "Crestfall", creatorUsername: "Crestfall", featuredImageSrc: "/avatar.webp" },
+    CONTEXT
+  );
+  assert.equal(intent.kind, SHARE_KINDS.PROFILE);
+  assert.equal(intent.hasCard, false);
+  assert.equal(intent.cardImageSrc, null);
+  assert.equal(intent.blockedMessage, null);
+  assert.equal(intent.byline, "@crestfall");
+  assert.equal(intent.previewImageSrc, "/avatar.webp");
+  assert.equal(intent.url, "https://crestfall-studio.com/studio/profile/crestfall?ref=brian");
+  assert.equal(buildProfileSharePath({ username: "@Crestfall" }), "/studio/profile/crestfall");
+  assert.equal(buildProfileSharePath({}), "");
 });
 
 test("an image source is medium then large, never the original", () => {

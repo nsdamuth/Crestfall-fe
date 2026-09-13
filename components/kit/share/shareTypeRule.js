@@ -15,6 +15,8 @@
 // - A playable asset (character, story, adventure) shares the stylized
 //   card the share-card image route composes from public creation
 //   data, and the link lands on that asset's public landing page.
+// - A creator profile shares the plain link preview (avatar, display
+//   name, handle) and lands on the public profile route.
 // - Any other creation shares the plain link preview and lands on the
 //   existing public creation page.
 // - The byline is the creator. The ref on the link is the sharer.
@@ -29,6 +31,7 @@ import {
   appendShareRef,
   buildCreationSharePath,
   buildImageSharePath,
+  buildProfileSharePath,
   buildShareUrl,
   normalizeShareUsername,
 } from "./shareUrl.js";
@@ -41,6 +44,7 @@ export const SHARE_KINDS = Object.freeze({
   CHARACTER: "character",
   STORY: "story",
   ADVENTURE: "adventure",
+  PROFILE: "profile",
   LINK: "link",
 });
 
@@ -69,7 +73,7 @@ export const SHARE_COPY = Object.freeze({
 const PLAYABLE_KINDS = new Set([SHARE_KINDS.CHARACTER, SHARE_KINDS.STORY, SHARE_KINDS.ADVENTURE]);
 const MEDIA_KINDS = new Set([SHARE_KINDS.IMAGE, SHARE_KINDS.VIDEO]);
 const KNOWN_KINDS = new Set(Object.values(SHARE_KINDS));
-const ALWAYS_PUBLIC_KINDS = new Set(MEDIA_KINDS);
+const ALWAYS_PUBLIC_KINDS = new Set([...MEDIA_KINDS, SHARE_KINDS.PROFILE]);
 
 // Data-layer type to share kind. Story and Adventure are the display
 // words for the two template types (docs/CRESTFALL-PRODUCT-MODEL-UXUI.md
@@ -119,7 +123,8 @@ export function isMediaShareKind(kind) {
 }
 
 // The card question, answered once: only a playable asset carries the
-// stylized card. Media and everything else share without one.
+// stylized card. Media, a profile, and everything else share without
+// one.
 export function shareCarriesCard(kind) {
   return isPlayableShareKind(kind);
 }
@@ -189,9 +194,12 @@ function formatHandle({ creatorHandle = "", creatorUsername = "" } = {}) {
   return handle && handle !== "@" ? handle : "";
 }
 
-function formatByline(asset) {
+// The byline reads "by @maker" on a creation and just "@handle" on a
+// profile, where the handle is the subject, not the maker.
+function formatByline(asset, kind) {
   const handle = formatHandle(asset);
-  return handle ? `by ${handle}` : "";
+  if (!handle) return "";
+  return kind === SHARE_KINDS.PROFILE ? handle : `by ${handle}`;
 }
 
 /**
@@ -199,14 +207,14 @@ function formatByline(asset) {
  * @param {string} [asset.kind] explicit share kind, else derived
  * @param {string} [asset.creationType] data-layer creation type
  * @param {string} [asset.mediaType] IMAGE or VIDEO for a media output
- * @param {string} asset.id creation id, or the media output id
+ * @param {string} asset.id creation id, the media output id, or the profile id
  * @param {string} [asset.title]
  * @param {string} [asset.creatorHandle] "@maker" as served
  * @param {string} [asset.creatorUsername] bare username, preferred
  * @param {string} [asset.visibility] PRIVATE, UNLISTED, INTERNAL, PUBLIC, CANON
  * @param {string} [asset.canonStatus]
  * @param {string} [asset.lifecycleStatus] DRAFT, IN_REVIEW, APPROVED, ...
- * @param {string} [asset.featuredImageSrc] creation preview image (card derivative)
+ * @param {string} [asset.featuredImageSrc] creation preview image (card derivative), or the profile avatar
  * @param {Object} [asset.media] served derivative fields for a media output
  * @param {string} [asset.sourceCreationId] the creation an image was generated from
  * @param {Object} [context]
@@ -217,9 +225,10 @@ export function buildShareIntent(asset = {}, { sharerUsername = "", origin = "" 
   const kind = getShareKind(asset);
   const id = text(asset.id);
   const title = text(asset.title) || "Untitled";
-  const byline = formatByline(asset);
+  const byline = formatByline(asset, kind);
   const sharer = normalizeShareUsername(sharerUsername);
   const isMedia = isMediaShareKind(kind);
+  const isProfile = kind === SHARE_KINDS.PROFILE;
   const hasCard = shareCarriesCard(kind);
   const visibility = ALWAYS_PUBLIC_KINDS.has(kind)
     ? SHARE_VISIBILITIES.PUBLIC
@@ -263,6 +272,9 @@ export function buildShareIntent(asset = {}, { sharerUsername = "", origin = "" 
     const sources = selectShareImageSources(asset.media || asset);
     previewImageSrc = selectShareImageSource(asset.media || asset).src;
     previewImageLargeSrc = sources.large;
+  } else if (isProfile) {
+    path = buildProfileSharePath({ username: asset.creatorUsername || asset.creatorHandle });
+    previewImageSrc = text(asset.featuredImageSrc);
   } else {
     path = buildCreationSharePath({ kind, id, title });
     previewImageSrc = text(asset.featuredImageSrc);

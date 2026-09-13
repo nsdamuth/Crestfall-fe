@@ -24,6 +24,9 @@ Lives in `shareTypeRule.js` and nowhere else.
   symbol, with the wordmark in the vendored display face at the
   sidebar's proportions), its title, a creator byline, a short excerpt,
   and the play invitation.
+- A creator profile carries no card. It shares the plain link preview
+  (the avatar, the display name, the handle) and lands on the public
+  profile route, `/studio/profile/:username`.
 - Every other creation (location, outfit, lore, a registry) shares the
   plain link preview with no card.
 - The byline is the creator. The `ref` on the link is the sharer.
@@ -91,7 +94,7 @@ diagnostics:loom:share`).
 ## Boundary
 
 ```text
-VaultV2Mockup.jsx, CommunityV2Mockup.jsx, ImagesV2ImageViewer.jsx (later: the creator profile, the story chat page)
+VaultV2Mockup.jsx, CommunityV2Mockup.jsx, ImagesV2ImageViewer.jsx, CreatorProfileLive.jsx (later: the story chat page)
   -> useKitShareController({ sharerUsername })   open(asset), close, copyLink, nativeShare, submitForReview, sheetProps
        -> shareTypeRule.buildShareIntent          the rule, the copy, the visibility fold, the review state
             -> shareUrl                            paths, slug, ref, sign-in return
@@ -131,7 +134,9 @@ An image passes `mediaType: "IMAGE"`, `id` (the output id),
 original). The image viewer on /studio/v2/images builds both from the
 file proxy's `card` and `display` variants.
 `lifecycleStatus` lets a blocked sheet open already reading "Submitted
-for review" when the creation is IN_REVIEW.
+for review" when the creation is IN_REVIEW. A creator profile passes
+`kind: "profile"`, `id` (the profile id), `title` (the display name),
+`creatorUsername` (the handle), and `featuredImageSrc` (the avatar).
 
 ## Copy
 
@@ -146,6 +151,6 @@ for review" when the creation is IN_REVIEW.
 
 ## Fixtures
 
-playable, playable-native, image, link, blocked, blocked-internal,
+playable, playable-native, image, profile, link, blocked, blocked-internal,
 blocked-submitting, blocked-submitted, blocked-error, copied, error,
 no-image, longest.
