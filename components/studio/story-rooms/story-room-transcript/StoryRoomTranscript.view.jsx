@@ -132,7 +132,7 @@ export default function StoryRoomTranscriptView({
     <>
     {/* scroll-pt-5 matches the region's own p-5, so an anchored message
         lands where the first message sits at the region's top. */}
-    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 scroll-smooth scroll-pt-5">
+    <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain p-5 scroll-smooth scroll-pt-5">
       {hiddenCount > 0 ? (
         <div className="mb-4 flex justify-center">
           <button

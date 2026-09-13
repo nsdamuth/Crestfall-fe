@@ -279,7 +279,10 @@ function getWrapperClassName(surfaceTone) {
 }
 
 function getArticleClassName(surfaceTone) {
-  const base = "rounded-[var(--radius-bubble)] px-[var(--space-4)] py-[var(--space-3)]";
+  // min-w-0 and break-words (review round 5, mobile): a bubble never
+  // grows past its cap for an unbroken run of text, so the column
+  // stays inside 390 whatever a message carries.
+  const base = "min-w-0 break-words rounded-[var(--radius-bubble)] px-[var(--space-4)] py-[var(--space-3)]";
 
   // Bubble width (brief 4 item 9): 85 percent of the transcript column
   // at the shipped 700px breakpoint and up (the player's from the right

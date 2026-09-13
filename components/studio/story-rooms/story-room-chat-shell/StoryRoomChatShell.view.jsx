@@ -103,7 +103,7 @@ export default function StoryRoomChatShellView({
     <section
       onTouchStart={handleSwipeStart}
       onTouchEnd={handleSwipeEnd}
-      className="flex h-[100dvh] md:h-[calc(100dvh-var(--topbar-h))] min-h-0 flex-col overflow-hidden"
+      className="flex h-[100dvh] md:h-[calc(100dvh-var(--topbar-h))] min-h-0 w-full max-w-full min-w-0 flex-col overflow-hidden"
     >
       <StoryChatMobileBar
         title={room?.title}
