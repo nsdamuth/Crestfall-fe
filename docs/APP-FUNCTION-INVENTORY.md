@@ -578,3 +578,31 @@ A, A, A of four at the plan gate: a live toggle with Generate on Soon;
 the stage tab row relabeled; Video owns its slots; the source image
 through the shared picker. The video job the frontend wants is gap 15
 in `docs/handoffs/MEDIA-STUDIO-BACKEND.md`.
+
+## Share rows (fe/share-og brief 1, 13 Sep 2026)
+
+Every share button on `/studio/v2/vault` and `/studio/v2/community`
+(card kebab, image overlay, asset detail popup) now opens the one Kit
+share sheet (`components/kit/share`, KitShareSheet 1.0.0) through
+`useKitShareController`; the pages carry no share logic. The type
+rule (`shareTypeRule.js`, one place) decides the intent: a playable
+creation (character, story, adventure) carries the 1200 by 630 card
+the image route `app/api/share-card/[id]/route.js` composes from
+public creation data; an image (later brief) carries the medium or
+large stored derivative and no card; every other creation carries the
+plain link preview. Private creations are blocked with the Vault
+sentence (the ruled word Internal); Internal creations share the link
+with the existing Vault note and no card until CR-075. Links: a
+playable share lands on `/c/[id]/[slug]`, `/story/[id]/[slug]`, or
+`/adventure/[id]/[slug]` (one server composition,
+`app/share-landing/ShareLandingPage.jsx`, signed out "Play free" to
+`/login?next=<the page>&ref=<sharer>`, signed in "Play" to
+`/studio/creations/[id]`); an image share lands on
+`/studio/creations/[id]?image=<outputId>` or the sharer's profile
+(ruled at the plan gate; selection is CR-077); every link ends with
+`ref=<sharer username>` (CR-072). The sheet rows (Copy link, Share...,
+Close forwarded to the frame) and the landing rows (Play free, Play,
+the creator byline link) are listed once per route. CR-072 to CR-077
+filed; the four out-of-scope share entry points the G1 grep still
+names (chat transcript share dialog, lore document renderer, creator
+profile share, retired preview harness) are unchanged.
