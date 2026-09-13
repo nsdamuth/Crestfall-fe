@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import DefaultPlayerCharacterPickerModal from "@/components/studio/account/DefaultPlayerCharacterPickerModal";
@@ -41,6 +41,10 @@ export default function StoryRoomChatShell({ roomId }) {
   // chat through the post-create route authority).
   const launchController = useStoryLaunchController();
 
+  // Preserve the accepted Character Configuration route authority when
+  // an existing room is opened directly in Story Chat while configuration
+  // is still required. The launch controller covers newly-created rooms;
+  // this guard covers direct/reloaded room entry.
   useEffect(() => {
     if (!roomId || chat?.loading || !chat?.room) return;
     if (!isStoryPostCreateCharacterConfigurationRequired(chat.room)) return;
