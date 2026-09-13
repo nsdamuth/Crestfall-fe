@@ -152,12 +152,10 @@ const NOOP_CHROME = Object.freeze({
   releaseLeft: () => {},
 });
 
-// Chat color (fe/chat-studio item 4): the creator default is the primary
-// Character's palette id, read from the participant record the Chassis
-// stamps at launch (participant.metadata.characterColorPaletteId), else
-// the latest Character message's presentation palette, else the catalog
-// default. The 13 catalog palettes are the combos Preferences offers
-// (item 6); the palette's `speaker` role is the anchor the bubble takes.
+// Player chat color is independent from whichever Character/Narrator spoke
+// last. With no explicit Player preference, use Crestfall's stock palette.
+// The 13 catalog palettes remain available in Preferences; the selected
+// palette's `speaker` role is the anchor the Player bubble takes.
 function normalizePaletteId(value) {
   const normalized = String(value || "").trim().toUpperCase();
   return normalized && CHARACTER_COLOR_PALETTES.some((palette) => palette.id === normalized)
@@ -165,26 +163,7 @@ function normalizePaletteId(value) {
     : "";
 }
 
-export function resolveCreatorChatColorPaletteId({ cast = [], messages = [] } = {}) {
-  const primaryCharacter = (Array.isArray(cast) ? cast : []).find(
-    (member) => String(member?.participantType || "").toUpperCase() === "CHARACTER"
-  );
-  const participantPaletteId = normalizePaletteId(
-    primaryCharacter?.participant?.metadata?.characterColorPaletteId
-  );
-  if (participantPaletteId) return participantPaletteId;
-
-  const safeMessages = Array.isArray(messages) ? messages : [];
-  for (let index = safeMessages.length - 1; index >= 0; index -= 1) {
-    const message = safeMessages[index];
-    if (String(message?.type || "").toLowerCase() !== "character") continue;
-    const messagePaletteId = normalizePaletteId(
-      message?.metadata?.presentation?.paletteId ||
-        message?.metadata?.openingCharacterPaletteId
-    );
-    if (messagePaletteId) return messagePaletteId;
-  }
-
+export function resolvePlayerChatColorDefaultPaletteId() {
   return DEFAULT_CHARACTER_COLOR_PALETTE_ID;
 }
 
@@ -308,13 +287,10 @@ export function useStoryRoomChatShellViewModel({
   // Cast drill-in is mounted; the binding shell renders it.
   const [manageCastOpen, setManageCastOpen] = useState(false);
   // The user's chat color override lives in page state until the Chassis
-  // serves a preference field (CR-066); null means the creator default.
+  // serves a preference field (CR-066); null means Crestfall stock default.
   const [chatColorOverrideId, setChatColorOverrideId] = useState(null);
-  const creatorChatColorPaletteId = useMemo(
-    () => resolveCreatorChatColorPaletteId({ cast, messages }),
-    [cast, messages]
-  );
-  const chatColorPaletteId = chatColorOverrideId || creatorChatColorPaletteId;
+  const defaultChatColorPaletteId = resolvePlayerChatColorDefaultPaletteId();
+  const chatColorPaletteId = chatColorOverrideId || defaultChatColorPaletteId;
   const chatColor = getCharacterColorPalette(chatColorPaletteId)?.colors?.speaker || null;
 
   const selectedPlayerCharacter = useMemo(
@@ -677,12 +653,12 @@ export function useStoryRoomChatShellViewModel({
 
   const chatColorProps = {
     paletteId: chatColorPaletteId,
-    creatorPaletteId: creatorChatColorPaletteId,
+    defaultPaletteId: defaultChatColorPaletteId,
     isOverridden: Boolean(chatColorOverrideId),
     options: CHAT_COLOR_OPTIONS,
     onChange: (paletteId) =>
       setChatColorOverrideId(
-        normalizePaletteId(paletteId) === creatorChatColorPaletteId
+        normalizePaletteId(paletteId) === defaultChatColorPaletteId
           ? null
           : normalizePaletteId(paletteId) || null
       ),

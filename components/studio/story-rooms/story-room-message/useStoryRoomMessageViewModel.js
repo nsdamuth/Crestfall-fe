@@ -230,9 +230,9 @@ export function getStoryRoomMessageViewProps(
     : presentation?.segments || [];
 
   const surfaceTone = getSurfaceTone(safeMessage);
-  // The player's bubble takes the chat color (fe/chat-studio item 4):
-  // the creator default from the character palette, or the user's
-  // Preferences override, passed down by the shell as `chatColor`.
+  // The player's bubble takes the Player chat color (fe/chat-studio item 4):
+  // Crestfall's stock default or the user's Preferences override, passed
+  // down by the shell as `chatColor`. Character palettes never seed it.
   const bubbleColor =
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER &&
     typeof chatColor === "string" &&

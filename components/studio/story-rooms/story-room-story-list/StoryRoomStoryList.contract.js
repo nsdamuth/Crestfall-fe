@@ -1,8 +1,14 @@
-export const STORY_ROOM_STORY_LIST_VIEW_CONTRACT_VERSION = "1.1.0";
+export const STORY_ROOM_STORY_LIST_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the story chat page's left rail, the
  * story list (ruling D4, fe/chat-studio item 1, 12 Sep 2026).
+ *
+ * 1.2.0, Recent pagination (13 Sep 2026). ADDITIVE: the ViewModel requests
+ * 10 rows below md and 25 at md+, with one lookahead row for `hasMore`;
+ * `hasMore`, `isLoadingMore`, `onLoadMore`, and `loadMoreLabel` back the
+ * explicit Load more control. Search intentionally fetches the complete list
+ * only after a query is entered so normal sidebar opens remain bounded.
  *
  * 1.1.0, fe/chat-studio brief 4 item 3 (13 Sep 2026). ADDITIVE:
  * `newChat` ({ label, pendingLabel, pending, disabled, title,
@@ -37,6 +43,10 @@ export const STORY_ROOM_STORY_LIST_VIEW_CONTRACT_VERSION = "1.1.0";
  * @property {string} newStoryHref
  * @property {{label: string, pendingLabel: string, pending: boolean, disabled: boolean, title: string, errorMessage: string, onPress: () => void}|null} newChat
  * @property {boolean} isLoading
+ * @property {boolean} isLoadingMore
+ * @property {boolean} hasMore
+ * @property {() => void} onLoadMore
+ * @property {string} loadMoreLabel
  * @property {string} errorMessage Empty when the list loaded.
  * @property {(roomId: string) => void} onSelect
  * @property {import("react").ElementType} LinkComponent Injected by the Binding Shell (next/link); "a" when portable.

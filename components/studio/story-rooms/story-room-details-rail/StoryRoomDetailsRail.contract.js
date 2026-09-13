@@ -1,16 +1,22 @@
-export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.7.0";
+export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.8.0";
 
 /**
  * Stable portable UI boundary for the story chat page's right rail
  * (fe/chat-studio item 6, 12 Sep 2026), also the content of the right
  * sheet below md.
  *
+ * 1.8.0, Story Chat responder-gallery convergence (13 Sep 2026). BREAKING:
+ * the temporary standalone `featuredSpeaker` surface is removed. The existing
+ * `gallery` is now responder-aware: its source changes to the latest responder's
+ * authored media collection and resets to the selected responder image when the
+ * responder changes. If no responder media exists it falls back to story/template
+ * imagery. `dangerAction` remains the explicit Delete story action at the bottom.
+ *
  * 1.7.0, Story Chat presentation restoration (13 Sep 2026). ADDITIVE:
- * `featuredSpeaker` is the authoritative primary latest-responder media
- * surface and is intentionally outside gallery paging; `dangerAction` is
- * the explicit Delete story action at the bottom of the shared desktop/
- * mobile rail content. The shell's confirmation/delete authority is unchanged.
- * Secondary gallery media excludes the current featured-speaker url.
+ * `featuredSpeaker` introduced a temporary primary latest-responder surface
+ * outside gallery paging; superseded by 1.8.0 responder-gallery convergence.
+ * `dangerAction` is the explicit Delete story action at the bottom of the shared
+ * desktop/mobile rail content.
  *
  * 1.6.0, fe/chat-studio review round 6 (13 Sep 2026, Brian's browser
  * review). BREAKING: `menu` (the three-dot menu with Delete story) is
@@ -75,8 +81,8 @@ export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.7.0";
  * the gallery is a placeholder: the circular geometric Crestfall mark
  * on a --surface-2 bed with --radius-md corners, inset by --space-3.
  *
- * Order: authoritative latest-responder media, optional secondary gallery,
- * title, rating and visibility chips, byline and description when served
+ * Order: responder-aware gallery, title, rating and visibility chips, byline
+ * and description when served
  * (CR-067, CR-068), Export and Share, drill-in rows Cast, Narrator, World
  * state, Mechanics, Preferences, then the explicit Delete story danger
  * action at the bottom. A drill-in replaces the rail content in place under
@@ -95,7 +101,6 @@ export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.7.0";
  * @property {string} description Hidden until CR-068.
  * @property {boolean} descriptionExpanded
  * @property {() => void} onToggleDescription
- * @property {{displayUrl:string,name:string,altText:string}|null} featuredSpeaker Authoritative primary latest-responder image; never controlled by gallery activeIndex.
  * @property {{items: StoryRoomMediaItem[], activeIndex: number, showEndCard: boolean, catalogueHref: string, canGoPrevious: boolean, canGoNext: boolean, onSelect: (index: number) => void, onPrevious: () => void, onNext: () => void, viewerItem: StoryRoomMediaItem|null, onOpenViewer: (index?: number) => void, onCloseViewer: () => void}} gallery `showEndCard` shows the View catalogue end card in the featured slot; `catalogueHref` is the creation page it opens ("" when the story resolves to none, in which case no end card exists); `canGoPrevious` and `canGoNext` show the arrows (never wrapping); `viewerItem` is the image the binding shell opens in the community image viewer.
  * @property {import("react").ReactNode} viewerSlot The community image viewer (KitImageViewer), mounted by the binding shell while `gallery.viewerItem` is set; null otherwise.
  * @property {string} deleteError

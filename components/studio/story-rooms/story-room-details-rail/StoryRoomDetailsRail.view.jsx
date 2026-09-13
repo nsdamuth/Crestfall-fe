@@ -10,8 +10,8 @@ const CIRCLE_BUTTON_CLASS =
 const ROW_CLASS =
   "flex min-h-[var(--control-md)] w-full items-center justify-between gap-[var(--space-3)] px-[var(--space-4)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)] transition-colors duration-[var(--dur-hover)] hover:bg-[var(--step-above)]";
 
-// The right rail (fe/chat-studio item 6, 12 Sep 2026): the authoritative
-// latest-responder image first, optional secondary gallery, title, metadata,
+// The right rail (fe/chat-studio item 6, 12 Sep 2026): one responder-aware
+// gallery, title, metadata,
 // Export and Share, drill-in rows, then the explicit Delete story danger
 // action at the bottom. A drill-in replaces the rail content in place under
 // a 44px back row. The same View renders inside the right sheet below md.
@@ -23,7 +23,6 @@ export default function StoryRoomDetailsRailView({
   description = "",
   descriptionExpanded = false,
   onToggleDescription = null,
-  featuredSpeaker = null,
   gallery = null,
   viewerSlot = null,
   deleteError = "",
@@ -68,15 +67,7 @@ export default function StoryRoomDetailsRailView({
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto">
-        {featuredSpeaker?.displayUrl ? (
-          <FeaturedSpeakerMedia featuredSpeaker={featuredSpeaker} />
-        ) : null}
-
-        {gallery?.items?.length || !featuredSpeaker?.displayUrl ? (
-          <Gallery gallery={gallery} viewerSlot={viewerSlot} />
-        ) : (
-          viewerSlot
-        )}
+        <Gallery gallery={gallery} viewerSlot={viewerSlot} />
 
         <div className="px-[var(--space-4)] pt-[var(--space-4)]">
           <h2 className="font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]">
@@ -182,38 +173,6 @@ export default function StoryRoomDetailsRailView({
                 <span>{dangerAction.busy ? dangerAction.busyLabel || dangerAction.label : dangerAction.label}</span>
               </button>
             ) : null}
-          </div>
-        ) : null}
-      </div>
-    </div>
-  );
-}
-
-// The primary current-responder media surface is intentionally outside the
-// pageable gallery. It is bound directly to room.featuredSpeakerImageUrl via
-// the ViewModel, so user paging can never strand the visible primary image on
-// a stale speaker after a new Character or Narrator response arrives.
-function FeaturedSpeakerMedia({ featuredSpeaker }) {
-  const src = featuredSpeaker?.displayUrl || "";
-  if (!src) return null;
-
-  return (
-    <div className="px-[var(--space-3)] pt-[var(--space-3)]">
-      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius-md)] bg-[var(--canvas)]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={src}
-          alt={featuredSpeaker?.altText || featuredSpeaker?.name || "Latest responder"}
-          className="h-full w-full object-cover"
-        />
-        {featuredSpeaker?.name ? (
-          <div className="absolute inset-x-0 bottom-0 bg-[var(--panel-glass)] px-[var(--space-3)] py-[var(--space-2)] backdrop-blur-[var(--blur-panel)]">
-            <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--art-ink)]">
-              Latest responder
-            </p>
-            <p className="mt-px truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--art-ink)]">
-              {featuredSpeaker.name}
-            </p>
           </div>
         ) : null}
       </div>
@@ -359,7 +318,7 @@ function GalleryEndCard({ backgroundSrc = "", href = "" }) {
 // Preferences drill-in: the chat color, one of the 13 palette combos.
 export function ChatColorPreferences({
   paletteId = "",
-  creatorPaletteId = "",
+  defaultPaletteId = "",
   isOverridden = false,
   options = [],
   onChange = null,
@@ -373,13 +332,13 @@ export function ChatColorPreferences({
         Chat color
       </p>
       <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
-        Your messages take this color. The creator picked the default for this story.
+        Your messages use Crestfall&apos;s stock color palette unless you choose another.
       </p>
 
       <ul className="mt-[var(--space-3)] flex flex-col gap-[var(--space-1)]" role="listbox" aria-label="Chat color">
         {safeOptions.map((option) => {
           const selected = option.id === paletteId;
-          const isCreator = option.id === creatorPaletteId;
+          const isDefault = option.id === defaultPaletteId;
 
           return (
             <li key={option.id}>
@@ -398,9 +357,9 @@ export function ChatColorPreferences({
                   style={{ backgroundColor: option.swatch }}
                 />
                 <span className="min-w-0 flex-1 truncate">{option.label}</span>
-                {isCreator ? (
+                {isDefault ? (
                   <span className="shrink-0 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
-                    Creator default
+                    Crestfall default
                   </span>
                 ) : null}
                 {selected ? <Check size={16} aria-hidden="true" className="shrink-0 text-[var(--gold-action)]" /> : null}
@@ -412,7 +371,7 @@ export function ChatColorPreferences({
 
       {isOverridden ? (
         <button type="button" onClick={() => onReset?.()} className="cf-btn cf-btn--secondary mt-[var(--space-4)]">
-          Use the creator default
+          Use Crestfall default
         </button>
       ) : null}
     </div>

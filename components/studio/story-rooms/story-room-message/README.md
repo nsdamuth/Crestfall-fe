@@ -40,6 +40,8 @@ message record, including:
   system notices stay at the ui step;
 - speaker identity, mode pill, and opening-scene label;
 - legacy inline bold/action/quote rendering;
+- wide roleplay bubbles (94% below 700px, 96% from 700px up) so long turns use the available transcript width while preserving left/right speaker alignment;
+- Player narration/action ink derived from the Player chat color so actions remain visibly distinct from spoken dialogue without borrowing a Character palette;
 - display-ready semantic segments and status blocks;
 - palette colors already supplied by the ViewModel;
 - failed and sending status copy;

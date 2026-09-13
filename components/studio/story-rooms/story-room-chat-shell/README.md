@@ -14,7 +14,7 @@
 
 - composer draft, input mode, responder, and mention state
 - rail state (`railsState`, defaults: story list closed, details open; mutually exclusive below xl) and the sheet state below md (`mobilePanel`: stories, details, or null; reset on a room change so the story list sheet never stays open over the next story)
-- the chat color (creator default from the primary Character's palette, page-state override until CR-066)
+- the Player chat color (Crestfall stock default, page-state override until CR-066; never derived from the current/previous Character responder)
 - the viewport reads (md and xl) the View used to make itself
 - responder availability reconciliation
 - local `/help`, `/commands`, and `/format` resolution

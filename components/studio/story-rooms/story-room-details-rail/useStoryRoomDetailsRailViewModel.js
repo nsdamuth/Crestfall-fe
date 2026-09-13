@@ -28,14 +28,56 @@ function humanizeChip(value) {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
 }
 
-// The story's secondary media set (interim until CR-069 serves a list):
-// the authoritative latest-responder image is owned by the dedicated
-// featured-speaker surface, so this gallery contains the remaining cast
-// media/avatar and scene images, deduplicated by url in first-seen order.
-export function buildStoryMediaItems({ room = {}, cast = [], messages = [] } = {}) {
+// The right-rail gallery follows the latest Character/Narrator responder.
+// The selected responder image is first, followed by that responder's
+// remaining authored media. The stable participant id is authoritative;
+// name matching is only a compatibility fallback for older snapshots.
+export function buildLatestResponderMediaItems({ room = {}, cast = [] } = {}) {
   const items = [];
-  const featuredSpeakerUrl = normalizeText(room?.featuredSpeakerImageUrl);
-  const seen = new Set(featuredSpeakerUrl ? [featuredSpeakerUrl] : []);
+  const seen = new Set();
+  const participantId = normalizeText(room?.featuredSpeakerParticipantId);
+  const speakerName = normalizeText(room?.featuredSpeakerName);
+  const members = Array.isArray(cast) ? cast : [];
+  const member =
+    members.find((candidate) => participantId && String(candidate?.id || "") === participantId) ||
+    members.find((candidate) =>
+      speakerName && normalizeText(candidate?.name).toLowerCase() === speakerName.toLowerCase()
+    ) ||
+    null;
+
+  function push(url) {
+    const safeUrl = normalizeText(url);
+    if (!safeUrl || seen.has(safeUrl)) return;
+    seen.add(safeUrl);
+    items.push({
+      id: `responder-media-${items.length + 1}`,
+      url: safeUrl,
+      altText: speakerName || normalizeText(member?.name) || "Latest responder",
+      sourceLabel: speakerName || normalizeText(member?.name),
+    });
+  }
+
+  push(room?.featuredSpeakerImageUrl);
+  for (const url of Array.isArray(room?.featuredSpeakerMediaImageUrls)
+    ? room.featuredSpeakerMediaImageUrls
+    : []) {
+    push(url);
+  }
+  for (const url of Array.isArray(member?.mediaImageUrls) ? member.mediaImageUrls : []) {
+    push(url);
+  }
+  push(room?.featuredSpeakerAvatarUrl);
+  push(member?.avatarUrl);
+
+  return items.slice(0, STORY_ROOM_GALLERY_MAX_IMAGES);
+}
+
+// Story-scene media is the fallback when the latest responder has no usable
+// authored image collection (for example a Narrator without custom media).
+// It intentionally does not merge every cast member into one gallery.
+export function buildStoryMediaItems({ room = {}, messages = [] } = {}) {
+  const items = [];
+  const seen = new Set();
 
   function push(url, altText, sourceLabel) {
     const safeUrl = normalizeText(url);
@@ -49,13 +91,12 @@ export function buildStoryMediaItems({ room = {}, cast = [], messages = [] } = {
     });
   }
 
-  for (const member of Array.isArray(cast) ? cast : []) {
-    const name = normalizeText(member?.name);
-    for (const url of Array.isArray(member?.mediaImageUrls) ? member.mediaImageUrls : []) {
-      push(url, name, name);
-    }
-    push(member?.avatarUrl, name, name);
-  }
+  const openingHero = room?.openingHeroImage;
+  push(
+    openingHero?.displayUrl || openingHero?.url,
+    openingHero?.altText || room?.title,
+    "Opening scene"
+  );
 
   for (const message of Array.isArray(messages) ? messages : []) {
     const media = message?.metadata?.autoEventMedia;
@@ -180,33 +221,31 @@ export function useStoryRoomDetailsRailViewModel({
   // when the story launched from one, else the Character's own; hidden
   // only when the story resolves to no creation.
   const description = normalizeText(cataloguePreview?.creation?.description);
-  const featuredSpeakerImageUrl = normalizeText(room?.featuredSpeakerImageUrl);
-  const featuredSpeakerName = normalizeText(room?.featuredSpeakerName);
-  const featuredSpeaker = featuredSpeakerImageUrl
-    ? {
-        displayUrl: featuredSpeakerImageUrl,
-        name: featuredSpeakerName,
-        altText: featuredSpeakerName
-          ? `${featuredSpeakerName} — latest responder`
-          : "Latest responder",
-      }
-    : null;
+  const responderMediaItems = useMemo(
+    () => buildLatestResponderMediaItems({ room, cast }),
+    [room, cast]
+  );
 
-  // The gallery's images (review round 4 item 4): the room-derived set
-  // first (CR-069 interim), else the catalogue creation's own featured
-  // media from its preview, the same served images the community story
-  // slider shows; at most four, then the end card.
+  // The existing gallery is the responder surface. When a Character or
+  // Narrator has media, only that responder's collection is shown. If not,
+  // fall back to story/template imagery rather than a duplicate responder
+  // card above the carousel.
   const mediaItems = useMemo(() => {
-    const roomItems = buildStoryMediaItems({ room, cast, messages });
-    const items = roomItems.length
-      ? roomItems
-      : projectPreviewFeaturedMedia(cataloguePreview, {
-          altText: normalizeText(cataloguePreview?.creation?.title) || normalizeText(room?.title),
-        });
-    return items
-      .filter((item) => normalizeText(item?.url) !== featuredSpeakerImageUrl)
-      .slice(0, STORY_ROOM_GALLERY_MAX_IMAGES);
-  }, [room, cast, messages, cataloguePreview, featuredSpeakerImageUrl]);
+    if (responderMediaItems.length) {
+      return responderMediaItems;
+    }
+
+    const catalogueItems = projectPreviewFeaturedMedia(cataloguePreview, {
+      altText: normalizeText(cataloguePreview?.creation?.title) || normalizeText(room?.title),
+    });
+    const storyItems = buildStoryMediaItems({ room, messages });
+    const items = catalogueItems.length ? catalogueItems : storyItems;
+    return items.slice(0, STORY_ROOM_GALLERY_MAX_IMAGES);
+  }, [responderMediaItems, cataloguePreview, room, messages]);
+
+  const gallerySourceKey = responderMediaItems.length
+    ? `responder:${normalizeText(room?.featuredSpeakerParticipantId) || normalizeText(room?.featuredSpeakerName)}:${normalizeText(room?.featuredSpeakerImageUrl)}`
+    : `story:${catalogueCreationId}:${mediaItems.map((item) => item.url).join("|")}`;
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [viewerIndex, setViewerIndex] = useState(() =>
@@ -214,6 +253,11 @@ export function useStoryRoomDetailsRailViewModel({
   );
   const [activeDetail, setActiveDetail] = useState(null);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+
+  useEffect(() => {
+    setActiveIndex(0);
+    setViewerIndex(null);
+  }, [gallerySourceKey]);
 
   const count = mediaItems.length;
   const catalogueHref = useMemo(
@@ -261,7 +305,6 @@ export function useStoryRoomDetailsRailViewModel({
     descriptionExpanded,
     onToggleDescription: () => setDescriptionExpanded((value) => !value),
     narratorLabel: normalizeText(room?.narrator) || "Crestfall Engine",
-    featuredSpeaker,
     gallery: {
       items: mediaItems,
       activeIndex: safeActiveIndex,

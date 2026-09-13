@@ -1,4 +1,14 @@
-export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.6.0";
+export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.7.1";
+
+// 2.7.1, Player action contrast follow-up (13 Sep 2026). Presentation only:
+// Player narration/action keeps the Player chat hue but clamps to a darker
+// mid-lightness band so actions are unmistakable beside spoken dialogue.
+
+// 2.7.0, Story Chat width/action distinction follow-up (13 Sep 2026).
+// Presentation only, no portable prop changed: speaker bubbles now use 94%
+// below 700px and 96% at/above 700px, and Player narration/action text
+// derives a distinct foreground from the Player chat color while spoken
+// dialogue stays normal ink.
 
 // 2.6.0, Story Chat presentation restoration (13 Sep 2026). ADDITIVE:
 // `paletteColors` returns to the portable boundary so Character opening
@@ -31,10 +41,11 @@ export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.6.0";
 // avatar tile through --chat-speaker; it no longer colors the name.
 //
 // 2.1.0, fe/chat-studio brief 4 item 9 (13 Sep 2026). Presentation
-// only, no prop changed: character, narrator, and player bubbles widen
+// only, no prop changed: character, narrator, and player bubbles widened
 // from 70 to 85 percent of the transcript column at the shipped 700px
 // breakpoint and up (the player's from the right edge, the others from
-// the left); below it the 86 percent width stays as shipped.
+// the left); below it the 86 percent width stayed as shipped. Superseded
+// by 2.7.0's wider 94/96 percent geometry.
 
 export const STORY_ROOM_MESSAGE_SURFACE_TONES = Object.freeze({
   PLAYER: "PLAYER",

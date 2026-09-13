@@ -8,10 +8,12 @@ The story chat page's left rail (ruling D4, fe/chat-studio item 1, 12 Sep 2026).
 
 `useStoryRoomStoryListViewModel.js` owns:
 
-- the list fetch through the existing `fetchStoryRooms()` client (the same `GET /api/studio/story-rooms` the Stories page reads through `getStoriesPageData`), on mount and whenever `refetchKey` changes
+- bounded Recent paging through the existing `fetchStoryRooms()` client: 10 rows below md, 25 at md+, plus one lookahead row to determine whether Load more is available; page requests carry `limit`/`offset`, while existing unpaged callers remain compatible
+- an explicit Load more append path with room-id deduplication; `refetchKey` resets the list to the newest first page
+- exhaustive search only after a query is actually entered, preserving full-list search semantics without making every normal sidebar open load every room
 - row projection through `projectStoryRoomToContinueItem`, the Stories page's own projector, so title, last line, and recency match that page
 - the relative day through `formatStudioNotificationRelativeTime`, the existing helper, never a new formatter
-- the search query and client-side filtering by title and last line
+- the search query and client-side filtering by title and last line after the on-demand exhaustive search fetch
 - newest activity first ordering
 - the loading, error, and empty states
 

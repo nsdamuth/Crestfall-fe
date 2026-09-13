@@ -83,6 +83,10 @@ export default function StoryRoomStoryListView({
   recentHeading = "Recent",
   emptyMessage = "No stories yet.",
   isLoading = false,
+  isLoadingMore = false,
+  hasMore = false,
+  onLoadMore = null,
+  loadMoreLabel = "Load more",
   errorMessage = "",
   onSelect = null,
   LinkComponent = "a",
@@ -154,11 +158,25 @@ export default function StoryRoomStoryListView({
             {emptyMessage}
           </p>
         ) : (
-          <ul className="flex flex-col">
-            {safeItems.map((item) => (
-              <StoryListRow key={item.id} item={item} onSelect={onSelect} />
-            ))}
-          </ul>
+          <>
+            <ul className="flex flex-col">
+              {safeItems.map((item) => (
+                <StoryListRow key={item.id} item={item} onSelect={onSelect} />
+              ))}
+            </ul>
+            {hasMore ? (
+              <div className="px-[var(--space-3)] pt-[var(--space-3)]">
+                <button
+                  type="button"
+                  onClick={() => onLoadMore?.()}
+                  disabled={isLoadingMore}
+                  className="cf-btn cf-btn--secondary w-full justify-center disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
+                >
+                  {isLoadingMore ? "Loading…" : loadMoreLabel}
+                </button>
+              </div>
+            ) : null}
+          </>
         )}
       </div>
     </nav>

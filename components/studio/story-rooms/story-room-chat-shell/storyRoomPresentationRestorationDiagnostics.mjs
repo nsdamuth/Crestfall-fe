@@ -87,7 +87,7 @@ test("story_room_presentation_restoration_v1: authoritative first-appearance eve
   assert.match(view, /src=\{media\.displayUrl\}/);
 });
 
-test("story_room_presentation_restoration_v1: primary right-rail media follows the latest responder outside gallery state", () => {
+test("story_room_presentation_restoration_v1: existing right-rail gallery follows the latest responder", () => {
   const transport = read("components/studio/story-rooms/hooks/useStoryRoomChat.js");
   const railVm = read(
     "components/studio/story-rooms/story-room-details-rail/useStoryRoomDetailsRailViewModel.js"
@@ -98,12 +98,14 @@ test("story_room_presentation_restoration_v1: primary right-rail media follows t
 
   assert.match(transport, /featuredSpeakerImageUrl/);
   assert.match(transport, /featuredSpeakerName/);
-  assert.match(railVm, /const featuredSpeakerImageUrl = normalizeText\(room\?\.featuredSpeakerImageUrl\)/);
-  assert.match(railVm, /const featuredSpeaker = featuredSpeakerImageUrl/);
-  assert.match(railVm, /new Set\(featuredSpeakerUrl \? \[featuredSpeakerUrl\] : \[\]\)/);
-  assert.match(railView, /<FeaturedSpeakerMedia featuredSpeaker=\{featuredSpeaker\} \/>/);
-  assert.match(railView, /src=\{src\}/);
-  assert.match(railView, /Latest responder/);
+  assert.match(transport, /featuredSpeakerParticipantId/);
+  assert.match(transport, /featuredSpeakerMediaImageUrls/);
+  assert.match(railVm, /buildLatestResponderMediaItems/);
+  assert.match(railVm, /responderMediaItems\.length/);
+  assert.match(railVm, /setActiveIndex\(0\)/);
+  assert.match(railView, /<Gallery gallery=\{gallery\} viewerSlot=\{viewerSlot\} \/>/);
+  assert.doesNotMatch(railView, /FeaturedSpeakerMedia/);
+  assert.doesNotMatch(railView, />Latest responder</);
 });
 
 test("story_room_presentation_restoration_v1: Delete story lives at the Details bottom and confirmation authority remains in shell", () => {

@@ -19,7 +19,7 @@ function apiError(message, status = 500, code = "STORY_ROOM_FAILED") {
   );
 }
 
-export async function GET() {
+export async function GET(request) {
   const supabase = await createClient();
 
   const { user, error: userError } = await getAuthenticatedUser(supabase);
@@ -29,8 +29,21 @@ export async function GET() {
   }
 
   try {
+    const incoming = request?.nextUrl?.searchParams || new URL(request.url).searchParams;
+    const outgoing = new URLSearchParams();
+    const limit = Number.parseInt(incoming.get("limit"), 10);
+    const offset = Number.parseInt(incoming.get("offset"), 10);
+
+    if (Number.isFinite(limit) && limit > 0) {
+      outgoing.set("limit", String(Math.min(limit, 100)));
+    }
+    if (Number.isFinite(offset) && offset >= 0) {
+      outgoing.set("offset", String(offset));
+    }
+
+    const suffix = outgoing.size ? `?${outgoing.toString()}` : "";
     const responsePayload = await crestfallApiRequest({
-      path: "/v1/studio/story-rooms",
+      path: `/v1/studio/story-rooms${suffix}`,
       method: "GET",
       headers: {
         "x-crestfall-user-id": user.id,

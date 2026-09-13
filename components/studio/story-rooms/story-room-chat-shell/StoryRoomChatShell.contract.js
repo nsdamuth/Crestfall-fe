@@ -1,7 +1,13 @@
 export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
-  "story-room-chat-shell.view.v4.3";
+  "story-room-chat-shell.view.v4.4";
 
 /**
+ * v4.4, Player chat-color independence (13 Sep 2026), additive/rename:
+ * the Player no longer inherits a Character/Narrator palette as its default.
+ * `chatColorProps.defaultPaletteId` identifies the stock Crestfall default;
+ * a Player override remains presentation-only and Character palettes continue
+ * to style Character-authored messages independently.
+ *
  * v4.3, fe/chat-studio review round 6 (13 Sep 2026), additive:
  * `onRequestDeleteRoom` backs a red trash control (Trash2, the bare
  * icon recipe, --status-danger ink) at the right end of the details
@@ -80,11 +86,11 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * amendment).
  *
  * v2.1, fe/chat-studio item 4 (12 Sep 2026), additive: `chatColorProps`
- * ({ paletteId, creatorPaletteId, isOverridden, options, onChange,
- * onReset }) carries the chat color state the ViewModel owns (creator
- * default from the primary Character's palette, page-state override
- * until CR-066) for the Preferences drill-in the right rail mounts in
- * item 6; `transcriptProps.chatColor` is the resolved anchor.
+ * ({ paletteId, defaultPaletteId, isOverridden, options, onChange,
+ * onReset }) carries the Player chat color state the ViewModel owns
+ * (Crestfall stock default, page-state override until CR-066) for the
+ * Preferences drill-in the right rail mounts in item 6;
+ * `transcriptProps.chatColor` is the resolved anchor.
  *
  * v2.0, fe/chat-studio item 1 (12 Sep 2026). BREAKING: `layoutClass`,
  * `onShowLeftPanel`, and `onShowRightPanel` are removed; the desktop
@@ -119,7 +125,7 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  *   transient pre-first-message Player Character picker
  * @property {Object} composerProps
  * @property {Object|null} manageCast StoryRoomManageCastDialog binding props while the Manage cast dialog is open; rendered by the binding shell, not the View.
- * @property {{paletteId: string, creatorPaletteId: string, isOverridden: boolean, options: Array<{id: string, label: string, family: string, swatch: string}>, onChange: (paletteId: string) => void, onReset: () => void}} chatColorProps
+ * @property {{paletteId: string, defaultPaletteId: string, isOverridden: boolean, options: Array<{id: string, label: string, family: string, swatch: string}>, onChange: (paletteId: string) => void, onReset: () => void}} chatColorProps
  * @property {() => void} onToggleLeftPanel
  * @property {() => void} onToggleRightPanel
  * @property {() => void} onOpenMobileDetails

@@ -72,3 +72,12 @@ test("chat color change remains presentation-only", () => {
   ].join("\n");
   assert.doesNotMatch(sources, /fetch\(|createClient|PostGraphile|supabase/i);
 });
+
+
+test("Player chat color defaults to Crestfall stock instead of Character state", () => {
+  const vm = read("components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js");
+  assert.match(vm, /resolvePlayerChatColorDefaultPaletteId\(\)/);
+  assert.match(vm, /return DEFAULT_CHARACTER_COLOR_PALETTE_ID/);
+  assert.match(vm, /defaultPaletteId: defaultChatColorPaletteId/);
+  assert.doesNotMatch(vm, /resolveCreatorChatColorPaletteId/);
+});

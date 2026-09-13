@@ -161,6 +161,10 @@ function getLastVisualSpeaker({ messages = [], participants = [] }) {
         : getParticipantMediaImageUrls(participant);
 
     return {
+      participantId: participant?.id || latestSpeakerMessage.senderParticipantId || "",
+      creationId: participant?.creationId || null,
+      participantType:
+        participant?.participantType || String(latestSpeakerMessage.type || "").toUpperCase(),
       name: latestSpeakerMessage.speaker,
       avatarUrl:
         latestSpeakerMessage.speakerAvatarUrl ||
@@ -176,6 +180,9 @@ function getLastVisualSpeaker({ messages = [], participants = [] }) {
 
   if (!fallbackParticipant) {
     return {
+      participantId: "",
+      creationId: null,
+      participantType: "",
       name: "",
       avatarUrl: null,
       mediaImageUrls: [],
@@ -184,6 +191,9 @@ function getLastVisualSpeaker({ messages = [], participants = [] }) {
   }
 
   return {
+    participantId: fallbackParticipant.id || "",
+    creationId: fallbackParticipant.creationId || null,
+    participantType: fallbackParticipant.participantType || "",
     name: fallbackParticipant.displayName || fallbackParticipant.participantType,
     avatarUrl: getParticipantAvatarUrl(fallbackParticipant),
     mediaImageUrls: getParticipantMediaImageUrls(fallbackParticipant),
@@ -373,6 +383,11 @@ function buildRoomViewModel(snapshot, roomId) {
     openingHeroImage: resolveStoryRoomOpeningHeroImage(room),
     featuredSpeakerImageUrl,
     featuredSpeakerName: lastVisualSpeaker.name || "",
+    featuredSpeakerParticipantId: lastVisualSpeaker.participantId || "",
+    featuredSpeakerCreationId: lastVisualSpeaker.creationId || null,
+    featuredSpeakerParticipantType: lastVisualSpeaker.participantType || "",
+    featuredSpeakerAvatarUrl: lastVisualSpeaker.avatarUrl || null,
+    featuredSpeakerMediaImageUrls: normalizeArray(lastVisualSpeaker.mediaImageUrls).filter(Boolean),
   };
 }
 

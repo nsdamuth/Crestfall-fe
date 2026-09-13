@@ -39,6 +39,14 @@ import {
 const WHISPER_INSET_CLASS =
   "border-l-2 border-[var(--line-strong)] pl-[var(--space-3)] italic text-[var(--ink-dim)]";
 
+// Player-authored action/narration needs to remain visually distinct from
+// spoken dialogue even though Player bubbles intentionally do not inherit a
+// Character semantic palette. Keep the action ink in the Player's own hue,
+// but clamp it into a deliberately darker mid-lightness band so italic action
+// text cannot wash toward the near-white spoken dialogue color.
+const PLAYER_ACTION_COLOR =
+  "oklch(from var(--chat-speaker, var(--gold-ornament)) clamp(0.56, l, 0.64) min(c, 0.16) h)";
+
 function tokenizeInlineMarkup(text) {
   const tokens = [];
   const pattern = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
@@ -85,7 +93,13 @@ function getPaletteColor(paletteColors, role) {
   return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
-function renderInlineMarkup(text, keyPrefix, paletteColors = null, baseRole = "dialogue") {
+function renderInlineMarkup(
+  text,
+  keyPrefix,
+  paletteColors = null,
+  baseRole = "dialogue",
+  playerActionColor = false
+) {
   return tokenizeInlineMarkup(text).map((token, index) => {
     const key = `${keyPrefix}-${index}`;
 
@@ -104,11 +118,13 @@ function renderInlineMarkup(text, keyPrefix, paletteColors = null, baseRole = "d
 
     if (token.type === "action") {
       const narrationColor = getPaletteColor(paletteColors, "narration");
+      const actionColor =
+        narrationColor || (playerActionColor ? PLAYER_ACTION_COLOR : null);
       return (
         <em
           key={key}
           className="italic"
-          style={narrationColor ? { color: narrationColor } : undefined}
+          style={actionColor ? { color: actionColor } : undefined}
         >
           {token.value}
         </em>
@@ -128,6 +144,7 @@ function LegacyMessageBody({
   body = "",
   allowAutomaticSpacing = false,
   paletteColors = null,
+  playerActionColor = false,
 }) {
   const text = String(body || "");
   const blocks = allowAutomaticSpacing
@@ -155,7 +172,8 @@ function LegacyMessageBody({
                 line,
                 `quote-${blockIndex}-${lineIndex}`,
                 paletteColors,
-                "whisper"
+                "whisper",
+                playerActionColor
               )}
               {lineIndex < quoteLines.length - 1 ? <br /> : null}
             </span>
@@ -172,7 +190,8 @@ function LegacyMessageBody({
               line,
               `line-${blockIndex}-${lineIndex}`,
               paletteColors,
-              "dialogue"
+              "dialogue",
+              playerActionColor
             )}
             {lineIndex < lines.length - 1 ? <br /> : null}
           </span>
@@ -204,7 +223,14 @@ function getSegmentClassName(segment) {
   return classes.join(" ");
 }
 
-function getSegmentStyle(segment, paletteColors) {
+function getSegmentStyle(segment, paletteColors, playerActionColor = false) {
+  if (
+    playerActionColor &&
+    segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.NARRATION
+  ) {
+    return { color: PLAYER_ACTION_COLOR };
+  }
+
   if (!paletteColors) return undefined;
 
   let role =
@@ -242,6 +268,7 @@ function SemanticMessageBody({
   statusBlocks,
   paletteColors = null,
   allowAutomaticSpacing = false,
+  playerActionColor = false,
 }) {
   const paragraphs = allowAutomaticSpacing
     ? buildSemanticMessageParagraphs(segments)
@@ -261,7 +288,11 @@ function SemanticMessageBody({
               <span
                 key={`presentation-segment-${paragraphIndex}-${segmentIndex}`}
                 className={getSegmentClassName(segment)}
-                style={getSegmentStyle(segment, paletteColors)}
+                style={getSegmentStyle(
+                  segment,
+                  paletteColors,
+                  playerActionColor
+                )}
               >
                 {segment.text}
               </span>
@@ -341,19 +372,20 @@ function getArticleClassName(surfaceTone) {
   // notice cards, up from --space-3 vertically.
   const base = "min-w-0 break-words rounded-[var(--radius-bubble)] p-[var(--space-4)]";
 
-  // Bubble width (brief 4 item 9): 85 percent of the transcript column
-  // at the shipped 700px breakpoint and up (the player's from the right
-  // edge, every other speaker's from the left, the same percentage);
-  // below it the width stays as shipped.
+  // Bubble width (13 Sep 2026 presentation follow-up): keep only a small
+  // alignment gutter so long roleplay turns use the transcript width rather
+  // than wrapping into narrow columns. Mobile uses 94 percent; the shipped
+  // 700px breakpoint and up uses 96 percent (Player from the right, every
+  // other speaker from the left).
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER) {
-    return `${base} max-w-[86%] min-[700px]:max-w-[85%] bg-[var(--chat-bubble-fill)]`;
+    return `${base} max-w-[94%] min-[700px]:max-w-[96%] bg-[var(--chat-bubble-fill)]`;
   }
 
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
     return `${base} max-w-xl border border-sky-400/20 bg-sky-400/10 text-center`;
   }
 
-  return `${base} max-w-[86%] min-[700px]:max-w-[85%] bg-[var(--surface-1)]`;
+  return `${base} max-w-[94%] min-[700px]:max-w-[96%] bg-[var(--surface-1)]`;
 }
 
 // Transcript body type (brief 3 item 6, RULED by Brian, replacing brief
@@ -513,6 +545,7 @@ export default function StoryRoomMessageView({
               statusBlocks={safeStatusBlocks}
               paletteColors={hasPalettePresentation ? paletteColors : null}
               allowAutomaticSpacing={allowAutomaticSpacing}
+              playerActionColor={isPlayerMessage}
             />
           ) : (
             <div className="whitespace-pre-wrap">
@@ -520,6 +553,7 @@ export default function StoryRoomMessageView({
                 body={legacyBody}
                 allowAutomaticSpacing={allowAutomaticSpacing}
                 paletteColors={hasPalettePresentation ? paletteColors : null}
+                playerActionColor={isPlayerMessage}
               />
             </div>
           )}

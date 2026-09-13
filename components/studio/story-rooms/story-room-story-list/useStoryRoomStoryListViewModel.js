@@ -16,6 +16,9 @@ export const STORY_ROOM_STORY_LIST_COPY = Object.freeze({
 });
 
 export const STORY_ROOM_STORY_LIST_NEW_STORY_HREF = "/studio/v2/stories";
+export const STORY_ROOM_STORY_LIST_MOBILE_PAGE_SIZE = 10;
+export const STORY_ROOM_STORY_LIST_DESKTOP_PAGE_SIZE = 25;
+export const STORY_ROOM_STORY_LIST_DESKTOP_QUERY = "(min-width: 48rem)";
 
 function normalizeText(value) {
   return typeof value === "string" ? value.trim() : "";
@@ -70,20 +73,54 @@ export function useStoryRoomStoryListViewModel({
   const [status, setStatus] = useState("loading");
   const [errorMessage, setErrorMessage] = useState("");
   const [query, setQuery] = useState("");
+  const [hasMore, setHasMore] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [searchRooms, setSearchRooms] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
+  const [pageSize, setPageSize] = useState(() =>
+    typeof window !== "undefined" &&
+    window.matchMedia(STORY_ROOM_STORY_LIST_DESKTOP_QUERY).matches
+      ? STORY_ROOM_STORY_LIST_DESKTOP_PAGE_SIZE
+      : STORY_ROOM_STORY_LIST_MOBILE_PAGE_SIZE
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const mediaQuery = window.matchMedia(STORY_ROOM_STORY_LIST_DESKTOP_QUERY);
+    const onChange = (event) => {
+      setPageSize(
+        event.matches
+          ? STORY_ROOM_STORY_LIST_DESKTOP_PAGE_SIZE
+          : STORY_ROOM_STORY_LIST_MOBILE_PAGE_SIZE
+      );
+    };
+
+    mediaQuery.addEventListener("change", onChange);
+    return () => mediaQuery.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
+      setStatus("loading");
+      setSearchRooms(null);
       try {
-        const nextRooms = await loadStoryRooms();
+        const nextRooms = await loadStoryRooms({
+          limit: pageSize + 1,
+          offset: 0,
+        });
         if (cancelled) return;
-        setRooms(Array.isArray(nextRooms) ? nextRooms : []);
+        const safeRooms = Array.isArray(nextRooms) ? nextRooms : [];
+        setRooms(safeRooms.slice(0, pageSize));
+        setHasMore(safeRooms.length > pageSize);
         setErrorMessage("");
         setStatus("loaded");
       } catch (error) {
         if (cancelled) return;
         setRooms([]);
+        setHasMore(false);
         setErrorMessage(
           error?.message || STORY_ROOM_STORY_LIST_COPY.loadErrorFallback
         );
@@ -96,11 +133,77 @@ export function useStoryRoomStoryListViewModel({
     return () => {
       cancelled = true;
     };
-  }, [loadStoryRooms, refetchKey]);
+  }, [loadStoryRooms, pageSize, refetchKey]);
 
+  const normalizedQuery = normalizeText(query);
+
+  // Search keeps full-list semantics without making every normal sidebar open
+  // expensive. We fetch the complete owned-room list only after the user
+  // actually enters a query, then reuse it until the room list refetches.
+  useEffect(() => {
+    if (!normalizedQuery || searchRooms !== null) return undefined;
+
+    let cancelled = false;
+
+    async function loadSearchRooms() {
+      setIsSearching(true);
+      try {
+        const nextRooms = await loadStoryRooms();
+        if (cancelled) return;
+        setSearchRooms(Array.isArray(nextRooms) ? nextRooms : []);
+      } catch {
+        if (cancelled) return;
+        // Keep the already-loaded page searchable if the exhaustive search
+        // fetch fails; the normal list error state should not be replaced.
+        setSearchRooms([]);
+      } finally {
+        if (!cancelled) setIsSearching(false);
+      }
+    }
+
+    void loadSearchRooms();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loadStoryRooms, normalizedQuery, searchRooms]);
+
+  const onLoadMore = useCallback(async () => {
+    if (!hasMore || isLoadingMore || normalizedQuery) return;
+
+    setIsLoadingMore(true);
+    try {
+      const nextRooms = await loadStoryRooms({
+        limit: pageSize + 1,
+        offset: rooms.length,
+      });
+      const safeRooms = Array.isArray(nextRooms) ? nextRooms : [];
+      const pageRooms = safeRooms.slice(0, pageSize);
+
+      setRooms((current) => {
+        const seen = new Set(current.map((room) => String(room?.id || "")));
+        const appended = pageRooms.filter((room) => {
+          const id = String(room?.id || "");
+          if (!id || seen.has(id)) return false;
+          seen.add(id);
+          return true;
+        });
+        return [...current, ...appended];
+      });
+      setHasMore(safeRooms.length > pageSize);
+    } catch (error) {
+      setErrorMessage(
+        error?.message || STORY_ROOM_STORY_LIST_COPY.loadErrorFallback
+      );
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [hasMore, isLoadingMore, loadStoryRooms, normalizedQuery, pageSize, rooms.length]);
+
+  const sourceRooms = normalizedQuery && searchRooms !== null ? searchRooms : rooms;
   const items = useMemo(
-    () => projectStoryRoomsToListItems(rooms, { currentRoomId }),
-    [rooms, currentRoomId]
+    () => projectStoryRoomsToListItems(sourceRooms, { currentRoomId }),
+    [sourceRooms, currentRoomId]
   );
 
   const filteredItems = useMemo(
@@ -125,7 +228,11 @@ export function useStoryRoomStoryListViewModel({
     // New chat (brief 4 item 3) arrives display-ready from the chat
     // shell, which owns the launch; null hides the button.
     newChat: newChat && typeof newChat === "object" ? newChat : null,
-    isLoading: status === "loading",
+    isLoading: status === "loading" || Boolean(normalizedQuery && isSearching),
+    isLoadingMore,
+    hasMore: !normalizedQuery && hasMore,
+    onLoadMore,
+    loadMoreLabel: "Load more",
     errorMessage: status === "error" ? errorMessage : "",
     onSelect,
   };
