@@ -290,8 +290,10 @@ function PlayerCircle({ circle = null }) {
       {label ? label.charAt(0).toUpperCase() : "You"}
     </span>
   );
+  // Review round 4 item 2: the same 44px circle as the scene image seat
+  // and the add character circle, no smaller inner disc.
   const circleClass =
-    "flex h-9 w-9 items-center justify-center overflow-hidden rounded-[var(--radius-full)] bg-[var(--step-above)] text-[var(--ink-dim)]";
+    "flex h-full w-full items-center justify-center overflow-hidden rounded-[var(--radius-full)] bg-[var(--step-above)] text-[var(--ink-dim)]";
   const title = label
     ? `${label}, your player character`
     : "You, no player character selected";
@@ -319,9 +321,11 @@ function PlayerCircle({ circle = null }) {
   );
 }
 
-// A 44px hit area around a 36px circle: the avatar, the narrator glyph,
-// or the initial. The active one carries the gold selected ring (gold
-// only for selected and active).
+// A 44px circle (review round 4 item 2: the same size as the scene
+// image seat, the player circle, and the add character circle): the
+// avatar, the narrator glyph, or the initial. The one chosen to speak
+// next carries the gold outline on the inside of the circle (gold only
+// for selected and active).
 function SpeakerCircle({ option, active = false, disabled = false, onChange }) {
   const Icon = SPEAKER_ICONS[option?.iconKind] || UserRound;
   const label = `${option?.label || "Character"} speaks next`;
@@ -338,9 +342,9 @@ function SpeakerCircle({ option, active = false, disabled = false, onChange }) {
       className={`${CIRCLE_BUTTON_CLASS} disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`}
     >
       <span
-        className={`flex h-9 w-9 items-center justify-center overflow-hidden rounded-[var(--radius-full)] bg-[var(--step-above)] transition-shadow duration-[var(--dur-hover)] ${
+        className={`flex h-full w-full items-center justify-center overflow-hidden rounded-[var(--radius-full)] bg-[var(--step-above)] transition-shadow duration-[var(--dur-hover)] ${
           active
-            ? "text-[var(--gold-bright)] ring-2 ring-[var(--gold-action)]"
+            ? "text-[var(--gold-bright)] ring-2 ring-inset ring-[var(--gold-action)]"
             : "text-[var(--ink-dim)]"
         }`}
       >

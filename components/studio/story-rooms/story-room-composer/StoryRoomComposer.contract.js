@@ -1,7 +1,15 @@
-export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "5.1.0";
+export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "5.2.0";
 
 /**
  * Stable UI boundary for the Story Room message composer.
+ *
+ * 5.2.0, fe/chat-studio review round 4 item 2 (13 Sep 2026, Brian's
+ * browser review). Presentation only, no prop changed: the scene image
+ * seat, the player circle, every cast circle, and the add character
+ * circle render at one size, the 44px --control-md circle (the cast
+ * and player circles drop their 36px inner disc); the character chosen
+ * to speak next carries the gold outline on the inside of its circle
+ * (ring-inset) instead of outside it.
  *
  * 5.1.0, fe/chat-studio brief 4 item 5 (13 Sep 2026). ADDITIVE:
  * `addCharacter` ({ disabled, title, onPress } | null) backs a 44px plus
