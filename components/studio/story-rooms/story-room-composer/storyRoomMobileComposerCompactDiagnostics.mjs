@@ -52,6 +52,12 @@ test("row one holds the scene image seat, the cast circles, then the mode chip",
 test("row two is the growing field, the Auto circle, and the gold send circle", () => {
   assert.match(view, /rows=\{1\}/);
   assert.match(view, /bg-\[var\(--step-below\)\]/);
+  // Brief 2 item 3: no scrollbar below the cap; the cap is 40dvh under
+  // md and 320px at md and up, read from the computed style.
+  assert.match(view, /max-h-\[40dvh\] .* overflow-hidden .* md:max-h-\[320px\]/);
+  assert.doesNotMatch(view, /max-h-\[220px\]|overflow-y-auto rounded/);
+  assert.match(view, /getComputedStyle\(textarea\)\.maxHeight/);
+  assert.match(view, /textarea\.style\.overflowY = atCap \? "auto" : "hidden"/);
   assert.match(view, /onClick=\{\(\) => onAuto\?\.\(\)\}/);
   assert.match(view, /<Sparkles size=\{18\}/);
   assert.match(view, /bg-\[var\(--gold-action\)\] text-\[var\(--tag-fill-ink\)\]/);

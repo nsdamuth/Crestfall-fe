@@ -102,7 +102,7 @@ export default function StoryRoomComposerView({
 }) {
   const textareaRef = useRef(null);
 
-  useAutoResizeTextarea(textareaRef, draft, 220);
+  useAutoResizeTextarea(textareaRef, draft);
 
   const speakerOptions = Array.isArray(nextSpeakerOptions) ? nextSpeakerOptions : [];
   const castOptions = speakerOptions.filter((option) => option?.id && option.id !== "AUTO");
@@ -182,7 +182,7 @@ export default function StoryRoomComposerView({
             disabled={textareaDisabled}
             placeholder={placeholder}
             rows={1}
-            className="block max-h-[220px] min-h-[var(--control-md)] w-full resize-none overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--step-below)] px-[var(--space-3)] py-[var(--space-3)] text-[length:var(--text-input)] leading-[var(--lh-input)] text-[var(--ink)] shadow-[var(--shadow-bed)] transition-colors duration-[var(--dur-hover)] placeholder:text-[var(--ink-faint)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
+            className="block max-h-[40dvh] min-h-[var(--control-md)] w-full resize-none overflow-hidden rounded-[var(--radius-md)] md:max-h-[320px] border border-[var(--line-whisper)] bg-[var(--step-below)] px-[var(--space-3)] py-[var(--space-3)] text-[length:var(--text-input)] leading-[var(--lh-input)] text-[var(--ink)] shadow-[var(--shadow-bed)] transition-colors duration-[var(--dur-hover)] placeholder:text-[var(--ink-faint)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
             onChangeDraft={onChangeDraft}
             onUpdateSuggestionQueries={onUpdateSuggestionQueries}
             onMoveMentionHighlight={onMoveMentionHighlight}
@@ -578,13 +578,23 @@ function ParticipantMentionTextarea({
   );
 }
 
-function useAutoResizeTextarea(textareaRef, value, maxHeight) {
+// The field grows with its content and never shows a scrollbar until it
+// reaches its cap (brief 2 item 3). The cap is the field's own CSS
+// max-height (40dvh under md, 320px at md and up), read from the
+// computed style so the hook carries no width fork; overflow stays
+// hidden below the cap and becomes scrollable only past it.
+function useAutoResizeTextarea(textareaRef, value) {
   useEffect(() => {
     const textarea = textareaRef.current;
 
     if (!textarea) return;
 
     textarea.style.height = "auto";
-    textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
-  }, [textareaRef, value, maxHeight]);
+    const cap = Number.parseFloat(window.getComputedStyle(textarea).maxHeight);
+    const contentHeight = textarea.scrollHeight;
+    const atCap = Number.isFinite(cap) && contentHeight > cap;
+
+    textarea.style.height = `${atCap ? cap : contentHeight}px`;
+    textarea.style.overflowY = atCap ? "auto" : "hidden";
+  }, [textareaRef, value]);
 }

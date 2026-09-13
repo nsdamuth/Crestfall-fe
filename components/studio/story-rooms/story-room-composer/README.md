@@ -41,9 +41,11 @@ not available yet" until the Chassis serves the operation (CR-070). There
 is no microphone, no Random speaker, no tools drawer, and no Next Speaker
 or Input Mode label.
 
-The View owns textarea auto-sizing, Enter to send and Shift+Enter for a new
-line (IME composition is never submitted), and the command, mention, and
-location menu presentation. It does not receive raw Story Room participant
+The View owns textarea auto-sizing (brief 2 item 3: the field grows with
+its content with overflow hidden and shows a scrollbar only past its cap,
+40dvh below md and 320px at md and up, read from the computed style),
+Enter to send and Shift+Enter for a new line (IME composition is never
+submitted), and the command, mention, and location menu presentation. It does not receive raw Story Room participant
 records and does not send messages, load room state, call APIs, or persist
 participant mentions.
 
