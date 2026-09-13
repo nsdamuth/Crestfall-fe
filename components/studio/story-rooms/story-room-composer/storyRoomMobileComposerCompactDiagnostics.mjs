@@ -66,7 +66,9 @@ test("row two is the growing field, the Auto circle, and the gold send circle", 
   assert.match(view, /onClick=\{\(\) => onAuto\?\.\(\)\}/);
   assert.match(view, /<Sparkles size=\{18\}/);
   assert.match(view, /bg-\[var\(--gold-action\)\] text-\[var\(--tag-fill-ink\)\]/);
-  assert.match(view, /<ArrowUp size=\{20\}/);
+  // Brief 3 item 9: the paper plane on the gold send circle.
+  assert.match(view, /<Send size=\{20\}/);
+  assert.doesNotMatch(view, /<ArrowUp\b/);
   assert.match(view, /onClick=\{\(\) => onSend\?\.\(\)\}/);
   assert.doesNotMatch(view, /submitIsContinuation/);
   // Auto and send stay in this order: field, Auto, send.

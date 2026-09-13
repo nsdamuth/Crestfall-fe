@@ -2,10 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import {
-  ArrowUp,
   BookOpen,
   Image as ImageIcon,
   MapPin,
+  Send,
   Settings,
   Sparkles,
   UserRound,
@@ -257,7 +257,8 @@ export default function StoryRoomComposerView({
             title={sendTitle}
             className={`${CIRCLE_BUTTON_CLASS} bg-[var(--gold-action)] text-[var(--tag-fill-ink)] transition-colors duration-[var(--dur-hover)] hover:bg-[var(--gold-bright)] focus-visible:shadow-[var(--focus-ring-ongold)] active:bg-[var(--state-pressed-gold)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`}
           >
-            <ArrowUp size={20} aria-hidden="true" />
+            {/* The paper plane (brief 3 item 9); Auto keeps the sparkle. */}
+            <Send size={20} aria-hidden="true" />
           </button>
 
           {/* Settings, below md only (brief 2 item 11): the story details

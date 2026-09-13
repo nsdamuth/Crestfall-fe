@@ -30,7 +30,8 @@ send row and Auto reshaped by brief 2 item 1, 13 Sep 2026):
   resting) pinned right, and nothing else;
 - row two: the growing message field (placeholder "Send a message"), the
   Auto circle (sparkle glyph, secondary circle on `--step-above`), and the
-  circular gold send button with the arrow glyph at the row's right edge.
+  circular gold send button with the paper plane glyph (brief 3 item 9)
+  at the row's right edge.
 
 The active speaker circle carries the gold selected ring. Tapping a cast
 circle reports that speaker through `onChangeNextSpeaker`; with a draft the
