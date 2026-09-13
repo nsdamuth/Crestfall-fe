@@ -3,23 +3,29 @@
 // Image viewer View (FE/MEDIA-STUDIO session 3, notes 6 and 6a). The
 // figure column inside KitModalFrame variant="viewer": the glass
 // header (title, pixel size beside Upscale, the icon row), the gold
-// hairline frame with zoom and pan, the gold-ink bottom bar (Edit,
-// Assign, Share), and the thumbnail strip. In edit mode the frame,
-// bar, and strip give way to KitImageEditor under the same header.
-// Stateless: mode, menu state, and the measured size come from the
-// ViewModel; every operation is the page's.
+// hairline frame with zoom and pan, and the gold-ink bottom bar (Edit,
+// then Assign or Remix, then Share). In edit mode the frame and bar
+// give way to KitImageEditor under the same header. Stateless: mode,
+// menu state, and the measured size come from the ViewModel; every
+// operation is the page's.
+//
+// 2.0.0, RULED 12 Sep 2026 (Brian's browser review): the thumbnail
+// strip under the bottom bar is removed; it duplicated the page's own
+// list. The bottom bar's middle action is now chosen by the page:
+// "assign" for the viewer's own library, "remix" for a public image
+// (creator cards), which creates a new asset off the public one.
 import {
   Bookmark,
   Coins,
   Download,
   Flag,
+  GitFork,
   Info,
   Link2,
   LoaderCircle,
   Pencil,
   Share2,
   Trash2,
-  Image as ImageIcon,
 } from "lucide-react";
 
 import KitImageEditor from "../KitImageEditor";
@@ -236,54 +242,47 @@ function ViewerBarAction({ label, icon, onClick = null, disabled = false, title,
   );
 }
 
-function ViewerBottomBar({ onEnterEdit, assignState, onAssign, onShare }) {
-  const assignSoon = assignState !== "ready";
+function ViewerBottomBar({
+  onEnterEdit,
+  bottomBarAction,
+  assignState,
+  onAssign,
+  remixState,
+  onRemix,
+  onShare,
+}) {
+  const isRemix = bottomBarAction === "remix";
+  const middleSoon = isRemix ? remixState !== "ready" : assignState !== "ready";
   return (
     <div className={`${GLASS_BAR} flex-wrap items-center justify-center gap-[var(--space-2)] px-[var(--space-2)] py-[var(--space-1)]`}>
       <ViewerBarAction label="Edit" icon={<Pencil size={16} aria-hidden="true" />} onClick={onEnterEdit} />
-      <ViewerBarAction
-        label="Assign"
-        icon={<Link2 size={16} aria-hidden="true" />}
-        onClick={onAssign}
-        disabled={assignSoon}
-        soon={assignSoon}
-        title={assignSoon ? NOT_AVAILABLE_LABEL : "Assign this image to one of your assets"}
-      />
+      {isRemix ? (
+        <ViewerBarAction
+          label="Remix"
+          icon={<GitFork size={16} aria-hidden="true" />}
+          onClick={onRemix}
+          disabled={middleSoon}
+          soon={middleSoon}
+          title={middleSoon ? NOT_AVAILABLE_LABEL : "Remix this image into a new asset of your own"}
+        />
+      ) : (
+        <ViewerBarAction
+          label="Assign"
+          icon={<Link2 size={16} aria-hidden="true" />}
+          onClick={onAssign}
+          disabled={middleSoon}
+          soon={middleSoon}
+          title={middleSoon ? NOT_AVAILABLE_LABEL : "Assign this image to one of your assets"}
+        />
+      )}
       <ViewerBarAction label="Share" icon={<Share2 size={16} aria-hidden="true" />} onClick={onShare} />
     </div>
-  );
-}
-
-function ThumbnailButton({ item, active = false, onClick }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={item.title || "Image"}
-      aria-current={active ? "true" : undefined}
-      className={`aspect-square h-16 w-16 shrink-0 overflow-hidden rounded-[var(--radius-md)] border transition-colors ${
-        active
-          ? "border-[var(--gold-bright)] bg-[var(--fill)]"
-          : "border-[var(--line-whisper)] bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]"
-      }`}
-    >
-      {item.thumbnailUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={item.thumbnailUrl} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
-      ) : (
-        <span className="flex h-full w-full items-center justify-center">
-          <ImageIcon size={16} aria-hidden="true" className="text-[var(--gold-ornament)]" />
-        </span>
-      )}
-    </button>
   );
 }
 
 export default function KitImageViewerView({
   imageSrc = null,
   title = "",
-  items = [],
-  activeId = null,
   pixelSize = null,
   pixelSizeLabel = "",
   isSaved = false,
@@ -291,6 +290,8 @@ export default function KitImageViewerView({
   downloadOptions = [],
   downloadMenuOpen = false,
   assignState = "soon",
+  bottomBarAction = "assign",
+  remixState = "soon",
   upscaleCoinCost = 0,
   upscaleState = "soon",
   editRunCoinCost = 0,
@@ -299,7 +300,6 @@ export default function KitImageViewerView({
   upscaleRef = null,
   overlaySlot = null,
   overlayReplacesBody = false,
-  onSelectItem = null,
   onImageLoad = null,
   onSave = null,
   onDelete = null,
@@ -307,6 +307,7 @@ export default function KitImageViewerView({
   onDetails = null,
   onShare = null,
   onAssign = null,
+  onRemix = null,
   onUpscale = null,
   onSubmitEdit = null,
   onToggleDownloadMenu = null,
@@ -383,23 +384,13 @@ export default function KitImageViewerView({
 
           <ViewerBottomBar
             onEnterEdit={onEnterEdit}
+            bottomBarAction={bottomBarAction}
             assignState={assignState}
             onAssign={onAssign}
+            remixState={remixState}
+            onRemix={onRemix}
             onShare={onShare}
           />
-
-          {items.length > 1 ? (
-            <div className="pointer-events-auto flex w-full max-w-[min(92vw,64rem)] flex-none gap-[var(--space-2)] overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {items.map((item) => (
-                <ThumbnailButton
-                  key={item.id}
-                  item={item}
-                  active={item.id === activeId}
-                  onClick={() => onSelectItem?.(item)}
-                />
-              ))}
-            </div>
-          ) : null}
         </>
       )}
 

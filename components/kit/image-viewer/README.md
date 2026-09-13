@@ -52,13 +52,19 @@ to the application is unchanged (contract law).
   image has been upscaled.
 - **Frame**: the gold hairline hugging the image, zoom and pan (wheel
   and drag on desktop, pinch and drag on touch, double click to zoom).
-- **Bottom bar** (gold ink): Edit (no cost on it), Assign, Share.
-  Assign is live when the page says the image can be reassigned;
-  otherwise it renders disabled with the Soon chip (an image with no
-  asset has no assign call yet, gap 11).
-- **Thumbnail strip**: view mode only, hidden in edit mode.
-- **Edit mode**: the frame, bar, and strip give way to
-  `KitImageEditor` under the same header.
+- **Bottom bar** (gold ink): Edit (no cost on it), then Assign or
+  Remix, then Share. Assign is live when the page says the image can
+  be reassigned; otherwise it renders disabled with the Soon chip (an
+  image with no asset has no assign call yet, gap 11). Remix (2.0.0,
+  `bottomBarAction="remix"`) takes Assign's place for a public image
+  opened from a creator card; it and Edit in that context create a new
+  asset off the public one, recorded in both libraries, and ship
+  "soon" until the Chassis serves the operation (CR-065).
+- **No thumbnail strip** (2.0.0, RULED 12 Sep 2026): the strip under
+  the bar duplicated the page's own list and is removed together with
+  `items`, `activeId`, and `onSelectItem`.
+- **Edit mode**: the frame and bar give way to `KitImageEditor` under
+  the same header.
 
 ## Costs and readiness
 
@@ -79,8 +85,8 @@ header reads "Measuring size..." until then.
 
 ## Phone
 
-Full screen through the frame variant. One column: header, image, bar,
-strip; the image shrinks through its own caps so nothing scrolls. Every
+Full screen through the frame variant. One column: header, image, bar;
+the image shrinks through its own caps so nothing scrolls. Every
 target is `--control-md` (44px).
 
 ## Fixtures

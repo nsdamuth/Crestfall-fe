@@ -90,6 +90,7 @@ the details below carry only what is still actionable.
 | CR-062 | Community type whitelist versus the Rules & Mechanics group | Seven of the eight Rules & Mechanics types the filter offers are outside the community route's `type` whitelist; grow the whitelist or serve those types as unavailable so the panel can render them disabled | open | Nick | non-blocking; filed 6 Sep 2026; client-side filtering hides the mismatch today |
 | CR-064 | Creator summary timestamps for Recently Active and Newest | The creator summary on `/v1/community/creators` carries no last-active timestamp and no joined timestamp, so the ruled Creators sorts Recently Active and Newest still render and stay selectable (ruling change, FE/FILTERS follow-up, 6 Sep 2026) but leave the list in its current order until both timestamps exist | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS carry-through (Creators) |
 | CR-065 | Per-user liked and saved flags on creator summaries | The ruled Activity section (Liked, Saved) on Creators needs per-user liked and saved state for creators; the payload carries following only, so both options render muted at a zero count and stay selectable (ruling change, FE/FILTERS follow-up, 6 Sep 2026) until the flags exist | open | Nick | non-blocking; filed 6 Sep 2026 by the FE/FILTERS carry-through (Creators) |
+| CR-065 | Remix a public image into the viewer's library | One Chassis operation: from a public image output, create a new asset owned by the viewer and record it as a new version in both the viewer's and the source creator's libraries with attribution; Remix and Edit on public images ship "soon" until then | open | Nick | non-blocking; filed 12 Sep 2026; KitImageViewer 2.0.0 remix context |
 | CR-064 | Viewer reaction state on the public profile payload | The public profile payload carries no `viewer.isLiked` or `viewer.isBookmarked`; the profile page fetches them from profile-reactions after first paint, so Liked and Saved rest unselected for one round trip | open | Nick | non-blocking; filed 12 Sep 2026; optimistic toggle in place |
 | CR-063 | Public lore approval-state projection | The community lore projection emits only canon or approved, so Draft and Archived never match community lore, and one state carries three names (IN_REVIEW, pending, Reviewing); confirm the states the public feed serves and the canonical name | open | Nick | non-blocking; filed 6 Sep 2026 |
 
@@ -1021,6 +1022,10 @@ side filtering hides the mismatch today (the seven never match). When
 CR-060 moves filtering server-side, either the whitelist grows or
 those types are served as unavailable so the panel renders them
 disabled ("Soon") rather than counting zero.
+
+### CR-065, Remix a public image into the viewer's library
+
+Filed 12 Sep 2026 (Brian's browser review). Creator card tiles now open the Kit image viewer in remix context (KitImageViewer 2.0.0): the bottom bar offers Remix in place of Assign, and Edit in that context is a remix through the editor. Needed from the Chassis: one operation that takes a public image output (and its source creation), creates a new asset owned by the viewer off it, and records the result as a new version in both the viewer's library and the source creator's library, with attribution to the source. Until it exists, Remix and Edit ship "soon" on public images; Details routes to the creation page.
 
 ### CR-064, Viewer reaction state on the public profile payload
 

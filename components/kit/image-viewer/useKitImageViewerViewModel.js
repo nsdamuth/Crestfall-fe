@@ -29,18 +29,6 @@ function normalizeState(value, allowed, fallback) {
   return allowed.includes(value) ? value : fallback;
 }
 
-function normalizeItems(items) {
-  if (!Array.isArray(items)) return [];
-  return items
-    .filter((item) => item && (item.id || item.imageOutputId))
-    .map((item) => ({
-      id: item.id || item.imageOutputId,
-      title: typeof item.title === "string" ? item.title : "",
-      thumbnailUrl: typeof item.thumbnailUrl === "string" ? item.thumbnailUrl : null,
-      original: item,
-    }));
-}
-
 function normalizeDownloadOptions(options, pixelSize) {
   if (!Array.isArray(options)) return [];
   return options
@@ -69,26 +57,15 @@ export function useKitImageViewerViewModel(props) {
   const measuredSize = measured.src === imageSrc ? measured.size : null;
   const pixelSize = storedSize || measuredSize;
 
-  const items = normalizeItems(props?.items);
-  const onSelectItem = toCallback(props?.onSelectItem);
-
   function handleImageLoad(size) {
     const next = normalizePixelSize(size);
     if (!next) return;
     setMeasured({ src: imageSrc, size: next });
   }
 
-  function selectItem(item) {
-    setMode("view");
-    setDownloadMenuOpen(false);
-    onSelectItem?.(item?.original || item);
-  }
-
   return {
     imageSrc,
     title: typeof props?.title === "string" ? props.title : "",
-    items,
-    activeId: props?.activeId || null,
     pixelSize,
     pixelSizeLabel: formatPixelSize(pixelSize),
     isSaved: Boolean(props?.isSaved),
@@ -96,6 +73,10 @@ export function useKitImageViewerViewModel(props) {
     downloadOptions: normalizeDownloadOptions(props?.downloadOptions, pixelSize),
     downloadMenuOpen,
     assignState: normalizeState(props?.assignState, ["ready", "soon"], "soon"),
+    // 2.0.0: the bottom bar's middle action, chosen by the page.
+    bottomBarAction: normalizeState(props?.bottomBarAction, ["assign", "remix"], "assign"),
+    remixState: normalizeState(props?.remixState, ["ready", "soon"], "soon"),
+    onRemix: toCallback(props?.onRemix),
     upscaleCoinCost: Number(props?.upscaleCoinCost ?? 0) || 0,
     upscaleState: normalizeState(props?.upscaleState, ["soon", "ready", "pending"], "soon"),
     editRunCoinCost: Number(props?.editRunCoinCost ?? 0) || 0,
@@ -105,7 +86,6 @@ export function useKitImageViewerViewModel(props) {
     upscaleRef,
     overlaySlot: props?.overlaySlot ?? null,
     overlayReplacesBody: Boolean(props?.overlayReplacesBody),
-    onSelectItem: selectItem,
     onImageLoad: handleImageLoad,
     onSave: toCallback(props?.onSave),
     onDelete: toCallback(props?.onDelete),

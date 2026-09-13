@@ -1,6 +1,19 @@
-export const KIT_IMAGE_VIEWER_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_IMAGE_VIEWER_VIEW_CONTRACT_VERSION = "2.0.0";
 
 /**
+ * 2.0.0, RULED 12 Sep 2026 (Brian's browser review of the media
+ * viewer and the creator cards). BREAKING: the thumbnail strip is
+ * removed together with `items`, `activeId`, and `onSelectItem`; the
+ * page's own list is the way to move between images, so the strip
+ * only duplicated it. ADDITIVE: `bottomBarAction` picks the bottom
+ * bar's middle action, "assign" (default, the viewer's own library,
+ * unchanged) or "remix" (a public image opened from a creator card);
+ * `remixState` and `onRemix` mirror the assign pair. Remix creates a
+ * new asset of the viewer's own off the public one and records it as a
+ * new version in both the viewer's and the creator's libraries; Edit in
+ * that context does the same through the editor. Both ship "soon"
+ * until the Chassis serves the remix operation (CR-065).
+ *
  * Stable portable UI boundary for the live image viewer that opens
  * from a library item on the Media Studio page (FE/MEDIA-STUDIO
  * session 3, Brian's notes 6 and 6a, RULED 10 Sep 2026).
@@ -47,9 +60,6 @@ export const KIT_IMAGE_VIEWER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @typedef {Object} KitImageViewerProps
  * @property {string|null} imageSrc
  * @property {string} title
- * @property {KitImageViewerItem[]} items the thumbnail strip, view mode only
- * @property {string|null} activeId
- * @property {(item: KitImageViewerItem) => void} onSelectItem
  * @property {KitImageViewerPixelSize|null} pixelSize the stored size; when null the viewer measures the image on load
  * @property {boolean} isSaved
  * @property {() => void} onSave
@@ -61,6 +71,9 @@ export const KIT_IMAGE_VIEWER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {KitImageViewerDownloadOption[]} downloadOptions empty hides the Download control
  * @property {"ready"|"soon"} assignState soon renders Assign disabled with the Soon chip
  * @property {() => void} onAssign
+ * @property {"assign"|"remix"} [bottomBarAction] added 2.0.0, default "assign"
+ * @property {"ready"|"soon"} [remixState] added 2.0.0, default "soon"; soon renders Remix disabled with the Soon chip
+ * @property {() => void} [onRemix] added 2.0.0
  * @property {number} upscaleCoinCost
  * @property {"soon"|"ready"|"pending"} upscaleState
  * @property {() => void} onUpscale
