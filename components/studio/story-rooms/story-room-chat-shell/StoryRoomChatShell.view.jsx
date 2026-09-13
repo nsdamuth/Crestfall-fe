@@ -1,4 +1,4 @@
-import { ChevronLeft, Command, HelpCircle, Keyboard, MapPin, Settings } from "lucide-react";
+import { ChevronLeft, Command, HelpCircle, Keyboard, MapPin } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
@@ -109,6 +109,7 @@ export default function StoryRoomChatShellView({
         title={room?.title}
         primaryCharacter={primaryCharacter}
         backHref={backHref}
+        mobilePanel={mobilePanel}
         onOpenStoryList={onOpenMobileStoryList}
         onOpenDetails={onOpenMobileDetails}
         LinkComponent={LinkComponent}
@@ -272,15 +273,17 @@ export default function StoryRoomChatShellView({
 }
 
 // D2 below md: one 44px bar. Back chevron to the Stories page, the
-// primary character's circle, the title truncated, then the story list
-// and settings buttons pinned right (brief 3 item 10 returns them from
-// the composer's rows; the media button stays retired). The story list
-// button carries the shared panel glyph in its closed turn and opens the
-// story list as the left sheet; settings opens the details sheet.
+// primary character's circle, the title truncated, then the two panel
+// buttons pinned right (brief 3 item 10 returns them from the
+// composer's rows; the media button stays retired). Brief 4 item 7: both
+// carry the desktop rail toggles' glyph, the story list glyph on the
+// left and the details glyph on the right, no gear, with the same 180
+// degree turn while their sheet is open (RailPanelGlyph reads `open`).
 function StoryChatMobileBar({
   title = "",
   primaryCharacter = null,
   backHref = "/studio/v2/stories",
+  mobilePanel = null,
   onOpenStoryList,
   onOpenDetails,
   LinkComponent = "a",
@@ -328,20 +331,22 @@ function StoryChatMobileBar({
         type="button"
         onClick={() => onOpenStoryList?.()}
         aria-label="Open story list"
+        aria-expanded={mobilePanel === "stories"}
         title="Stories"
         className={BARE_ICON_BUTTON_CLASS}
       >
-        <RailPanelGlyph side="left" open={false} />
+        <RailPanelGlyph side="left" open={mobilePanel === "stories"} />
       </button>
 
       <button
         type="button"
         onClick={() => onOpenDetails?.()}
         aria-label="Story details"
+        aria-expanded={mobilePanel === "details"}
         title="Story details"
         className={BARE_ICON_BUTTON_CLASS}
       >
-        <Settings size={20} aria-hidden="true" />
+        <RailPanelGlyph side="right" open={mobilePanel === "details"} />
       </button>
     </div>
   );

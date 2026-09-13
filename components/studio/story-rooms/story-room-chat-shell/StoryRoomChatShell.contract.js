@@ -23,6 +23,9 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * rail's Manage cast button at that one dialog. One participants source
  * feeds both the cast row and the rail's Cast list: `cast` from
  * useStoryRoomChat, the row derived through `selectCastRowOptions`.
+ * Item 7 (presentation only): the mobile bar's two panel buttons carry
+ * the rail toggles' glyph (story list left, details right, no gear) and
+ * turn while their sheet is open, read from `mobilePanel`.
  *
  * v4.1, fe/chat-studio brief 3 (13 Sep 2026), additive. Item 1: the
  * composer renders in a full-width shell row beneath the rails grid,
