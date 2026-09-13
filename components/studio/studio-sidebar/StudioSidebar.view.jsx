@@ -97,10 +97,14 @@ export default function StudioSidebarView({
   return (
     <aside
       className={`
-        hidden shrink-0 border-r border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-5 transition-all duration-300 lg:sticky lg:top-0 lg:block lg:h-dvh lg:self-start lg:overflow-y-auto
-        ${collapsed ? "lg:w-16" : "lg:w-56"}
+        hidden shrink-0 border-r border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-5 transition-all duration-300 lg:sticky lg:top-0 lg:z-10 lg:block lg:h-dvh lg:self-start lg:overflow-y-auto
+        ${collapsed ? "lg:w-16" : "lg:w-56 lg:shadow-[var(--shadow-modal)]"}
       `}
     >
+      {/* Expanded, the rail carries --shadow-modal (brief 3 item 8, the
+          drawer role's token, the one existing shadow token whose role
+          covers a full-height panel) and sits one layer up so the shadow
+          separates it from the page; collapsed it carries none. */}
       {/* Collapsed header stacks the logo icon (Home link) above the
           collapse control, RULED 6 Sep 2026 (sidebar batch 1). The
           expanded header keeps its one-row lockup; the shift below
