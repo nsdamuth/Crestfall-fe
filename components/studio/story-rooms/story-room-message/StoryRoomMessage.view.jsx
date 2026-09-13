@@ -281,8 +281,10 @@ function getWrapperClassName(surfaceTone) {
 function getArticleClassName(surfaceTone) {
   // min-w-0 and break-words (review round 5, mobile): a bubble never
   // grows past its cap for an unbroken run of text, so the column
-  // stays inside 390 whatever a message carries.
-  const base = "min-w-0 break-words rounded-[var(--radius-bubble)] px-[var(--space-4)] py-[var(--space-3)]";
+  // stays inside 390 whatever a message carries. Padding (review round
+  // 8): --space-4 on every side, the same inset as the transcript's
+  // notice cards, up from --space-3 vertically.
+  const base = "min-w-0 break-words rounded-[var(--radius-bubble)] p-[var(--space-4)]";
 
   // Bubble width (brief 4 item 9): 85 percent of the transcript column
   // at the shipped 700px breakpoint and up (the player's from the right

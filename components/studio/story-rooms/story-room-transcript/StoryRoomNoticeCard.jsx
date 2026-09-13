@@ -39,7 +39,7 @@ export default function StoryRoomNoticeCard({
   return (
     <article
       role={tone === "danger" ? "alert" : undefined}
-      className={`min-w-0 max-w-full rounded-[var(--radius-md)] border bg-[var(--surface-1)] p-[var(--space-5)] ${classes.card}`}
+      className={`min-w-0 max-w-full rounded-[var(--radius-md)] border bg-[var(--surface-1)] p-[var(--space-4)] ${classes.card}`}
     >
       <div className={`flex items-start gap-[var(--space-3)] ${centered ? "flex-col items-center text-center" : ""}`}>
         <span

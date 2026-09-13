@@ -1,5 +1,10 @@
-export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.4.0";
+export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.5.0";
 
+// 2.5.0, fe/chat-studio review round 8 (13 Sep 2026, Brian's browser
+// review). Presentation only: every bubble's inset is --space-4 on all
+// sides (vertical up from --space-3), the same inset the transcript's
+// notice cards take (down from --space-5), so the two read alike.
+//
 // 2.4.0, fe/chat-studio review round 5 item 1 (13 Sep 2026, Brian's
 // browser review, "a little bit more"). Presentation only: the speaker
 // name rises one more scale step, from --text-body (16) to --text-lead

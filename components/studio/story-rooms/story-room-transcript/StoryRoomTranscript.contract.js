@@ -1,7 +1,12 @@
-export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.2.0";
+export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Portable View contract.
+ *
+ * 1.3.0, fe/chat-studio review round 8 (13 Sep 2026, Brian's browser
+ * review). Presentation only: the notice cards' inset is --space-4 on
+ * every side (down from --space-5), the same inset the message bubbles
+ * take, so the player character prompt reads alike beside them.
  *
  * 1.2.0, fe/chat-studio review round 4 item 3 (13 Sep 2026, Brian's
  * browser review, RULED). Presentation only, no prop changed: the
