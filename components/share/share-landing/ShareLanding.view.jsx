@@ -61,7 +61,7 @@ export default function ShareLandingView({
   creatorHref = null,
   excerpt = "",
   imageSrc = "",
-  actionLabel = "Play free on Crestfall Studio",
+  actionLabel = "Play Free on Crestfall Studio",
   actionHref = "/login",
   errorMessage = "",
 }) {

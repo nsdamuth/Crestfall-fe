@@ -17,7 +17,7 @@ export function buildShareLandingViewProps(props = {}) {
     creatorHref: text(props.creatorHref) || null,
     excerpt: text(props.excerpt),
     imageSrc: text(props.imageSrc),
-    actionLabel: text(props.actionLabel) || "Play free on Crestfall Studio",
+    actionLabel: text(props.actionLabel) || "Play Free on Crestfall Studio",
     actionHref: text(props.actionHref) || "/login",
     errorMessage: text(props.errorMessage),
   };

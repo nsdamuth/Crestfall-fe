@@ -136,7 +136,7 @@ export default async function ShareLandingPage({ family, params, searchParams })
     creatorHref: model.creatorUsername ? `/studio/profile/${encodeURIComponent(model.creatorUsername)}` : null,
     excerpt: model.excerpt,
     imageSrc: model.imageSrc,
-    actionLabel: user ? "Play" : "Play free on Crestfall Studio",
+    actionLabel: user ? "Play" : "Play Free on Crestfall Studio",
     actionHref: user
       ? `/studio/creations/${encodeURIComponent(model.id)}`
       : buildSignInReturnPath({ nextPath: sharedPath, sharerUsername: ref }),

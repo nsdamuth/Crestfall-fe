@@ -26,7 +26,7 @@ export const SHARE_LANDING_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} excerpt the card excerpt; empty renders nothing
  * @property {string} imageSrc the featured image (card derivative);
  *   empty renders the quiet no-image tile
- * @property {string} actionLabel "Play free on Crestfall Studio" signed
+ * @property {string} actionLabel "Play Free on Crestfall Studio" signed
  *   out (follow-up 2, the card pill's copy), "Play" signed in
  * @property {string} actionHref the sign-in return link, or the play route
  * @property {string} errorMessage a served load error; renders in place

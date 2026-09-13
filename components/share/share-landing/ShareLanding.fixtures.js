@@ -7,13 +7,13 @@ const BASE = {
   excerpt:
     "A Bastet artificer whose workshop is equal parts appraisal counter, den, vault, and dangerous mechanical argument.",
   imageSrc: "/assets/covers/crestfall-camellia-cover.png",
-  actionLabel: "Play free on Crestfall Studio",
+  actionLabel: "Play Free on Crestfall Studio",
   actionHref: "/login?next=%2Fc%2Fcreation-1%2Flilith-of-nod%3Fref%3Dbrian&ref=brian",
   errorMessage: "",
 };
 
 export const shareLandingFixtures = [
-  { id: "signed-out", label: "Signed out, Play free on Crestfall Studio", props: { ...BASE } },
+  { id: "signed-out", label: "Signed out, Play Free on Crestfall Studio", props: { ...BASE } },
   {
     id: "signed-in",
     label: "Signed in, Play",
