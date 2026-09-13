@@ -142,12 +142,16 @@ export function ImageFrame({
     }
 
     if (dragStartRef.current) {
-      const dx = event.clientX - dragStartRef.current.clientX;
-      const dy = event.clientY - dragStartRef.current.clientY;
+      // Snapshot the drag start before queueing the state update. A pointerup/
+      // pointercancel can clear the ref before React executes the updater,
+      // which previously made `dragStartRef.current.origin` crash mid-pan.
+      const dragStart = dragStartRef.current;
+      const dx = event.clientX - dragStart.clientX;
+      const dy = event.clientY - dragStart.clientY;
       updateZoom((current) => ({
         scale: current.scale,
-        x: dragStartRef.current.origin.x + dx,
-        y: dragStartRef.current.origin.y + dy,
+        x: dragStart.origin.x + dx,
+        y: dragStart.origin.y + dy,
       }));
     }
   }
