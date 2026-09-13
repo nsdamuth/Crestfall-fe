@@ -44,6 +44,9 @@ test("row one holds the scene image seat, the cast circles, then the mode chip",
   assert.ok(sceneIndex > 0 && sceneIndex < castIndex && castIndex < chipIndex);
   assert.match(view, /labelMode="replace"/);
   assert.match(view, /restingValue=\{restingMode\.value\}/);
+  // Brief 2 item 4: the mode chip's menu opens upward, aligned to the
+  // trigger, inside the viewport.
+  assert.match(view, /placement="up"/);
   assert.match(view, /disabled=\{sceneImageState !== "ready"\}/);
   assert.match(view, /aria-pressed=\{active\}/);
   assert.match(view, /ring-2 ring-\[var\(--gold-action\)\]/);

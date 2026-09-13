@@ -162,6 +162,7 @@ export default function StoryRoomComposerView({
             isMultiSelect={false}
             restingValue={restingMode.value}
             align="right"
+            placement="up"
             isDisabled={textareaDisabled}
             onToggleOption={(nextValue) => onChangeInputMode?.(nextValue)}
           />
