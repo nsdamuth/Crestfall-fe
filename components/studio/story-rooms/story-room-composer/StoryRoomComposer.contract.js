@@ -1,7 +1,15 @@
-export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "3.0.0";
+export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "3.1.0";
 
 /**
  * Stable UI boundary for the Story Room message composer.
+ *
+ * 3.1.0, fe/chat-studio brief 2 item 11 (13 Sep 2026). ADDITIVE:
+ * `onOpenStoryList` and `onOpenSettings` back two bare icon buttons the
+ * View renders below md only (hidden at md and up): the story list
+ * button at the far left of the cast row, before the scene image seat,
+ * carrying the left rail toggle's glyph; the settings button at the far
+ * right of the send row, after send. Both sheets belong to the chat
+ * shell. The mobile bar's media button is retired.
  *
  * 3.0.0, fe/chat-studio brief 2 item 1 (13 Sep 2026). BREAKING: the
  * Auto circle leaves the cast row and becomes a secondary circle on the
@@ -80,6 +88,8 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "3.0.0";
  * @property {"soon"|"ready"} sceneImageState "soon" renders the scene image seat disabled.
  * @property {string} sceneImageLabel The scene image seat's accessible name.
  * @property {() => void} onAuto Runs the existing continuation with the AUTO speaker.
+ * @property {() => void} onOpenStoryList Below md: opens the story list as a left sheet.
+ * @property {() => void} onOpenSettings Below md: opens the story details sheet.
  * @property {(nextValue: string) => void} onChangeInputMode
  * @property {(speakerId: string) => void} onChangeNextSpeaker
  * @property {(nextValue: string, cursorPosition: number) => void} onChangeDraft

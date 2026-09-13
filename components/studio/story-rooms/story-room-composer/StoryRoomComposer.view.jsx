@@ -6,12 +6,16 @@ import {
   BookOpen,
   Image as ImageIcon,
   MapPin,
+  Settings,
   Sparkles,
   UserRound,
 } from "lucide-react";
 
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import { MENU_PANEL_RECIPE } from "@/components/kit/form-field/menuRecipe";
+import RailPanelGlyph, {
+  BARE_ICON_BUTTON_CLASS,
+} from "../story-room-chat-shell/RailPanelGlyph";
 
 // The three menus above the field (commands, locations, mentions) share
 // the composer menu recipe by construction (fe/chat-studio item 5):
@@ -82,6 +86,8 @@ export default function StoryRoomComposerView({
   sceneImageState = "soon",
   sceneImageLabel = "Scene image, not available yet",
   onAuto,
+  onOpenStoryList,
+  onOpenSettings,
   onChangeInputMode,
   onChangeNextSpeaker,
   onChangeDraft,
@@ -129,8 +135,23 @@ export default function StoryRoomComposerView({
 
         {/* Cast row order (brief 2 item 2): the scene image seat at the
             left edge, the cast circles, the input mode chip pinned
-            right. Nothing else on the row. */}
+            right. Nothing else on the row at md and up. Below md the
+            story list button leads the row (brief 2 item 11, starred
+            placement, the row budget measured in
+            storyRoomComposerMobileRowBudgetDiagnostics.mjs): the left
+            rail toggle's glyph, opening the story list as a left
+            sheet. */}
         <div className="mb-[var(--space-2)] flex items-center gap-[var(--space-2)]">
+          <button
+            type="button"
+            onClick={() => onOpenStoryList?.()}
+            aria-label="Open story list"
+            title="Stories"
+            className={`${BARE_ICON_BUTTON_CLASS} md:hidden`}
+          >
+            <RailPanelGlyph side="left" />
+          </button>
+
           {/* Scene image seat (decision A1): the Chassis serves no scene
               image operation yet (CR-070), so the seat is visible and
               honestly disabled. */}
@@ -226,6 +247,18 @@ export default function StoryRoomComposerView({
             className={`${CIRCLE_BUTTON_CLASS} bg-[var(--gold-action)] text-[var(--tag-fill-ink)] transition-colors duration-[var(--dur-hover)] hover:bg-[var(--gold-bright)] focus-visible:shadow-[var(--focus-ring-ongold)] active:bg-[var(--state-pressed-gold)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`}
           >
             <ArrowUp size={20} aria-hidden="true" />
+          </button>
+
+          {/* Settings, below md only (brief 2 item 11): the story details
+              sheet, at the far right of the send row after send. */}
+          <button
+            type="button"
+            onClick={() => onOpenSettings?.()}
+            aria-label="Story details"
+            title="Story details"
+            className={`${BARE_ICON_BUTTON_CLASS} md:hidden`}
+          >
+            <Settings size={20} aria-hidden="true" />
           </button>
         </div>
       </div>

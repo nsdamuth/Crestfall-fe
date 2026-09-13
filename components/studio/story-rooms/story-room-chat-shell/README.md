@@ -13,7 +13,7 @@
 `useStoryRoomChatShellViewModel.js` is the Chassis. It owns:
 
 - composer draft, input mode, responder, and mention state
-- rail state (`railsState`, defaults: story list closed, details open; mutually exclusive below xl) and the right sheet state below md (`mobilePanel`: details or gallery)
+- rail state (`railsState`, defaults: story list closed, details open; mutually exclusive below xl) and the sheet state below md (`mobilePanel`: stories, details, or null; reset on a room change so the story list sheet never stays open over the next story)
 - the chat color (creator default from the primary Character's palette, page-state override until CR-066)
 - the viewport reads (md and xl) the View used to make itself
 - responder availability reconciliation
@@ -26,8 +26,8 @@
 
 - the three flush columns at md and up (geometry in `app/design-system.css`, `.cf-story-room-grid[data-rails]`, fe/chat-studio item 1)
 - one bare 44px edge toggle per rail, open or closed (brief 2 item 5: the primary sidebar's collapse glyph and bare-icon recipe, the story list toggle on the right edge of its panel, the details toggle on the left edge; a closed rail carries no surface, border, or column color)
-- the 44px mobile bar below md (back chevron, primary character circle, title, story details and gallery buttons); there is no desktop header block
-- the right sheet below md (the details rail inside `KitModalFrame variant="sheet"`) and the delete confirm on `StoryChatDialog`
+- the 44px mobile bar below md (back chevron, primary character circle, title; brief 2 item 11 retired the media button and moved the story list and settings buttons to the composer's rows); there is no desktop header block
+- the two sheets below md: the story list as a left sheet (`KitModalFrame variant="drawer"`, opened from the composer's story list button) and the details rail as the bottom sheet (`variant="sheet"`, opened from the composer's settings button), plus the delete confirm on `StoryChatDialog`
 - Help and Commands overlays
 - desktop and mobile placement of injected child components
 

@@ -24,6 +24,8 @@ const defaultCallbacks = {
   onSelectMention: returnNull,
   onDismissMentionSuggestions: noop,
   onAuto: noop,
+  onOpenStoryList: noop,
+  onOpenSettings: noop,
   onSend: noop,
 };
 

@@ -1,7 +1,23 @@
 export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
-  "story-room-chat-shell.view.v3.0";
+  "story-room-chat-shell.view.v4.0";
 
 /**
+ * v4.0, fe/chat-studio brief 2 item 11 (13 Sep 2026). BREAKING:
+ * `onOpenMobileGallery` and the "gallery" mobile panel are removed with
+ * the mobile bar's media button; the mobile bar keeps the back chevron,
+ * the character circle, and the title. `mobilePanel` is now
+ * "stories" | "details" | null: "stories" mounts the story list as a
+ * left sheet (`KitModalFrame variant="drawer"`), "details" the details
+ * rail as the bottom sheet. ADDITIVE: `onOpenMobileStoryList`;
+ * `composerProps` carries `onOpenStoryList` and `onOpenSettings` for
+ * the composer's below-md buttons (starred placement: story list at
+ * the far left of the cast row, settings at the far right of the send
+ * row; the cast row budget at 390 is measured in
+ * story-room-composer/storyRoomComposerMobileRowBudgetDiagnostics.mjs).
+ * Rails (items 5 and 6, presentation only): the edge toggles carry the
+ * primary sidebar's collapse glyph and bare recipe, an open rail sits
+ * on --surface-2, a closed rail carries no surface.
+ *
  * v3.0, fe/chat-studio item 6 (12 Sep 2026). BREAKING: the right rail is
  * the details rail (`DetailsRailComponent`, `detailsRailProps`,
  * `mobileDetailsRailProps`); `CastPanelComponent`, `StatePanelComponent`,
@@ -48,7 +64,7 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {Object} storyListProps { currentRoomId, refetchKey }
  * @property {Object} detailsRailProps StoryRoomDetailsRail binding props (room, cast, messages, castPanelProps, statePanelProps, runtimeMechanicsPanelProps, chatColorProps, onDeleteRoom, isDeletingRoom, deleteError).
  * @property {Object} mobileDetailsRailProps The same bag for the right sheet; its cast roster closes the sheet on a pick.
- * @property {"details"|"gallery"|null} mobilePanel
+ * @property {"stories"|"details"|null} mobilePanel
  * @property {"COMMANDS"|"HELP"|null} composerHelpPanel
  * @property {Array<Object>} commands
  * @property {Array<Object>} statusSurfaces Host-agnostic authoritative readout projections.
@@ -61,7 +77,7 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {() => void} onToggleLeftPanel
  * @property {() => void} onToggleRightPanel
  * @property {() => void} onOpenMobileDetails
- * @property {() => void} onOpenMobileGallery
+ * @property {() => void} onOpenMobileStoryList
  * @property {() => void} onCloseMobilePanel
  * @property {boolean} isConfirmingDeleteRoom
  * @property {boolean} isDeletingRoom

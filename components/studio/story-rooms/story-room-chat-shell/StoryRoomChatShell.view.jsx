@@ -1,15 +1,8 @@
-import {
-  ChevronLeft,
-  Command,
-  HelpCircle,
-  Image as ImageIcon,
-  Keyboard,
-  MapPin,
-  Settings,
-} from "lucide-react";
+import { ChevronLeft, Command, HelpCircle, Keyboard, MapPin } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
+import RailPanelGlyph, { BARE_ICON_BUTTON_CLASS } from "./RailPanelGlyph";
 import StoryChatDialog from "./StoryChatDialog";
 import { STORY_ROOM_DELETE_CONFIRMATION_LINES } from "./useStoryRoomChatShellViewModel";
 import {
@@ -51,7 +44,6 @@ export default function StoryRoomChatShellView({
   onToggleLeftPanel,
   onToggleRightPanel,
   onOpenMobileDetails,
-  onOpenMobileGallery,
   onCloseMobilePanel,
   onCloseComposerHelpPanel,
   isConfirmingDeleteRoom = false,
@@ -116,8 +108,6 @@ export default function StoryRoomChatShellView({
         title={room?.title}
         primaryCharacter={primaryCharacter}
         backHref={backHref}
-        onOpenSettings={onOpenMobileDetails}
-        onOpenGallery={onOpenMobileGallery}
         LinkComponent={LinkComponent}
       />
 
@@ -214,7 +204,18 @@ export default function StoryRoomChatShellView({
         />
       ) : null}
 
-      {(mobilePanel === "details" || mobilePanel === "gallery") && DetailsRailComponent ? (
+      {/* Below md the story list opens as a left sheet (brief 2 item 11)
+          from the composer's story list button, on the frame's drawer
+          variant; the same story list package the left rail mounts. */}
+      {mobilePanel === "stories" && StoryListComponent ? (
+        <KitModalFrame variant="drawer" onClose={onCloseMobilePanel} ariaLabel="Stories">
+          <div className="flex min-h-0 flex-1 flex-col">
+            <StoryListComponent {...storyListProps} />
+          </div>
+        </KitModalFrame>
+      ) : null}
+
+      {mobilePanel === "details" && DetailsRailComponent ? (
         <KitModalFrame
           variant="sheet"
           sheetGrabber
@@ -224,10 +225,7 @@ export default function StoryRoomChatShellView({
           {/* The frame's sheet caps at 92dvh; the rail scrolls inside a
               bounded column so the header row never has to. */}
           <div className="flex h-[84dvh] min-h-0 w-full flex-col">
-            <DetailsRailComponent
-              {...mobileDetailsRailProps}
-              autoOpenViewer={mobilePanel === "gallery"}
-            />
+            <DetailsRailComponent {...mobileDetailsRailProps} />
           </div>
         </KitModalFrame>
       ) : null}
@@ -254,15 +252,14 @@ export default function StoryRoomChatShellView({
 }
 
 // D2 below md: one 44px bar. Back chevron to the Stories page, the
-// primary character's circle, the title truncated, then two icon
-// buttons: settings opens the story details sheet, media opens the
-// gallery viewer on the featured image.
+// primary character's circle, the title truncated. The media button is
+// retired and the story list and settings buttons moved to the
+// composer's rows (brief 2 item 11, starred placement, the cast row
+// budget measured in storyRoomComposerMobileRowBudgetDiagnostics.mjs).
 function StoryChatMobileBar({
   title = "",
   primaryCharacter = null,
   backHref = "/studio/v2/stories",
-  onOpenSettings,
-  onOpenGallery,
   LinkComponent = "a",
 }) {
   const initial = String(primaryCharacter?.label || title || "S")
@@ -300,59 +297,16 @@ function StoryChatMobileBar({
       <h1 className="min-w-0 flex-1 truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
         {title}
       </h1>
-
-      <button
-        type="button"
-        onClick={() => onOpenSettings?.()}
-        aria-label="Story details"
-        className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)]"
-      >
-        <Settings size={20} aria-hidden="true" />
-      </button>
-
-      <button
-        type="button"
-        onClick={() => onOpenGallery?.()}
-        aria-label="Story gallery"
-        className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)]"
-      >
-        <ImageIcon size={20} aria-hidden="true" />
-      </button>
     </div>
   );
 }
 
 // One 44px toggle per rail (brief 2 item 5): the same glyph and recipe
-// as the primary sidebar's collapse toggle
-// (components/studio/studio-sidebar/StudioSidebar.view.jsx, the bare
-// icon ruled 10 Sep 2026: no circle, no fill, dim ink at rest, gold on
-// hover, deep gold pressed, the global focus ring). The story list
-// toggle anchors to the right edge of its panel and the details toggle
-// to the left edge, so each sits against the center column open or
-// closed. The right rail's glyph mirrors the panel line to its own
-// side.
-const RAIL_TOGGLE_CLASS =
-  "grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation place-items-center rounded-[var(--radius-md)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--gold-action)] active:text-[var(--gold-deep)]";
-
-function RailPanelGlyph({ side = "left" }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="20"
-      height="20"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="3" y="4" width="18" height="16" rx="2" />
-      <path d={side === "right" ? "M15 4v16" : "M9 4v16"} />
-    </svg>
-  );
-}
-
+// as the primary sidebar's collapse toggle, shared from RailPanelGlyph
+// with the composer's mobile story list button (item 11). The story
+// list toggle anchors to the right edge of its panel and the details
+// toggle to the left edge, so each sits against the center column open
+// or closed.
 function RailEdgeToggle({ side, open = false, onClick, openLabel, closeLabel }) {
   const label = open ? closeLabel : openLabel;
 
@@ -368,7 +322,7 @@ function RailEdgeToggle({ side, open = false, onClick, openLabel, closeLabel }) 
         title={label}
         aria-label={label}
         aria-expanded={open}
-        className={RAIL_TOGGLE_CLASS}
+        className={BARE_ICON_BUTTON_CLASS}
       >
         <RailPanelGlyph side={side} />
       </button>

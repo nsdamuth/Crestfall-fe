@@ -167,6 +167,16 @@ export const kitModalFrameFixtures = [
     },
   },
   {
+    id: "drawer",
+    label: "Drawer, left-docked (brief 2 item 11)",
+    props: {
+      variant: "drawer",
+      panelClassName: "",
+      ariaLabelledBy: "kit-modal-frame-sheet-title",
+      children: sheetContent,
+    },
+  },
+  {
     id: "sheetGrabber",
     label: "Sheet, grabber (build-0823 pass 2)",
     props: {

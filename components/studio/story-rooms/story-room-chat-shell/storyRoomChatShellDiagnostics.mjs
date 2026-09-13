@@ -100,8 +100,13 @@ test("portable View owns responsive layout and uses injected children only", () 
     /flex h-full min-h-0 flex-col bg-\[var\(--surface-1\)\]/
   );
   assert.match(view, /RailEdgeToggle/);
-  assert.match(view, /function RailPanelGlyph/);
-  assert.match(view, /<rect x="3" y="4" width="18" height="16" rx="2" \/>/);
+  // The glyph and bare recipe live in RailPanelGlyph.jsx (item 11),
+  // shared with the composer's story list button.
+  assert.match(view, /import RailPanelGlyph, \{ BARE_ICON_BUTTON_CLASS \} from "\.\/RailPanelGlyph"/);
+  assert.match(
+    read("components/studio/story-rooms/story-room-chat-shell/RailPanelGlyph.jsx"),
+    /<rect x="3" y="4" width="18" height="16" rx="2" \/>/
+  );
   assert.match(view, /side === "left" \? "justify-end" : "justify-start"/);
   assert.doesNotMatch(view, /PanelLeftOpen|PanelRightOpen|bg-\[var\(--step-above\)\] text-\[var\(--ink-dim\)\] transition-colors duration-\[var\(--dur-hover\)\] hover:text-\[var\(--ink\)\]"\n      >\n        <Icon/);
   assert.match(view, /StoryChatMobileBar/);
@@ -112,7 +117,13 @@ test("portable View owns responsive layout and uses injected children only", () 
   // rail's Cast drill-in, no card or sticky chrome of its own.
   assert.doesNotMatch(castPanelView, /xl:sticky|xl:top-24|<aside/);
   assert.match(view, /variant="sheet"/);
-  assert.match(view, /mobilePanel === "details" \|\| mobilePanel === "gallery"/);
+  // Brief 2 item 11: the story list opens as a left sheet on the frame's
+  // drawer variant, the details rail as the bottom sheet; the mobile
+  // bar keeps back, character circle, and title only.
+  assert.match(view, /variant="drawer"/);
+  assert.match(view, /mobilePanel === "stories" && StoryListComponent/);
+  assert.match(view, /mobilePanel === "details" && DetailsRailComponent/);
+  assert.doesNotMatch(view, /"gallery"|onOpenMobileGallery|onOpenSettings|onOpenGallery|Story gallery/);
   assert.match(view, /Available commands/);
   assert.match(view, /Quick help/);
   assert.doesNotMatch(
@@ -131,7 +142,10 @@ test("ViewModel preserves responder, mention, and mobile panel projection", () =
   assert.match(viewModel, /participantType === "CHARACTER"/);
   assert.match(viewModel, /locationMentionOptions/);
   assert.match(viewModel, /onOpenMobileDetails: \(\) => setMobilePanel\("details"\)/);
-  assert.match(viewModel, /onOpenMobileGallery: \(\) => setMobilePanel\("gallery"\)/);
+  assert.match(viewModel, /onOpenMobileStoryList: \(\) => setMobilePanel\("stories"\)/);
+  assert.match(viewModel, /onOpenStoryList: \(\) => setMobilePanel\("stories"\)/);
+  assert.match(viewModel, /onOpenSettings: \(\) => setMobilePanel\("details"\)/);
+  assert.doesNotMatch(viewModel, /onOpenMobileGallery|"gallery"/);
   assert.match(viewModel, /onUpdated: reloadStoryRoom/);
   assert.match(viewModel, /disabled: loading \|\| Boolean\(error\) \|\| !chatAllowed/);
 });

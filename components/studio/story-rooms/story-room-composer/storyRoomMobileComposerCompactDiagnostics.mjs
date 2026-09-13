@@ -73,6 +73,19 @@ test("row two is the growing field, the Auto circle, and the gold send circle", 
   assert.ok(view.indexOf("onAuto?.()") < view.indexOf("onSend?.()}\n            disabled={sendDisabled}"));
 });
 
+test("below md the composer carries the story list and settings buttons", () => {
+  // Brief 2 item 11, starred placement: story list at the far left of
+  // the cast row before the scene image seat, settings at the far
+  // right of the send row after send, both hidden at md and up, both
+  // on the sidebar's bare icon recipe.
+  assert.match(view, /onClick=\{\(\) => onOpenStoryList\?\.\(\)\}/);
+  assert.match(view, /onClick=\{\(\) => onOpenSettings\?\.\(\)\}/);
+  assert.match(view, /<RailPanelGlyph side="left" \/>/);
+  assert.equal((view.match(/\$\{BARE_ICON_BUTTON_CLASS\} md:hidden/g) || []).length, 2);
+  assert.match(viewModel, /onOpenStoryList: \(\) => onOpenStoryList\?\.\(\)/);
+  assert.match(viewModel, /onOpenSettings: \(\) => onOpenSettings\?\.\(\)/);
+});
+
 test("retired controls and copy are gone", () => {
   const combined = view + viewModel;
 
@@ -101,4 +114,4 @@ test("view model names the send and Auto circles and the placeholder", () => {
   assert.doesNotMatch(viewModel, /autoContinuationAvailable/);
 });
 
-console.log("Story Room composer bar diagnostics: 6/6 PASS");
+console.log("Story Room composer bar diagnostics: 7/7 PASS");

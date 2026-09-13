@@ -217,6 +217,8 @@ export function useStoryRoomChatShellViewModel({
   const [rightOpen, setRightOpen] = useState(true);
   const leftOpen = isMdUp && safeChrome.leftOwner === "page";
   const { claimLeft, releaseLeft } = safeChrome;
+  // Below md: "stories" (the story list as a left sheet), "details"
+  // (the details rail as a bottom sheet), or null.
   const [mobilePanel, setMobilePanel] = useState(null);
   const [deletingRoom, setDeletingRoom] = useState(false);
   const [deleteError, setDeleteError] = useState("");
@@ -244,7 +246,9 @@ export function useStoryRoomChatShellViewModel({
     [cast]
   );
 
-  // A new room resets the pre-first-message state. Adjusted during
+  // A new room resets the pre-first-message state and closes any open
+  // mobile sheet (the story list sheet navigates to the next story, so
+  // it must not stay open over it; brief 2 item 11). Adjusted during
   // render (the React-sanctioned pattern) rather than in an effect, so
   // no cascading render and no setState-in-effect lint error.
   const [seenRoomId, setSeenRoomId] = useState(roomId);
@@ -252,6 +256,7 @@ export function useStoryRoomChatShellViewModel({
     setSeenRoomId(roomId);
     setFirstMessageSubmitted(false);
     setPlayerCharacterPickerOpen(false);
+    setMobilePanel(null);
   }
 
   // Leaving the route hands the left edge back to the primary nav.
@@ -632,12 +637,17 @@ export function useStoryRoomChatShellViewModel({
       isSending: sending,
       disabled: loading || Boolean(error) || !chatAllowed,
       disabledReason: chatUnavailableReason,
+      // Below md the composer carries the story list and settings
+      // buttons (brief 2 item 11): the story list opens as a left
+      // sheet, settings opens the details sheet.
+      onOpenStoryList: () => setMobilePanel("stories"),
+      onOpenSettings: () => setMobilePanel("details"),
     },
     chatColorProps,
     onToggleLeftPanel: toggleLeftPanel,
     onToggleRightPanel: toggleRightPanel,
     onOpenMobileDetails: () => setMobilePanel("details"),
-    onOpenMobileGallery: () => setMobilePanel("gallery"),
+    onOpenMobileStoryList: () => setMobilePanel("stories"),
     onCloseMobilePanel: closeMobilePanel,
     onCloseComposerHelpPanel: closeComposerHelpPanel,
     isConfirmingDeleteRoom,
