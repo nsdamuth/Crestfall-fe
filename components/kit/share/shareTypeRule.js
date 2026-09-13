@@ -67,7 +67,7 @@ export const SHARE_COPY = Object.freeze({
   submitForReview: "Submit for public review",
   submittedForReview: "Submitted for review",
   submitFailed: "Could not submit for review.",
-  invitation: "Play free on Crestfall",
+  invitation: "Play free on Crestfall Studio",
 });
 
 const PLAYABLE_KINDS = new Set([SHARE_KINDS.CHARACTER, SHARE_KINDS.STORY, SHARE_KINDS.ADVENTURE]);

@@ -147,7 +147,8 @@ for review" when the creation is IN_REVIEW. A creator profile passes
   (follow-up 1; supersedes the Vault sentence from brief 1).
 - "Submit for public review", "Submitted for review", "Could not
   submit for review."
-- Invitation on the card: "Play free on Crestfall".
+- Invitation on the card: "Play free on Crestfall Studio" (follow-up 2;
+  the landing page's signed-out action reads the same).
 
 ## Fixtures
 

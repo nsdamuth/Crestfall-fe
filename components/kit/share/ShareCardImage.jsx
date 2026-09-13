@@ -11,8 +11,10 @@
 // excerpt, the pill): the text column pads one step above the panel
 // step (space-10), the three text blocks sit one consistent step apart
 // (space-3), the excerpt is the ui size clamped to two lines, and the
-// pill is one control step smaller (control-sm high, label type). The
-// text block clips before it can ever reach the pill.
+// pill is one control step smaller (control-sm high, label type). One
+// full step (space-4) always separates the excerpt's last line from
+// the pill (follow-up 2, item 2): the text block clips before it can
+// ever close that gap.
 
 const CANVAS = { width: 1200, height: 630 };
 const ART_WIDTH = 540;
@@ -162,6 +164,7 @@ export default function ShareCardImage({ model = {}, resolve = () => "", fonts =
   const uiSize = toPx(resolve("text-ui"), SCALE);
   const labelSize = toPx(resolve("text-label"), SCALE);
   const step = toPx(resolve("space-3"), SCALE);
+  const fullStep = toPx(resolve("space-4"), SCALE);
   const pillPad = toPx(resolve("space-6"), SCALE);
   const pillHeight = toPx(resolve("control-sm"), SCALE);
   const pad = toPx(resolve("space-10"), SCALE);
@@ -245,7 +248,7 @@ export default function ShareCardImage({ model = {}, resolve = () => "", fonts =
             flexShrink: 1,
             minHeight: 0,
             overflow: "hidden",
-            marginBottom: step,
+            marginBottom: fullStep,
           }}
         >
           <ShareCardLockup resolve={resolve} display={display} sans={sans} />

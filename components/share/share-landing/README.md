@@ -9,7 +9,7 @@ research map: `/c/:id/:slug` (character), `/story/:id/:slug`,
 
 - Signed out: the card's content as page text (featured image, Canon
   and kind badges, title, "by @maker", excerpt) and one gold action,
-  "Play free", linking to `/login?next=<this page, ref included>&ref=<sharer>`
+  "Play free on Crestfall Studio", linking to `/login?next=<this page, ref included>&ref=<sharer>`
   so the visitor returns here after sign in with the sharer's handle
   preserved (the Chassis honors both under CR-074).
 - Signed in: the action reads "Play" and opens the existing creation
@@ -52,7 +52,7 @@ app/c/[id]/[[...slug]]/page.jsx, app/story/..., app/adventure/...
   the sidebar's mark, `public/assets/icons/icons-v7.svg#i-59`, and
   wordmark at the sidebar's proportions, replacing the "Crestfall"
   eyebrow), "Canon", the kind word (Character, Story, Adventure),
-  "Play free", "Play", "Skip to the action".
+  "Play free on Crestfall Studio", "Play", "Skip to the action".
 
 ## Fixtures
 
