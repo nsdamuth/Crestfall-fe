@@ -77,10 +77,14 @@ components/studio/story-rooms/story-room-composer/storyRoomCommandRegistry.js
 ```
 
 The local command registry defines `/help` (with `/?` as an alias),
-`/commands`, and `/format`. `/format` opens the Story text formatting guide
-locally. `StoryRoomChatShell` resolves these commands before the existing
-turn submission path, opens a local help panel, and does not write the
-command into the transcript or send it to the AI provider.
+`/commands`, and `/format`, plus the server commands `/inventory`, `/save`,
+`/like`, and `/mark`. Each entry carries `name`, `aliases`, `description`,
+`usage`, and one `example` (fe/chat-studio item 5); creator Mechanics
+commands merge from the catalog with a null example. `/format` opens the
+Story text formatting guide locally. `StoryRoomChatShell` resolves the
+local commands before the existing turn submission path, opens a local
+help panel, and does not write the command into the transcript or send it
+to the AI provider.
 
 ## Responder circles
 
@@ -97,7 +101,9 @@ command into the transcript or send it to the AI provider.
 ## Command autocomplete
 
 - Typing `/` at the start of an empty composer opens the shared command
-  registry.
+  registry as a tappable list on the composer menu recipe: each row shows
+  the usage, the description, and one example; the footer reads "Commands
+  are hidden from the story."
 - Suggestions filter by command name and aliases while the command token
   is typed.
 - Arrow Up/Down changes the highlighted command.

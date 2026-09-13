@@ -62,6 +62,12 @@ assert.equal(commands.some((command) => command.name === "mark"), true);
 assert.equal(commands.find((command) => command.name === "save")?.requiresArguments, true);
 assert.equal(commands.find((command) => command.name === "like")?.requiresArguments, true);
 assert.equal(commands.find((command) => command.name === "mark")?.requiresArguments, true);
+// fe/chat-studio item 5: every platform command carries one example and
+// the list renders it; creator Mechanics commands merge with a null one.
+for (const name of ["help", "commands", "format", "inventory", "save", "like", "mark"]) {
+  assert.equal(typeof commands.find((command) => command.name === name)?.example, "string", `${name} example`);
+}
+assert.equal(commands.find((command) => command.name === "stats")?.example, null);
 assert.equal(commands.some((command) => command.name === "stats"), true);
 assert.equal(commands.some((command) => command.name === "cast"), true);
 assert.equal(commands.some((command) => command.name === "legacy phrase"), false);
@@ -113,6 +119,9 @@ assert.match(composerVm, /commandOptions/);
 assert.match(composerVm, /command\.requiresArguments !== true/);
 assert.match(composerVm, /command\.requiresArguments[\s\S]*`\/\$\{command\.name\} `/);
 assert.match(composerView, /command\.sourceLabel/);
+assert.match(composerView, /command\.example/);
+assert.match(composerView, /Commands are hidden from the story\./);
+assert.match(composerView, /MENU_PANEL_RECIPE/);
 assert.match(
   shellVm,
   /mergeStoryRoomCommandsWithMechanicsCatalog\([\s\S]*commandCatalog[\s\S]*STORY_ROOM_COMMANDS/

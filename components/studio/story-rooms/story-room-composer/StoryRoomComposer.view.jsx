@@ -11,6 +11,27 @@ import {
 } from "lucide-react";
 
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+import { MENU_PANEL_RECIPE } from "@/components/kit/form-field/menuRecipe";
+
+// The three menus above the field (commands, locations, mentions) share
+// the composer menu recipe by construction (fe/chat-studio item 5):
+// the kit panel, anchored above the field and capped so it stays inside
+// the viewport at 390.
+const COMPOSER_MENU_PANEL_CLASS = `${MENU_PANEL_RECIPE.replace(
+  "max-h-[19rem]",
+  "max-h-[40dvh]"
+)} bottom-full left-0 right-0 mb-[var(--space-2)]`;
+
+const COMPOSER_MENU_HEADING_CLASS =
+  "flex items-center gap-[var(--space-2)] px-[var(--space-3)] py-[var(--space-1)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]";
+
+function composerMenuRowClass(highlighted) {
+  return `flex min-h-[var(--control-md)] w-full items-center gap-[var(--space-3)] rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-2)] text-left transition-colors duration-[var(--dur-hover)] ${
+    highlighted
+      ? "bg-[var(--state-hover-fill)] text-[var(--ink)]"
+      : "text-[var(--ink-dim)] hover:bg-[var(--state-hover-fill)] hover:text-[var(--ink)]"
+  }`;
+}
 
 const SPEAKER_ICONS = {
   auto: Sparkles,
@@ -420,76 +441,76 @@ function ParticipantMentionTextarea({
       />
 
       {commandSuggestions.length ? (
-        <div className="absolute bottom-full left-0 right-0 z-50 mb-2 max-h-64 overflow-y-auto rounded-xl border border-[var(--gold-ornament)]/30 bg-[#080706] p-1 shadow-2xl">
-          <p className="px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-            Composer commands
-          </p>
+        <div role="listbox" aria-label="Commands" className={COMPOSER_MENU_PANEL_CLASS}>
+          <p className={COMPOSER_MENU_HEADING_CLASS}>Commands</p>
 
           {commandSuggestions.map((command, index) => (
             <button
               key={command.name}
               type="button"
+              role="option"
+              aria-selected={index === highlightedCommandIndex}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => restoreCursor(onSelectCommand?.(command.name))}
-              className={`flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2 text-left transition ${
-                index === highlightedCommandIndex
-                  ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "text-[var(--ink-dim)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
-              }`}
+              className={`${composerMenuRowClass(index === highlightedCommandIndex)} flex-col items-start gap-[var(--space-1)]`}
             >
-              <span className="min-w-0">
-                <span className="block font-mono text-sm text-[var(--gold-ornament)]">
+              <span className="flex w-full items-baseline justify-between gap-[var(--space-3)]">
+                <span className="min-w-0 truncate font-mono text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]">
                   {command.usage}
                 </span>
-                <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
-                  {command.description}
-                </span>
-                {command.sourceLabel ? (
-                  <span className="mt-1 block text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
-                    {command.sourceLabel}
-                    {command.ambiguous
-                      ? " · Multiple active definitions"
-                      : ""}
+                {command.aliases?.length ? (
+                  <span className="shrink-0 font-mono text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+                    {command.aliases.map((alias) => `/${alias}`).join(", ")}
                   </span>
                 ) : null}
               </span>
-
-              {command.aliases?.length ? (
-                <span className="shrink-0 pt-0.5 font-mono text-[10px] text-[var(--ink-dim)]">
-                  {command.aliases.map((alias) => `/${alias}`).join(", ")}
+              <span className="block text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+                {command.description}
+              </span>
+              {command.example ? (
+                <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+                  Example: <span className="font-mono text-[var(--ink)]">{command.example}</span>
+                </span>
+              ) : null}
+              {command.sourceLabel ? (
+                <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
+                  {command.sourceLabel}
+                  {command.ambiguous ? " · Multiple active definitions" : ""}
                 </span>
               ) : null}
             </button>
           ))}
+
+          <p className="mt-[var(--space-1)] border-t border-[var(--line-whisper)] px-[var(--space-3)] pt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+            Commands are hidden from the story.
+          </p>
         </div>
       ) : null}
 
       {locationSuggestions.length ? (
-        <div className="absolute bottom-full left-0 right-0 z-50 mb-2 max-h-72 overflow-y-auto rounded-xl border border-[var(--gold-ornament)]/30 bg-[#080706] p-1 shadow-2xl">
-          <p className="flex items-center gap-2 px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-            <MapPin size={12} />
-            Registered locations
+        <div role="listbox" aria-label="Locations" className={COMPOSER_MENU_PANEL_CLASS}>
+          <p className={COMPOSER_MENU_HEADING_CLASS}>
+            <MapPin size={12} aria-hidden="true" />
+            Locations
           </p>
 
           {locationSuggestions.map((option, index) => (
             <button
               key={option.runtimeEntryId}
               type="button"
+              role="option"
+              aria-selected={index === highlightedLocationIndex}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() =>
                 restoreCursor(onSelectLocation?.(option.runtimeEntryId))
               }
-              className={`flex w-full items-start justify-between gap-4 rounded-lg px-3 py-2 text-left transition ${
-                index === highlightedLocationIndex
-                  ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "text-[var(--ink-dim)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
-              }`}
+              className={`${composerMenuRowClass(index === highlightedLocationIndex)} justify-between`}
             >
               <span className="min-w-0">
-                <span className="block truncate text-sm text-[var(--ink)]">
+                <span className="block truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">
                   #{option.label}
                 </span>
-                <span className="mt-1 block truncate text-[10px] uppercase tracking-[0.13em] text-[var(--ink-dim)]">
+                <span className="block truncate text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
                   {[
                     option.isCurrent ? "Current" : null,
                     option.locationScale || null,
@@ -501,7 +522,7 @@ function ParticipantMentionTextarea({
               </span>
 
               {option.aliases?.length ? (
-                <span className="max-w-[40%] shrink-0 truncate pt-0.5 text-[10px] text-[var(--ink-dim)]">
+                <span className="max-w-[40%] shrink-0 truncate text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
                   {option.aliases.join(", ")}
                 </span>
               ) : null}
@@ -511,40 +532,36 @@ function ParticipantMentionTextarea({
       ) : null}
 
       {mentionSuggestions.length ? (
-        <div className="absolute bottom-full left-0 right-0 z-50 mb-2 max-h-64 overflow-y-auto rounded-xl border border-[var(--gold-ornament)]/30 bg-[#080706] p-1 shadow-2xl">
-          <p className="px-3 py-2 text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-            Target active character
-          </p>
+        <div role="listbox" aria-label="Characters" className={COMPOSER_MENU_PANEL_CLASS}>
+          <p className={COMPOSER_MENU_HEADING_CLASS}>Characters</p>
 
           {mentionSuggestions.map((option, index) => (
             <button
               key={option.id}
               type="button"
+              role="option"
+              aria-selected={index === highlightedMentionIndex}
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => restoreCursor(onSelectMention?.(option.id))}
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition ${
-                index === highlightedMentionIndex
-                  ? "bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "text-[var(--ink-dim)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
-              }`}
+              className={composerMenuRowClass(index === highlightedMentionIndex)}
             >
               {option.avatarUrl ? (
                 <img
                   src={option.avatarUrl}
                   alt=""
-                  className="h-8 w-8 rounded-full border border-white/10 object-cover"
+                  className="h-8 w-8 shrink-0 rounded-[var(--radius-full)] bg-[var(--chat-avatar-fill)] object-cover"
                 />
               ) : (
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-[var(--surface-2)] text-xs text-[var(--gold-ornament)]">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-full)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[var(--gold-ornament)]">
                   {String(option.label || "?").charAt(0).toUpperCase()}
                 </span>
               )}
 
               <span className="min-w-0">
-                <span className="block truncate text-sm text-[var(--ink)]">
+                <span className="block truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]">
                   {option.label}
                 </span>
-                <span className="block text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+                <span className="block text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
                   {option.mentionAlias}
                 </span>
               </span>
