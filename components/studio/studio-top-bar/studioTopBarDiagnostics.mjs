@@ -106,7 +106,7 @@ test("the one global search adapter fetches on request and names only real route
 test("Studio Top Bar contract and fixtures cover quiet feed states", () => {
   const contract = read("components/studio/studio-top-bar/StudioTopBar.contract.js");
   const fixtures = read("components/studio/studio-top-bar/StudioTopBar.fixtures.js");
-  assert.match(contract, /studio-top-bar\.view\.v8/);
+  assert.match(contract, /studio-top-bar\.view\.v9/);
   assert.match(contract, /"globalSearch"/);
   assert.doesNotMatch(contract, /"searchValue"|"onSearchChange"/);
   assert.match(fixtures, /globalSearch:/);

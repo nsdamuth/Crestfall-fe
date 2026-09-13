@@ -10,17 +10,21 @@ const view = read("components/studio/story-rooms/story-room-cast-panel/StoryRoom
 const viewModel = read("components/studio/story-rooms/story-room-cast-panel/useStoryRoomCastPanelViewModel.js");
 const contract = read("components/studio/story-rooms/story-room-cast-panel/StoryRoomCastPanel.contract.js");
 
-assert.match(contract, /STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "1\.2\.0"/);
+assert.match(contract, /STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2\.3\.0"/);
 for (const prop of ["manageCastOpen", "onOpenManageCast", "onCloseManageCast"]) {
   assert.match(contract, new RegExp(`@property .*${prop}`));
 }
 
-assert.match(view, />\s*Manage Cast\s*</);
+assert.match(view, />\s*Manage cast\s*</);
 assert.match(view, /aria-haspopup="dialog"/);
-assert.match(view, /role="dialog"/);
-assert.match(view, /aria-modal="true"/);
+// fe/chat-studio item 8: the modal is the shared StoryChatDialog recipe
+// (KitModalFrame owns role, aria-modal, the veil, and the sheet).
+assert.match(view, /<StoryChatDialog/);
+assert.match(view, /primary=\{\{ label: "Done"/);
+assert.match(view, /panelWidth="42rem"/);
 assert.match(view, /Registry NPCs/);
-assert.match(view, /Quick Add/);
+// Item 8: Random liked is the dialog footer's secondary action, no Quick add section.
+assert.match(view, /label: safeRandomLikedAction\.label \|\| "Random liked"/);
 assert.match(view, /<StoryRoomNpcParticipantManagerView \{\.\.\.npcParticipantManager\} \/>/);
 assert.match(view, /onLoadRandomLiked\?\.\(\)/);
 assert.match(view, /safeRandomLikedAction\.busy/);

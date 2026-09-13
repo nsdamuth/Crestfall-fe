@@ -1,18 +1,22 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import {
   getStoryRoomCommandSearchTerms,
   getStoryRoomCommandSuggestions,
 } from "./storyRoomCommandRegistry";
 
+// Input modes (fe/chat-studio item 2): the four the Chassis accepts, as
+// the compact chip menu shows them.
 const INPUT_MODE_OPTIONS = [
   { value: "DIALOGUE", label: "Dialogue" },
   { value: "ACTION", label: "Action" },
-  { value: "OOC", label: "OOC / Note" },
-  { value: "DIRECT", label: "Direct / GM" },
+  { value: "OOC", label: "OOC" },
+  { value: "DIRECT", label: "Direct" },
 ];
+
+export const STORY_ROOM_COMPOSER_PLACEHOLDER = "Send a message";
 
 function normalizeMentionSearch(value) {
   return String(value || "")
@@ -135,7 +139,6 @@ function normalizeLocationOptions(options = []) {
 
 function getSpeakerIconKind(option) {
   if (option?.id === "AUTO") return "auto";
-  if (option?.id === "RANDOM") return "random";
   if (option?.participantType === "NARRATOR") return "narrator";
   return "participant";
 }
@@ -164,20 +167,10 @@ function normalizeMentionOptions(options = []) {
     .filter((option) => option.id && option.label);
 }
 
-function getPlaceholder(inputMode) {
-  if (inputMode === "ACTION") {
-    return "Describe an action visible in the scene...";
-  }
-
-  if (inputMode === "DIRECT") {
-    return "Steer pacing, scene direction, or GM-style movement...";
-  }
-
-  if (inputMode === "OOC") {
-    return "Write an OOC note...";
-  }
-
-  return "Write dialogue or natural player input...";
+// One placeholder in every mode (fe/chat-studio item 2); the mode chip
+// beside the field already names the mode.
+function getPlaceholder() {
+  return STORY_ROOM_COMPOSER_PLACEHOLDER;
 }
 
 export function useStoryRoomComposerViewModel({
@@ -196,11 +189,12 @@ export function useStoryRoomComposerViewModel({
   locationMentionOptions = [],
   commandOptions = [],
   onSend,
-  onOpenCast,
-  onOpenState,
   isSending = false,
   disabled = false,
   disabledReason = "",
+  playerCharacter = null,
+  onPlayerSpeak = null,
+  addCharacter = null,
 } = {}) {
   const [activeMentionQuery, setActiveMentionQuery] = useState(null);
   const [highlightedMentionIndex, setHighlightedMentionIndex] = useState(0);
@@ -294,25 +288,41 @@ export function useStoryRoomComposerViewModel({
       .slice(0, 8);
   }, [activeLocationQuery, normalizedLocationOptions]);
 
-  useEffect(() => {
+  // A changed query resets its highlight, and an emptied draft closes
+  // every menu. Both are adjusted during render (the React-sanctioned
+  // pattern) rather than in effects, so no cascading render and no
+  // setState-in-effect lint error (fe/chat-studio item 2).
+  const mentionQueryKey = activeMentionQuery?.query ?? null;
+  const [seenMentionQueryKey, setSeenMentionQueryKey] = useState(mentionQueryKey);
+  if (mentionQueryKey !== seenMentionQueryKey) {
+    setSeenMentionQueryKey(mentionQueryKey);
     setHighlightedMentionIndex(0);
-  }, [activeMentionQuery?.query]);
+  }
 
-  useEffect(() => {
+  const commandQueryKey = activeCommandQuery?.query ?? null;
+  const [seenCommandQueryKey, setSeenCommandQueryKey] = useState(commandQueryKey);
+  if (commandQueryKey !== seenCommandQueryKey) {
+    setSeenCommandQueryKey(commandQueryKey);
     setHighlightedCommandIndex(0);
-  }, [activeCommandQuery?.query]);
+  }
 
-  useEffect(() => {
+  const locationQueryKey = activeLocationQuery?.query ?? null;
+  const [seenLocationQueryKey, setSeenLocationQueryKey] = useState(locationQueryKey);
+  if (locationQueryKey !== seenLocationQueryKey) {
+    setSeenLocationQueryKey(locationQueryKey);
     setHighlightedLocationIndex(0);
-  }, [activeLocationQuery?.query]);
+  }
 
-  useEffect(() => {
-    if (!String(draft || "")) {
+  const draftKey = String(draft || "");
+  const [seenDraftKey, setSeenDraftKey] = useState(draftKey);
+  if (draftKey !== seenDraftKey) {
+    setSeenDraftKey(draftKey);
+    if (!draftKey) {
       setActiveMentionQuery(null);
       setActiveCommandQuery(null);
       setActiveLocationQuery(null);
     }
-  }, [draft]);
+  }
 
   function updateSuggestionQueries(value, cursorPosition) {
     const normalizedCursor = Number(cursorPosition) || 0;
@@ -498,7 +508,7 @@ export function useStoryRoomComposerViewModel({
 
     if (!option || composerDisabled || sending) return;
 
-    if (["AUTO", "RANDOM"].includes(option.id)) {
+    if (option.id === "AUTO") {
       setNextSpeaker?.(option.id);
       return;
     }
@@ -519,22 +529,25 @@ export function useStoryRoomComposerViewModel({
   const draftText = String(draft || "");
   const sending = Boolean(isSending);
   const composerDisabled = Boolean(disabled);
-  const autoContinuationAvailable =
-    !draftText.trim() && String(nextSpeaker || "AUTO") === "AUTO";
 
+  // Send posts the draft (brief 2 item 1); it no longer folds the
+  // continuation in when the field is empty.
   function submitComposer(options = {}) {
-    if (
-      autoContinuationAvailable &&
-      !String(options?.actionType || "").trim()
-    ) {
-      onSend?.({
-        requestedSpeakerId: "AUTO",
-        actionType: "PLAYER_YIELD_TO_AUTO",
-      });
-      return;
-    }
-
     onSend?.(options);
+  }
+
+  // Auto (brief 2 item 1): the existing continuation call, the AUTO
+  // speaker and the PLAYER_YIELD_TO_AUTO action, never reading the
+  // draft. Auto also becomes the resting speaker so a cast circle's
+  // selected ring clears.
+  function continueAuto() {
+    if (composerDisabled || sending) return;
+
+    setNextSpeaker?.("AUTO");
+    onSend?.({
+      requestedSpeakerId: "AUTO",
+      actionType: "PLAYER_YIELD_TO_AUTO",
+    });
   }
 
   return {
@@ -553,14 +566,40 @@ export function useStoryRoomComposerViewModel({
     placeholder: getPlaceholder(inputMode),
     disabledReason: composerDisabled ? String(disabledReason || "") : "",
     textareaDisabled: composerDisabled || sending,
-    sendDisabled:
-      composerDisabled || sending || (!draftText.trim() && !autoContinuationAvailable),
+    sendDisabled: composerDisabled || sending || !draftText.trim(),
     isSending: sending,
-    submitIsContinuation: autoContinuationAvailable,
-    submitLabel: autoContinuationAvailable ? "Continue Scene" : "Send",
-    submitPendingLabel: autoContinuationAvailable
-      ? "Choosing next responder..."
-      : "Sending...",
+    submitLabel: "Send",
+    submitPendingLabel: "Sending",
+    autoDisabled: composerDisabled || sending,
+    autoLabel: "Auto: the story chooses who speaks next",
+    autoPendingLabel: "Choosing the next speaker",
+    sceneImageState: "soon",
+    sceneImageLabel: "Scene image, not available yet",
+    // The player circle (brief 3 item 2, brief 4 item 4): the selected
+    // player character (avatar or initial), or "You" when none is
+    // chosen. Its tap never opens the picker; while the shell hands down
+    // `onPlayerSpeak` (a player character is set) it runs the existing
+    // continuation with the player character as the requested speaker.
+    playerCircle: {
+      label: String(playerCharacter?.label || "").trim(),
+      avatarUrl: String(playerCharacter?.avatarUrl || "").trim(),
+      canSpeak: typeof onPlayerSpeak === "function" && !composerDisabled && !sending,
+      onSpeak: () => {
+        if (composerDisabled || sending) return;
+        onPlayerSpeak?.();
+      },
+    },
+    // Add character (brief 4 item 5) arrives display-ready from the
+    // shell, which owns the cast cap and the Manage cast dialog.
+    addCharacter:
+      addCharacter && typeof addCharacter === "object"
+        ? {
+            disabled: Boolean(addCharacter.disabled),
+            title: String(addCharacter.title || "Add character"),
+            onPress: () => addCharacter.onPress?.(),
+          }
+        : null,
+    onAuto: continueAuto,
     onChangeInputMode: (nextValue) => setInputMode?.(nextValue),
     onChangeNextSpeaker: activateSpeaker,
     onChangeDraft: changeDraft,
@@ -578,7 +617,5 @@ export function useStoryRoomComposerViewModel({
     onSelectLocation: selectLocation,
     onDismissLocationSuggestions: () => setActiveLocationQuery(null),
     onSend: submitComposer,
-    onOpenCast: () => onOpenCast?.(),
-    onOpenState: () => onOpenState?.(),
   };
 }

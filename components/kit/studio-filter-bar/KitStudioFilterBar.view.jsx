@@ -200,8 +200,11 @@ export default function KitStudioFilterBarView({
             ))}
 
           {sortOptions.length > 0 && (
+            // Sort trigger (fe/chat-studio item 9, 12 Sep 2026): reads
+            // "Sort" at rest and the chosen option's label after a
+            // non-default pick; the filter triggers keep "Filter".
             <KitDropdownView
-              label="Filter"
+              label="Sort"
               ariaLabel="Sort"
               labelMode="replace"
               options={sortOptions}

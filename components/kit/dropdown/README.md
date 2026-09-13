@@ -107,6 +107,14 @@ option's label alone. The menu still marks the default option as
 selected. The former "Sort: <value>" prefix pattern (6 Sep 2026) is
 superseded.
 
+## Placement, 13 Sep 2026 (fe/chat-studio brief 2 item 4, 1.5.0)
+
+`placement="up"` anchors the 700px-and-up popover above the trigger,
+aligned to it, for a trigger that sits on the bottom edge of the
+viewport (the story composer's input mode chip). The measured
+left/right flip still applies; the phone sheet is unaffected. Default
+"down", every existing consumer pixel-stable.
+
 ## Shared mechanics, 6 Sep 2026 (FE/FILTERS)
 
 The open flag, the phone-width chassis select, the measured left/right

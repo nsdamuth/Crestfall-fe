@@ -11,8 +11,13 @@ const read = (relativePath) =>
 
 test("the actual live Story Room route still owns the approved chat presentation", () => {
   const shell = read("components/studio/story-rooms/StoryRoomChatShell.jsx");
+  const rail = read("components/studio/story-rooms/StoryRoomDetailsRail.jsx");
   assert.match(shell, /StoryRoomChatShellView/);
-  assert.match(shell, /StatePanelComponent=\{StoryRoomStatePanel\}/);
+  assert.match(shell, /DetailsRailComponent=\{StoryRoomDetailsRail\}/);
+  // fe/chat-studio item 6: the details rail mounts the state panel twice,
+  // the actions above its rows and the sections in the World state drill-in.
+  assert.match(rail, /<StoryRoomStatePanel \{\.\.\.statePanelProps\} layout="actions" \/>/);
+  assert.match(rail, /<StoryRoomStatePanel \{\.\.\.statePanelProps\} layout="sections" \/>/);
   assert.doesNotMatch(shell, /StoryRoomChatC1C6Binding/);
 });
 

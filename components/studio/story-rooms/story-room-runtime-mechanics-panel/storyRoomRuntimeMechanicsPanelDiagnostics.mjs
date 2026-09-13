@@ -95,10 +95,12 @@ test("portable View renders controls from display-ready state only", () => {
   );
 });
 
-test("Story Room Chat mounts Runtime Mechanics in desktop and mobile state surfaces", () => {
-  const chatShell = read(
-    "components/studio/story-rooms/StoryRoomChatShell.jsx"
-  );
+test("Story Room Chat mounts Runtime Mechanics through the details rail's Mechanics drill-in", () => {
+  // fe/chat-studio item 6: the rail binding owns the mount, the same
+  // props reach the desktop rail and the right sheet below md, and the
+  // existing gate (no binding attached) decides whether the panel or one
+  // quiet line renders.
+  const railBinding = read("components/studio/story-rooms/StoryRoomDetailsRail.jsx");
   const chatViewModel = read(
     "components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js"
   );
@@ -106,18 +108,13 @@ test("Story Room Chat mounts Runtime Mechanics in desktop and mobile state surfa
     "components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx"
   );
 
-  assert.match(chatShell, /import StoryRoomRuntimeMechanicsPanel/);
-  assert.match(
-    chatShell,
-    /RuntimeMechanicsPanelComponent=\{StoryRoomRuntimeMechanicsPanel\}/
-  );
-  assert.equal(
-    (chatView.match(/<RuntimeMechanicsPanelComponent/g) || []).length,
-    2
-  );
+  assert.match(railBinding, /import StoryRoomRuntimeMechanicsPanel/);
+  assert.match(railBinding, /mechanics: runtimeMechanicsPanelProps \? \(/);
+  assert.match(railBinding, /<StoryRoomRuntimeMechanicsPanel \{\.\.\.runtimeMechanicsPanelProps\} \/>/);
   assert.match(chatViewModel, /onUpdated: reloadStoryRoom/);
-  assert.match(chatView, /mobilePanel === "state"/);
-  assert.match(chatViewModel, /onClose: \(\) => setRightOpen\(false\)/);
+  assert.match(chatViewModel, /runtimeMechanicsPanelProps,\s*chatColorProps,/);
+  assert.match(chatView, /mobileDetailsRailProps/);
+  assert.match(chatView, /\{\.\.\.detailsRailProps\}/);
 });
 
 test("contract, fixtures, and protected preview cover representative states", () => {

@@ -395,7 +395,7 @@ export default function StoriesV2Live({
                   }}
                   className={`cf-btn ${manageRooms ? "cf-btn--danger" : "cf-btn--secondary"}`}
                 >
-                  {manageRooms ? "Cancel manage" : "Manage rooms"}
+                  {manageRooms ? "Cancel manage" : "Manage stories"}
                 </button>
                 {manageRooms ? (
                   <button

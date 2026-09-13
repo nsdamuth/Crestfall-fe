@@ -1,17 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import DefaultPlayerCharacterPickerModal from "@/components/studio/account/DefaultPlayerCharacterPickerModal";
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
-import StoryRoomCastPanel from "@/components/studio/story-rooms/StoryRoomCastPanel";
+import { useStudioChrome } from "@/components/studio/StudioChromeProvider";
 import StoryRoomComposer from "@/components/studio/story-rooms/StoryRoomComposer";
-import StoryRoomMobileDrawer from "@/components/studio/story-rooms/StoryRoomMobileDrawer";
-import StoryRoomRuntimeMechanicsPanel from "@/components/studio/story-rooms/StoryRoomRuntimeMechanicsPanel";
-import StoryRoomStatePanel from "@/components/studio/story-rooms/StoryRoomStatePanel";
+import StoryRoomDetailsRail from "@/components/studio/story-rooms/StoryRoomDetailsRail";
+import StoryRoomManageCastDialog from "@/components/studio/story-rooms/StoryRoomManageCastDialog";
+import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
 import StoryRoomStatusSurfaceHost from "@/components/studio/story-rooms/story-room-chat-shell/StoryRoomStatusSurfaceHost";
+import StoryRoomStoryList from "@/components/studio/story-rooms/StoryRoomStoryList";
 import StoryRoomTranscript from "@/components/studio/story-rooms/StoryRoomTranscript";
+import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import useStoryRoomChat from "@/components/studio/story-rooms/hooks/useStoryRoomChat";
 import {
   isStoryPostCreateCharacterConfigurationRequired,
@@ -23,10 +26,20 @@ import {
 import StoryRoomChatShellView from "./story-room-chat-shell/StoryRoomChatShell.view";
 import { useStoryRoomChatShellViewModel } from "./story-room-chat-shell/useStoryRoomChatShellViewModel";
 
+// The cast panel, state panel, and runtime mechanics panel reach the
+// page through StoryRoomDetailsRail's own binding (item 6).
 export default function StoryRoomChatShell({ roomId }) {
   const router = useRouter();
   const chat = useStoryRoomChat(roomId);
   const account = useStudioAccount();
+  // One left panel at a time: the story list rail claims the left edge
+  // through the studio chrome context and the primary nav collapses.
+  const chrome = useStudioChrome();
+  // New chat (brief 4 item 3): the same launch controller the Stories
+  // page uses (prepare, the requirements sheet when a choice is needed,
+  // POST from-template or POST story-rooms, then navigate to the new
+  // chat through the post-create route authority).
+  const launchController = useStoryLaunchController();
 
   useEffect(() => {
     if (!roomId || chat?.loading || !chat?.room) return;
@@ -45,25 +58,34 @@ export default function StoryRoomChatShell({ roomId }) {
     chat,
     account,
     onRoomDeleted,
+    chrome,
+    newChatLaunch: launchController,
   });
 
   return (
     <>
       <StoryRoomChatShellView
         {...viewProps}
-        CastPanelComponent={StoryRoomCastPanel}
         ComposerComponent={StoryRoomComposer}
-        MobileDrawerComponent={StoryRoomMobileDrawer}
-        RuntimeMechanicsPanelComponent={StoryRoomRuntimeMechanicsPanel}
-        StatePanelComponent={StoryRoomStatePanel}
+        DetailsRailComponent={StoryRoomDetailsRail}
         StatusSurfaceHostComponent={StoryRoomStatusSurfaceHost}
+        StoryListComponent={StoryRoomStoryList}
         TranscriptComponent={StoryRoomTranscript}
+        LinkComponent={Link}
       />
 
       {viewProps.playerCharacterPickerProps ? (
         <DefaultPlayerCharacterPickerModal
           {...viewProps.playerCharacterPickerProps}
         />
+      ) : null}
+
+      <StoryLaunchRequirementsSheet picker={launchController.picker} />
+
+      {/* Manage cast (brief 4 item 5), opened from the composer's add
+          character circle or the rail's Cast drill-in button. */}
+      {viewProps.manageCast ? (
+        <StoryRoomManageCastDialog {...viewProps.manageCast} />
       ) : null}
     </>
   );

@@ -3,13 +3,13 @@ import { Activity, Plus, Trash2 } from "lucide-react";
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 export default function StoryRoomRuntimeMechanicsPanelView({
-  eyebrow = "Room Runtime",
-  title = "Mechanics Module",
+  eyebrow = "Story runtime",
+  title = "Mechanics module",
   description = "",
   binding = null,
   attachActionLabel = "Attach mechanics",
   saving = false,
-  savingMessage = "Saving runtime mechanics...",
+  savingMessage = "Saving runtime mechanics",
   statusMessage = "",
   errorMessage = "",
   pickerContent = null,
@@ -20,7 +20,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
   onChangePriority = null,
 }) {
   return (
-    <div className="mt-6 min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-4">
+    <div className="min-w-0 overflow-hidden">
       <div className="flex items-start gap-3">
         <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
           <Activity size={18} />
@@ -64,7 +64,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
                 onClick={() => onRemove?.()}
                 disabled={saving}
                 className="cf-btn cf-btn--danger w-full"
-                title="Remove room mechanics module"
+                title="Remove story mechanics module"
               >
                 <Trash2 size={14} />
                 Remove
@@ -138,7 +138,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
           </div>
         ) : (
           <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-3 text-xs leading-5 text-[var(--ink-dim)]">
-            No room-level Mechanics Module attached.
+            No story-level mechanics module attached.
           </div>
         )}
 

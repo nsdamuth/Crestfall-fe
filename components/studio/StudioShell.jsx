@@ -7,6 +7,7 @@ import StudioSidebar from "@/components/studio/StudioSidebar";
 import StudioMobileNav from "@/components/studio/StudioMobileNav";
 import StudioTopBar from "@/components/studio/StudioTopBar";
 import { StudioAccountProvider } from "@/components/studio/StudioAccountProvider";
+import { StudioChromeProvider } from "@/components/studio/StudioChromeProvider";
 
 import StudioShellView from "./studio-shell/StudioShell.view";
 import { isStoryChatPath } from "./studio-shell/studioShellPathPolicy";
@@ -27,6 +28,10 @@ export default function StudioShell({
   const { themeMode, onToggleTheme } =
     useStudioThemePreference(initialThemeMode);
   const pathname = usePathname();
+  // Story chat runs flush and full screen (fe/chat-studio item 1): the
+  // content section drops its gutters and the sticky top bar hides
+  // below md on that route only.
+  const storyChat = isStoryChatPath(pathname);
 
   const viewProps = useStudioShellViewModel({
     sidebarSlot: <StudioSidebar user={user} />,
@@ -43,16 +48,20 @@ export default function StudioShell({
         themeMode={themeMode}
         onToggleTheme={onToggleTheme}
         onOpenMenu={() => setMobileMenuOpen(true)}
+        hiddenBelowMd={storyChat}
       />
     ),
     reserveMobileDockSpace: !isStoryChatPath(pathname),
+    flush: storyChat,
     themeMode,
     children,
   });
 
   return (
     <StudioAccountProvider>
-      <StudioShellView {...viewProps} />
+      <StudioChromeProvider>
+        <StudioShellView {...viewProps} />
+      </StudioChromeProvider>
     </StudioAccountProvider>
   );
 }

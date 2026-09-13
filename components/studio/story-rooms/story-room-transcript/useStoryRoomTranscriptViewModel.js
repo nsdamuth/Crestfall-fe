@@ -125,6 +125,7 @@ async function writeTextToClipboard(text) {
 }
 
 export function useStoryRoomTranscriptViewModel({
+  openingHeroImage = null,
   messages,
   loading = false,
   sending = false,
@@ -137,6 +138,7 @@ export function useStoryRoomTranscriptViewModel({
   chatGenerationDisabledReason = "",
   onReportMessage = null,
   messageActionState = {},
+  chatColor = null,
 } = {}) {
   const safeMessages = Array.isArray(messages) ? messages : [];
   const [copyFeedback, setCopyFeedback] = useState(null);
@@ -256,6 +258,7 @@ export function useStoryRoomTranscriptViewModel({
         const id = String(message?.id ?? `story-room-message-${index}`);
         const viewProps = getStoryRoomMessageViewProps(message, {
           persistentStatusSurfaceDomains,
+          chatColor,
         });
 
         if (
@@ -333,6 +336,7 @@ export function useStoryRoomTranscriptViewModel({
         };
       }),
     [
+      chatColor,
       chatGenerationAllowed,
       chatGenerationDisabledReason,
       copyFeedback,
@@ -349,6 +353,10 @@ export function useStoryRoomTranscriptViewModel({
   );
 
   return {
+    openingHeroImage:
+      openingHeroImage && typeof openingHeroImage === "object" && openingHeroImage.displayUrl
+        ? openingHeroImage
+        : null,
     messageItems,
     loading: Boolean(loading),
     sending: Boolean(sending),

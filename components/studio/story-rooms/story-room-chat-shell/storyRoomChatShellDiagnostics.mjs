@@ -18,8 +18,8 @@ test("Story Room Chat Shell stays thin and owns app bindings", () => {
   assert.match(shell, /useStoryRoomChat\(roomId\)/);
   assert.match(shell, /useStoryRoomChatShellViewModel/);
   assert.match(shell, /StoryRoomChatShellView/);
-  assert.match(shell, /CastPanelComponent=\{StoryRoomCastPanel\}/);
-  assert.match(shell, /RuntimeMechanicsPanelComponent=\{StoryRoomRuntimeMechanicsPanel\}/);
+  assert.match(shell, /DetailsRailComponent=\{StoryRoomDetailsRail\}/);
+  assert.match(shell, /StoryListComponent=\{StoryRoomStoryList\}/);
   assert.doesNotMatch(shell, /window\.confirm/);
   assert.match(shell, /router\.push\("\/studio\/v2\/stories"\)/);
   assert.doesNotMatch(shell, /useState|deleteStoryRoom|resolveLocalStoryRoomCommand/);
@@ -75,22 +75,57 @@ test("portable View owns responsive layout and uses injected children only", () 
     "components/studio/story-rooms/story-room-cast-panel/StoryRoomCastPanel.view.jsx"
   );
 
-  assert.match(view, /CastPanelComponent/);
+  assert.match(view, /DetailsRailComponent/);
   assert.match(view, /ComposerComponent/);
-  assert.match(view, /MobileDrawerComponent/);
-  assert.match(view, /RuntimeMechanicsPanelComponent/);
-  assert.match(view, /StatePanelComponent/);
+  assert.match(view, /StoryChatDialog/);
+  assert.doesNotMatch(view, /MobileDrawerComponent|CastPanelComponent|StatePanelComponent|RuntimeMechanicsPanelComponent/);
   assert.match(view, /TranscriptComponent/);
-  assert.match(view, /xl:h-\[calc\(100vh-7rem\)\]/);
-  assert.match(view, /hidden min-h-0 overflow-y-auto pr-1 xl:block/);
-  assert.match(view, /min-w-0 pb-4/);
-  assert.doesNotMatch(statePanelView, /2xl:sticky|2xl:top-24/);
-  assert.match(castPanelView, /xl:sticky xl:top-0/);
-  assert.doesNotMatch(castPanelView, /xl:top-24/);
-  assert.match(view, /Room & Cast/);
-  assert.match(view, /Chronicle State/);
-  assert.match(view, /Available Commands/);
-  assert.match(view, /Quick Help/);
+  assert.match(view, /StoryListComponent/);
+  assert.match(view, /md:h-\[calc\(100dvh-var\(--topbar-h\)\)\]/);
+  assert.match(view, /cf-story-room-grid/);
+  // Brief 2 item 5: a closed rail carries no surface, the open rail
+  // paints its own; the toggle is the sidebar's bare panel glyph and
+  // recipe, anchored to the panel edge nearest the center.
+  // Brief 2 item 6: an open rail sits on --surface-2, one step above
+  // the primary sidebar, and the rail views paint no surface of their
+  // own.
+  assert.match(view, /rightOpen \? "border-l border-\[var\(--line-whisper\)\] bg-\[var\(--surface-2\)\]" : ""/);
+  assert.match(view, /leftOpen \? "border-r border-\[var\(--line-whisper\)\] bg-\[var\(--surface-2\)\]" : ""/);
+  assert.doesNotMatch(
+    read("components/studio/story-rooms/story-room-story-list/StoryRoomStoryList.view.jsx"),
+    /flex h-full min-h-0 flex-col bg-\[var\(--surface-1\)\]/
+  );
+  assert.doesNotMatch(
+    read("components/studio/story-rooms/story-room-details-rail/StoryRoomDetailsRail.view.jsx"),
+    /flex h-full min-h-0 flex-col bg-\[var\(--surface-1\)\]/
+  );
+  assert.match(view, /RailEdgeToggle/);
+  // The glyph and bare recipe live in RailPanelGlyph.jsx (item 11),
+  // shared with the composer's story list button.
+  assert.match(view, /import RailPanelGlyph, \{ BARE_ICON_BUTTON_CLASS \} from "\.\/RailPanelGlyph"/);
+  assert.match(
+    read("components/studio/story-rooms/story-room-chat-shell/RailPanelGlyph.jsx"),
+    /<rect x="3" y="4" width="18" height="16" rx="2" \/>/
+  );
+  assert.match(view, /side === "left" \? "justify-end" : "justify-start"/);
+  assert.doesNotMatch(view, /PanelLeftOpen|PanelRightOpen|bg-\[var\(--step-above\)\] text-\[var\(--ink-dim\)\] transition-colors duration-\[var\(--dur-hover\)\] hover:text-\[var\(--ink\)\]"\n      >\n        <Icon/);
+  assert.match(view, /StoryChatMobileBar/);
+  assert.doesNotMatch(view, /StoryRoomHeader|PanelRevealButton|Cast Open|State Open/);
+  assert.doesNotMatch(view, /matchMedia/);
+  assert.doesNotMatch(statePanelView, /2xl:sticky|2xl:top-24|<aside/);
+  // fe/chat-studio item 6: the cast panel is a roster inside the details
+  // rail's Cast drill-in, no card or sticky chrome of its own.
+  assert.doesNotMatch(castPanelView, /xl:sticky|xl:top-24|<aside/);
+  assert.match(view, /variant="sheet"/);
+  // Brief 2 item 11: the story list opens as a left sheet on the frame's
+  // drawer variant, the details rail as the bottom sheet; the mobile
+  // bar keeps back, character circle, and title only.
+  assert.match(view, /variant="drawer"/);
+  assert.match(view, /mobilePanel === "stories" && StoryListComponent/);
+  assert.match(view, /mobilePanel === "details" && DetailsRailComponent/);
+  assert.doesNotMatch(view, /"gallery"|onOpenMobileGallery|onOpenSettings|onOpenGallery|Story gallery/);
+  assert.match(view, /Available commands/);
+  assert.match(view, /Quick help/);
   assert.doesNotMatch(
     view,
     /useStoryRoomChat\(|storyRoomClient|useRouter|next\/navigation|StoryRoomCastPanel from/
@@ -103,11 +138,27 @@ test("ViewModel preserves responder, mention, and mobile panel projection", () =
   );
 
   assert.match(viewModel, /\{ id: "AUTO", label: "Auto" \}/);
-  assert.match(viewModel, /\{ id: "RANDOM", label: "Random" \}/);
+  assert.doesNotMatch(viewModel, /label: "Random"/);
   assert.match(viewModel, /participantType === "CHARACTER"/);
   assert.match(viewModel, /locationMentionOptions/);
-  assert.match(viewModel, /onOpenCast: \(\) => setMobilePanel\("cast"\)/);
-  assert.match(viewModel, /onOpenState: \(\) => setMobilePanel\("state"\)/);
+  assert.match(viewModel, /onOpenMobileDetails: \(\) => setMobilePanel\("details"\)/);
+  assert.match(viewModel, /onOpenMobileStoryList: \(\) => setMobilePanel\("stories"\)/);
+  // Brief 3 item 10: the composer no longer carries the story list and
+  // settings callbacks; the mobile bar opens both sheets through the
+  // View's own onOpenMobileStoryList and onOpenMobileDetails.
+  assert.doesNotMatch(viewModel, /onOpenStoryList: \(\) =>|onOpenSettings: \(\) =>/);
+  const shellView = read(
+    "components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx"
+  );
+  assert.match(shellView, /onOpenStoryList=\{onOpenMobileStoryList\}/);
+  assert.match(shellView, /onOpenDetails=\{onOpenMobileDetails\}/);
+  // Brief 3 item 2 and brief 4 items 4 and 5: the player circle's props
+  // ride composerProps; its tap asks the player character to speak, never
+  // the picker, and the add character circle rides beside it.
+  assert.match(viewModel, /onPlayerSpeak: selectedPlayerCharacter\?\.id/);
+  assert.doesNotMatch(viewModel, /onOpenPlayerCharacterPicker: openPlayerCharacterPicker/);
+  assert.match(viewModel, /addCharacter,\n\s+\},\n\s+manageCast,/);
+  assert.doesNotMatch(viewModel, /onOpenMobileGallery|"gallery"/);
   assert.match(viewModel, /onUpdated: reloadStoryRoom/);
   assert.match(viewModel, /disabled: loading \|\| Boolean\(error\) \|\| !chatAllowed/);
 });
@@ -118,7 +169,7 @@ test("delete wording and navigation behavior remain explicit", () => {
   );
   const shell = read("components/studio/story-rooms/StoryRoomChatShell.jsx");
 
-  assert.match(viewModel, /Delete this Story\?/);
+  assert.match(viewModel, /Delete this story\?/);
   assert.match(viewModel, /permanently deletes this chat session and all messages/);
   assert.match(viewModel, /Interaction totals will remain/);
   assert.match(viewModel, /This cannot be undone/);
@@ -126,6 +177,30 @@ test("delete wording and navigation behavior remain explicit", () => {
   assert.match(viewModel, /await deleteStoryRoom\(roomId\)/);
   assert.match(viewModel, /onRoomDeleted\?\.\(\)/);
   assert.match(shell, /\/studio\/v2\/stories/);
+});
+
+test("delete action is separated from rail toggles and bound through the Details rail", () => {
+  const view = read(
+    "components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx"
+  );
+  const viewModel = read(
+    "components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js"
+  );
+  const binding = read("components/studio/story-rooms/StoryRoomDetailsRail.jsx");
+  const railView = read(
+    "components/studio/story-rooms/story-room-details-rail/StoryRoomDetailsRail.view.jsx"
+  );
+
+  assert.doesNotMatch(view, /DeleteStoryButton/);
+  assert.doesNotMatch(view, /trailing=\{/);
+  assert.match(viewModel, /onRequestDeleteRoom: requestDeleteRoom/);
+  assert.match(viewModel, /isDeletingRoom: deletingRoom/);
+  assert.match(binding, /dangerAction=/);
+  assert.match(binding, /label: "Delete story"/);
+  assert.match(railView, /dangerAction/);
+  assert.match(railView, /<Trash2/);
+  assert.match(view, /StoryChatDialog/);
+  assert.match(view, /onPress: onConfirmDeleteRoom/);
 });
 
 test("contract, fixtures, and protected preview cover shell states", () => {
@@ -143,8 +218,10 @@ test("contract, fixtures, and protected preview cover shell states", () => {
   assert.match(contract, /STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION/);
   assert.match(contract, /ownsStoryRoomTransportHook: "Transport \/ Runtime Hook"/);
   assert.match(contract, /ownsComposerAndPanelState: "ViewModel"/);
-  assert.match(contract, /ownsResponsiveChatLayout: "Portable View"/);
+  assert.match(contract, /ownsResponsiveChatLayout: "CSS block plus Portable View"/);
+  assert.match(contract, /railsState/);
   assert.match(fixtures, /storyRoomChatShellReadyFixture/);
+  assert.match(fixtures, /storyRoomChatShellStoryListFixture/);
   assert.match(fixtures, /storyRoomChatShellLoadingFixture/);
   assert.match(fixtures, /storyRoomChatShellErrorFixture/);
   assert.match(fixtures, /storyRoomChatShellDeleteErrorFixture/);

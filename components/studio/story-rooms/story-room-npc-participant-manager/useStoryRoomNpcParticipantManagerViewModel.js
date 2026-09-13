@@ -170,8 +170,11 @@ export function useStoryRoomNpcParticipantManagerViewModel({
   error = "",
   onLoad,
   onUnload,
+  // Brief 4 item 5: the composer's Manage cast dialog mounts the tools
+  // already open, the way the cast panel's button opened them.
+  initialOpen = false,
 } = {}) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(Boolean(initialOpen));
 
   const state = useMemo(
     () =>

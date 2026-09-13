@@ -9,12 +9,12 @@ const ATTACHED_BINDING = {
 };
 
 const BASE_FIXTURE = {
-  eyebrow: "Room Runtime",
-  title: "Mechanics Module",
+  eyebrow: "Story runtime",
+  title: "Mechanics module",
   description:
-    "Attach one Story mechanics module. Room-level mechanics are the highest runtime source for footers and root room state.",
+    "Attach one story mechanics module. Story-level mechanics are the highest runtime source for footers and root story state.",
   binding: null,
-  attachActionLabel: "Attach Mechanics",
+  attachActionLabel: "Attach mechanics",
   saving: false,
   savingMessage: "Saving runtime mechanics...",
   statusMessage: "",

@@ -190,7 +190,7 @@ function getDeliveryState(message) {
 
 export function getStoryRoomMessageViewProps(
   message,
-  { persistentStatusSurfaceDomains = [] } = {}
+  { persistentStatusSurfaceDomains = [], chatColor = null } = {}
 ) {
   const safeMessage = normalizeObject(message);
   const autoEventMedia = getAutoEventMedia(safeMessage);
@@ -202,8 +202,12 @@ export function getStoryRoomMessageViewProps(
   const openingCharacterPaletteId = isCharacterOpeningMessage(safeMessage)
     ? safeMessage?.metadata?.openingCharacterPaletteId || "CRESTFALL_DEFAULT"
     : null;
-  const palette = presentation
-    ? getCharacterColorPalette(presentation.paletteId)
+  const presentationPaletteId =
+    typeof presentation?.paletteId === "string" && presentation.paletteId.trim()
+      ? presentation.paletteId.trim()
+      : null;
+  const palette = presentationPaletteId
+    ? getCharacterColorPalette(presentationPaletteId)
     : openingCharacterPaletteId
       ? getCharacterColorPalette(openingCharacterPaletteId)
       : null;
@@ -225,15 +229,26 @@ export function getStoryRoomMessageViewProps(
     ? openingGreetingSegments
     : presentation?.segments || [];
 
+  const surfaceTone = getSurfaceTone(safeMessage);
+  // The player's bubble takes the Player chat color (fe/chat-studio item 4):
+  // Crestfall's stock default or the user's Preferences override, passed
+  // down by the shell as `chatColor`. Character palettes never seed it.
+  const bubbleColor =
+    surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER &&
+    typeof chatColor === "string" &&
+    chatColor.trim()
+      ? chatColor.trim()
+      : null;
+
   return {
-    surfaceTone: getSurfaceTone(safeMessage),
+    surfaceTone,
     contentType: autoEventMedia
       ? STORY_ROOM_MESSAGE_CONTENT_TYPES.AUTO_EVENT_MEDIA
       : STORY_ROOM_MESSAGE_CONTENT_TYPES.TEXT,
     speakerLabel: String(safeMessage.speaker || ""),
     speakerAvatarUrl: safeMessage.speakerAvatarUrl || null,
     openingLabel:
-      safeMessage.kind === "OPENING_SCENE" ? "Opening Scene" : "",
+      safeMessage.kind === "OPENING_SCENE" ? "Opening scene" : "",
     modeLabel: String(safeMessage.mode || ""),
     bodyMode: semanticSegments.length
       ? STORY_ROOM_MESSAGE_BODY_MODES.SEMANTIC
@@ -246,11 +261,12 @@ export function getStoryRoomMessageViewProps(
       typeof palette?.colors?.speaker === "string" && palette.colors.speaker.trim()
         ? palette.colors.speaker.trim()
         : null,
+    bubbleColor,
     media: autoEventMedia,
     deliveryState: getDeliveryState(safeMessage),
   };
 }
 
-export function useStoryRoomMessageViewModel({ message } = {}) {
-  return getStoryRoomMessageViewProps(message);
+export function useStoryRoomMessageViewModel({ message, chatColor = null } = {}) {
+  return getStoryRoomMessageViewProps(message, { chatColor });
 }

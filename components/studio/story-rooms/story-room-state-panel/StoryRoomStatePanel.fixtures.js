@@ -2,14 +2,14 @@ const LIVE_ACTIONS = [
   {
     id: "export-chat",
     iconKey: "download",
-    label: "Export Chat",
+    label: "Export",
     disabled: false,
     onPress: null,
   },
   {
     id: "share-snapshot",
     iconKey: "share",
-    label: "Share Snapshot",
+    label: "Share",
     disabled: false,
     onPress: null,
   },
@@ -39,7 +39,7 @@ function standardSections({
       row("objective", "Objective", objective),
       row("scenario", "Scenario", scenario),
     ]),
-    section("world-state", "world", "World State", [
+    section("world-state", "world", "World state", [
       row("location", "Location", location),
       row("time", "Time", time),
       row("time-source", "Time Source", timeSource),

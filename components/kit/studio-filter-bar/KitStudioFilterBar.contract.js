@@ -1,4 +1,4 @@
-export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.3.0";
+export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.3.1";
 
 /**
  * Stable portable UI boundary for the shared sticky filter bar kit
@@ -37,6 +37,12 @@ export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.3.0";
  * Contract-breaking change from v1.0.0: filter groups render as
  * dropdowns, so options gain the KitDropdown option fields
  * (description, isDisabled) and groups gain isMultiSelect.
+ *
+ * 2.3.1 (fe/chat-studio item 9, 12 Sep 2026), copy only: the sort
+ * trigger reads "Sort" at rest and the chosen option's label after a
+ * non-default pick; every filter trigger keeps reading "Filter". The
+ * mechanism (KitDropdown labelMode "replace" with restingValue) is
+ * unchanged.
  *
  * @typedef {Object} KitStudioFilterBarOption
  * @property {string} value

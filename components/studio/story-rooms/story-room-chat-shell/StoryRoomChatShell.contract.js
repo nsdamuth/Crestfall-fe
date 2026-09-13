@@ -1,41 +1,146 @@
 export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
-  "story-room-chat-shell.view.v1.2";
+  "story-room-chat-shell.view.v4.4";
 
 /**
+ * v4.4, Player chat-color independence (13 Sep 2026), additive/rename:
+ * the Player no longer inherits a Character/Narrator palette as its default.
+ * `chatColorProps.defaultPaletteId` identifies the stock Crestfall default;
+ * a Player override remains presentation-only and Character palettes continue
+ * to style Character-authored messages independently.
+ *
+ * v4.3, fe/chat-studio review round 6 (13 Sep 2026), additive:
+ * `onRequestDeleteRoom` backs a red trash control (Trash2, the bare
+ * icon recipe, --status-danger ink) at the right end of the details
+ * rail's toggle row while the rail is open, and at the top right of
+ * the details sheet below md; it opens the existing "Delete this
+ * story?" confirm. The details rail's three-dot menu is retired
+ * (details rail contract 1.6.0), and `detailsRailProps` no longer
+ * carries `onDeleteRoom` or `isDeletingRoom`.
+ *
+ * v4.2, fe/chat-studio brief 4 (13 Sep 2026), additive. Item 3:
+ * `storyListProps` carries `newChat` (display-ready button state) and
+ * the ViewModel takes `newChatLaunch`, the launch controller the
+ * binding shell owns (`useStoryLaunchController`, the Stories page's);
+ * a tap starts a new chat from the story's source creation
+ * (`resolveStorySourceCreation`: the source template, else the default
+ * Character) and the controller navigates to it. Item 4: `composerProps`
+ * carries `onPlayerSpeak` (the existing continuation with the player
+ * character participant as the requested speaker, null when no player
+ * character is set) in place of `playerCharacterPickerAvailable` and
+ * `onOpenPlayerCharacterPicker` (composer contract 5.0.0); the
+ * transcript prompt still opens the picker before the first message.
+ * Item 5: `composerProps` carries `addCharacter` (the plus circle after
+ * the last cast circle, disabled at the cap of the player plus four
+ * NPCs, `STORY_ROOM_CAST_NPC_CAP`, a frontend constant until CR-071);
+ * the ViewModel owns the Manage cast dialog and returns `manageCast`
+ * (StoryRoomManageCastDialog binding props, null when closed) for the
+ * binding shell to render; `castPanelProps.onOpenManageCast` points the
+ * rail's Manage cast button at that one dialog. One participants source
+ * feeds both the cast row and the rail's Cast list: `cast` from
+ * useStoryRoomChat, the row derived through `selectCastRowOptions`.
+ * Item 7 (presentation only): the mobile bar's two panel buttons carry
+ * the rail toggles' glyph (story list left, details right, no gear) and
+ * turn while their sheet is open, read from `mobilePanel`.
+ *
+ * v4.1, fe/chat-studio brief 3 (13 Sep 2026), additive. Item 1: the
+ * composer renders in a full-width shell row beneath the rails grid,
+ * its content in the transcript's grid column. Item 10: the mobile bar
+ * carries the story list and settings buttons again, pinned right after
+ * the title (`onOpenMobileStoryList` and `onOpenMobileDetails`, both
+ * already on the View); `composerProps` no longer carries
+ * `onOpenStoryList` or `onOpenSettings` (composer contract 4.0.0) and
+ * carries `playerCharacter`, `playerCharacterPickerAvailable`, and
+ * `onOpenPlayerCharacterPicker` for the player circle (item 2). Item 3:
+ * the rail toggles' glyph turns 180 degrees between open and closed.
+ *
+ * v4.0, fe/chat-studio brief 2 item 11 (13 Sep 2026). BREAKING:
+ * `onOpenMobileGallery` and the "gallery" mobile panel are removed with
+ * the mobile bar's media button; the mobile bar keeps the back chevron,
+ * the character circle, and the title. `mobilePanel` is now
+ * "stories" | "details" | null: "stories" mounts the story list as a
+ * left sheet (`KitModalFrame variant="drawer"`), "details" the details
+ * rail as the bottom sheet. ADDITIVE: `onOpenMobileStoryList`;
+ * `composerProps` carries `onOpenStoryList` and `onOpenSettings` for
+ * the composer's below-md buttons (starred placement: story list at
+ * the far left of the cast row, settings at the far right of the send
+ * row; the cast row budget at 390 is measured in
+ * story-room-composer/storyRoomComposerMobileRowBudgetDiagnostics.mjs).
+ * Rails (items 5 and 6, presentation only): the edge toggles carry the
+ * primary sidebar's collapse glyph and bare recipe, an open rail sits
+ * on --surface-2, a closed rail carries no surface.
+ *
+ * v3.0, fe/chat-studio item 6 (12 Sep 2026). BREAKING: the right rail is
+ * the details rail (`DetailsRailComponent`, `detailsRailProps`,
+ * `mobileDetailsRailProps`); `CastPanelComponent`, `StatePanelComponent`,
+ * `RuntimeMechanicsPanelComponent`, `MobileDrawerComponent`,
+ * `castPanelProps`, `mobileCastPanelProps`, `desktopStatePanelProps`,
+ * `mobileStatePanelProps`, `runtimeMechanicsPanelProps`,
+ * `onOpenMobileCast`, and `onOpenMobileState` leave the View (the rail's
+ * own binding composes those panels). `mobilePanel` is now
+ * "details" | "gallery" | null: below md the settings button opens the
+ * rail as a bottom sheet and the media button opens it with the gallery
+ * viewer on the featured image (`onOpenMobileDetails`,
+ * `onOpenMobileGallery`). The delete confirm is the shared
+ * StoryChatDialog (ruling D3, danger tone per decision E1). The center
+ * column sits on the canvas and the rails on the card surface (Brian's
+ * amendment).
+ *
+ * v2.1, fe/chat-studio item 4 (12 Sep 2026), additive: `chatColorProps`
+ * ({ paletteId, defaultPaletteId, isOverridden, options, onChange,
+ * onReset }) carries the Player chat color state the ViewModel owns
+ * (Crestfall stock default, page-state override until CR-066) for the
+ * Preferences drill-in the right rail mounts in item 6;
+ * `transcriptProps.chatColor` is the resolved anchor.
+ *
+ * v2.0, fe/chat-studio item 1 (12 Sep 2026). BREAKING: `layoutClass`,
+ * `onShowLeftPanel`, and `onShowRightPanel` are removed; the desktop
+ * header block (eyebrow, title, type line, Cast Open and State Open
+ * toggles, status pills) is gone. ADDITIVE: `railsState` drives the grid
+ * through app/design-system.css (.cf-story-room-grid[data-rails]),
+ * `swipeEnabled` replaces the View's own viewport read, `primaryCharacter`
+ * and `backHref` feed the 44px mobile bar below md, `storyListProps` and
+ * `StoryListComponent` mount the left rail story list (ruling D4), and
+ * `LinkComponent` keeps the View portable for the back link. The rails
+ * collapse to one bare 44px edge toggle each. Left rail ownership goes
+ * through StudioChromeProvider (one left panel at a time).
+ *
  * @typedef {Object} StoryRoomChatShellViewProps
  * @property {Object} room
- * @property {string} layoutClass
+ * @property {"none"|"left"|"right"|"both"} railsState
  * @property {boolean} leftOpen
  * @property {boolean} rightOpen
- * @property {"cast"|"state"|null} mobilePanel
+ * @property {boolean} swipeEnabled True below md, where horizontal swipes open the mobile panels.
+ * @property {{label: string, avatarUrl: string}|null} primaryCharacter The first Character responder, for the mobile bar circle.
+ * @property {string} backHref The mobile bar's back link, the Stories page.
+ * @property {Object} storyListProps { currentRoomId, refetchKey, newChat }
+ * @property {Object} detailsRailProps StoryRoomDetailsRail binding props (room, cast, messages, castPanelProps, statePanelProps, runtimeMechanicsPanelProps, chatColorProps, deleteError).
+ * @property {Object} mobileDetailsRailProps The same bag for the right sheet; its cast roster closes the sheet on a pick.
+ * @property {"stories"|"details"|null} mobilePanel
  * @property {"COMMANDS"|"HELP"|null} composerHelpPanel
  * @property {Array<Object>} commands
  * @property {Array<Object>} statusSurfaces Host-agnostic authoritative readout projections.
  * @property {string} statusSurfaceError Non-fatal persistent surface loading error.
- * @property {Object} castPanelProps
- * @property {Object} mobileCastPanelProps
  * @property {Object} transcriptProps
  * @property {Object|null} playerCharacterPickerProps binding-shell props for the
  *   transient pre-first-message Player Character picker
  * @property {Object} composerProps
- * @property {Object} desktopStatePanelProps
- * @property {Object} mobileStatePanelProps
- * @property {Object|null} runtimeMechanicsPanelProps
+ * @property {Object|null} manageCast StoryRoomManageCastDialog binding props while the Manage cast dialog is open; rendered by the binding shell, not the View.
+ * @property {{paletteId: string, defaultPaletteId: string, isOverridden: boolean, options: Array<{id: string, label: string, family: string, swatch: string}>, onChange: (paletteId: string) => void, onReset: () => void}} chatColorProps
  * @property {() => void} onToggleLeftPanel
  * @property {() => void} onToggleRightPanel
- * @property {() => void} onShowLeftPanel
- * @property {() => void} onShowRightPanel
- * @property {() => void} onOpenMobileCast
- * @property {() => void} onOpenMobileState
+ * @property {() => void} onOpenMobileDetails
+ * @property {() => void} onOpenMobileStoryList
  * @property {() => void} onCloseMobilePanel
+ * @property {boolean} isConfirmingDeleteRoom
+ * @property {boolean} isDeletingRoom
+ * @property {() => void} onRequestDeleteRoom Opens the delete confirm from the trash control (review round 6).
  * @property {() => void} onCloseComposerHelpPanel
- * @property {import("react").ElementType} CastPanelComponent
  * @property {import("react").ElementType} ComposerComponent
- * @property {import("react").ElementType} MobileDrawerComponent
- * @property {import("react").ElementType} RuntimeMechanicsPanelComponent
- * @property {import("react").ElementType} StatePanelComponent
+ * @property {import("react").ElementType} DetailsRailComponent
  * @property {import("react").ElementType} StatusSurfaceHostComponent
+ * @property {import("react").ElementType} StoryListComponent
  * @property {import("react").ElementType} TranscriptComponent
+ * @property {import("react").ElementType} LinkComponent Injected next/link; "a" when portable.
  */
 
 export const STORY_ROOM_CHAT_SHELL_PORTABILITY_RULES = Object.freeze({
@@ -50,6 +155,8 @@ export const STORY_ROOM_CHAT_SHELL_PORTABILITY_RULES = Object.freeze({
   ownsCapabilityPresentation: "ViewModel",
   ownsLocalCommandResolution: "ViewModel",
   ownsStoryRoomDeletionClient: "ViewModel",
-  ownsResponsiveChatLayout: "Portable View",
-  ownsHelpAndHeaderMarkup: "Portable View",
+  ownsViewportReads: "ViewModel",
+  ownsResponsiveChatLayout: "CSS block plus Portable View",
+  ownsHelpAndMobileBarMarkup: "Portable View",
+  ownsDetailsRailComposition: "StoryRoomDetailsRail Binding Shell",
 });

@@ -1,6 +1,15 @@
-export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.6.0";
+export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.7.0";
 
 /**
+ * 1.6.0 to 1.7.0 (fe/chat-studio brief 2 item 11, 13 Sep 2026),
+ * additive: `variant="drawer"`, the sheet recipe docked to the LEFT
+ * edge at full viewport height (panel-lift surface, --line hairline on
+ * the right edge, --radius-lg right corners, --shadow-modal, the
+ * sheet's structural header row with the close control, safe-area
+ * padding, a flex column so caller content can own the scroll). For a
+ * side sheet such as the story chat's mobile story list. Every
+ * existing variant is untouched.
+ *
  * Stable portable UI boundary for the unified modal frame kit piece
  * (docs/BUILD-BLUEPRINT.md section 2.5, RULED 9 Aug 2026, carved this
  * pass per docs/SPRINT-A-PLAN.md section 1). The ruled PANEL standing
@@ -24,7 +33,7 @@ export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.6.0";
  *   ModalShell behavior
  * @property {boolean} closeOnEscape default true, pass-through to
  *   ModalShell behavior
- * @property {"modal"|"sheet"|"viewer"} variant default "modal". "modal"
+ * @property {"modal"|"sheet"|"drawer"|"viewer"} variant default "modal". "modal"
  *   is the ruled responsive frame: at 700px and up a centered floating
  *   surface, unchanged. Under 700px (1.2.0, 22 Aug 2026, mobile modal
  *   law, supersedes R4): bottom-anchored at the panel's own content

@@ -5,9 +5,20 @@ export default function StudioShellView({
   mobileNavSlot = null,
   topBarSlot = null,
   reserveMobileDockSpace = true,
+  flush = false,
   themeMode = "dark",
   children = null,
 }) {
+  // flush (1.4.0, fe/chat-studio item 1): a full-screen workspace such
+  // as story chat owns its own edges, so the section drops every gutter
+  // and becomes a min-h-0 flex column the page can fill exactly. The
+  // padded branch is byte for byte the pre-1.4.0 string.
+  const sectionClassName = flush
+    ? "min-w-0 w-full flex-1 flex min-h-0 flex-col overflow-hidden p-0"
+    : `min-w-0 w-full flex-1 px-[var(--space-5)] pt-0 sm:px-[var(--space-8)] lg:px-[var(--space-10)] lg:pb-[var(--space-8)] ${
+        reserveMobileDockSpace ? "pb-24" : "pb-0"
+      }`;
+
   return (
     <main
       data-studio-shell=""
@@ -27,13 +38,7 @@ export default function StudioShellView({
           {mobileNavSlot}
           {topBarSlot}
 
-          <section
-            className={`min-w-0 w-full flex-1 px-[var(--space-5)] pt-0 sm:px-[var(--space-8)] lg:px-[var(--space-10)] lg:pb-[var(--space-8)] ${
-              reserveMobileDockSpace ? "pb-24" : "pb-0"
-            }`}
-          >
-            {children}
-          </section>
+          <section className={sectionClassName}>{children}</section>
         </div>
       </div>
     </main>

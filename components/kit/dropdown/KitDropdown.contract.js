@@ -1,6 +1,14 @@
-export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.4.0";
+export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.5.0";
 
 /**
+ * 1.4.0 to 1.5.0 (fe/chat-studio brief 2 item 4, 13 Sep 2026),
+ * additive: `placement` "up" anchors the 700px-and-up popover above
+ * the trigger instead of below it, for a trigger on the bottom edge of
+ * the viewport (the story composer's input mode chip). Horizontal
+ * alignment (`align` plus the measured flip) is unchanged, and the
+ * phone sheet is unaffected. Default "down", every existing consumer
+ * pixel-stable.
+ *
  * 1.3.0 to 1.4.0 (eight-fix package FIX 5, RULED 12 Sep 2026),
  * additive: `labelMode` "replace" lets a non-resting single-select
  * value take the trigger over, so the trigger reads the chosen
@@ -91,6 +99,11 @@ export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.4.0";
  *   2026) "replace": a non-resting single-select value replaces
  *   `label` on the trigger; while resting, the trigger reads `label`
  *   with no value. Default "prefix". Multi-select ignores it.
+ * @property {"down"|"up"} [placement] (added 1.5.0, 13 Sep 2026) the
+ *   popover's vertical anchor at 700px and up. Default "down" (below
+ *   the trigger). "up" opens the panel above the trigger, aligned to
+ *   it, for a trigger on the bottom edge of the viewport. The phone
+ *   sheet is unaffected.
  */
 
 export {};

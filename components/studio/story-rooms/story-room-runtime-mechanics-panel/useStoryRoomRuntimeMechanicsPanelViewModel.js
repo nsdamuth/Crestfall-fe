@@ -136,15 +136,15 @@ export function buildStoryRoomRuntimeMechanicsPanelState({
     : "";
 
   return {
-    eyebrow: "Room Runtime",
-    title: "Mechanics Module",
+    eyebrow: "Story runtime",
+    title: "Mechanics module",
     description:
-      "Attach one Story mechanics module. Room-level mechanics are the highest runtime source for footers and root room state.",
+      "Attach one story mechanics module. Story-level mechanics are the highest runtime source for footers and root story state.",
     binding: hasBinding
       ? {
           title:
             currentBinding.moduleInstanceTitle ||
-            "Untitled Mechanics Module",
+            "Untitled mechanics module",
           creationId: moduleCreationId || currentBinding.moduleInstanceId || "",
           moduleId: currentBinding.moduleId || TRACKERS_MODULE_ID,
           trigger:
@@ -156,10 +156,10 @@ export function buildStoryRoomRuntimeMechanicsPanelState({
         }
       : null,
     attachActionLabel: hasBinding
-      ? "Replace Mechanics"
-      : "Attach Mechanics",
+      ? "Replace mechanics"
+      : "Attach mechanics",
     saving: Boolean(saving),
-    savingMessage: "Saving runtime mechanics...",
+    savingMessage: "Saving runtime mechanics",
     statusMessage: normalizeString(statusMessage),
     errorMessage: normalizeString(errorMessage),
   };

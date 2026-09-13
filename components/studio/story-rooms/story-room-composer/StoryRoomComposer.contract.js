@@ -1,21 +1,103 @@
-export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "1.5.0";
+export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "5.2.0";
 
 /**
  * Stable UI boundary for the Story Room message composer.
  *
- * The View owns desktop/mobile composition, disclosure of mobile tools,
- * textarea sizing, Enter/Shift+Enter submission behavior, command/mention-menu presentation, and disabled future-tool
- * placeholders. It does not receive raw Story Room participant records and
- * does not own message submission, room state, persistence, or API behavior.
+ * 5.2.0, fe/chat-studio review round 4 item 2 (13 Sep 2026, Brian's
+ * browser review). Presentation only, no prop changed: the scene image
+ * seat, the player circle, every cast circle, and the add character
+ * circle render at one size, the 44px --control-md circle (the cast
+ * and player circles drop their 36px inner disc); the character chosen
+ * to speak next carries the gold outline on the inside of its circle
+ * (ring-inset) instead of outside it.
+ *
+ * 5.1.0, fe/chat-studio brief 4 item 5 (13 Sep 2026). ADDITIVE:
+ * `addCharacter` ({ disabled, title, onPress } | null) backs a 44px plus
+ * circle on the secondary recipe after the last character circle,
+ * inside the scrolling cast strip; its tap opens the Manage cast dialog
+ * the chat shell owns. At the cap (the player plus four NPCs, a
+ * frontend constant until the Chassis serves one, CR-071) it is
+ * disabled with the title "Up to 4 characters". Null hides it.
+ *
+ * 5.0.0, fe/chat-studio brief 4 item 4 (13 Sep 2026). BREAKING:
+ * `playerCircle.canPick` and `playerCircle.onPick` are replaced by
+ * `playerCircle.canSpeak` and `playerCircle.onSpeak`. The circle never
+ * opens the player character picker (the player character is set once
+ * at the start, through the transcript prompt); while `canSpeak` is
+ * true its tap asks the player character to speak next through the
+ * existing continuation call (the shell passes the player character
+ * participant as the requested speaker on a PLAYER_YIELD_TO_CHARACTER
+ * turn). The ViewModel input `onPlayerSpeak` replaces
+ * `playerCharacterPickerAvailable` and `onOpenPlayerCharacterPicker`.
+ * The "You" initial stays when no avatar exists.
+ *
+ * 4.0.0, fe/chat-studio brief 3 item 10 (13 Sep 2026). BREAKING:
+ * `onOpenStoryList` and `onOpenSettings` are removed with the below-md
+ * story list and settings buttons, which return to the story chat
+ * page's top bar (the chat shell's mobile bar). Below md the rows hold
+ * only the scene image seat, the player circle, the character circles,
+ * and the mode chip on row one; the field, Auto, and send on row two,
+ * Auto and send pinned to the right edge. The row widths at 390 are
+ * measured in storyRoomComposerMobileRowBudgetDiagnostics.mjs.
+ *
+ * 3.2.0, fe/chat-studio brief 3 item 2 (13 Sep 2026). ADDITIVE:
+ * `playerCircle` ({ label, avatarUrl, canPick, onPick }) backs the
+ * player circle the View renders first on the cast row, after the scene
+ * image seat and before the character circles: the selected player
+ * character's avatar or initial, or "You" when none is chosen. While
+ * `canPick` is true the circle is a button whose tap opens the existing
+ * select player character flow; otherwise it is a plain mark. It never
+ * reports a speaker: the Chassis regulator flags a player character
+ * chosen as responder, and no PLAYER speaker option exists, so the
+ * brief's player-as-next-speaker tap is held for Brian's ruling.
+ *
+ * 3.1.0, fe/chat-studio brief 2 item 11 (13 Sep 2026). ADDITIVE:
+ * `onOpenStoryList` and `onOpenSettings` back two bare icon buttons the
+ * View renders below md only (hidden at md and up): the story list
+ * button at the far left of the cast row, before the scene image seat,
+ * carrying the left rail toggle's glyph; the settings button at the far
+ * right of the send row, after send. Both sheets belong to the chat
+ * shell. The mobile bar's media button is retired.
+ *
+ * 3.0.0, fe/chat-studio brief 2 item 1 (13 Sep 2026). BREAKING: the
+ * Auto circle leaves the cast row and becomes a secondary circle on the
+ * send row, between the field and the gold send circle. `onAuto` runs
+ * the existing continuation (the AUTO speaker, PLAYER_YIELD_TO_AUTO)
+ * and never depends on the draft; `autoDisabled`, `autoLabel`, and
+ * `autoPendingLabel` describe it. The send circle posts the draft only:
+ * `submitIsContinuation` is removed, `submitLabel` is always "Send",
+ * and `sendDisabled` is true on an empty draft. `nextSpeakerOptions`
+ * still carries the "AUTO" option for the ViewModel; the View renders
+ * only the cast entries.
+ *
+ * 2.0.0, fe/chat-studio item 2 (12 Sep 2026). BREAKING: one composer bar
+ * at every width replaces the desktop and mobile compositions; the
+ * mobile tools drawer, the responder overflow picker, the Next Speaker
+ * and Input Mode labels, the Random speaker (iconKind "random"), the two
+ * Soon scene buttons, and the old continue label are retired;
+ * `onOpenCast` and `onOpenState` are removed. ADDITIVE: `sceneImageState`
+ * ("soon" | "ready") and `sceneImageLabel` describe the one scene image
+ * seat, disabled until the Chassis serves the operation (CR-070).
+ *
+ * The View owns the bar: a 44px circle per cast member and the Auto
+ * circle (tap reports the speaker through onChangeNextSpeaker), the
+ * input mode chip (KitDropdown, labelMode replace, the first mode as
+ * the resting value), the scene image seat, the growing message field,
+ * and the gold send circle. It owns textarea sizing, Enter and
+ * Shift+Enter submission, and the command, mention, and location menu
+ * presentation. It does not receive raw Story Room participant records
+ * and does not own message submission, room state, persistence, or API
+ * behavior.
  *
  * @typedef {Object} StoryRoomComposerInputModeOption
  * @property {string} value Semantic input-mode value.
  * @property {string} label Display label.
  *
  * @typedef {Object} StoryRoomComposerSpeakerOption
- * @property {string} id Opaque speaker-selection value.
+ * @property {string} id Opaque speaker-selection value ("AUTO" or a participant id).
  * @property {string} label Display label.
- * @property {"auto"|"narrator"|"participant"|"random"} iconKind Display icon category.
+ * @property {"auto"|"narrator"|"participant"} iconKind Display icon category.
+ * @property {string} [avatarUrl] Display-ready avatar URL for participants.
  *
  * @typedef {Object} StoryRoomComposerMention
  * @property {string} participantId Opaque participant identifier.
@@ -41,14 +123,21 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "1.5.0";
  * @property {boolean} highlightedCommandExact Whether Enter should execute the exact selected command.
  * @property {Object[]} locationSuggestions Filtered display-ready Location Registry options.
  * @property {number} highlightedLocationIndex
- * @property {string} placeholder
+ * @property {string} placeholder "Send a message" in every mode.
  * @property {string} disabledReason User-facing explanation when chat authoring is unavailable.
  * @property {boolean} textareaDisabled
  * @property {boolean} sendDisabled
  * @property {boolean} isSending
- * @property {boolean} submitIsContinuation Whether the empty AUTO action continues the scene.
- * @property {string} submitLabel Idle submit-action label.
- * @property {string} submitPendingLabel In-flight submit-action label.
+ * @property {string} submitLabel The send circle's accessible name at rest ("Send").
+ * @property {string} submitPendingLabel The send circle's accessible name while sending.
+ * @property {boolean} autoDisabled
+ * @property {string} autoLabel The Auto circle's accessible name at rest.
+ * @property {string} autoPendingLabel The Auto circle's accessible name while sending.
+ * @property {"soon"|"ready"} sceneImageState "soon" renders the scene image seat disabled.
+ * @property {string} sceneImageLabel The scene image seat's accessible name.
+ * @property {{ label: string, avatarUrl: string, canSpeak: boolean, onSpeak: () => void }} playerCircle The player circle: the selected player character (or "You"), a button asking the player character to speak next while canSpeak is true.
+ * @property {{ disabled: boolean, title: string, onPress: () => void }|null} addCharacter The add character plus circle after the last character circle; null hides it.
+ * @property {() => void} onAuto Runs the existing continuation with the AUTO speaker.
  * @property {(nextValue: string) => void} onChangeInputMode
  * @property {(speakerId: string) => void} onChangeNextSpeaker
  * @property {(nextValue: string, cursorPosition: number) => void} onChangeDraft
@@ -66,8 +155,6 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "1.5.0";
  * @property {(runtimeEntryId: string) => number|null} onSelectLocation
  * @property {() => void} onDismissLocationSuggestions
  * @property {(options?: Object) => void} onSend
- * @property {() => void} onOpenCast
- * @property {() => void} onOpenState
  */
 
 export {};

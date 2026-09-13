@@ -1,4 +1,51 @@
-export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "1.4.0";
+export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.7.1";
+
+// 2.7.1, Player action contrast follow-up (13 Sep 2026). Presentation only:
+// Player narration/action keeps the Player chat hue but clamps to a darker
+// mid-lightness band so actions are unmistakable beside spoken dialogue.
+
+// 2.7.0, Story Chat width/action distinction follow-up (13 Sep 2026).
+// Presentation only, no portable prop changed: speaker bubbles now use 94%
+// below 700px and 96% at/above 700px, and Player narration/action text
+// derives a distinct foreground from the Player chat color while spoken
+// dialogue stays normal ink.
+
+// 2.6.0, Story Chat presentation restoration (13 Sep 2026). ADDITIVE:
+// `paletteColors` returns to the portable boundary so Character opening
+// greetings and ordinary Character messages can render their authored
+// semantic roles again. Player `bubbleColor` remains a separate user
+// preference and the redesigned bubble geometry is unchanged.
+
+// 2.5.0, fe/chat-studio review round 8 (13 Sep 2026, Brian's browser
+// review). Presentation only: every bubble's inset is --space-4 on all
+// sides (vertical up from --space-3), the same inset the transcript's
+// notice cards take (down from --space-5), so the two read alike.
+//
+// 2.4.0, fe/chat-studio review round 5 item 1 (13 Sep 2026, Brian's
+// browser review, "a little bit more"). Presentation only: the speaker
+// name rises one more scale step, from --text-body (16) to --text-lead
+// (19 over 28). Everything else as 2.3.0.
+//
+// 2.3.0, fe/chat-studio review round 4 item 1 (13 Sep 2026, Brian's
+// browser review). Presentation only: the speaker name rises one scale
+// step, from --text-ui (13) to --text-body (16), about 20 percent, so
+// it reads larger than the Opening scene eyebrow above it. Font,
+// weight, ink, case, and tracking as 2.2.0.
+//
+// 2.2.0, fe/chat-studio brief 4 item 10 (13 Sep 2026, RULED by Brian).
+// Presentation only, no prop changed: the speaker name on every bubble
+// (character, narrator, the player's "You") leaves the eyebrow tier and
+// reads in the display font at --text-ui, --weight-medium, --ink, no
+// uppercase, no tracking; the eyebrow above it (Opening scene, the
+// Dialogue tag) stays. `speakerColor` still tints the bubble and the
+// avatar tile through --chat-speaker; it no longer colors the name.
+//
+// 2.1.0, fe/chat-studio brief 4 item 9 (13 Sep 2026). Presentation
+// only, no prop changed: character, narrator, and player bubbles widened
+// from 70 to 85 percent of the transcript column at the shipped 700px
+// breakpoint and up (the player's from the right edge, the others from
+// the left); below it the 86 percent width stayed as shipped. Superseded
+// by 2.7.0's wider 94/96 percent geometry.
 
 export const STORY_ROOM_MESSAGE_SURFACE_TONES = Object.freeze({
   PLAYER: "PLAYER",
@@ -49,6 +96,13 @@ export const STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS = Object.freeze({
 /**
  * Portable View contract.
  *
+ * 2.0.0 introduced the independent Player `bubbleColor` chat preference.
+ * 2.6.0 restores Character semantic palette projection without undoing
+ * that separation: Character-authored dialogue/narration/emphasis/strong/
+ * whisper/speaker presentation reads from `paletteColors`, while Player
+ * messages continue to read `bubbleColor`. The current borderless bubble
+ * geometry remains intact.
+ *
  * @typedef {Object} StoryRoomMessageViewProps
  * @property {"PLAYER"|"OPENING"|"SYSTEM"|"NARRATOR"|"CHARACTER"|"MEDIA"} surfaceTone
  * @property {"TEXT"|"AUTO_EVENT_MEDIA"} contentType
@@ -60,7 +114,9 @@ export const STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS = Object.freeze({
  * @property {string} legacyBody
  * @property {Array<{text:string,type:string,emphasis:string}>} semanticSegments
  * @property {Array<{id:string,text:string}>} statusBlocks
- * @property {{dialogue:string,narration:string,emphasis:string,strong:string,whisper:string,speaker:string,border:string}|null} paletteColors
+ * @property {{dialogue:string,narration:string,emphasis:string,strong:string,whisper:string,speaker:string,border:string}|null} paletteColors Character semantic palette roles; null when no authoritative Character/presentation palette exists.
+ * @property {string|null} speakerColor The character palette anchor for the speaker name (contract data, applied as the --chat-speaker custom property).
+ * @property {string|null} bubbleColor The chat color for the player's bubble; null on every other tone.
  * @property {{subtype:string,displayUrl:string,thumbnailUrl:string|null,width:number|null,height:number|null,altText:string,caption:string,entityLabel:string,contentRating:string}|null} media
  * @property {"FAILED"|"SENDING"|null} deliveryState
  * @property {boolean} canCopy

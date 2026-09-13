@@ -36,7 +36,7 @@ test("automatic media suppresses placeholder text presentation", () => {
   const view = read(
     "components/studio/story-rooms/story-room-message/StoryRoomMessage.view.jsx"
   );
-  assert.match(vm, /const presentation = autoEventMedia \? null : getValidatedPresentation/);
+  assert.match(vm, /const presentation = autoEventMedia\s*\?\s*null\s*:\s*getValidatedPresentation/);
   assert.match(view, /return <AutoEventMediaMessage media=\{media\} \/>/);
 });
 

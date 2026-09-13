@@ -1,4 +1,11 @@
-export const STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
+export const STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "2.1.0";
+
+// 2.1.0, fe/chat-studio review round 6 (13 Sep 2026, Brian's browser
+// review). Presentation only, no prop changed: the action buttons
+// (Export, Share) take the compact recipe, .cf-btn--compact in
+// app/design-system.css, the ui step over --space-4 padding; review
+// round 7: one step shorter (--control-filter, 38) on a fine pointer,
+// the 44px floor on a coarse one.
 
 /**
  * Display-ready row supplied to one Story Room state card.
@@ -38,13 +45,17 @@ export const STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
  * drawer orchestration, export/share transport, APIs, or persistence.
  * It receives display-ready sections/actions and emits semantic action intent only.
  *
+ * 2.0.0, fe/chat-studio item 6 (12 Sep 2026). BREAKING: `eyebrow`,
+ * `title`, `showCloseControl`, and `onClosePanel` are removed with the
+ * card chrome; the details rail names the section. ADDITIVE: `layout`
+ * ("full" | "actions" | "sections") lets the rail mount the Export and
+ * Share actions above its rows and the world state rows inside the
+ * World state drill-in.
+ *
  * @typedef {Object} StoryRoomStatePanelViewProps
- * @property {string} eyebrow
- * @property {string} title
  * @property {StoryRoomStatePanelSectionViewItem[]} sections
  * @property {StoryRoomStatePanelActionViewItem[]} actions
- * @property {boolean} showCloseControl
- * @property {(() => void)|null} onClosePanel
+ * @property {"full"|"actions"|"sections"} layout
  */
 
 export {};

@@ -1,0 +1,126 @@
+export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.8.0";
+
+/**
+ * Stable portable UI boundary for the story chat page's right rail
+ * (fe/chat-studio item 6, 12 Sep 2026), also the content of the right
+ * sheet below md.
+ *
+ * 1.8.0, Story Chat responder-gallery convergence (13 Sep 2026). BREAKING:
+ * the temporary standalone `featuredSpeaker` surface is removed. The existing
+ * `gallery` is now responder-aware: its source changes to the latest responder's
+ * authored media collection and resets to the selected responder image when the
+ * responder changes. If no responder media exists it falls back to story/template
+ * imagery. `dangerAction` remains the explicit Delete story action at the bottom.
+ *
+ * 1.7.0, Story Chat presentation restoration (13 Sep 2026). ADDITIVE:
+ * `featuredSpeaker` introduced a temporary primary latest-responder surface
+ * outside gallery paging; superseded by 1.8.0 responder-gallery convergence.
+ * `dangerAction` is the explicit Delete story action at the bottom of the shared
+ * desktop/mobile rail content.
+ *
+ * 1.6.0, fe/chat-studio review round 6 (13 Sep 2026, Brian's browser
+ * review). BREAKING: `menu` (the three-dot menu with Delete story) is
+ * removed, and the ViewModel no longer takes `onDeleteRoom` or
+ * `isDeletingRoom`; Delete story is the chat shell's red trash control
+ * beside the rail toggle (at the top of the sheet below md), opening
+ * the shell's existing "Delete this story?" confirm. `deleteError`
+ * stays. Presentation: the description clamps to two lines with
+ * "See more" on the second line after the text (a float, no bed);
+ * on the end card the back control sits at the top left.
+ *
+ * 1.5.0, fe/chat-studio review round 5 (13 Sep 2026, Brian's browser
+ * review). Item 1, BREAKING on the gallery bag: `viewerIndex`,
+ * `onViewerPrevious`, and `onViewerNext` are removed with the lean
+ * StoryRoomGalleryViewer; `viewerItem` names the image a tap opened
+ * and the binding shell mounts the community image viewer
+ * (KitImageViewer: Edit, Remix, Share, Details) through the new
+ * `viewerSlot` prop. ADDITIVE: `canGoPrevious` and `canGoNext`; the
+ * first slide shows no previous arrow, the end card shows only the
+ * back arrow, paging never wraps; the end card's backdrop is blurred
+ * (--blur-panel). Item 2: `description` is populated for every story
+ * that resolves to a catalogue creation (the template's, else the
+ * Character's own), not only template launches.
+ *
+ * 1.4.0, fe/chat-studio review round 4 item 4 (13 Sep 2026, Brian's
+ * browser review). No prop shape changed. The gallery bed is --canvas
+ * (the darkest brown, the community story slider's art surface) so its
+ * --radius-md corners and --space-3 margin read against the rail; the
+ * counter reads "n/total". `gallery.items` now holds at most four
+ * images: the room-derived set when the snapshot serves one, else the
+ * catalogue creation's own featured media read from its preview
+ * (fetchCreationPreview, GET /api/creations/{id}/preview, the same
+ * served images the community slider shows), interim until CR-069;
+ * the end card follows the last one and opens that creation's page in
+ * a new tab.
+ *
+ * 1.3.0, fe/chat-studio brief 4 item 2 (13 Sep 2026). ADDITIVE in
+ * meaning, no prop shape changed: `description` is now populated from
+ * the source creation (the ViewModel reads `room.data.source.templateId`
+ * and fetches `creation.description` through the existing preview
+ * client, fetchCreationPreview, GET /api/creations/{id}/preview) until
+ * CR-068 serves it on the room snapshot; "" when the story has no
+ * source creation. The View clamps it to three lines (was four) with
+ * See more expanding in place.
+ *
+ * 1.2.0, fe/chat-studio brief 4 item 1 (13 Sep 2026). Presentation
+ * only, no prop changed: the gallery is one bed at every state
+ * (--surface-2, --radius-md, --space-3 margin each side); the image
+ * fills the bed edge to edge inside the rounding; previous and next
+ * are 44px circles over the art; an "n / total" counter chip sits
+ * centered at the bottom on the tag-over-art recipe; the thumbnail
+ * strip is retired (`gallery.onSelect` stays on the contract, unused
+ * by the View). The end card is unchanged from 1.1.0.
+ *
+ * 1.1.0, fe/chat-studio brief 3 item 4 (13 Sep 2026). ADDITIVE:
+ * `gallery.showEndCard` and `gallery.catalogueHref`. When the story
+ * resolves to a creation page, the next tap after the last image shows
+ * an end card on the asset detail popup's "Want to see more" recipe
+ * whose primary link, View catalogue, opens that page in a new tab
+ * (target _blank, rel noopener) so the chat stays open; previous and
+ * next page through the images and that one extra stop. With no media
+ * the gallery is a placeholder: the circular geometric Crestfall mark
+ * on a --surface-2 bed with --radius-md corners, inset by --space-3.
+ *
+ * Order: responder-aware gallery, title, rating and visibility chips, byline
+ * and description when served
+ * (CR-067, CR-068), Export and Share, drill-in rows Cast, Narrator, World
+ * state, Mechanics, Preferences, then the explicit Delete story danger
+ * action at the bottom. A drill-in replaces the rail content in place under
+ * a 44px back row. No rows for anything the Chassis does not serve.
+ *
+ * @typedef {Object} StoryRoomMediaItem
+ * @property {string} id
+ * @property {string} url
+ * @property {string} altText
+ * @property {string} sourceLabel
+ *
+ * @typedef {Object} StoryRoomDetailsRailViewProps
+ * @property {string} title
+ * @property {Array<{id: string, label: string}>} chips
+ * @property {{handle: string, href: string|null}|null} byline Hidden until CR-067.
+ * @property {string} description Hidden until CR-068.
+ * @property {boolean} descriptionExpanded
+ * @property {() => void} onToggleDescription
+ * @property {{items: StoryRoomMediaItem[], activeIndex: number, showEndCard: boolean, catalogueHref: string, canGoPrevious: boolean, canGoNext: boolean, onSelect: (index: number) => void, onPrevious: () => void, onNext: () => void, viewerItem: StoryRoomMediaItem|null, onOpenViewer: (index?: number) => void, onCloseViewer: () => void}} gallery `showEndCard` shows the View catalogue end card in the featured slot; `catalogueHref` is the creation page it opens ("" when the story resolves to none, in which case no end card exists); `canGoPrevious` and `canGoNext` show the arrows (never wrapping); `viewerItem` is the image the binding shell opens in the community image viewer.
+ * @property {import("react").ReactNode} viewerSlot The community image viewer (KitImageViewer), mounted by the binding shell while `gallery.viewerItem` is set; null otherwise.
+ * @property {string} deleteError
+ * @property {import("react").ReactNode} actionsSlot Export and Share, the state panel's live actions.
+ * @property {{label:string,busyLabel?:string,busy?:boolean,onPress:() => void}|null} dangerAction Explicit destructive action rendered at the bottom of the main rail/sheet content.
+ * @property {Array<{id: "cast"|"narrator"|"world"|"mechanics"|"preferences", label: string}>} rows
+ * @property {string|null} activeDetail
+ * @property {(id: string) => void} onOpenDetail
+ * @property {() => void} onBack
+ * @property {Record<string, import("react").ReactNode>} detailPanels One node per row id.
+ * @property {import("react").ElementType} LinkComponent Injected next/link; "a" when portable.
+ */
+
+export const STORY_ROOM_DETAILS_RAIL_PORTABILITY_RULES = Object.freeze({
+  ownsRouterNavigation: "Binding Shell",
+  ownsPanelComposition: "Binding Shell",
+  ownsMediaSetAndDrillInState: "ViewModel",
+  ownsChatColorState: "Chat shell ViewModel",
+  ownsDeleteAuthority: "Chat shell ViewModel / binding shell",
+  ownsRailMarkup: "Portable View",
+});
+
+export {};

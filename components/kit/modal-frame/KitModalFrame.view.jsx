@@ -155,7 +155,9 @@ export default function KitModalFrameView({
 }) {
   if (typeof document === "undefined") return null;
 
-  const isSheet = variant === "sheet";
+  // drawer (1.7.0) shares the sheet's structural header row, so its
+  // close control never overlaps content either.
+  const isSheet = variant === "sheet" || variant === "drawer";
   const isViewer = variant === "viewer";
   const body = isConfirmingDismiss ? (
     <UnsavedDismissConfirm onKeepEditing={onKeepEditing} onConfirmDiscard={onConfirmDiscard} />

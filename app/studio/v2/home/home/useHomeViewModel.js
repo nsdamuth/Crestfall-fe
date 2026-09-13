@@ -4,7 +4,10 @@ import { useMemo, useState } from "react";
 
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
 import { setProfileFollowByUsername } from "@/lib/client/studio/profile/profileFollowClient";
-import { projectCommunityCreations } from "@/lib/shared/presentation/communityPresentation";
+import {
+  projectCommunityCreation,
+  projectCommunityCreations,
+} from "@/lib/shared/presentation/communityPresentation";
 import { projectCommunityCreators } from "@/lib/shared/presentation/creatorPresentation";
 import {
   projectOwnedLoreCreations,
@@ -45,8 +48,9 @@ const SECTIONS = Object.freeze([
 // a field is absent, the option is shown and selectable and leaves
 // the rail in its current order (no invented values). Labels
 // shortened 6 Sep 2026 (Home quick fix): "Most" dropped. Trigger
-// label re-ruled 12 Sep 2026 (FIX 5): "Filter" on the default sort,
-// the chosen option's label once the user picks another.
+// label re-ruled 12 Sep 2026 (FIX 5, then fe/chat-studio item 9): "Sort"
+// on the default sort, the chosen option's label once the user picks
+// another.
 const SORT_OPTIONS = Object.freeze([
   Object.freeze({ value: "plays", label: "Plays" }),
   Object.freeze({ value: "likes", label: "Likes" }),
@@ -143,6 +147,11 @@ export function useHomeViewModel({
   const [sortSelections, setSortSelections] = useState({});
   const [followOverrides, setFollowOverrides] = useState({});
   const [notice, setNotice] = useState(null);
+  // Creator shortlist tiles open the same asset detail popup the creator
+  // profile page opens (fe/chat-studio item 10, 12 Sep 2026), by the same
+  // handler pattern: one id in state, the popup built from the loaded
+  // creations when it is set.
+  const [assetDetailTarget, setAssetDetailTarget] = useState(null);
 
   const communityItems = useMemo(
     () => projectCommunityCreations(communityCreations),
@@ -295,7 +304,10 @@ export function useHomeViewModel({
             onThumbnailOpen: (thumbnailId) => {
               const thumbnail = creator.thumbnails.find((entry) => entry.id === thumbnailId);
               if (thumbnail?.creationId) {
-                onNavigate?.(`/studio/creations/${encodeURIComponent(thumbnail.creationId)}`);
+                setAssetDetailTarget({
+                  creationId: thumbnail.creationId,
+                  creatorUsername: creator.username || "",
+                });
               }
             },
             onViewProfile: () =>
@@ -386,6 +398,60 @@ export function useHomeViewModel({
     [sectionItems, sortSelections, onNavigate]
   );
 
+  // The popup's item: the community projection when the creation is in
+  // it, else the creator creations projected the same way the profile
+  // page projects its works.
+  const assetDetail = useMemo(() => {
+    if (!assetDetailTarget?.creationId) return null;
+
+    const creationId = String(assetDetailTarget.creationId);
+    const fromCommunity = communityItems.find((entry) => String(entry?.id) === creationId);
+    const rawCreation = (Array.isArray(creatorCreations) ? creatorCreations : []).find(
+      (entry) => String(entry?.id) === creationId
+    );
+    const item = fromCommunity || (rawCreation ? projectCommunityCreation(rawCreation) : null);
+    if (!item) return null;
+
+    const media = item.detailMedia?.length
+      ? item.detailMedia
+      : [item.imageSrc, ...(item.extraMedia || [])]
+          .filter(Boolean)
+          .map((src, index) => ({ id: `${item.id}-media-${index + 1}`, src }));
+    const creatorUsername = assetDetailTarget.creatorUsername || "";
+    const href = `/studio/creations/${encodeURIComponent(item.id)}`;
+
+    return {
+      assetKind: item.assetKind,
+      title: item.title,
+      subtitle: item.subtitle,
+      creator: creatorUsername
+        ? {
+            handle: `@${creatorUsername}`,
+            href: `/studio/v2/creators/${encodeURIComponent(creatorUsername)}`,
+          }
+        : item.creator || null,
+      media,
+      badges: item.isCanon ? [{ label: "Canon", variant: "canon" }] : [],
+      creationType: item.type,
+      metrics: item.metrics,
+      stats: {
+        plays: numberOrNull(item.plays),
+        hearts: numberOrNull(item.hearts),
+        followers: null,
+      },
+      description: item.description,
+      tags: item.tags || [],
+      isLiked: engagement.isCreationLiked(item),
+      isSaved: engagement.isCreationBookmarked(item),
+      onLike: () => engagement.toggleCreationLike(item),
+      onPrimaryAction: () => onNavigate?.(href),
+      onSave: () => engagement.toggleCreationBookmark(item),
+      onViewCatalogue: () => onNavigate?.(href),
+      credits: item.credits || [],
+      onClose: () => setAssetDetailTarget(null),
+    };
+  }, [assetDetailTarget, communityItems, creatorCreations, engagement, onNavigate]);
+
   const sourceErrors = [
     storiesLoadError,
     communityLoadError,
@@ -413,5 +479,6 @@ export function useHomeViewModel({
     warningMessage,
     notice,
     onCloseNotice: () => setNotice(null),
+    assetDetail,
   };
 }

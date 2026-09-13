@@ -93,6 +93,12 @@ the details below carry only what is still actionable.
 | CR-065 | Remix a public image into the viewer's library | One Chassis operation: from a public image output, create a new asset owned by the viewer and record it as a new version in both the viewer's and the source creator's libraries with attribution; Remix and Edit on public images ship "soon" until then | open | Nick | non-blocking; filed 12 Sep 2026; KitImageViewer 2.0.0 remix context |
 | CR-064 | Viewer reaction state on the public profile payload | The public profile payload carries no `viewer.isLiked` or `viewer.isBookmarked`; the profile page fetches them from profile-reactions after first paint, so Liked and Saved rest unselected for one round trip | open | Nick | non-blocking; filed 12 Sep 2026; optimistic toggle in place |
 | CR-063 | Public lore approval-state projection | The community lore projection emits only canon or approved, so Draft and Archived never match community lore, and one state carries three names (IN_REVIEW, pending, Reviewing); confirm the states the public feed serves and the canonical name | open | Nick | non-blocking; filed 6 Sep 2026 |
+| CR-066 | Chat color preference | A per-account (or per-story) `chat_color_palette_id` on the profile, one of the 13 character palette ids, so the user's Preferences choice on the story chat page survives a reload; the chat page keeps the override in page state until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 4 |
+| CR-067 | Creator byline on the room snapshot | `GET /v1/studio/story-rooms/{id}` carries `ownerId` only; the story chat details rail wants `room.creator` ({ id, username, displayName }) for the source template's owner so it can render "by @username"; the byline row stays hidden until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
+| CR-068 | Story description on the room snapshot | The room record has no description (room.data.source carries templateId and templateTitle only); the details rail wants `room.description` copied from the source template at launch; the description block stays hidden until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
+| CR-069 | Story media list on the room snapshot | No story-level media list exists; the details rail builds its gallery from each participant's `metadata.mediaImageUrls` and the transcript's scene images until `room.media[]` is served in display order | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
+| CR-070 | Scene image generation | No scene image operation exists in the Chassis (message actions accept REGENERATE_RESPONSE, CONTINUE_RESPONSE, REPORT_MESSAGE only); the composer keeps one visible, disabled scene image seat until a `POST /v1/studio/story-rooms/{id}/scene-image` call and its served coin cost exist | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 2 |
+| CR-071 | Served cast cap | No cast size cap exists in the Chassis; the composer's add character circle disables at a frontend constant (the player plus four NPCs) until the room snapshot serves `room.castCap` or a limit error on load | open | Nick | non-blocking; filed 13 Sep 2026 by fe/chat-studio brief 4 item 5 |
 
 ## Details
 
@@ -1041,6 +1047,151 @@ three names across the stack: backend `IN_REVIEW`, value `pending`,
 label "Reviewing". Needed: confirmation of which states the public
 publications feed serves, and the canonical name for the review
 state.
+
+### CR-066, Chat color preference
+
+Filed 12 Sep 2026 by fe/chat-studio item 4 (bubbles and chat color).
+The player's bubble on the story chat page takes the chat color: by
+default the primary Character's palette anchor (the participant record
+the Chassis stamps at launch, `participant.metadata.characterColorPaletteId`,
+resolved through the 13-entry catalog in
+`components/studio/create/character/constants/characterColorPalettes.js`),
+and a Preferences panel in the right rail lets the user pick any of the
+13 palettes instead. No preference field exists for that choice:
+`PATCH /v1/profile/me` (through `/api/profile/me`) allowlists username,
+display_name, bio, tagline, description, announcement, contact_email,
+content_rating_preference, and default_player_character_id, and drops
+any other key. Call wanted: the same PATCH accepting
+`chat_color_palette_id` (one of the 13 palette ids, or null for the
+creator default), returned on `GET /v1/profile/me` under `profile`.
+Expected response: the profile payload carrying the field. Unverified:
+whether Nick wants the preference per account or per story room, and
+whether the id set stays the character palette catalog. Interim: the
+override is page state in `useStoryRoomChatShellViewModel.js`
+(`chatColorProps`), reset on reload; nothing is faked.
+
+### CR-067, Creator byline on the room snapshot
+
+Filed 12 Sep 2026 by fe/chat-studio item 6 (the story details rail).
+The rail's order is gallery, title, byline, description, actions, rows.
+The room snapshot (`GET /v1/studio/story-rooms/{id}`, the FE proxy at
+`app/api/studio/story-rooms/[id]/route.js`) carries `room.ownerId` and
+nothing that names a person. Call wanted: the same GET adds
+`room.creator` with `{ id, username, displayName }` for the owner of the
+source template (`room.data.source.templateId`). Expected response: the
+snapshot with that object, null for a private character chat with no
+template owner. Unverified: whether a private character chat should
+credit the character's creator instead. Interim: the byline row is
+hidden (`byline: null` in `useStoryRoomDetailsRailViewModel.js`).
+
+### CR-068, Story description on the room snapshot
+
+Filed 12 Sep 2026 by fe/chat-studio item 6. `normalizeRoomRecord` in the
+Chassis has no description field and `room.data.source` holds only
+`templateId` and `templateTitle`, so the rail has nothing to clamp to
+four lines with See more. Call wanted: the same GET adds
+`room.description`, copied from the source template creation's
+description at launch (createChatRoomFromTemplate already reads
+`creation.description` for registry links). Expected response: a string,
+empty when the template has none. Interim (revised 13 Sep 2026, brief 4
+item 2): the rail reads the source creation's preview
+(`fetchCreationPreview`, GET `/api/creations/{id}/preview`, keyed by
+`room.data.source.templateId`) and shows its `creation.description`;
+widened 13 Sep 2026 (Brian's review round 5 item 2) to the catalogue
+creation (the template, else the Character's own description for a
+private character chat), so it is hidden only when no creation resolves.
+Note for Nick: the preview serves the literal "No description has been added
+yet." when the template has none (`creationPreviewGraph.js:546-550`), so
+the rail shows that sentence rather than hiding; an empty string on the
+snapshot field would let it hide.
+
+### CR-069, Story media list on the room snapshot
+
+Filed 12 Sep 2026 by fe/chat-studio item 6. The gallery at the top of the
+rail wants the story's media in display order. Today the page builds it
+itself (`buildStoryMediaItems` in `useStoryRoomDetailsRailViewModel.js`):
+the featured speaker image, every participant's `metadata.mediaImageUrls`
+(already SFW-filtered by the Chassis) and avatar, then every scene image
+the transcript carries (`metadata.autoEventMedia.displayUrl`),
+deduplicated by url in first-seen order. Call wanted: the same GET adds
+`room.media[]` of `{ id, url, altText, sourceType, sourceId }`, featured
+first. Expected response: the list, empty when the story has no images.
+Unverified: whether scene images belong in it. Interim: the client-side
+union above; nothing is faked.
+
+Finding, 13 Sep 2026 (fe/chat-studio brief 4 item 1, the Lilith of Nod
+gallery placeholder). The interim union is empty for every private
+character chat because the Chassis stamps the media keys on the
+participant only on the template launch path. Read:
+`services/api/src/services/chat/createChatRoomFromTemplate.js:1457`
+spreads `buildCreationParticipantMediaMetadata(character)` into the
+CHARACTER participant's metadata (`avatarUrl`, `primaryImageUrl`,
+`mediaImageUrls`), while `createPrivateCharacterChatRoom` in
+`services/api/src/services/chat/chatRepository.js:2449-2467` writes the
+CHARACTER participant with `creationType`, the content rating ceilings,
+`source: "PRIVATE_CHARACTER_CHAT"`, `loadPolicy`, `castClass`,
+`storyRole`, `cohortPolicy`, `mobilityPolicy` and no media key at all;
+the same builder is spread only into the opening MESSAGE record
+(`chatRepository.js:2515`), and `buildPublicMessageMetadata` does not
+serve it. Confirmed against the local database (PostGraphile,
+`allChatRooms`): the three Lilith of Nod rooms have `data.source: null`
+and their CHARACTER participant metadata keys are exactly
+`accountMaximumContentRating, castClass, cohortPolicy, contentRating,
+creationType, effectiveContentRating, loadPolicy,
+maximumContentRating, mobilityPolicy, platformMaximumContentRating,
+roomMaximumContentRating, source, storyRole`; the served message
+`speakerMediaImageUrls` derives from that same metadata
+(`chatRepository.js:2857`) so it is `[]` too. The creation itself
+(`9b45b53f-d4e7-472e-9a3b-a89846124120`) carries
+`data.featuredMedia[0].url` (the Primary image), which the builder
+would read. The media is not served under any other key on the room
+snapshot, so this is a Chassis fix, not a frontend one: spread
+`buildCreationParticipantMediaMetadata(character, { contentRating })`
+into the private character chat participant the way the template path
+does (and reissue it on existing rooms, or serve `room.media[]` as this
+CR asks). Frontend interim (revised 13 Sep 2026, Brian's review round 4
+item 4): when the snapshot serves no media, the gallery reads the
+catalogue creation's own `creation.featuredMedia` from its preview
+(`fetchCreationPreview`, GET `/api/creations/{id}/preview`, the same
+served images the community story slider shows), at most four, then
+the end card; the placeholder mark shows only when that creation has no
+featured media either. Nothing is faked; the served list from this CR
+would replace the preview read.
+
+### CR-070, Scene image generation
+
+Filed 12 Sep 2026 by fe/chat-studio item 2 (the composer bar). The brief
+asked for one scene image button wired to the working scene handler; no
+such handler exists on the live route (every scene control was a disabled
+stub) and the Chassis serves no scene image operation
+(`services/api/src/routes/chatRoute.js` accepts REGENERATE_RESPONSE,
+CONTINUE_RESPONSE, and REPORT_MESSAGE as message actions, nothing else).
+Call wanted: `POST /v1/studio/story-rooms/{id}/scene-image` with
+`{ requestedSpeakerId? }`, returning a job or a message that carries
+`metadata.autoEventMedia`, plus the coin cost served with it (never a
+frontend literal). Expected response: the transcript gains the scene image
+the way auto event media arrives today. Unverified: the cost, the gating,
+and whether it reuses the image generation job route. Interim: the seat is
+visible and disabled with the name "Scene image, not available yet"
+(`sceneImageState: "soon"` in `useStoryRoomComposerViewModel.js`).
+
+### CR-071, Served cast cap
+
+Filed 13 Sep 2026 by fe/chat-studio brief 4 item 5 (the add character
+circle). Brian ruled the cap as the player plus four NPCs; the Chassis
+serves no cast size limit and enforces none on load (searched
+`services/api/src` for a participant or cast cap: the hits are
+`ACTIVE_STORYLINE_SUMMARY_LIMITS.maxParticipants` 256,
+`sceneStateGrounding.js` `MAX_PARTICIPANTS` 18, and the active beat
+summary limit, all summary or grounding windows, not a cast size). Call
+wanted: `room.castCap` ({ maxNpcs }) on `GET /v1/studio/story-rooms/{id}`,
+and the registry NPC load and Random liked calls answering a
+`CHAT_CAST_CAP_REACHED` error past it. Expected response: the snapshot
+with the cap; the load calls refusing past it. Interim:
+`STORY_ROOM_CAST_NPC_CAP = 4` in `useStoryRoomChatShellViewModel.js`,
+counted over active CHARACTER participants (the Narrator and the player
+are not NPCs); the circle disables at the cap with the title "Up to 4
+characters", and nothing else is gated.
 
 ## Closed
 
