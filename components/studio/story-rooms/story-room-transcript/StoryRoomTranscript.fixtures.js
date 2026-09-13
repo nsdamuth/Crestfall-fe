@@ -85,6 +85,34 @@ export const storyRoomTranscriptErrorFixture = {
   errorMessage: "The Crestfall Engine could not complete this turn.",
 };
 
+export const storyRoomTranscriptPlayerCharacterPromptFixture = {
+  messageItems: [messageItem("opening", storyRoomMessageOpeningFixture)],
+  loading: false,
+  sending: false,
+  errorMessage: "",
+  playerCharacterPrompt: {
+    visible: true,
+    selectedName: "",
+    busy: false,
+    errorMessage: "",
+    onSelect: () => {},
+  },
+};
+
+export const storyRoomTranscriptPlayerCharacterPromptErrorFixture = {
+  messageItems: [messageItem("opening", storyRoomMessageOpeningFixture)],
+  loading: false,
+  sending: false,
+  errorMessage: "",
+  playerCharacterPrompt: {
+    visible: true,
+    selectedName: "Mara Vale",
+    busy: false,
+    errorMessage: "The player character could not be set.",
+    onSelect: () => {},
+  },
+};
+
 export const storyRoomTranscriptLongFixture = {
   messageItems: [
     messageItem("long-message", storyRoomMessageLongFixture),

@@ -19,20 +19,31 @@ test("Room & Cast no longer receives the Set Player Character quick action", () 
   assert.doesNotMatch(castBlock, /onSetPlayerCharacter/);
 });
 
-test("transcript receives a transient blue Player Character system prompt", () => {
+test("transcript receives a transient Player Character prompt on the notice card recipe", () => {
   const vm = read(
     "components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js"
   );
   const transcript = read(
     "components/studio/story-rooms/story-room-transcript/StoryRoomTranscript.view.jsx"
   );
+  const noticeCard = read(
+    "components/studio/story-rooms/story-room-transcript/StoryRoomNoticeCard.jsx"
+  );
 
   assert.match(vm, /playerCharacterPrompt:/);
   assert.match(vm, /visible: Boolean\(canSetPlayerCharacter\) && !firstMessageSubmitted/);
   assert.match(transcript, /PlayerCharacterPromptCard/);
-  assert.match(transcript, /border-sky-400\/25 bg-sky-400\/10/);
-  assert.match(transcript, /Select Player Character/);
-  assert.match(transcript, /Change Player Character/);
+  // fe/chat-studio item 3: the nested card tier, no blue tint, the gold
+  // secondary button, and the danger tokens for the error tone.
+  assert.match(transcript, /StoryRoomNoticeCard/);
+  assert.doesNotMatch(transcript, /sky-\d|red-\d/);
+  assert.match(noticeCard, /bg-\[var\(--surface-2\)\]/);
+  assert.match(noticeCard, /cf-btn cf-btn--secondary/);
+  assert.match(noticeCard, /--status-danger-border/);
+  assert.match(noticeCard, /--status-danger-text/);
+  assert.match(transcript, /Select player character/);
+  assert.match(transcript, /Change player character/);
+  assert.match(transcript, /eyebrow="Story error"/);
 });
 
 test("first real sent message removes the prompt, but failed sends restore it", () => {

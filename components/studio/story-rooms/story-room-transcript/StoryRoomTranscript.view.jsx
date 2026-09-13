@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronUp, Flag, Loader2, Sparkles, UserRound, X } from "lucide-react";
+import { ChevronUp, Flag, Loader2, Sparkles, X } from "lucide-react";
 
 import StoryRoomMessageView from "../story-room-message/StoryRoomMessage.view";
+import StoryRoomNoticeCard from "./StoryRoomNoticeCard";
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 const DEFAULT_VISIBLE_MESSAGES = 12;
@@ -196,7 +197,7 @@ function MessageReportDialog({
         </label>
 
         {error ? (
-          <p className="mt-3 text-sm text-red-200" role="alert">
+          <p className="mt-3 text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger-text)]" role="alert">
             {error}
           </p>
         ) : null}
@@ -229,53 +230,37 @@ function MessageReportDialog({
   );
 }
 
+// The player character prompt and the story error card share the notice
+// card recipe (fe/chat-studio item 3): nested card tier, gold secondary
+// button, the danger tokens for errors, no blue tint.
 function PlayerCharacterPromptCard({ prompt }) {
   const selectedName = String(prompt?.selectedName || "").trim();
   const buttonLabel = selectedName
-    ? "Change Player Character"
-    : "Select Player Character";
+    ? "Change player character"
+    : "Select player character";
 
   return (
-    <article className="rounded-[var(--radius-md)] border border-sky-400/25 bg-sky-400/10 p-5">
-      <div className="flex items-start gap-3">
-        <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-sky-300/25 bg-sky-300/10 text-sky-200">
-          <UserRound size={17} aria-hidden="true" />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-sky-200">
-            Crestfall Engine
-          </p>
-          <p className="mt-2 text-sm leading-6 text-sky-50/90">
-            {selectedName
-              ? `${selectedName} is your Player Character for this Story. You can change it until you send the first message.`
-              : "Choose a Player Character before your first message. This selection stays editable until the Story begins."}
-          </p>
-
-          <button
-            type="button"
-            onClick={() => prompt?.onSelect?.()}
-            disabled={Boolean(prompt?.busy)}
-            className="cf-btn cf-btn--secondary mt-4 border-sky-300/30 text-sky-100 hover:border-sky-200/50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <UserRound size={14} aria-hidden="true" />
-            {prompt?.busy ? "Setting..." : buttonLabel}
-          </button>
-
-          {prompt?.errorMessage ? (
-            <p className="mt-3 text-xs leading-5 text-red-200">
-              {prompt.errorMessage}
-            </p>
-          ) : null}
-        </div>
-      </div>
-    </article>
+    <StoryRoomNoticeCard
+      eyebrow="Player character"
+      body={
+        selectedName
+          ? `${selectedName} is your player character for this story. You can change it until you send the first message.`
+          : "Choose a player character before your first message. This selection stays editable until the story begins."
+      }
+      action={{
+        label: buttonLabel,
+        busyLabel: "Setting",
+        busy: Boolean(prompt?.busy),
+        onPress: () => prompt?.onSelect?.(),
+      }}
+      errorMessage={prompt?.errorMessage || ""}
+    />
   );
 }
 
 function StatusCard({ icon: Icon, spin = false, children }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-5 text-center">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] bg-[var(--surface-1)] p-5 text-center">
       <Icon
         className={`mx-auto text-[var(--gold-ornament)] ${spin ? "animate-spin" : ""}`}
         size={24}
@@ -287,13 +272,5 @@ function StatusCard({ icon: Icon, spin = false, children }) {
 }
 
 function ErrorCard({ message }) {
-  return (
-    <div className="rounded-[var(--radius-md)] border border-red-400/25 bg-red-500/10 p-5 text-center">
-      <p className="text-xs uppercase tracking-[0.2em] text-red-200">
-        Story Error
-      </p>
-
-      <p className="mt-3 text-sm leading-6 text-red-100/90">{message}</p>
-    </div>
-  );
+  return <StoryRoomNoticeCard tone="danger" eyebrow="Story error" body={message} />;
 }
