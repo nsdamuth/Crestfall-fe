@@ -1,7 +1,7 @@
-Nick, sharing on fe/share-og is ready for a look. Latest code commit 8f62a3ea, docs on top of it.
+Nick, sharing on fe/share-og is ready for a look. Latest code commit ce6aa0e5, docs on top of it.
 
 WHAT LANDED
-- Share sheet: one popup for every Share button. Public creations share a link with a preview; private and internal ones are blocked with a one-line reason and a Submit for public review button that uses the existing review flow.
+- Share sheet: one popup for every Share button with one gold Copy link. Public creations share a link with a preview; private and internal ones are blocked with a one-line reason and a Submit for public review button that uses the existing review flow.
 - Card image: playable creations (characters, stories, adventures) get a 1200 by 630 card with the Crestfall Studio lockup, the art, the title, the creator, a short excerpt, and Play free on Crestfall.
 - Landing pages: every playable link opens a public page with that card in the preview; Play free sends a stranger to sign in and back to that page; Play sends a signed-in player straight to the creation.
 - Vault: Share on your own items opens the sheet.
