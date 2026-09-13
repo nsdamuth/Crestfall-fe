@@ -194,6 +194,7 @@ export function useStoryRoomComposerViewModel({
   disabledReason = "",
   playerCharacter = null,
   onPlayerSpeak = null,
+  addCharacter = null,
 } = {}) {
   const [activeMentionQuery, setActiveMentionQuery] = useState(null);
   const [highlightedMentionIndex, setHighlightedMentionIndex] = useState(0);
@@ -588,6 +589,16 @@ export function useStoryRoomComposerViewModel({
         onPlayerSpeak?.();
       },
     },
+    // Add character (brief 4 item 5) arrives display-ready from the
+    // shell, which owns the cast cap and the Manage cast dialog.
+    addCharacter:
+      addCharacter && typeof addCharacter === "object"
+        ? {
+            disabled: Boolean(addCharacter.disabled),
+            title: String(addCharacter.title || "Add character"),
+            onPress: () => addCharacter.onPress?.(),
+          }
+        : null,
     onAuto: continueAuto,
     onChangeInputMode: (nextValue) => setInputMode?.(nextValue),
     onChangeNextSpeaker: activateSpeaker,

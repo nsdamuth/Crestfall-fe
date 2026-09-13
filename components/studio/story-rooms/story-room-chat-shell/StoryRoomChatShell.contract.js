@@ -14,6 +14,15 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * character is set) in place of `playerCharacterPickerAvailable` and
  * `onOpenPlayerCharacterPicker` (composer contract 5.0.0); the
  * transcript prompt still opens the picker before the first message.
+ * Item 5: `composerProps` carries `addCharacter` (the plus circle after
+ * the last cast circle, disabled at the cap of the player plus four
+ * NPCs, `STORY_ROOM_CAST_NPC_CAP`, a frontend constant until CR-071);
+ * the ViewModel owns the Manage cast dialog and returns `manageCast`
+ * (StoryRoomManageCastDialog binding props, null when closed) for the
+ * binding shell to render; `castPanelProps.onOpenManageCast` points the
+ * rail's Manage cast button at that one dialog. One participants source
+ * feeds both the cast row and the rail's Cast list: `cast` from
+ * useStoryRoomChat, the row derived through `selectCastRowOptions`.
  *
  * v4.1, fe/chat-studio brief 3 (13 Sep 2026), additive. Item 1: the
  * composer renders in a full-width shell row beneath the rails grid,
@@ -97,6 +106,7 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {Object|null} playerCharacterPickerProps binding-shell props for the
  *   transient pre-first-message Player Character picker
  * @property {Object} composerProps
+ * @property {Object|null} manageCast StoryRoomManageCastDialog binding props while the Manage cast dialog is open; rendered by the binding shell, not the View.
  * @property {{paletteId: string, creatorPaletteId: string, isOverridden: boolean, options: Array<{id: string, label: string, family: string, swatch: string}>, onChange: (paletteId: string) => void, onReset: () => void}} chatColorProps
  * @property {() => void} onToggleLeftPanel
  * @property {() => void} onToggleRightPanel

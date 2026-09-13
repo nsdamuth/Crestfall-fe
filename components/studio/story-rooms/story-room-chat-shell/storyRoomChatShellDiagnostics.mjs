@@ -152,9 +152,12 @@ test("ViewModel preserves responder, mention, and mobile panel projection", () =
   );
   assert.match(shellView, /onOpenStoryList=\{onOpenMobileStoryList\}/);
   assert.match(shellView, /onOpenDetails=\{onOpenMobileDetails\}/);
-  // Brief 3 item 2: the player circle's props ride composerProps.
-  assert.match(viewModel, /onOpenPlayerCharacterPicker: openPlayerCharacterPicker/);
-  assert.match(viewModel, /playerCharacterPickerAvailable:/);
+  // Brief 3 item 2 and brief 4 items 4 and 5: the player circle's props
+  // ride composerProps; its tap asks the player character to speak, never
+  // the picker, and the add character circle rides beside it.
+  assert.match(viewModel, /onPlayerSpeak: selectedPlayerCharacter\?\.id/);
+  assert.doesNotMatch(viewModel, /onOpenPlayerCharacterPicker: openPlayerCharacterPicker/);
+  assert.match(viewModel, /addCharacter,\n\s+\},\n\s+manageCast,/);
   assert.doesNotMatch(viewModel, /onOpenMobileGallery|"gallery"/);
   assert.match(viewModel, /onUpdated: reloadStoryRoom/);
   assert.match(viewModel, /disabled: loading \|\| Boolean\(error\) \|\| !chatAllowed/);

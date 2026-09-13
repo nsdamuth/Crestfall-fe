@@ -1,7 +1,15 @@
-export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "5.0.0";
+export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "5.1.0";
 
 /**
  * Stable UI boundary for the Story Room message composer.
+ *
+ * 5.1.0, fe/chat-studio brief 4 item 5 (13 Sep 2026). ADDITIVE:
+ * `addCharacter` ({ disabled, title, onPress } | null) backs a 44px plus
+ * circle on the secondary recipe after the last character circle,
+ * inside the scrolling cast strip; its tap opens the Manage cast dialog
+ * the chat shell owns. At the cap (the player plus four NPCs, a
+ * frontend constant until the Chassis serves one, CR-071) it is
+ * disabled with the title "Up to 4 characters". Null hides it.
  *
  * 5.0.0, fe/chat-studio brief 4 item 4 (13 Sep 2026). BREAKING:
  * `playerCircle.canPick` and `playerCircle.onPick` are replaced by
@@ -120,6 +128,7 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "5.0.0";
  * @property {"soon"|"ready"} sceneImageState "soon" renders the scene image seat disabled.
  * @property {string} sceneImageLabel The scene image seat's accessible name.
  * @property {{ label: string, avatarUrl: string, canSpeak: boolean, onSpeak: () => void }} playerCircle The player circle: the selected player character (or "You"), a button asking the player character to speak next while canSpeak is true.
+ * @property {{ disabled: boolean, title: string, onPress: () => void }|null} addCharacter The add character plus circle after the last character circle; null hides it.
  * @property {() => void} onAuto Runs the existing continuation with the AUTO speaker.
  * @property {(nextValue: string) => void} onChangeInputMode
  * @property {(speakerId: string) => void} onChangeNextSpeaker

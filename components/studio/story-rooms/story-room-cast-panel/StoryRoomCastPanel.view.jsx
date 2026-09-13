@@ -100,8 +100,10 @@ export default function StoryRoomCastPanelView({
 // 8, decision F1): eyebrow, title, one sentence, the registry NPC tools as
 // the body, Random liked as the secondary action on the left, Done as the
 // gold primary on the right. The frame owns the veil, the close control,
-// and the sheet below 700px.
-function ManageCastModal({
+// and the sheet below 700px. Exported for the chat shell's
+// StoryRoomManageCastDialog binding (brief 4 item 5), so the composer's
+// add character circle opens this same dialog.
+export function ManageCastModal({
   npcParticipantManager,
   randomLikedAction,
   randomLikedError,

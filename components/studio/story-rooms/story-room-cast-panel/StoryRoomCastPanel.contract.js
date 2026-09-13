@@ -1,7 +1,17 @@
-export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2.1.0";
+export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2.2.0";
 
 /**
  * Stable UI boundary for the Story Room cast panel.
+ *
+ * 2.2.0, fe/chat-studio brief 4 item 5 (13 Sep 2026). ADDITIVE on the
+ * ViewModel input: `onOpenManageCast`, handed down by the chat shell
+ * when it owns the Manage cast dialog (opened from the composer's add
+ * character circle through the StoryRoomManageCastDialog binding); the
+ * panel's Manage cast button then opens that one dialog. Without it the
+ * panel keeps its local dialog. `ManageCastModal` is exported from the
+ * View for that binding. No View prop changed. The roster the panel
+ * lists and the composer's cast circles read one participants source,
+ * `cast` from useStoryRoomChat (buildCastViewModel).
  *
  * 2.0.0, fe/chat-studio item 6 (12 Sep 2026). BREAKING: the panel is the
  * roster and its two actions only, rendered inside the details rail's

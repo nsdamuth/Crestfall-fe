@@ -9,6 +9,7 @@ import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { useStudioChrome } from "@/components/studio/StudioChromeProvider";
 import StoryRoomComposer from "@/components/studio/story-rooms/StoryRoomComposer";
 import StoryRoomDetailsRail from "@/components/studio/story-rooms/StoryRoomDetailsRail";
+import StoryRoomManageCastDialog from "@/components/studio/story-rooms/StoryRoomManageCastDialog";
 import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
 import StoryRoomStatusSurfaceHost from "@/components/studio/story-rooms/story-room-chat-shell/StoryRoomStatusSurfaceHost";
 import StoryRoomStoryList from "@/components/studio/story-rooms/StoryRoomStoryList";
@@ -66,6 +67,12 @@ export default function StoryRoomChatShell({ roomId }) {
       ) : null}
 
       <StoryLaunchRequirementsSheet picker={launchController.picker} />
+
+      {/* Manage cast (brief 4 item 5), opened from the composer's add
+          character circle or the rail's Cast drill-in button. */}
+      {viewProps.manageCast ? (
+        <StoryRoomManageCastDialog {...viewProps.manageCast} />
+      ) : null}
     </>
   );
 }

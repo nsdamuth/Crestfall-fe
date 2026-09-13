@@ -106,6 +106,10 @@ export function useStoryRoomCastPanelViewModel({
   randomLikedLoading = false,
   randomLikedError = "",
   onLoadRandomLiked,
+  // Brief 4 item 5: when the chat shell owns the Manage cast dialog it
+  // hands this down and the panel's Manage cast button opens that one
+  // dialog instead of a local copy.
+  onOpenManageCast: onOpenSharedManageCast = null,
 } = {}) {
   const [playerCharacterPickerOpen, setPlayerCharacterPickerOpen] =
     useState(false);
@@ -151,12 +155,21 @@ export function useStoryRoomCastPanelViewModel({
   );
 
   const onOpenManageCast = useCallback(() => {
+    if (typeof onOpenSharedManageCast === "function") {
+      onOpenSharedManageCast();
+      return;
+    }
+
     setManageCastOpen(true);
 
     if (!npcParticipantManager?.isOpen) {
       npcParticipantManager?.onTogglePanel?.();
     }
-  }, [npcParticipantManager?.isOpen, npcParticipantManager?.onTogglePanel]);
+  }, [
+    npcParticipantManager?.isOpen,
+    npcParticipantManager?.onTogglePanel,
+    onOpenSharedManageCast,
+  ]);
 
   const onCloseManageCast = useCallback(() => {
     setManageCastOpen(false);

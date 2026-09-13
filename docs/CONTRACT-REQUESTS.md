@@ -98,6 +98,7 @@ the details below carry only what is still actionable.
 | CR-068 | Story description on the room snapshot | The room record has no description (room.data.source carries templateId and templateTitle only); the details rail wants `room.description` copied from the source template at launch; the description block stays hidden until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
 | CR-069 | Story media list on the room snapshot | No story-level media list exists; the details rail builds its gallery from each participant's `metadata.mediaImageUrls` and the transcript's scene images until `room.media[]` is served in display order | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
 | CR-070 | Scene image generation | No scene image operation exists in the Chassis (message actions accept REGENERATE_RESPONSE, CONTINUE_RESPONSE, REPORT_MESSAGE only); the composer keeps one visible, disabled scene image seat until a `POST /v1/studio/story-rooms/{id}/scene-image` call and its served coin cost exist | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 2 |
+| CR-071 | Served cast cap | No cast size cap exists in the Chassis; the composer's add character circle disables at a frontend constant (the player plus four NPCs) until the room snapshot serves `room.castCap` or a limit error on load | open | Nick | non-blocking; filed 13 Sep 2026 by fe/chat-studio brief 4 item 5 |
 
 ## Details
 
@@ -1164,6 +1165,24 @@ the way auto event media arrives today. Unverified: the cost, the gating,
 and whether it reuses the image generation job route. Interim: the seat is
 visible and disabled with the name "Scene image, not available yet"
 (`sceneImageState: "soon"` in `useStoryRoomComposerViewModel.js`).
+
+### CR-071, Served cast cap
+
+Filed 13 Sep 2026 by fe/chat-studio brief 4 item 5 (the add character
+circle). Brian ruled the cap as the player plus four NPCs; the Chassis
+serves no cast size limit and enforces none on load (searched
+`services/api/src` for a participant or cast cap: the hits are
+`ACTIVE_STORYLINE_SUMMARY_LIMITS.maxParticipants` 256,
+`sceneStateGrounding.js` `MAX_PARTICIPANTS` 18, and the active beat
+summary limit, all summary or grounding windows, not a cast size). Call
+wanted: `room.castCap` ({ maxNpcs }) on `GET /v1/studio/story-rooms/{id}`,
+and the registry NPC load and Random liked calls answering a
+`CHAT_CAST_CAP_REACHED` error past it. Expected response: the snapshot
+with the cap; the load calls refusing past it. Interim:
+`STORY_ROOM_CAST_NPC_CAP = 4` in `useStoryRoomChatShellViewModel.js`,
+counted over active CHARACTER participants (the Narrator and the player
+are not NPCs); the circle disables at the cap with the title "Up to 4
+characters", and nothing else is gated.
 
 ## Closed
 

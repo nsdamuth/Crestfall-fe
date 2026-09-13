@@ -39,6 +39,41 @@ export const STORY_ROOM_BACK_HREF = "/studio/v2/stories";
 
 export const STORY_ROOM_NEW_CHAT_LABEL = "New chat";
 
+// The cast cap (brief 4 item 5): the player plus four NPCs. A frontend
+// constant until the Chassis serves one (CR-071); no cast cap exists in
+// services/api today (the participant limits found there are summary
+// and scene grounding windows, not a cast size).
+export const STORY_ROOM_CAST_NPC_CAP = 4;
+export const STORY_ROOM_CAST_CAP_TITLE = `Up to ${STORY_ROOM_CAST_NPC_CAP} characters`;
+
+// One participants source (brief 4 item 5, gate G5): `cast` from
+// useStoryRoomChat (buildCastViewModel over snapshot.participants) feeds
+// the rail's Cast list as is, and this selector derives the composer's
+// cast row from the same list: every present, selectable responder
+// (active Characters, including NPCs the story auto-loaded, and the
+// Narrator), in participant order.
+export function selectCastRowOptions(cast = []) {
+  return (Array.isArray(cast) ? cast : [])
+    .filter((member) => member?.id && member?.isSelectableResponder)
+    .map((member) => ({
+      id: String(member.id),
+      label: String(member.name || member.participantType || "").trim(),
+      participantType: String(member.participantType || "").trim(),
+      creationId: member?.participant?.creationId || null,
+      avatarUrl: String(member.avatarUrl || "").trim(),
+    }));
+}
+
+// NPCs present in the chat, counted from the same source: active
+// Characters (the Narrator and the player are not NPCs).
+export function countStoryRoomNpcs(cast = []) {
+  return (Array.isArray(cast) ? cast : []).filter(
+    (member) =>
+      String(member?.participantType || "").toUpperCase() === "CHARACTER" &&
+      Boolean(member?.isActive)
+  ).length;
+}
+
 // The creation a new chat starts from (brief 4 item 3): the room's
 // source template when it launched from one (room.data.source), else,
 // for a private character chat, the default Character's creation; the
@@ -239,6 +274,10 @@ export function useStoryRoomChatShellViewModel({
     () => (Array.isArray(speakerOptions) ? speakerOptions : []),
     [speakerOptions]
   );
+  // The cast row reads the same participants list the rail's Cast list
+  // reads (brief 4 item 5, gate G5): selectCastRowOptions over `cast`.
+  const castRowOptions = useMemo(() => selectCastRowOptions(cast), [cast]);
+  const npcCount = useMemo(() => countStoryRoomNpcs(cast), [cast]);
 
   const [inputMode, setInputMode] = useState("DIALOGUE");
   const [nextSpeaker, setNextSpeaker] = useState("AUTO");
@@ -264,6 +303,10 @@ export function useStoryRoomChatShellViewModel({
   const [composerHelpPanel, setComposerHelpPanel] = useState(null);
   const [playerCharacterPickerOpen, setPlayerCharacterPickerOpen] = useState(false);
   const [firstMessageSubmitted, setFirstMessageSubmitted] = useState(false);
+  // The Manage cast dialog (brief 4 item 5) is owned here so the
+  // composer's add character circle opens it whether or not the rail's
+  // Cast drill-in is mounted; the binding shell renders it.
+  const [manageCastOpen, setManageCastOpen] = useState(false);
   // The user's chat color override lives in page state until the Chassis
   // serves a preference field (CR-066); null means the creator default.
   const [chatColorOverrideId, setChatColorOverrideId] = useState(null);
@@ -295,6 +338,7 @@ export function useStoryRoomChatShellViewModel({
     setFirstMessageSubmitted(false);
     setPlayerCharacterPickerOpen(false);
     setMobilePanel(null);
+    setManageCastOpen(false);
   }
 
   // Leaving the route hands the left edge back to the primary nav.
@@ -319,18 +363,18 @@ export function useStoryRoomChatShellViewModel({
   }, [isXlUp, leftOpen, releaseLeft]);
 
   const primaryCharacter = useMemo(() => {
-    const option = safeSpeakerOptions.find(
+    const option = castRowOptions.find(
       (candidate) => candidate?.participantType === "CHARACTER"
     );
 
     return option
       ? { label: option.label || "", avatarUrl: option.avatarUrl || "" }
       : null;
-  }, [safeSpeakerOptions]);
+  }, [castRowOptions]);
 
   const nextSpeakerOptions = useMemo(
-    () => buildNextSpeakerOptions(safeSpeakerOptions),
-    [safeSpeakerOptions]
+    () => buildNextSpeakerOptions(castRowOptions),
+    [castRowOptions]
   );
 
   const commands = useMemo(
@@ -360,14 +404,14 @@ export function useStoryRoomChatShellViewModel({
   // during render for the same reason as the room reset above.
   const selectedResponderStillAvailable =
     nextSpeaker === "AUTO" ||
-    safeSpeakerOptions.some((option) => option?.id === nextSpeaker);
+    castRowOptions.some((option) => option?.id === nextSpeaker);
   if (!selectedResponderStillAvailable) {
     setNextSpeaker("AUTO");
   }
 
   const selectNextResponder = useCallback(
     (participantId, { closeMobile = false } = {}) => {
-      if (!safeSpeakerOptions.some((option) => option?.id === participantId)) {
+      if (!castRowOptions.some((option) => option?.id === participantId)) {
         return;
       }
 
@@ -377,8 +421,11 @@ export function useStoryRoomChatShellViewModel({
         setMobilePanel(null);
       }
     },
-    [safeSpeakerOptions]
+    [castRowOptions]
   );
+
+  const openManageCast = useCallback(() => setManageCastOpen(true), []);
+  const closeManageCast = useCallback(() => setManageCastOpen(false), []);
 
   const requestDeleteRoom = useCallback(() => {
     if (deletingRoom || !roomId) return;
@@ -543,6 +590,33 @@ export function useStoryRoomChatShellViewModel({
     randomLikedLoading,
     randomLikedError,
     onLoadRandomLiked: loadRandomLikedCharacter,
+    onOpenManageCast: openManageCast,
+  };
+
+  // The Manage cast dialog's binding props (brief 4 item 5): the same
+  // registry NPC lifecycle and Random liked action the cast panel binds.
+  const manageCast = manageCastOpen
+    ? {
+        registryNpcs,
+        registryNpcsLoading,
+        registryNpcActionKey,
+        registryNpcError,
+        onLoadRegistryNpc: loadRegistryNpc,
+        onUnloadRegistryNpc: unloadRegistryNpc,
+        randomLikedLoading,
+        randomLikedError,
+        onLoadRandomLiked: loadRandomLikedCharacter,
+        onClose: closeManageCast,
+      }
+    : null;
+
+  // Add character (brief 4 item 5): the plus circle after the last cast
+  // circle; disabled at the cap with the cap as its title.
+  const atCastCap = npcCount >= STORY_ROOM_CAST_NPC_CAP;
+  const addCharacter = {
+    disabled: atCastCap,
+    title: atCastCap ? STORY_ROOM_CAST_CAP_TITLE : "Add character",
+    onPress: openManageCast,
   };
 
   // Inside the mobile sheet, choosing a responder closes the sheet.
@@ -728,7 +802,9 @@ export function useStoryRoomChatShellViewModel({
               actionType: "PLAYER_YIELD_TO_CHARACTER",
             })
         : null,
+      addCharacter,
     },
+    manageCast,
     chatColorProps,
     onToggleLeftPanel: toggleLeftPanel,
     onToggleRightPanel: toggleRightPanel,

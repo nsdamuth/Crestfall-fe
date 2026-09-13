@@ -12,6 +12,14 @@ ViewModel to the portable View and conditionally mounts the existing
 open. This preserves the original behavior of loading Player Characters only
 when the picker is opened.
 
+Brief 4 item 5 (13 Sep 2026): the chat shell owns the Manage cast dialog
+(`components/studio/story-rooms/StoryRoomManageCastDialog.jsx`, rendering
+this package's exported `ManageCastModal`) so the composer's add character
+circle opens it without the Cast drill-in mounted; when the shell hands
+`onOpenManageCast` down, the panel's Manage cast button opens that one
+dialog. The roster and the composer's cast circles read one participants
+source, `cast` from `useStoryRoomChat`.
+
 ## Portable View
 
 ```text

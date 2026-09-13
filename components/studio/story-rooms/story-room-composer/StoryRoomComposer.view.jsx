@@ -5,6 +5,7 @@ import {
   BookOpen,
   Image as ImageIcon,
   MapPin,
+  Plus,
   Send,
   Sparkles,
   UserRound,
@@ -84,6 +85,7 @@ export default function StoryRoomComposerView({
   sceneImageState = "soon",
   sceneImageLabel = "Scene image, not available yet",
   playerCircle = null,
+  addCharacter = null,
   onAuto,
   onChangeInputMode,
   onChangeNextSpeaker,
@@ -171,6 +173,25 @@ export default function StoryRoomComposerView({
                 onChange={onChangeNextSpeaker}
               />
             ))}
+
+            {/* Add character (brief 4 item 5): a 44px plus circle on the
+                secondary recipe after the last character circle, inside
+                the scrolling strip so it follows the cast; tap opens the
+                Manage cast dialog. Disabled at the cap with the cap as
+                its title. */}
+            {addCharacter ? (
+              <button
+                type="button"
+                onClick={() => addCharacter.onPress?.()}
+                disabled={Boolean(addCharacter.disabled) || textareaDisabled}
+                aria-label={addCharacter.title || "Add character"}
+                title={addCharacter.title || "Add character"}
+                aria-haspopup="dialog"
+                className={SECONDARY_CIRCLE_CLASS}
+              >
+                <Plus size={18} aria-hidden="true" />
+              </button>
+            ) : null}
           </div>
 
           <KitDropdownView

@@ -51,10 +51,16 @@ function createFixture(overrides = {}) {
     autoPendingLabel: "Choosing the next speaker",
     sceneImageState: "soon",
     sceneImageLabel: "Scene image, not available yet",
+    addCharacter: { disabled: false, title: "Add character", onPress: noop },
     ...defaultCallbacks,
     ...overrides,
   };
 }
+
+// Contract 5.1.0 (brief 4 item 5): the add character circle at the cap.
+export const storyRoomComposerCastCapFixture = createFixture({
+  addCharacter: { disabled: true, title: "Up to 4 characters", onPress: noop },
+});
 
 export const storyRoomComposerDefaultFixture = createFixture();
 

@@ -10,7 +10,7 @@ const view = read("components/studio/story-rooms/story-room-cast-panel/StoryRoom
 const viewModel = read("components/studio/story-rooms/story-room-cast-panel/useStoryRoomCastPanelViewModel.js");
 const contract = read("components/studio/story-rooms/story-room-cast-panel/StoryRoomCastPanel.contract.js");
 
-assert.match(contract, /STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2\.1\.0"/);
+assert.match(contract, /STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2\.2\.0"/);
 for (const prop of ["manageCastOpen", "onOpenManageCast", "onCloseManageCast"]) {
   assert.match(contract, new RegExp(`@property .*${prop}`));
 }

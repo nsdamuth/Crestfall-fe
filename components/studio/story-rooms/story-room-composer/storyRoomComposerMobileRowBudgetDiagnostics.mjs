@@ -14,7 +14,10 @@ import { fileURLToPath } from "node:url";
 // below is read from app/theme.css or from the rendered class strings;
 // the only estimate is the chip label's glyph advance, and the check is
 // taken on its ceiling (one em per glyph), which no Latin text face
-// exceeds.
+// exceeds. Brief 4 item 5 added the add character plus circle inside
+// the cast strip (the flex-1, min-w-0, overflow-x-auto span between the
+// player circle and the chip), so it scrolls with the cast and the row
+// budget below is unchanged.
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(currentDir, "../../../..");
