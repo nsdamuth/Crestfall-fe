@@ -47,21 +47,24 @@ const UPSCALE_TIP =
 // --viewer-expanded-width is derived from the measured image aspect
 // ratio so portrait and landscape images both grow until they meet
 // either the 78dvh height envelope or the 88vw/76rem width envelope.
+// Image sizing, RULED 12 Sep 2026 (Brian's browser review): the image
+// never takes an explicit width. It keeps its own ratio (aspect-ratio
+// from the stored size, or the intrinsic one) and fits inside the
+// space the column leaves after the header and the bar, capped in
+// width at the standing 88vw / 76rem ceiling. The former explicit
+// width (a 78dvh formula) squashed the image whenever the window was
+// too short for that formula to hold.
 const VIEWER_IMAGE_CLASSES =
-  "block h-auto w-auto max-w-full select-none max-h-[calc(100dvh-20rem)] min-[700px]:w-[var(--viewer-expanded-width)] min-[700px]:max-h-[78dvh] min-[700px]:max-w-[min(88vw,76rem)]";
+  "block h-auto w-auto max-h-full max-w-full select-none aspect-[var(--viewer-aspect)] min-[700px]:max-w-[min(88vw,76rem)]";
 
 function getViewerExpandedImageStyle(pixelSize) {
   const width = Number(pixelSize?.width);
   const height = Number(pixelSize?.height);
   if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
-    return undefined;
+    return { "--viewer-aspect": "auto" };
   }
 
-  const aspectRatio = width / height;
-  const heightBoundWidthDvh = 78 * aspectRatio;
-  return {
-    "--viewer-expanded-width": `min(88vw, 76rem, ${heightBoundWidthDvh.toFixed(4)}dvh)`,
-  };
+  return { "--viewer-aspect": `${width} / ${height}` };
 }
 
 const GLASS_BAR =
@@ -331,10 +334,14 @@ export default function KitImageViewerView({
     // viewer panel: only the header, the frame, the bars, the editor
     // rows, and the strip re-enable pointer events, so a click
     // anywhere else falls through to the veil and dismisses. w-fit so
-    // the header and bars snap to the image's own width (R5).
+    // the header and bars snap to the image's own width (R5). The
+    // column is the full viewer height at every width with --space-4
+    // above and below (RULED 12 Sep 2026: never flush with the
+    // window); the frame wrapper takes what the header and bar leave,
+    // so the image's max-height is real space, not a viewport formula.
     <div
       style={viewerExpandedImageStyle}
-      className="pointer-events-none flex h-full max-h-full w-fit max-w-full min-h-0 flex-col items-center justify-center gap-[var(--space-3)] px-[var(--space-2)] min-[700px]:h-auto min-[700px]:max-h-full min-[700px]:px-0"
+      className="pointer-events-none flex h-full max-h-full w-fit max-w-full min-h-0 flex-col items-center justify-center gap-[var(--space-3)] px-[var(--space-2)] py-[var(--space-4)] min-[700px]:px-0"
     >
       <ViewerHeader
         title={title}
@@ -374,13 +381,15 @@ export default function KitImageViewerView({
         />
       ) : (
         <>
-          <ImageFrame
-            imageSrc={imageSrc}
-            title={title}
-            zoomDisabled={!imageSrc}
-            imageClassName={VIEWER_IMAGE_CLASSES}
-            onImageLoad={onImageLoad}
-          />
+          <div className="flex min-h-0 max-w-full flex-1 items-center justify-center">
+            <ImageFrame
+              imageSrc={imageSrc}
+              title={title}
+              zoomDisabled={!imageSrc}
+              imageClassName={VIEWER_IMAGE_CLASSES}
+              onImageLoad={onImageLoad}
+            />
+          </div>
 
           <ViewerBottomBar
             onEnterEdit={onEnterEdit}
