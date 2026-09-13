@@ -390,15 +390,25 @@
   line-height: var(--lh-chat);
 }
 
-/* Compact button (fe/chat-studio review round 6, 13 Sep 2026, RULED
-   by Brian for the story details rail's Export and Share): a cf-btn
-   one step smaller by label and padding, the ui step over --space-4,
-   the height still --control-md (the touch floor). The same shape the
-   banner CTA takes below 700px, available at every width. */
+/* Compact button (fe/chat-studio review rounds 6 and 7, 13 Sep 2026,
+   RULED by Brian for the story details rail's Export and Share): a
+   cf-btn one step smaller by label and padding, the ui step over
+   --space-4, and (round 7, "slightly shorter") one step shorter on a
+   fine pointer at --control-filter (38), the same pairing rule the
+   filter line uses: a coarse pointer keeps the --control-md touch
+   floor. Scope of --control-filter widened to this recipe by that
+   ruling (docs/DESIGN-TOKENS.md, Sizing). */
 .cf-btn--compact {
+  height: var(--control-filter);
   padding: 0 var(--space-4);
   font-size: var(--text-ui);
   line-height: var(--lh-ui);
+}
+
+@media (pointer: coarse) {
+  .cf-btn--compact {
+    height: var(--control-md);
+  }
 }
 
 .cf-btn--lg {

@@ -395,7 +395,7 @@ height, splitting the difference between `--control-sm` and
 `--control-md`; legal on search, dropdown, sort, and view-toggle
 controls on the sticky filter line, desktop widths only, always
 paired with a `[@media(pointer:coarse)]:min-h-[var(--control-md)]`
-override so touch keeps the 44px floor; never on any other control),
+override so touch keeps the 44px floor; RULED 13 Sep 2026 by Brian's story chat review round 7: also the compact button recipe `.cf-btn--compact` in `app/design-system.css` (the story details rail's Export and Share), on the same coarse-pointer pairing; never on any other control),
 `--control-md` 44 (the default and the touch floor), `--control-lg`
 48, `--icon-sm/md/lg` 16/20/24, `--container` 1200, `--measure` 68ch.
 All locked.
