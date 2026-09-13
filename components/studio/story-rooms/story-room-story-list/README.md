@@ -15,7 +15,7 @@ The story chat page's left rail (ruling D4, fe/chat-studio item 1, 12 Sep 2026).
 - newest activity first ordering
 - the loading, error, and empty states
 
-`StoryRoomStoryList.view.jsx` is the portable View. It renders the search field (`KitSearchFieldView`), the New story link, the Recent heading, and one 56px row per story: art or the kit art placeholder at 40px, title at the ui step, last line at the label step, the relative day right-aligned, hover on `--step-above`, the current story on a gold left rule and `--fill-whisper`. Gold marks the selected row only.
+`StoryRoomStoryList.view.jsx` is the portable View. It renders the search field (`KitSearchFieldView`, the one shared search field the sticky filter bar and the Filter panel render, so the bed, hairline, glyph, and type are the filter bar's by construction and never restyled here; brief 2 item 7 verified this, no local override exists), the New story link, the Recent heading, and one 56px row per story: art or the kit art placeholder at 40px, title at the ui step, last line at the label step, the relative day right-aligned, hover on `--step-above`, the current story on a gold left rule and `--fill-whisper`. Gold marks the selected row only.
 
 ## Placement
 
