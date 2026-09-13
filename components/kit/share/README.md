@@ -18,7 +18,11 @@ Lives in `shareTypeRule.js` and nowhere else.
 - A playable asset (character, story, adventure) carries the card: the
   stylized 1200 by 630 image the share-card route composes from public
   creation data (`app/api/share-card/[id]/route.js`), built on the
-  asset's featured image, its title, a creator byline, a short excerpt,
+  asset's featured image, the Crestfall Studio lockup (the sidebar's
+  mark, `public/assets/icons/icons-v7.svg#i-59`, drawn as the same
+  circles inside `ShareCardImage.jsx` because Satori loads no external
+  symbol, with the wordmark in the vendored display face at the
+  sidebar's proportions), its title, a creator byline, a short excerpt,
   and the play invitation.
 - Every other creation (location, outfit, lore, a registry) shares the
   plain link preview with no card.

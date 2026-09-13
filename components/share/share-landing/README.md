@@ -48,8 +48,11 @@ app/c/[id]/[[...slug]]/page.jsx, app/story/..., app/adventure/...
 
 ## Copy
 
-- "Crestfall" (eyebrow), "Canon", the kind word (Character, Story,
-  Adventure), "Play free", "Play", "Skip to the action".
+- The Crestfall Studio lockup in the header slot (follow-up 1, item 4:
+  the sidebar's mark, `public/assets/icons/icons-v7.svg#i-59`, and
+  wordmark at the sidebar's proportions, replacing the "Crestfall"
+  eyebrow), "Canon", the kind word (Character, Story, Adventure),
+  "Play free", "Play", "Skip to the action".
 
 ## Fixtures
 

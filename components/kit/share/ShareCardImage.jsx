@@ -1,6 +1,7 @@
 // The one card renderer (fe/share-og brief 1, decisions 2A and 4A;
-// spacing and the call to action re-cut in follow-up 1, item 3): art
-// left, words right, 1200 by 630. Written in the Satori subset (flex
+// spacing and the call to action re-cut in follow-up 1, item 3; the
+// Crestfall Studio lockup in place of the eyebrow, item 4): art left,
+// words right, 1200 by 630. Written in the Satori subset (flex
 // only, inline styles, no CSS variables) for next/og. Every color,
 // size, and radius is asked for by theme name through the resolver the
 // route builds from app/theme.css; nothing here names a value. Type
@@ -43,6 +44,93 @@ export const SHARE_CARD_THEME_NAMES = Object.freeze([
   "control-sm",
   "track-label",
 ]);
+
+// The studio sidebar's mark, public/assets/icons/icons-v7.svg#i-59,
+// drawn here as the same circles because Satori cannot load an
+// external symbol. Seven petals, the inner ring, the outer ring; the
+// stroke is the ornament gold, exactly as the sidebar paints it.
+const MARK_VIEWBOX = 64;
+const MARK_PETALS = Object.freeze([
+  [32, 32],
+  [42, 32],
+  [37, 40.66],
+  [27, 40.66],
+  [22, 32],
+  [27, 23.34],
+  [37, 23.34],
+]);
+
+// The sidebar's lockup proportions (StudioSidebar.view.jsx): a 2.5rem
+// mark, the wordmark at the ui size with its first letter at 1.45em
+// tracked .04em, the word Studio at the label size beneath it 2px down.
+const LOCKUP_FIRST_LETTER_EM = 1.45;
+const LOCKUP_WORDMARK_TRACKING_EM = 0.04;
+const LOCKUP_TITLE_GAP_PX = 2;
+
+function ShareCardMark({ size = 0, stroke = "" }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${MARK_VIEWBOX} ${MARK_VIEWBOX}`}
+      fill="none"
+      stroke={stroke}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {MARK_PETALS.map(([cx, cy]) => (
+        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={10} strokeWidth={0.6} />
+      ))}
+      <circle cx={32} cy={32} r={20} strokeWidth={0.6} />
+      <circle cx={32} cy={32} r={23} strokeWidth={1} />
+    </svg>
+  );
+}
+
+function ShareCardLockup({ resolve = () => "", display = "serif", sans = "sans-serif" }) {
+  const markSize = toPx(resolve("space-10"), SCALE);
+  const wordmarkSize = toPx(resolve("text-ui"), SCALE);
+  const firstLetterSize = wordmarkSize * LOCKUP_FIRST_LETTER_EM;
+  const studioSize = toPx(resolve("text-label"), SCALE);
+  const gap = toPx(resolve("space-3"), SCALE);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <ShareCardMark size={markSize} stroke={resolve("gold-ornament")} />
+      <div style={{ display: "flex", flexDirection: "column", marginLeft: gap }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            fontFamily: display,
+            fontWeight: 600,
+            fontSize: wordmarkSize,
+            lineHeight: 1,
+            letterSpacing: LOCKUP_WORDMARK_TRACKING_EM * wordmarkSize,
+            textTransform: "uppercase",
+            color: resolve("ink"),
+          }}
+        >
+          <span style={{ fontSize: firstLetterSize, lineHeight: 1 }}>C</span>
+          <span>restfall</span>
+        </div>
+        <div
+          style={{
+            marginTop: LOCKUP_TITLE_GAP_PX * SCALE,
+            fontFamily: sans,
+            fontSize: studioSize,
+            lineHeight: 1,
+            letterSpacing: toTracking(resolve("track-label"), studioSize),
+            textTransform: "uppercase",
+            color: resolve("ink-faint"),
+          }}
+        >
+          Studio
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function toPx(value, scale = 1) {
   const text = String(value || "").trim();
@@ -160,17 +248,7 @@ export default function ShareCardImage({ model = {}, resolve = () => "", fonts =
             marginBottom: step,
           }}
         >
-          <div
-            style={{
-              fontSize: labelSize,
-              fontWeight: 500,
-              letterSpacing: toTracking(resolve("track-label"), labelSize),
-              textTransform: "uppercase",
-              color: resolve("gold-ornament"),
-            }}
-          >
-            Crestfall
-          </div>
+          <ShareCardLockup resolve={resolve} display={display} sans={sans} />
           <div
             style={{
               marginTop: step,

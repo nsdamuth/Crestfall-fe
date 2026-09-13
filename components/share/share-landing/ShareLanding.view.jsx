@@ -1,13 +1,36 @@
 // ShareLanding.view: stateless presentation of the public share
 // landing (contract 1.0.0). The card's content as page text, readable
 // without zoom at 390, in a deliberate two-column layout from 1024 up.
-// Tokens only; the one action is the gold primary at 44px.
+// Theme values only; the one action is the gold primary at 44px.
 import Link from "next/link";
 import { Play } from "lucide-react";
 
 import KitBadgeView from "@/components/kit/badge/KitBadge.view";
 
 export const SHARE_LANDING_TITLE_ID = "share-landing-title";
+
+// The Crestfall Studio lockup in the header slot (follow-up 1, item 4):
+// the same mark and wordmark the studio sidebar renders
+// (StudioSidebar.view.jsx, public/assets/icons/icons-v7.svg#i-59), at
+// the sidebar's own proportions. Decorative on this page: the h1 is
+// the creation's title.
+function Lockup() {
+  return (
+    <div className="flex items-center gap-[var(--space-2)]">
+      <svg viewBox="0 0 64 64" aria-hidden="true" className="h-10 w-10 shrink-0 text-[var(--gold-ornament)]">
+        <use href="/assets/icons/icons-v7.svg#i-59" />
+      </svg>
+      <span>
+        <p className="font-display text-[length:var(--text-ui)] font-[var(--weight-medium)] uppercase leading-none tracking-[.04em] text-[color:var(--ink)] first-letter:text-[1.45em]">
+          Crestfall
+        </p>
+        <p className="mt-[2px] text-[length:var(--text-label)] uppercase leading-none tracking-[var(--track-label)] text-[color:var(--ink-faint)]">
+          Studio
+        </p>
+      </span>
+    </div>
+  );
+}
 
 function Art({ src = "", title = "" }) {
   return (
@@ -59,9 +82,7 @@ export default function ShareLandingView({
             <Art src={imageSrc} title={title} />
 
             <div className="flex min-w-0 flex-col gap-[var(--space-4)]">
-              <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
-                Crestfall
-              </p>
+              <Lockup />
 
               {kindLabel || isCanon ? (
                 <div className="flex flex-wrap gap-[var(--space-1)]">
