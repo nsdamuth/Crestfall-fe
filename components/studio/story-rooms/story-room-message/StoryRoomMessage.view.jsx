@@ -290,6 +290,11 @@ function getArticleClassName(surfaceTone) {
   return `${base} max-w-[86%] min-[700px]:max-w-[70%] bg-[var(--surface-1)]`;
 }
 
+// Transcript body type (brief 2 item 8, decision C2 replaces C1): the
+// message body reads at --text-body and --lh-body; the speaker name,
+// the opening label, the mode pill, and the delivery lines stay at
+// --text-label. System notices are meta, not body, and stay at the ui
+// step (the brief named the body only).
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
     return "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]";
@@ -302,7 +307,7 @@ function getBodyClassName(surfaceTone, hasSemanticPresentation) {
     return "font-display text-[length:var(--text-body)] leading-[var(--lh-body)] italic text-[var(--ink-dim)]";
   }
 
-  return "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink)]";
+  return "text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]";
 }
 
 export default function StoryRoomMessageView({
