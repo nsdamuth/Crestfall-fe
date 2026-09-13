@@ -30,10 +30,11 @@ import {
 // locked --chat-bubble-fill recipe, every other speaker left-aligned on
 // the nested card surface, no borders, --radius-bubble, body one step
 // tighter (the ui step), narration italic, whispers as a quiet inset.
-// Speaker ink derives from the character's palette anchor through
-// --chat-speaker-name (the gap-6 clamp); body ink is always --ink.
-// The one inline value the View writes is the --chat-speaker anchor,
-// contract data, never a literal of its own.
+// The speaker name reads --ink in the display font at the ui step
+// (brief 4 item 10, RULED, off the --chat-speaker-name clamp and off
+// the eyebrow tier); body ink is always --ink. The one inline value
+// the View writes is the --chat-speaker anchor, contract data, never a
+// literal of its own; it still tints the bubble and the avatar tile.
 
 const WHISPER_INSET_CLASS =
   "border-l-2 border-[var(--line-strong)] pl-[var(--space-3)] italic text-[var(--ink-dim)]";
@@ -297,10 +298,11 @@ function getArticleClassName(surfaceTone) {
 // Transcript body type (brief 3 item 6, RULED by Brian, replacing brief
 // 2 item 8's body step): the message body reads at --text-chat and
 // --lh-chat (14 over 22), the transcript body tier minted in
-// app/theme.css and legal only in this package; the speaker name, the
-// opening label, the mode pill, and the delivery lines stay at
-// --text-label. System notices are meta, not body, and stay at the ui
-// step (the brief named the body only).
+// app/theme.css and legal only in this package; the opening label, the
+// mode pill, and the delivery lines stay at --text-label, and the
+// speaker name reads the display font at --text-ui (brief 4 item 10).
+// System notices are meta, not body, and stay at the ui step (the
+// brief named the body only).
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
     return "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]";
@@ -412,7 +414,11 @@ export default function StoryRoomMessageView({
                   </p>
                 ) : null}
 
-                <p className="truncate text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--chat-speaker-name)]">
+                {/* The speaker name (brief 4 item 10): off the eyebrow
+                    tier so it never matches the Opening scene eyebrow
+                    above it; display font, the ui step, medium weight,
+                    --ink, no uppercase, no tracking. */}
+                <p className="truncate font-display text-[length:var(--text-ui)] leading-[var(--lh-ui)] font-[var(--weight-medium)] text-[var(--ink)]">
                   {speakerLabel}
                 </p>
               </div>

@@ -1,5 +1,13 @@
-export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.1.0";
+export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.2.0";
 
+// 2.2.0, fe/chat-studio brief 4 item 10 (13 Sep 2026, RULED by Brian).
+// Presentation only, no prop changed: the speaker name on every bubble
+// (character, narrator, the player's "You") leaves the eyebrow tier and
+// reads in the display font at --text-ui, --weight-medium, --ink, no
+// uppercase, no tracking; the eyebrow above it (Opening scene, the
+// Dialogue tag) stays. `speakerColor` still tints the bubble and the
+// avatar tile through --chat-speaker; it no longer colors the name.
+//
 // 2.1.0, fe/chat-studio brief 4 item 9 (13 Sep 2026). Presentation
 // only, no prop changed: character, narrator, and player bubbles widen
 // from 70 to 85 percent of the transcript column at the shipped 700px
