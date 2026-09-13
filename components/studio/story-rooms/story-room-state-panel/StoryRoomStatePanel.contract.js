@@ -1,4 +1,10 @@
-export const STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
+export const STORY_ROOM_STATE_PANEL_VIEW_CONTRACT_VERSION = "2.1.0";
+
+// 2.1.0, fe/chat-studio review round 6 (13 Sep 2026, Brian's browser
+// review). Presentation only, no prop changed: the action buttons
+// (Export, Share) take the compact recipe, .cf-btn--compact in
+// app/design-system.css, the ui step over --space-4 padding, height
+// still the 44px floor.
 
 /**
  * Display-ready row supplied to one Story Room state card.

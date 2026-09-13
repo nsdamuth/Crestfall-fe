@@ -50,7 +50,7 @@ export default function StoryRoomStatePanelView({
                 type="button"
                 disabled={action.disabled !== false}
                 onClick={() => action.onPress?.()}
-                className="cf-btn cf-btn--secondary w-full justify-center disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
+                className="cf-btn cf-btn--secondary cf-btn--compact w-full justify-center disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
               >
                 <ActionIcon size={14} aria-hidden="true" />
                 {action.label}

@@ -390,6 +390,17 @@
   line-height: var(--lh-chat);
 }
 
+/* Compact button (fe/chat-studio review round 6, 13 Sep 2026, RULED
+   by Brian for the story details rail's Export and Share): a cf-btn
+   one step smaller by label and padding, the ui step over --space-4,
+   the height still --control-md (the touch floor). The same shape the
+   banner CTA takes below 700px, available at every width. */
+.cf-btn--compact {
+  padding: 0 var(--space-4);
+  font-size: var(--text-ui);
+  line-height: var(--lh-ui);
+}
+
 .cf-btn--lg {
   height: var(--control-lg);
   padding: 0 var(--space-8);
