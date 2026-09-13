@@ -50,30 +50,39 @@ export default function StoryRoomNoticeCard({
         </span>
 
         <div className="min-w-0 flex-1">
-          {eyebrow ? (
-            <p
-              className={`text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] ${classes.eyebrow}`}
-            >
-              {eyebrow}
-            </p>
-          ) : null}
+          {/* Action placement (brief 2 item 9): the button anchors to the
+              right edge of the card on the same row as the text at md
+              and up, and runs full width under the text below md. Its
+              label reads at the message field's type step through the
+              cf-btn--field variant. */}
+          <div className="md:flex md:items-center md:gap-[var(--space-4)]">
+            <div className="min-w-0 md:flex-1">
+              {eyebrow ? (
+                <p
+                  className={`text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] ${classes.eyebrow}`}
+                >
+                  {eyebrow}
+                </p>
+              ) : null}
 
-          {body ? (
-            <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
-              {body}
-            </p>
-          ) : null}
+              {body ? (
+                <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+                  {body}
+                </p>
+              ) : null}
+            </div>
 
-          {safeAction?.label ? (
-            <button
-              type="button"
-              onClick={() => safeAction.onPress?.()}
-              disabled={Boolean(safeAction.busy)}
-              className="cf-btn cf-btn--secondary mt-[var(--space-4)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
-            >
-              {safeAction.busy ? safeAction.busyLabel || safeAction.label : safeAction.label}
-            </button>
-          ) : null}
+            {safeAction?.label ? (
+              <button
+                type="button"
+                onClick={() => safeAction.onPress?.()}
+                disabled={Boolean(safeAction.busy)}
+                className="cf-btn cf-btn--secondary cf-btn--field mt-[var(--space-4)] w-full disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] md:mt-0 md:w-auto md:shrink-0"
+              >
+                {safeAction.busy ? safeAction.busyLabel || safeAction.label : safeAction.label}
+              </button>
+            ) : null}
+          </div>
 
           {errorMessage ? (
             <p className="mt-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger-text)]">
