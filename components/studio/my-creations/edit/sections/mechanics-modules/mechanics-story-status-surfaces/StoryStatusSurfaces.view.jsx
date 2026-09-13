@@ -16,6 +16,7 @@ import {
   STORY_STATUS_SURFACE_SOURCE_DOMAINS,
   STORY_STATUS_SURFACE_STATS_KINDS,
 } from "./StoryStatusSurfaces.contract.js";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 function Field({ label, value, onChange, placeholder = "", help = "", list }) {
   return (
@@ -26,7 +27,7 @@ function Field({ label, value, onChange, placeholder = "", help = "", list }) {
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
         list={list}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]"
+        className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]"
       />
       {help ? <span className="text-[11px] leading-5 text-[var(--muted)]">{help}</span> : null}
     </label>
@@ -34,20 +35,22 @@ function Field({ label, value, onChange, placeholder = "", help = "", list }) {
 }
 
 function SelectField({ label, value, onChange, options, help = "" }) {
+  const normalizedOptions = options.map((option) => ({
+    value: option?.value ?? option,
+    label: option?.label ?? option,
+  }));
+
   return (
     <label className="grid gap-2 text-sm text-[var(--muted)]">
       <span>{label}</span>
-      <select
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]"
-      >
-        {options.map((option) => (
-          <option key={option.value ?? option} value={option.value ?? option}>
-            {option.label ?? option}
-          </option>
-        ))}
-      </select>
+      <div className="w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+        <KitDropdownView
+          options={normalizedOptions}
+          selectedValues={value !== undefined && value !== null ? [value] : []}
+          isMultiSelect={false}
+          onToggleOption={(nextValue) => onChange?.(nextValue)}
+        />
+      </div>
       {help ? <span className="text-[11px] leading-5 text-[var(--muted)]">{help}</span> : null}
     </label>
   );
@@ -92,7 +95,7 @@ function ReadoutCard({
   const dataListId = `story-status-mechanics-${surfaceIndex}-${readoutIndex}`;
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
@@ -315,14 +318,14 @@ function ReadoutCard({
           placeholder="Unavailable"
           help="Shown when the authoritative source cannot resolve safely."
         />
-        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+        <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--muted)]">
           <input
             type="checkbox"
             checked={readout.enabled !== false}
             onChange={(event) =>
               patchReadout(surfaceIndex, readoutIndex, { enabled: event.target.checked })
             }
-            className="h-4 w-4 accent-[var(--muted-gold)]"
+            className="h-4 w-4 accent-[var(--gold-ornament)]"
           />
           Readout enabled
         </label>
@@ -355,7 +358,7 @@ function SurfaceCard({
   }, [foldSignal?.revision, foldSignal?.expanded]);
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface-2)]">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"
@@ -433,7 +436,7 @@ function SurfaceCard({
               <input
                 readOnly
                 value={host === "INLINE" ? "Inline in Story Room" : host}
-                className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-[var(--muted)] outline-none"
+                className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--muted)] outline-none"
               />
               <span className="text-[11px] leading-5 text-[var(--muted)]">
                 V1 supports inline presentation only. The readout contract is separate so modal/drawer hosts can be added later without redefining these values.
@@ -455,20 +458,20 @@ function SurfaceCard({
                 help="Presentation only; changing placement never changes gameplay state."
               />
             ) : null}
-            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--muted)]">
+            <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--muted)]">
               <input
                 type="checkbox"
                 checked={surface.enabled !== false}
                 onChange={(event) =>
                   patchSurface(surfaceIndex, { enabled: event.target.checked })
                 }
-                className="h-4 w-4 accent-[var(--muted-gold)]"
+                className="h-4 w-4 accent-[var(--gold-ornament)]"
               />
               Surface enabled
             </label>
           </div>
 
-          <div className="mt-6 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
@@ -501,7 +504,7 @@ function SurfaceCard({
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-[var(--muted)]">
+              <p className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--muted)]">
                 No readouts yet. Add a value from this Mechanics Module, Stats & Pools, Progression, or Wallet.
               </p>
             )}
@@ -526,7 +529,7 @@ export default function StoryStatusSurfacesView({
   moveReadout,
 }) {
   return (
-    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/20 p-5">
+    <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-[var(--surface-2)] p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.25em] text-[var(--muted-gold)]">
@@ -564,7 +567,7 @@ export default function StoryStatusSurfacesView({
           ))}
         </div>
       ) : (
-        <div className="mt-6 rounded-xl border border-white/10 bg-black/20 px-4 py-4 text-sm leading-6 text-[var(--muted)]">
+        <div className="mt-6 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 text-sm leading-6 text-[var(--muted)]">
           No Story Status Surfaces yet. Add one when this module should expose live state persistently in the Story UI.
         </div>
       )}

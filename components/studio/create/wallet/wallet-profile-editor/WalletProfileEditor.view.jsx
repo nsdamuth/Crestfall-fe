@@ -11,7 +11,7 @@ function Label({ children }) {
 }
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50";
+  "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--muted-gold)]/50";
 
 function TextInput({ value = "", onChange = null, type = "text", ...props }) {
   return (
@@ -86,7 +86,7 @@ export default function WalletProfileEditorView({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-[var(--muted-gold)]">
@@ -130,6 +130,7 @@ export default function WalletProfileEditorView({
                 onChange={(event) =>
                   onUpdateProfileField?.("enabled", event.target.checked)
                 }
+                className="h-4 w-4 accent-[var(--gold-ornament)]"
               />
               Profile enabled
             </label>
@@ -148,7 +149,7 @@ export default function WalletProfileEditorView({
 
       <ValidationPanel errors={errors} warnings={warnings} />
 
-      <section className="rounded-2xl border border-white/10 bg-black/30 p-5">
+      <section className="rounded-2xl border border-white/10 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
@@ -172,11 +173,11 @@ export default function WalletProfileEditorView({
           </button>
         </div>
 
-        <div className="mt-5 space-y-5">
+        <div className="mt-5 divide-y divide-[var(--line-whisper)]">
           {currencies.map((currency, currencyIndex) => (
             <article
               key={`${currency.id}-${currencyIndex}`}
-              className="rounded-2xl border border-white/10 bg-black/25 p-5"
+              className="py-5 first:pt-0"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
@@ -244,6 +245,7 @@ export default function WalletProfileEditorView({
                           event.target.checked
                         )
                       }
+                      className="h-4 w-4 accent-[var(--gold-ornament)]"
                     />
                     Currency enabled
                   </label>

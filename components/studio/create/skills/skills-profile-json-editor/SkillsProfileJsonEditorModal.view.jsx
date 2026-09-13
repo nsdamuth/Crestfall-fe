@@ -30,7 +30,7 @@ function IssueList({ title, issues = [], tone = "error" }) {
         {issues.map((issue, index) => (
           <div
             key={`${issue?.path || "issue"}-${index}`}
-            className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+            className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2"
           >
             <code className="break-all text-[11px] text-[var(--muted-gold)]">
               {issue?.path || "$"}
@@ -51,7 +51,7 @@ function ToolbarButton({ icon: Icon, children, onClick, disabled = false }) {
       type="button"
       onClick={() => onClick?.()}
       disabled={disabled}
-      className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-45"
+      className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-[var(--surface-2)] px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] transition hover:border-[var(--muted-gold)]/35 hover:text-[var(--foreground)] disabled:cursor-not-allowed disabled:opacity-45"
     >
       <Icon size={13} />
       {children}
@@ -86,7 +86,7 @@ export default function SkillsProfileJsonEditorModalView({
       closeOnBackdrop={false}
       panelClassName="flex max-h-[calc(100dvh-2rem)] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-[var(--muted-gold)]/25 bg-[#080706] shadow-2xl"
     >
-      <div className="flex shrink-0 flex-col gap-4 border-b border-white/10 p-5 lg:flex-row lg:items-start lg:justify-between">
+      <div className="flex shrink-0 flex-col gap-4 p-5 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--muted-gold)]">
             <Braces size={15} />
@@ -134,6 +134,7 @@ export default function SkillsProfileJsonEditorModalView({
           </button>
         </div>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="min-w-0">
@@ -177,7 +178,7 @@ export default function SkillsProfileJsonEditorModalView({
             onChange={(event) => onChangeJson?.(event.target.value)}
             spellCheck={false}
             aria-label="Skills Profile JSON"
-            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/55"
+            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 font-mono text-xs leading-6 text-[var(--foreground)] outline-none transition placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/55"
           />
         </section>
 
@@ -194,7 +195,7 @@ export default function SkillsProfileJsonEditorModalView({
             </p>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
               AI Guide
             </p>
@@ -206,7 +207,7 @@ export default function SkillsProfileJsonEditorModalView({
           </section>
 
           {statusMessage ? (
-            <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
                 Status
               </p>

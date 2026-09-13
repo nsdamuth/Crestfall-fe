@@ -17,6 +17,7 @@ import {
 
 import RulesCodexJsonEditorModal from "../rules-codex-json-editor/RulesCodexJsonEditorModal";
 import { TextAreaField } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 function Counter({ value = 0, limit = 0 }) {
   const safeValue = Number.isFinite(Number(value)) ? Number(value) : 0;
@@ -78,7 +79,7 @@ function TextInput({ value = "", onChange, placeholder = "", ...props }) {
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
@@ -92,20 +93,21 @@ function NumberInput({ value, onChange, min, max, step = 1 }) {
       max={max}
       step={step}
       onChange={onChange}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
 
-function SelectInput({ value, onChange, children }) {
+function SelectInput({ value, onChange, options = [] }) {
   return (
-    <select
-      value={value}
-      onChange={onChange}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
-    >
-      {children}
-    </select>
+    <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+      <KitDropdownView
+        options={options}
+        selectedValues={value ? [value] : []}
+        isMultiSelect={false}
+        onToggleOption={(nextValue) => onChange?.({ target: { value: nextValue } })}
+      />
+    </div>
   );
 }
 
@@ -149,12 +151,12 @@ export default function RulesCodexEditorView({
     : [];
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <BookOpenText size={18} />
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Rules Codex · Interpretation Layer
             </p>
           </div>
@@ -187,7 +189,7 @@ export default function RulesCodexEditorView({
             className={`rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
               enabled
                 ? "border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
+                : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
             }`}
           >
             {enabled ? "Codex Enabled" : "Enable Codex"}
@@ -196,7 +198,7 @@ export default function RulesCodexEditorView({
       </div>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Authority
           </p>
@@ -204,7 +206,7 @@ export default function RulesCodexEditorView({
             Interpretation only
           </p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Sections
           </p>
@@ -212,7 +214,7 @@ export default function RulesCodexEditorView({
             {sectionCount.toLocaleString()} / {sectionLimit.toLocaleString()}
           </p>
         </div>
-        <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+        <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
           <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
             Guidance budget
           </p>
@@ -252,8 +254,8 @@ export default function RulesCodexEditorView({
           />
         </div>
 
-        <aside className="rounded-xl border border-white/10 bg-black/25 p-4">
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+        <aside className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Selection Budget
           </p>
           <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -300,7 +302,7 @@ export default function RulesCodexEditorView({
 
       <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
         <div>
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Rules Sections
           </p>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -330,7 +332,7 @@ export default function RulesCodexEditorView({
             return (
               <article
                 key={`${section.id || "section"}-${section.order}-${index}`}
-                className="overflow-hidden rounded-xl border border-white/10 bg-black/25"
+                className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]"
               >
                 <div className="flex items-start gap-2 px-3 py-3 sm:px-4">
                   <button
@@ -450,11 +452,12 @@ export default function RulesCodexEditorView({
                                 event.target.value
                               )
                             }
-                          >
-                            <option value="ALWAYS">Always</option>
-                            <option value="CONTEXTUAL">Contextual</option>
-                            <option value="EXPLICIT_ONLY">Explicit only</option>
-                          </SelectInput>
+                            options={[
+                              { value: "ALWAYS", label: "Always" },
+                              { value: "CONTEXTUAL", label: "Contextual" },
+                              { value: "EXPLICIT_ONLY", label: "Explicit only" },
+                            ]}
+                          />
                         </div>
 
                         <div>
@@ -468,10 +471,11 @@ export default function RulesCodexEditorView({
                                 event.target.value
                               )
                             }
-                          >
-                            <option value="ANY">Any signal</option>
-                            <option value="ALL">All populated groups</option>
-                          </SelectInput>
+                            options={[
+                              { value: "ANY", label: "Any signal" },
+                              { value: "ALL", label: "All populated groups" },
+                            ]}
+                          />
                         </div>
 
                         <div>
@@ -506,7 +510,7 @@ export default function RulesCodexEditorView({
                             className={`mt-2 w-full rounded-xl border px-4 py-3 text-sm transition ${
                               section.enabled
                                 ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-100"
-                                : "border-white/10 bg-black/35 text-[var(--ink-dim)]"
+                                : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
                             }`}
                           >
                             {section.enabled ? "Enabled" : "Disabled"}
@@ -514,7 +518,7 @@ export default function RulesCodexEditorView({
                         </div>
                       </div>
 
-                      <div className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+                      <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-xs leading-5 text-[var(--ink-dim)]">
                         <span className="font-medium text-[var(--gold-ornament)]">
                           Fixed authority:
                         </span>{" "}
@@ -543,7 +547,7 @@ export default function RulesCodexEditorView({
                               className="mt-0.5 shrink-0 text-[var(--gold-ornament)]"
                             />
                             <div>
-                              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                                 Contextual Activation Signals
                               </p>
                               <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -582,10 +586,10 @@ export default function RulesCodexEditorView({
                           </div>
 
                           <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                            <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
+                            <div className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
                               Known domains: {knownDomains.join(", ")}
                             </div>
-                            <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
+                            <div className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
                               Known scopes: {knownScopeTypes.join(", ")}
                             </div>
                           </div>
@@ -612,7 +616,7 @@ export default function RulesCodexEditorView({
           })}
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-5 text-sm leading-6 text-[var(--ink-dim)]">
           The authored Codex remains available for editing, but no section may be
           selected for runtime context while the Codex is disabled.
         </div>
@@ -627,7 +631,7 @@ export default function RulesCodexEditorView({
       ) : null}
 
       {!safeSections.length && enabled ? (
-        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/20 p-6 text-center">
+        <div className="mt-5 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-6 text-center">
           <BookOpenText
             size={28}
             className="mx-auto text-[var(--gold-ornament)]"

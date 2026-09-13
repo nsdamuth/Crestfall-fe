@@ -10,6 +10,7 @@
 // every section body arrives pre-composed in `sectionNodes`.
 import { Check, ChevronDown, ChevronsUpDown, List, Loader2, Save } from "lucide-react";
 
+import KitBreadcrumbs from "@/components/kit/KitBreadcrumbs";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 import { useState } from "react";
 
@@ -85,7 +86,7 @@ function SwitcherBlock({ isDirty, onOpenSwitcher }) {
             <button
               type="button"
               onClick={() => setConfirming(false)}
-              className="cf-btn cf-btn--secondary cf-btn--sm"
+              className="cf-btn cf-btn--secondary cf-btn--sm [@media(pointer:coarse)]:h-[var(--control-md)]"
             >
               Keep editing
             </button>
@@ -95,7 +96,7 @@ function SwitcherBlock({ isDirty, onOpenSwitcher }) {
                 setConfirming(false);
                 onOpenSwitcher?.();
               }}
-              className="cf-btn cf-btn--primary cf-btn--sm"
+              className="cf-btn cf-btn--primary cf-btn--sm [@media(pointer:coarse)]:h-[var(--control-md)]"
             >
               Discard and switch
             </button>
@@ -208,7 +209,7 @@ function TocList({ groups, openSectionId, sectionMarks, onSelect }) {
         <div key={group.id}>
           {/* Tier 4 group label (section 3): gold-ornament with the
               trailing grad-rule mark, distinct from tier 6 item rows. */}
-          <p className="flex items-center gap-[var(--space-2)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:flex-1 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-2)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             {group.label}
           </p>
           <div className="mt-[var(--space-1)] flex flex-col">
@@ -317,6 +318,7 @@ export default function EditorView({
   sectionSeats = {},
   backLabel = "Back",
   onBack,
+  breadcrumbs = [],
   hero = null,
   featuredImagePicker = null,
   creationPicker = null,
@@ -357,6 +359,10 @@ export default function EditorView({
       ) : (
         <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_264px] lg:gap-[var(--space-8)] 2xl:grid-cols-[minmax(0,1fr)_288px]">
           <div className="min-w-0 pb-[var(--space-14)] lg:pb-0">
+            {/* Breadcrumbs (4.1.0, eight-fix package FIX 4, 12 Sep
+                2026): Studio, then the creation being edited, above
+                the origin-aware Back control. */}
+            {breadcrumbs?.length ? <KitBreadcrumbs items={breadcrumbs} /> : null}
             {onBack ? (
               <button
                 type="button"
@@ -374,7 +380,7 @@ export default function EditorView({
                 <div key={group.id}>
                   {/* Tier 4 group label (section 3), same recipe as
                       the rail's own group labels. */}
-                  <p className="mb-[var(--space-2)] flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:flex-1 after:bg-[image:var(--grad-rule)]">
+                  <p className="mb-[var(--space-2)] flex items-center gap-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                     {group.label}
                   </p>
                   <div className="flex flex-col gap-[var(--space-3)]">

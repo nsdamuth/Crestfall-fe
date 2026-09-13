@@ -23,10 +23,10 @@ It does not own routes, page actions, data loading, API calls, permissions, life
 ## Contract
 
 ```text
-STUDIO_PAGE_HEADER_VIEW_CONTRACT_VERSION = "1.0.0"
+STUDIO_PAGE_HEADER_VIEW_CONTRACT_VERSION = "1.3.0"
 ```
 
-Inputs are display-ready `eyebrow`, `title`, `description`, and optional `children`.
+Inputs are display-ready `eyebrow`, `title`, `description`, optional `children`, and, since 1.3.0 (12 Sep 2026, eight-fix package FIX 4), optional `breadcrumbs`: the shared `KitBreadcrumbs` row rendered between the description line and the divider on every page deeper than a primary sidebar page.
 
 ## Preview
 

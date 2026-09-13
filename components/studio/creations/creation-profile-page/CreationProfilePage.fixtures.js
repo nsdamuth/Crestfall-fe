@@ -4,7 +4,7 @@ export const creationProfileFixture = {
   title: "Kessa Cindervell",
   subtitle: "The Brasswhisker",
   description:
-    "A Bastet artificer whose workshop is equal parts appraisal counter, den, vault, and dangerous mechanical argument. This deliberately long description demonstrates the existing 420-character catalogue preview behavior without requiring live data. ".repeat(
+    "A Bastet artificer whose workshop is equal parts appraisal counter, den, vault, and dangerous mechanical argument. This deliberately long description demonstrates the four-line clamp and its Show more link without requiring live data.".repeat(
       3
     ),
   imageUrl: "/assets/covers/crestfall-camellia-cover.png",

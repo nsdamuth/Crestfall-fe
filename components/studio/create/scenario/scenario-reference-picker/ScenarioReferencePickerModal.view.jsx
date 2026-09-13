@@ -18,7 +18,7 @@ export default function ScenarioReferencePickerModalView({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
       <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+        <div className="flex items-start justify-between gap-4 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               {eyebrow}
@@ -42,9 +42,10 @@ export default function ScenarioReferencePickerModalView({
             <X size={18} />
           </button>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="p-5">
-          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}
@@ -70,7 +71,7 @@ export default function ScenarioReferencePickerModalView({
                   className={`overflow-hidden rounded-xl border text-left transition hover:-translate-y-0.5 ${
                     item.isSelected
                       ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15"
-                      : "border-white/10 bg-black/35 hover:border-[var(--gold-ornament)]/35"
+                      : "border-white/10 bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/35"
                   }`}
                 >
                   <div className="aspect-[4/3] bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
@@ -125,7 +126,7 @@ export default function ScenarioReferencePickerModalView({
                 </button>
               ))
             ) : (
-              <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
+              <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center sm:col-span-2 lg:col-span-3 xl:col-span-4">
                 <p className="font-display text-3xl">No matches</p>
                 <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-[var(--ink-dim)]">
                   {emptyMessage}

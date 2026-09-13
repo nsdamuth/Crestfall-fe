@@ -1,28 +1,32 @@
+import KitBreadcrumbs from "@/components/kit/KitBreadcrumbs";
+import KitModalFrame from "@/components/kit/KitModalFrame";
+import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import {
-  Bookmark,
+  BUY_COINS_INFO_BODY,
+  UtilityModal,
+} from "@/components/studio/studio-economy-widget/StudioEconomyWidget.view";
+import {
   Camera,
   Coins,
   Film,
-  Heart,
   Image as ImageIcon,
   LockKeyhole,
   MessageCircle,
-  Search,
-  ScrollText,
 } from "lucide-react";
 
-const TAB_ICONS = {
-  IMAGE: ImageIcon,
-  VIDEO: Film,
-  HEART: Heart,
-  BOOKMARK: Bookmark,
-  CREDITS: ScrollText,
-};
+// The media filter is the one single-select group in the standard
+// sticky bar (RULED 12 Sep 2026, Brian's browser review): All is the
+// resting value, so the trigger reads "Filter" until another option is
+// picked. No sort on a single creation's catalogue (per-asset ordering
+// ruling, 24 Aug 2026).
+const MEDIA_FILTER_GROUP_ID = "media";
+const MEDIA_FILTER_RESTING_VALUE = "ALL";
 
 export default function CreationProfilePageView({
   shouldRender = false,
   loadErrorMessage = "",
   creation = null,
+  breadcrumbs = [],
   description = null,
   mediaTabs = [],
   query = "",
@@ -44,6 +48,12 @@ export default function CreationProfilePageView({
   onLoadMore = null,
   onOpenMedia = null,
   onPurchaseLibraryPass = null,
+  unlockDialog = null,
+  onOpenUnlockDialog = null,
+  onCloseUnlockDialog = null,
+  isBuyCoinsInfoOpen = false,
+  onOpenBuyCoinsInfo = null,
+  onCloseBuyCoinsInfo = null,
   onToggleDescription = null,
   onStartChat = null,
 }) {
@@ -61,12 +71,29 @@ export default function CreationProfilePageView({
 
   if (!creation) return null;
 
-  const activeTabId = mediaTabs.find((tab) => tab.active)?.id || "IMAGES";
+  const activeTabId = mediaTabs.find((tab) => tab.active)?.id || MEDIA_FILTER_RESTING_VALUE;
   const showingCredits = activeTabId === "CREDITS";
+  const mediaFilterGroups = [
+    {
+      id: MEDIA_FILTER_GROUP_ID,
+      label: "Filter",
+      isMultiSelect: false,
+      restingValue: MEDIA_FILTER_RESTING_VALUE,
+      options: mediaTabs.map((tab) => ({ value: tab.id, label: tab.label, count: null })),
+    },
+  ];
 
   return (
     <section className="pb-12">
-      <header className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+      {/* Breadcrumbs (eight-fix package FIX 4, 12 Sep 2026): this page
+          carries its own header card rather than StudioPageHeader, so
+          the row sits directly above it. */}
+      {breadcrumbs?.length ? (
+        <div className="mb-[var(--space-2)]">
+          <KitBreadcrumbs items={breadcrumbs} />
+        </div>
+      ) : null}
+      <header className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
         <div className="grid gap-6 lg:grid-cols-[auto_1fr_auto] lg:items-start">
           <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 font-display text-4xl text-[var(--gold-ornament)]">
             {creation.imageUrl ? (
@@ -104,21 +131,30 @@ export default function CreationProfilePageView({
               {statsSlot}
             </div>
 
-            <p className="mt-5 max-w-4xl whitespace-pre-line break-words leading-7 text-[var(--ink-dim)]">
-              {description?.visibleText}
-              {description?.hasLongDescription ? (
-                <>
-                  {" "}
-                  <button
-                    type="button"
-                    onClick={() => onToggleDescription?.()}
-                    className="cf-btn cf-btn--tertiary inline h-auto p-0"
-                  >
-                    {description.toggleLabel}
-                  </button>
-                </>
-              ) : null}
+            {/* Description clamp, RULED 12 Sep 2026 (eight-fix package
+                FIX 8): at rest at most four rendered lines (a line
+                clamp, never a character count). The gold Show more link
+                expands in place and reads Show less when open; it
+                renders only when the text overflows four lines, which
+                the view model measures through measureRef. */}
+            <p
+              ref={description?.measureRef}
+              className={`mt-5 max-w-4xl whitespace-pre-line break-words leading-7 text-[var(--ink-dim)] ${
+                description?.isExpanded ? "" : "line-clamp-4"
+              }`}
+            >
+              {description?.text}
             </p>
+            {description?.showToggle ? (
+              <button
+                type="button"
+                onClick={() => onToggleDescription?.()}
+                aria-expanded={Boolean(description?.isExpanded)}
+                className="cf-btn cf-btn--tertiary mt-[var(--space-2)] inline-flex min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
+              >
+                {description.toggleLabel}
+              </button>
+            ) : null}
 
             {creation.tags.length ? (
               <div className="mt-5 flex flex-wrap gap-2">
@@ -134,7 +170,9 @@ export default function CreationProfilePageView({
             ) : null}
           </div>
 
-          <div className="flex flex-wrap gap-3 lg:flex-col">
+          {/* Chat, Generate, Share anchor to the bottom right of the
+              header at lg and up (RULED 12 Sep 2026, browser review). */}
+          <div className="flex flex-wrap gap-3 lg:flex-col lg:items-end lg:self-end">
             {creation.supportsChat ? (
               <button
                 type="button"
@@ -166,43 +204,32 @@ export default function CreationProfilePageView({
       {libraryPassPanel ? (
         <LibraryPassViewerPanel
           panel={libraryPassPanel}
-          onPurchase={onPurchaseLibraryPass}
+          onUnlock={onOpenUnlockDialog}
         />
       ) : null}
 
       <div className="mt-8 border-t border-[var(--gold-ornament)]/15 pt-5">
-        <div className="flex flex-wrap gap-2">
-          {mediaTabs.map((tab) => {
-            const Icon = TAB_ICONS[tab.icon];
-            return (
-              <FilterButton
-                key={tab.id}
-                active={tab.active}
-                onClick={() => onSelectTab?.(tab.id)}
-              >
-                {Icon ? <Icon size={14} /> : null}
-                {tab.label}
-              </FilterButton>
-            );
-          })}
-        </div>
+        {/* Standard sticky search and filter bar (RULED 12 Sep 2026,
+            browser review): search left, the one media Filter dropdown
+            right (All resting, Images, Videos, Liked, Saved, plus
+            Credits when attribution exists). No sort on this page. */}
+        <KitStudioFilterBarView
+          searchValue={query}
+          searchPlaceholder="Search this creation's media..."
+          onSearchChange={onQueryChange}
+          filterGroups={mediaFilterGroups}
+          selectedValues={{ [MEDIA_FILTER_GROUP_ID]: [activeTabId] }}
+          onFilterToggle={(groupId, value) => onSelectTab?.(value)}
+          filterPresentation="dropdowns"
+          sortOptions={[]}
+        />
 
         {showingCredits ? (
           <div className="mt-5">{creditsSlot}</div>
         ) : (
           <>
-            <div className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
-              <Search size={16} className="text-[var(--gold-ornament)]" />
-              <input
-                value={query}
-                onChange={(event) => onQueryChange?.(event.target.value)}
-                placeholder="Search this creation's media..."
-                className="w-full bg-transparent text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]"
-              />
-            </div>
-
             {!visibleMedia.length ? (
-          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
             <ImageIcon size={30} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 font-display text-3xl">No public media yet</p>
             <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-dim)]">
@@ -220,6 +247,7 @@ export default function CreationProfilePageView({
                 item={item}
                 actionsSlot={mediaActionSlots[item.id] || null}
                 onOpen={() => onOpenMedia?.(item.id)}
+                onOpenUnlock={onOpenUnlockDialog}
               />
             ))}
           </div>
@@ -240,18 +268,115 @@ export default function CreationProfilePageView({
         )}
       </div>
 
+      {unlockDialog?.isOpen ? (
+        <UnlockFullLibraryDialog
+          dialog={unlockDialog}
+          onConfirm={onPurchaseLibraryPass}
+          onCancel={onCloseUnlockDialog}
+          onOpenBuyCoins={onOpenBuyCoinsInfo}
+        />
+      ) : null}
+
+      {isBuyCoinsInfoOpen ? (
+        <UtilityModal title="Buy Coins" body={BUY_COINS_INFO_BODY} onClose={onCloseBuyCoinsInfo} />
+      ) : null}
+
       {lightboxSlot}
     </section>
   );
 }
 
-function LibraryPassViewerPanel({ panel, onPurchase }) {
+// Unlock confirmation, RULED 12 Sep 2026 (eight-fix package FIX 6),
+// built on the coins info dialog recipe (UtilityModal: KitModalFrame,
+// max-w-sm panel, --space-6 content box, eyebrow, display title, body,
+// full-width buttons). Single column at every width, every button
+// --control-md tall through .cf-btn, and the frame keeps the panel
+// inside the viewport (bottom-anchored under 700px, capped at 92dvh).
+// The charge runs only from the primary's handler; a balance below the
+// cost disables the primary and shows the existing Buy Coins path.
+function UnlockFullLibraryDialog({ dialog, onConfirm, onCancel, onOpenBuyCoins }) {
+  const showBuyCoins = dialog.isBalanceKnown && !dialog.canAfford;
+
+  return (
+    <KitModalFrame
+      onClose={onCancel}
+      ariaLabelledBy="creation-profile-unlock-title"
+      panelClassName="w-full max-w-sm"
+    >
+      <div className="flex flex-col gap-[var(--space-4)] p-[var(--space-6)]">
+        <div>
+          <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+            Library Pass
+          </p>
+          <h2
+            id="creation-profile-unlock-title"
+            className="mt-[var(--space-2)] font-display text-[length:var(--text-heading)] leading-[var(--lh-heading)] text-[var(--ink)]"
+          >
+            {dialog.title}
+          </h2>
+        </div>
+
+        <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+          {dialog.summary}
+        </p>
+
+        <dl className="flex flex-col gap-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)]">
+          <div className="flex items-center justify-between gap-[var(--space-3)]">
+            <dt className="text-[var(--ink-dim)]">Cost</dt>
+            <dd className="tabular-nums text-[var(--ink)]">{dialog.costLabel}</dd>
+          </div>
+          <div className="flex items-center justify-between gap-[var(--space-3)]">
+            <dt className="text-[var(--ink-dim)]">Your balance</dt>
+            <dd className="tabular-nums text-[var(--ink)]">{dialog.balanceLabel}</dd>
+          </div>
+        </dl>
+
+        {showBuyCoins ? (
+          <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            Your balance is below the cost of this pass.
+          </p>
+        ) : null}
+
+        {dialog.errorMessage ? (
+          <p className="rounded-[var(--radius-md)] border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--status-danger)]">
+            {dialog.errorMessage}
+          </p>
+        ) : null}
+
+        <div className="flex flex-col gap-[var(--space-2)]">
+          <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary w-full">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => onConfirm?.()}
+            disabled={!dialog.canAfford || dialog.isBusy}
+            className="cf-btn cf-btn--primary w-full disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]"
+          >
+            <Coins size={15} aria-hidden="true" />
+            {dialog.isBusy ? "Unlocking..." : dialog.confirmLabel}
+          </button>
+          {showBuyCoins ? (
+            <button type="button" onClick={() => onOpenBuyCoins?.()} className="cf-btn cf-btn--secondary w-full">
+              Buy Coins
+            </button>
+          ) : null}
+        </div>
+      </div>
+    </KitModalFrame>
+  );
+}
+
+function LibraryPassViewerPanel({ panel, onUnlock }) {
   const messageIsError = panel.purchaseStatus === "error";
 
   return (
     <section className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="max-w-3xl">
+      {/* The Unlock CTA sits on the right at lg and up (RULED 12 Sep
+          2026, browser review): the copy block takes the remaining
+          width and the row no longer wraps the CTA underneath it. */}
+      <div className="flex flex-wrap items-start justify-between gap-4 lg:flex-nowrap lg:items-end">
+        <div className="min-w-0 max-w-3xl lg:flex-1">
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
               <LockKeyhole size={16} />
@@ -275,9 +400,11 @@ function LibraryPassViewerPanel({ panel, onPurchase }) {
 
         {!panel.isOwner && !panel.hasActiveEntitlement ? (
           panel.canPurchase ? (
+            // The CTA opens the confirmation (FIX 6, 12 Sep 2026); it
+            // never charges on tap.
             <button
               type="button"
-              onClick={() => onPurchase?.()}
+              onClick={() => onUnlock?.()}
               disabled={panel.purchaseBusy}
               className="cf-btn cf-btn--primary"
             >
@@ -285,7 +412,7 @@ function LibraryPassViewerPanel({ panel, onPurchase }) {
               {panel.actionLabel}
             </button>
           ) : (
-            <span className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+            <span className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
               New purchases unavailable
             </span>
           )
@@ -305,29 +432,17 @@ function LibraryPassViewerPanel({ panel, onPurchase }) {
   );
 }
 
-function FilterButton({ active, onClick, children }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
-        active
-          ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-          : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
-function MediaTile({ item, actionsSlot, onOpen }) {
+// Locked Library Pass tiles, RULED 12 Sep 2026 (eight-fix package
+// FIX 7): the whole tile is the tap target and tapping it opens the
+// same "Unlock full library?" confirmation the CTA opens (FIX 6).
+// Unlocked tiles are unchanged.
+function MediaTile({ item, actionsSlot, onOpen, onOpenUnlock = null }) {
   if (item.isLocked) {
     return (
-      <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/45 text-left">
+      <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] text-left">
         <button
           type="button"
-          onClick={onOpen}
+          onClick={() => onOpenUnlock?.()}
           className="relative h-full w-full text-left"
           aria-label={`Library Pass required for ${item.title || "media"}`}
         >
@@ -363,7 +478,7 @@ function MediaTile({ item, actionsSlot, onOpen }) {
 
   if (!item.imageUrl) {
     return (
-      <article className="aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35 text-left">
+      <article className="aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] text-left">
         <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
           <div className="text-center">
             {item.type === "VIDEO" ? (
@@ -382,7 +497,7 @@ function MediaTile({ item, actionsSlot, onOpen }) {
   }
 
   return (
-    <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35 text-left transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/35">
+    <article className="group relative aspect-square overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] text-left transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/35">
       <button
         type="button"
         onClick={onOpen}

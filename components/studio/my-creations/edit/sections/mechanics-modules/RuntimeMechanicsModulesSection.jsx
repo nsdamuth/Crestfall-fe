@@ -182,7 +182,7 @@ export default function RuntimeMechanicsModulesSection({
         />
       ) : null}
 
-      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5">
+      <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
@@ -204,7 +204,7 @@ export default function RuntimeMechanicsModulesSection({
             </div>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 p-3 text-[var(--gold-ornament)]">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 text-[var(--gold-ornament)]">
             <Activity size={18} />
           </div>
         </div>
@@ -221,7 +221,7 @@ export default function RuntimeMechanicsModulesSection({
             </button>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-xs leading-6 text-[var(--ink-dim)]">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-xs leading-6 text-[var(--ink-dim)]">
             <p>
               Scope behavior:{" "}
               <span className="text-[var(--ink)]">
@@ -255,7 +255,7 @@ export default function RuntimeMechanicsModulesSection({
                 return (
                   <div
                     key={moduleCreationId || binding.moduleInstanceTitle}
-                    className="rounded-xl border border-white/10 bg-black/25 p-4"
+                    className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div>
@@ -314,7 +314,7 @@ export default function RuntimeMechanicsModulesSection({
                                 : 65,
                             })
                           }
-                          className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition"
+                          className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-[var(--ink)] transition"
                         />
                       </label>
 

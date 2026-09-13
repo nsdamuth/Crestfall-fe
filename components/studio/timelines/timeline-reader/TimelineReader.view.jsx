@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+
+import KitBreadcrumbsView from "@/components/kit/breadcrumbs/KitBreadcrumbs.view";
 import {
   ArrowLeft,
   CalendarDays,
@@ -129,7 +131,6 @@ function StaticGroup({ group, startIndex = 0, LinkComponent = "a" }) {
         <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
           {group.label}
         </span>
-        <span className="h-px min-w-8 flex-1 bg-[image:var(--grad-rule)] opacity-70" />
       </div>
       <ChronologyEntries
         entries={group.entries}
@@ -151,7 +152,7 @@ function ChapterGroup({
     <details
       open={isOpen}
       onToggle={(event) => onToggle?.(group.id, event.currentTarget.open)}
-      className="group/chapter overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 open:border-[var(--gold-ornament)]/45 open:bg-black/40"
+      className="group/chapter overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] open:border-[var(--gold-ornament)]/45 open:bg-[var(--surface-2)]"
     >
       <summary className="flex cursor-pointer list-none items-center gap-3 px-5 py-4 text-left text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:bg-[var(--gold-ornament)]/5 sm:px-6 sm:py-5 [&::-webkit-details-marker]:hidden">
         <ChevronRight
@@ -189,6 +190,7 @@ export default function TimelineReaderView({
   entryCount = 0,
   groups = [],
   showEditAction = true,
+  breadcrumbs = [],
   onBack = null,
   onEdit = null,
   LinkComponent = "a",
@@ -261,6 +263,13 @@ export default function TimelineReaderView({
 
   return (
     <div className="mx-auto w-full max-w-[112rem] pb-16">
+      {/* Breadcrumbs (1.2.0, eight-fix package FIX 4, 12 Sep 2026):
+          Lore, then this timeline, above the action row. */}
+      {breadcrumbs?.length ? (
+        <div className="mb-[var(--space-2)]">
+          <KitBreadcrumbsView items={breadcrumbs} LinkComponent={LinkComponent} />
+        </div>
+      ) : null}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <button type="button" onClick={() => onBack?.()} className="cf-btn">
           <ArrowLeft size={14} /> Back to Lore

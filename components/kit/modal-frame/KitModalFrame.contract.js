@@ -1,4 +1,4 @@
-export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.5.0";
+export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.6.0";
 
 /**
  * Stable portable UI boundary for the unified modal frame kit piece
@@ -59,6 +59,16 @@ export const KIT_MODAL_FRAME_VIEW_CONTRACT_VERSION = "1.5.0";
  *   caller used, so legacy max-w-* classes cap it down). Under 700px
  *   the panel stays full width and bottom-anchored. Ignored by the
  *   sheet and viewer variants
+ * @property {import("react").CSSProperties|null} [panelStyle] added
+ *   1.6.0, 12 Sep 2026 (R11 refine item 3, the mobile dropdown
+ *   sheet). Default null. An inline style object for the dialog
+ *   panel, every value a var(--token) or a calc of tokens, merged
+ *   beneath the modal variant's --panel-width so the fixed-width law
+ *   still wins there. Exists because the recipe already carries a
+ *   background-image, a border color, and a width utility, and two
+ *   arbitrary-value utilities on one property do not override
+ *   reliably in this build. With the default null, rendering is
+ *   unchanged for every prior caller
  * @property {boolean} [hasUnsavedChanges] added 1.2.0, 22 Aug 2026
  *   (mobile modal law, checkable condition 3). Default false. The
  *   frame owns no form state of its own; when the caller reports

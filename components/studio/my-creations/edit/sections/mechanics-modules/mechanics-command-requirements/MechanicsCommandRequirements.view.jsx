@@ -22,7 +22,7 @@ import {
 } from "../../SharedFields";
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 // Local TextField, not SharedFields.TextField: this file needs a
 // native numeric input (type="number") for numeric requirement
@@ -134,7 +134,7 @@ function RequirementCard({ requirement, requirementIndex, onPatch, onRemove }) {
   const progressionRequirement = isProgressionCommandRequirementType(requirement.type);
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <p className={EYEBROW_CLASS}>
           Requirement {requirementIndex + 1}

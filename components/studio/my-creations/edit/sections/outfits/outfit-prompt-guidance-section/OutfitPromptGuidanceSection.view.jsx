@@ -85,7 +85,7 @@ export default function OutfitPromptGuidanceSectionView({
         <div>
           {/* Tier 4 group label, matching the ActionPanel/SectionTitle
               recipe. */}
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             {clothingModeLabel}
           </p>
 
@@ -204,7 +204,7 @@ export default function OutfitPromptGuidanceSectionView({
             {/* Section 5 de-nesting: inset hairline, tier 4 label,
                 no bordered/backgrounded box. */}
             <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
-              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                 {advancedSectionsTitle}
               </p>
               <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
@@ -245,7 +245,7 @@ export default function OutfitPromptGuidanceSectionView({
         />
 
         <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             {lanePromptsTitle}
           </p>
           <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">

@@ -11,7 +11,7 @@ import {
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 function IssueList({ title, issues = [], tone = "error" }) {
   if (!issues.length) return null;
@@ -74,7 +74,7 @@ export default function StructuredRegistryJsonEditorModalView({
       hasUnsavedChanges={hasDraftChanges}
       panelClassName="max-w-4xl"
     >
-      <div className="flex items-start justify-between gap-4 border-b border-[var(--line-fade)] p-5">
+      <div className="flex items-start justify-between gap-4 p-5">
         <div>
           <p className={EYEBROW_CLASS}>
             <Braces size={15} />
@@ -84,6 +84,7 @@ export default function StructuredRegistryJsonEditorModalView({
           <p className="mt-2 max-w-4xl text-sm leading-6 text-[var(--ink-dim)]">{description}</p>
         </div>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="grid gap-4 p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="min-w-0">
@@ -118,7 +119,7 @@ export default function StructuredRegistryJsonEditorModalView({
             onChange={(event) => onChangeJson?.(event.target.value)}
             spellCheck={false}
             aria-label={jsonAriaLabel}
-            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
           />
         </section>
 
@@ -130,7 +131,7 @@ export default function StructuredRegistryJsonEditorModalView({
             </p>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+          <section className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             <p className={EYEBROW_CLASS}>AI / Link Safety</p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
               Existing linked Creation IDs may be preserved. New Creation IDs cannot be introduced through JSON; use the visual link picker after applying bulk-authored content.
@@ -138,7 +139,7 @@ export default function StructuredRegistryJsonEditorModalView({
           </section>
 
           {statusMessage ? (
-            <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <section className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
               <p className={EYEBROW_CLASS}>Status</p>
               <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">{statusMessage}</p>
             </section>
@@ -156,7 +157,8 @@ export default function StructuredRegistryJsonEditorModalView({
         </aside>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-fade)] p-5">
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+      <div className="flex flex-wrap items-center justify-between gap-3 p-5">
         <p className="text-xs leading-5 text-[var(--ink-dim)]">
           Applying updates the open builder. The normal page Save action still controls persistence.
         </p>

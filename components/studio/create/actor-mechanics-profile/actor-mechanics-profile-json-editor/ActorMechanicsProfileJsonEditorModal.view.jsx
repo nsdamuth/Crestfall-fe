@@ -29,7 +29,7 @@ function IssueList({ title, issues = [], tone = "error" }) {
         {issues.map((issue, index) => (
           <div
             key={`${issue?.path || "issue"}-${index}`}
-            className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+            className="rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2"
           >
             <code className="break-all text-[11px] text-[var(--gold-ornament)]">
               {issue?.path || "$"}
@@ -86,9 +86,9 @@ export default function ActorMechanicsProfileJsonEditorModalView({
       hasUnsavedChanges={hasDraftChanges}
       panelClassName="max-w-4xl"
     >
-      <div className="flex items-start justify-between gap-4 border-b border-[var(--line-fade)] p-5">
+      <div className="flex items-start justify-between gap-4 p-5">
         <div>
-          <p className="inline-flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <p className="inline-flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             <Braces size={15} />
             Loom Authoring Tool
           </p>
@@ -100,12 +100,13 @@ export default function ActorMechanicsProfileJsonEditorModalView({
           </p>
         </div>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="grid gap-4 p-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <section className="min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="inline-flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+              <p className="inline-flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 <Code2 size={14} />
                 Authored Actor Mechanics Profile
               </p>
@@ -143,13 +144,13 @@ export default function ActorMechanicsProfileJsonEditorModalView({
             onChange={(event) => onChangeJson?.(event.target.value)}
             spellCheck={false}
             aria-label="Actor Mechanics Profile JSON"
-            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-black/55 px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/55"
+            className="mt-4 min-h-[58vh] w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-4 font-mono text-xs leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/55"
           />
         </section>
 
         <aside className="grid content-start gap-4">
           <section className="rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/5 p-4">
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Apply Behavior
             </p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -160,8 +161,8 @@ export default function ActorMechanicsProfileJsonEditorModalView({
             </p>
           </section>
 
-          <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               AI Guide
             </p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -172,8 +173,8 @@ export default function ActorMechanicsProfileJsonEditorModalView({
           </section>
 
           {statusMessage ? (
-            <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 Status
               </p>
               <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -212,7 +213,8 @@ export default function ActorMechanicsProfileJsonEditorModalView({
         </aside>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-fade)] p-5">
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+      <div className="flex flex-wrap items-center justify-between gap-3 p-5">
         <p className="text-xs leading-5 text-[var(--ink-dim)]">
           Applying updates the open Actor Mechanics Profile editor. The normal page
           Save action still controls persistence.

@@ -74,8 +74,9 @@ export default function KitStudioFilterBarPreviewClient() {
             setLastAction(`Search changed to "${value}" (local preview only).`);
           }}
           onFilterToggle={toggleFilter}
-          onSortChange={(value) => {
-            setLocalProps((current) => ({ ...current, selectedSort: value }));
+          onSortChange={(selectedSort) => {
+            const value = selectedSort;
+            setLocalProps((current) => ({ ...current, selectedSort }));
             setLastAction(`Sort changed to "${value}" (local preview only).`);
           }}
           onQuickTabChange={(value) => {

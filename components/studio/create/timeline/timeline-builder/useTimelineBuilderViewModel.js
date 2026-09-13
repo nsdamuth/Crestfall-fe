@@ -498,5 +498,14 @@ export function useTimelineBuilderViewModel({
     onRemoveChapter: removeChapter,
     onSave: save,
     onBackToLore: () => router.push(backHref || "/studio/v2/lore"),
+    // Breadcrumbs (eight-fix package FIX 4, 12 Sep 2026): the origin
+    // section (Vault when the builder was opened from there, Lore
+    // otherwise), then this timeline or the new-timeline label.
+    breadcrumbs: [
+      backHref === "/studio/v2/vault"
+        ? { label: "Vault", href: "/studio/v2/vault" }
+        : { label: "Lore", href: "/studio/v2/lore" },
+      { label: draft.title.trim() || (timelineId ? "Untitled Timeline" : "New Timeline") },
+    ],
   };
 }

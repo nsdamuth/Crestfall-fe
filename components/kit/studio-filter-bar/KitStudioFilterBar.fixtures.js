@@ -46,6 +46,7 @@ export const kitStudioFilterBarDefaultFixture = {
   onFilterToggle: noop,
   sortOptions: defaultSortOptions,
   selectedSort: "recent",
+  defaultSort: "recent",
   onSortChange: noop,
   isLoadingCounts: false,
   viewModeSlot: null,

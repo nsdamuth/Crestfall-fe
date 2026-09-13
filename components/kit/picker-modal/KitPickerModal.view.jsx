@@ -145,7 +145,7 @@ function TileItem({ item, isSelected, isMultiSelect, onActivate }) {
         <Thumbnail item={item} />
         <span
           aria-hidden="true"
-          className={`absolute right-[var(--space-2)] top-[var(--space-2)] flex h-6 w-6 items-center justify-center rounded-[var(--radius-full)] bg-[var(--surface-4)] ${
+          className={`absolute right-[var(--space-2)] top-[var(--space-2)] flex h-6 w-6 items-center justify-center rounded-[var(--radius-full)] bg-[var(--panel-glass)] backdrop-blur-[var(--blur-panel)] ${
             isSelected ? "" : "invisible"
           }`}
         >
@@ -213,6 +213,7 @@ export default function KitPickerModalView({
           <SearchField value={searchValue} placeholder={searchPlaceholder} onChange={onSearchChange} />
           <FilterRow filters={filters} onToggleFilter={onToggleFilter} />
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="flex-1 overflow-y-auto px-[var(--space-6)]">
           {errorMessage ? (

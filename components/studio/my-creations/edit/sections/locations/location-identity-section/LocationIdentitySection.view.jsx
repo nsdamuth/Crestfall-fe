@@ -141,7 +141,7 @@ export default function LocationIdentitySectionView({
       {/* Section 5 de-nesting: inset hairline, tier 4 label, no
           bordered/backgrounded panel. */}
       <div className="mt-[var(--space-6)] border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
-        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
           {inheritanceEyebrow}
         </p>
 

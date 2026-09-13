@@ -78,11 +78,6 @@ function Eyebrow({ children }) {
   return (
     <span className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
       {children}
-      <span
-        aria-hidden
-        className="h-px w-[var(--space-8)]"
-        style={{ background: "var(--grad-rule)" }}
-      />
     </span>
   );
 }
@@ -91,11 +86,6 @@ function GroupLabel({ children }) {
   return (
     <div className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] font-medium uppercase leading-[var(--lh-label)] tracking-[var(--track-label)] text-[var(--gold-ornament)]">
       {children}
-      <span
-        aria-hidden
-        className="h-px w-[var(--space-6)]"
-        style={{ background: "var(--grad-rule)" }}
-      />
     </div>
   );
 }

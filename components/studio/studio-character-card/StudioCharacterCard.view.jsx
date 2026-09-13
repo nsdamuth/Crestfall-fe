@@ -11,7 +11,7 @@ export default function StudioCharacterCardView({
 }) {
   return (
     <article className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)]">
-      <div className="aspect-[3/4] bg-[var(--scrim-strong)]">
+      <div className="aspect-[3/4] bg-[var(--surface-1)]">
         {imageSrc ? (
           <img
             src={imageSrc}

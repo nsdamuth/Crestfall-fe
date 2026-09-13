@@ -21,7 +21,7 @@ const FIELD_LABEL_CLASS =
 export function SectionLabel({ children }) {
   return (
     <div className="mb-[var(--space-1)]">
-      <GlobalEyebrow>{children}</GlobalEyebrow>
+      <GlobalEyebrow showRuleMark={false}>{children}</GlobalEyebrow>
     </div>
   );
 }
@@ -326,7 +326,7 @@ export function InlineDropdown({ label, options, value, onChange, placeholder = 
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
-        className={`flex w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-left text-sm transition ${
+        className={`flex w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-md)] border bg-[var(--step-above)] px-[var(--space-4)] py-[var(--space-2)] text-left text-sm transition ${
           open
             ? "border-[var(--gold-action)]"
             : "border-[var(--line-whisper)] hover:border-[var(--line)]"
@@ -391,7 +391,7 @@ export function CustomValueField({ label, value, onChange, placeholder, maxLengt
         onChange={(event) => onChange?.(event.target.value)}
         maxLength={maxLength}
         placeholder={placeholder}
-        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-3)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
+        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-[var(--space-3)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
       />
     </div>
   );
@@ -412,7 +412,7 @@ export function TextAreaField({ label, value, onChange, placeholder, maxLength }
         maxLength={maxLength}
         placeholder={placeholder}
         rows={2}
-        className="w-full resize-y overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
+        className="w-full resize-y overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-[var(--space-4)] py-[var(--space-2)] text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
         style={{ minHeight: "var(--control-md)" }}
       />
     </div>
@@ -428,7 +428,7 @@ export function TextField({ label, value, onChange, placeholder, type = "text" }
         value={value ?? ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
+        className="w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-[var(--space-4)] py-[var(--space-2)] text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)]"
       />
     </div>
   );

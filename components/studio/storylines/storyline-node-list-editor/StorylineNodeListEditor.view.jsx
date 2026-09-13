@@ -6,6 +6,8 @@ import {
   Trash2,
 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 export default function StorylineNodeListEditorView({
   headerEyebrow = "Narrative Sequence",
   headerDescription = "",
@@ -38,7 +40,7 @@ export default function StorylineNodeListEditorView({
 } = {}) {
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
             {headerEyebrow}
@@ -76,7 +78,7 @@ export default function StorylineNodeListEditorView({
       {nodes.map((node) => (
         <article
           key={node.id}
-          className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5"
+          className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5"
         >
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-4">
@@ -145,7 +147,7 @@ export default function StorylineNodeListEditorView({
                       )
                     }
                     placeholder="Optional evidence or authored condition that indicates this node has concluded."
-                    className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+                    className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 outline-none"
                   />
                 </label>
 
@@ -153,23 +155,17 @@ export default function StorylineNodeListEditorView({
                   <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                     Transition After Completion
                   </span>
-                  <select
-                    value={node.transitionPolicy}
-                    disabled={node.isLast}
-                    onChange={(event) =>
-                      onChangeTransitionPolicy?.(
-                        node.index,
-                        event.target.value
-                      )
-                    }
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {node.transitionOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                    <KitDropdownView
+                      options={node.transitionOptions}
+                      selectedValues={node.transitionPolicy ? [node.transitionPolicy] : []}
+                      isMultiSelect={false}
+                      isDisabled={node.isLast}
+                      onToggleOption={(nextValue) =>
+                        onChangeTransitionPolicy?.(node.index, nextValue)
+                      }
+                    />
+                  </div>
                   <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                     {node.transitionDescription}
                   </p>
@@ -177,7 +173,7 @@ export default function StorylineNodeListEditorView({
               </div>
 
               {node.needsTriggers ? (
-                <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-black/25 p-4">
+                <div className="mt-5 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-[var(--surface-1)] p-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-start gap-3">
                       <GitBranch
@@ -196,27 +192,28 @@ export default function StorylineNodeListEditorView({
                       </div>
                     </div>
 
-                    <div className="flex gap-2">
-                      <select
-                        value={node.triggerMode}
-                        onChange={(event) =>
-                          onChangeTriggerMode?.(
-                            node.index,
-                            event.target.value
-                          )
-                        }
-                        className="rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs outline-none"
-                      >
-                        {node.triggerModeOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
+                    {/* MOBILE-SHELLS: this row is the measured cause of the
+                        storyline right-edge clip at 390. It paired a dropdown
+                        wrapper that never claimed its width with a cf-btn that
+                        is white-space: nowrap, so its min-content set the page
+                        scroll width. It wraps now, and the wrapper claims
+                        w-full and min-w-0 the way the same wrapper already does
+                        in StorylineBuilderShell.view.jsx. */}
+                    <div className="flex flex-wrap gap-2">
+                      <div className="w-full min-w-0 [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                        <KitDropdownView
+                          options={node.triggerModeOptions}
+                          selectedValues={node.triggerMode ? [node.triggerMode] : []}
+                          isMultiSelect={false}
+                          onToggleOption={(nextValue) =>
+                            onChangeTriggerMode?.(node.index, nextValue)
+                          }
+                        />
+                      </div>
                       <button
                         type="button"
                         onClick={() => onAddTrigger?.(node.index)}
-                        className="cf-btn cf-btn--secondary cf-btn--sm"
+                        className="cf-btn cf-btn--secondary cf-btn--sm min-h-[var(--control-md)] w-full [@media(min-width:48rem)]:w-auto"
                       >
                         Add trigger
                       </button>
@@ -227,25 +224,18 @@ export default function StorylineNodeListEditorView({
                     {node.triggers.map((trigger) => (
                       <div
                         key={trigger.id}
-                        className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-3 lg:grid-cols-[0.75fr_1fr_1.4fr_auto]"
+                        className="grid min-w-0 gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3 lg:grid-cols-[0.75fr_1fr_1.4fr_auto]"
                       >
-                        <select
-                          value={trigger.type}
-                          onChange={(event) =>
-                            onChangeTriggerType?.(
-                              node.index,
-                              trigger.index,
-                              event.target.value
-                            )
-                          }
-                          className="rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-xs outline-none"
-                        >
-                          {node.triggerTypeOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="min-w-0 [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                          <KitDropdownView
+                            options={node.triggerTypeOptions}
+                            selectedValues={trigger.type ? [trigger.type] : []}
+                            isMultiSelect={false}
+                            onToggleOption={(nextValue) =>
+                              onChangeTriggerType?.(node.index, trigger.index, nextValue)
+                            }
+                          />
+                        </div>
                         <input
                           value={trigger.label}
                           onChange={(event) =>
@@ -256,7 +246,7 @@ export default function StorylineNodeListEditorView({
                             )
                           }
                           placeholder="Trigger label"
-                          className="rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm outline-none"
+                          className="min-w-0 rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm outline-none"
                         />
                         <input
                           value={trigger.description}
@@ -268,7 +258,7 @@ export default function StorylineNodeListEditorView({
                             )
                           }
                           placeholder="What must occur or be confirmed?"
-                          className="rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm outline-none"
+                          className="min-w-0 rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm outline-none"
                         />
                         <button
                           type="button"
@@ -310,7 +300,7 @@ export default function StorylineNodeListEditorView({
                         )
                       }
                       placeholder="What remains naturally available after this node?"
-                      className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+                      className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 outline-none"
                     />
                   </label>
                   <label className="block">
@@ -327,7 +317,7 @@ export default function StorylineNodeListEditorView({
                         )
                       }
                       placeholder="Optional world-facing pressure that may surface without controlling the player."
-                      className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 outline-none"
+                      className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 outline-none"
                     />
                   </label>
                 </div>

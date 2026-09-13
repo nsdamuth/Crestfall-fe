@@ -44,8 +44,9 @@ const SECTIONS = Object.freeze([
 // rail regardless of whether the payload carries the field yet; where
 // a field is absent, the option is shown and selectable and leaves
 // the rail in its current order (no invented values). Labels
-// shortened 6 Sep 2026 (Home quick fix): "Most" dropped, the trigger
-// reads "Sort: Plays".
+// shortened 6 Sep 2026 (Home quick fix): "Most" dropped. Trigger
+// label re-ruled 12 Sep 2026 (FIX 5): "Filter" on the default sort,
+// the chosen option's label once the user picks another.
 const SORT_OPTIONS = Object.freeze([
   Object.freeze({ value: "plays", label: "Plays" }),
   Object.freeze({ value: "likes", label: "Likes" }),
@@ -132,7 +133,6 @@ export function useHomeViewModel({
   loreCommunityCreations = [],
   loreOwnedCreations = [],
   viewerUsername = null,
-  viewerDisplayName = null,
   followingUsernames = [],
   storiesLoadError = null,
   communityLoadError = null,
@@ -377,6 +377,7 @@ export function useHomeViewModel({
           sortControl: {
             options,
             selectedValue,
+            defaultValue: options[0].value,
             onChange: (value) =>
               setSortSelections((current) => ({ ...current, [section.id]: value })),
           },
@@ -396,13 +397,7 @@ export function useHomeViewModel({
     sectionRails.some((rail) => rail.items.length > 0) || Boolean(continueItem);
   const errorMessage = !hasDiscoverableData && sourceErrors.length ? sourceErrors[0] : null;
   const warningMessage = hasDiscoverableData && sourceErrors.length ? sourceErrors.join(" ") : null;
-  const welcomeName =
-    (typeof viewerDisplayName === "string" && viewerDisplayName.trim()) ||
-    (typeof viewerUsername === "string" && viewerUsername.trim()) ||
-    "Player";
-
   return {
-    welcomeName,
     topBanner: {
       ...TOP_BANNER,
       onCtaClick: () => onNavigate?.("/studio/v2/stories"),

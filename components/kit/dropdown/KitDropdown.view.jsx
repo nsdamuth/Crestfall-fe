@@ -37,8 +37,15 @@ function deriveSelectedLabel(options, selectedValues, isMultiSelect) {
   return selected?.label || null;
 }
 
-function OptionRow({ option, isSelected, isMultiSelect, onActivate }) {
+// isSheet (R11 refine item 3, 12 Sep 2026): inside the mobile sheet
+// every row is at least --control-md (44px) unconditionally, the
+// full row being the tap target; the popover keeps its dense
+// desktop height with the coarse-pointer floor.
+function OptionRow({ option, isSelected, isMultiSelect, onActivate, isSheet = false }) {
   const disabled = Boolean(option?.isDisabled);
+  const rowHeightClass = isSheet
+    ? "min-h-[var(--control-md)] items-center"
+    : "min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] items-start";
 
   return (
     <button
@@ -48,7 +55,7 @@ function OptionRow({ option, isSelected, isMultiSelect, onActivate }) {
       disabled={disabled}
       title={option?.tooltip || undefined}
       onClick={() => onActivate?.(option?.value)}
-      className={`flex w-full items-start gap-[var(--space-2)] rounded-[var(--radius-sm)] border border-transparent px-[var(--space-3)] py-[var(--space-2)] text-left transition-colors min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+      className={`flex w-full gap-[var(--space-2)] rounded-[var(--radius-sm)] border border-transparent px-[var(--space-3)] py-[var(--space-2)] text-left transition-colors ${rowHeightClass} ${
         disabled
           ? "opacity-[var(--state-disabled-opacity)]"
           : isSelected
@@ -91,7 +98,7 @@ function OptionRow({ option, isSelected, isMultiSelect, onActivate }) {
   );
 }
 
-function PanelRows({ options, selectedValues, isMultiSelect, onActivate }) {
+function PanelRows({ options, selectedValues, isMultiSelect, onActivate, isSheet = false }) {
   return (
     <>
       {options.map((option) => (
@@ -101,6 +108,7 @@ function PanelRows({ options, selectedValues, isMultiSelect, onActivate }) {
           isSelected={selectedValues?.includes(option?.value)}
           isMultiSelect={isMultiSelect}
           onActivate={onActivate}
+          isSheet={isSheet}
         />
       ))}
       {!options.length && (
@@ -122,6 +130,7 @@ export default function KitDropdownView({
   ariaLabel = null,
   restingValue = null,
   align = "left",
+  labelMode = "prefix",
 }) {
   // Open flag, chassis-select flag (Sprint A Phase 4, docs/SPRINT-A-
   // PLAN.md section 5.2), measured flip, and popover-only dismissal:
@@ -146,6 +155,13 @@ export default function KitDropdownView({
   const selectedLabel = isResting
     ? null
     : deriveSelectedLabel(options, selectedValues, isMultiSelect);
+  // Label mode (1.4.0, RULED 12 Sep 2026, eight-fix package FIX 5):
+  // "replace" makes a non-resting single-select value take the
+  // trigger over, so the trigger reads the chosen option's label
+  // alone (and reads `label`, e.g. "Filter", while the value is the
+  // default). "prefix", the default, is the 1.3.0 label-then-value
+  // grammar, pixel-stable on every existing consumer.
+  const triggerLabel = labelMode === "replace" && selectedLabel ? selectedLabel : label;
   const isMarked = (selectionCount > 0 && !isResting) || isOpen;
 
   function activateOption(value) {
@@ -162,15 +178,15 @@ export default function KitDropdownView({
         aria-expanded={isOpen}
         aria-label={ariaLabel ? `${ariaLabel}: ${label}` : undefined}
         onClick={toggleOpen}
-        className={`inline-flex min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border bg-[var(--surface-1)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
+        className={`inline-flex min-w-0 min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--step-above)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:min-h-[var(--control-md)] ${
           isMarked
-            ? "border-[var(--line-whisper)] bg-[var(--fill)] text-[var(--gold-bright)]"
-            : "border-[var(--line-whisper)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
+            ? "text-[var(--gold-bright)]"
+            : "text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]"
         }`}
       >
-        <span className="truncate">{label}</span>
-        {selectedLabel && (
-          <span className="truncate text-[var(--gold-bright)]">{selectedLabel}</span>
+        <span className="min-w-0 truncate">{triggerLabel}</span>
+        {labelMode !== "replace" && selectedLabel && (
+          <span className="min-w-0 truncate text-[var(--gold-bright)]">{selectedLabel}</span>
         )}
         {isMultiSelect && selectionCount > 0 && !isResting && (
           <span className="tabular-nums text-[length:var(--text-label)] text-[var(--gold-bright)]">
@@ -212,16 +228,37 @@ export default function KitDropdownView({
       )}
 
       {isOpen && isPhoneWidth && (
+        // Mobile sheet, RULED 12 Sep 2026 (R11 refine item 3). The
+        // frame's sheet recipe supplies the top-corner --radius-lg,
+        // the --scrim-strong veil at --blur-panel, the header row
+        // with the 44px circular close control on the right, and
+        // bottom docking. The sheet is floating chrome, so it sits on
+        // --surface-3 with the --line-whisper hairline, and it is
+        // inset by the page's mobile gutter (--space-5, StudioShell)
+        // on each side, never edge to edge. Those four go in as
+        // inline custom-property styles because the recipe already
+        // carries a background-image, a border color, and a width
+        // utility, and two arbitrary-value utilities on one property
+        // do not override reliably in this build (see the frame's
+        // own fixed-width note). The label rides in the header slot,
+        // pushed left of the close control.
         <KitModalFrame
           variant="sheet"
           ariaLabel={ariaLabel || label}
           onClose={close}
-        >
-          <div className="flex items-center justify-between gap-[var(--space-2)] px-[var(--space-3)] py-[var(--space-2)]">
-            <span className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
+          headerSlot={
+            <span className="mr-auto text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-faint)]">
               {label}
             </span>
-          </div>
+          }
+          panelStyle={{
+            backgroundImage: "none",
+            backgroundColor: "var(--surface-3)",
+            borderColor: "var(--line-whisper)",
+            width: "calc(100% - var(--space-5) * 2)",
+            maxWidth: "calc(100% - var(--space-5) * 2)",
+          }}
+        >
           <div
             role="listbox"
             aria-label={ariaLabel || label}
@@ -233,6 +270,7 @@ export default function KitDropdownView({
               selectedValues={selectedValues}
               isMultiSelect={isMultiSelect}
               onActivate={activateOption}
+              isSheet
             />
           </div>
         </KitModalFrame>

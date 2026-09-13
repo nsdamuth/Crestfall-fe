@@ -23,6 +23,7 @@ import {
 import ActorMechanicsProfileJsonEditorModal from "../actor-mechanics-profile-json-editor/ActorMechanicsProfileJsonEditorModal";
 import { ACTOR_MECHANICS_PROFILE_EDITOR_LIMITS } from "./ActorMechanicsProfileEditor.contract";
 import { TextAreaField } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
 function humanize(value) {
   return String(value || "")
@@ -97,27 +98,28 @@ function TextInput({ value = "", onChange, placeholder = "", ...props }) {
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
     />
   );
 }
 
-function SelectInput({ value, onChange, children, disabled = false }) {
+function SelectInput({ value, onChange, options = [], disabled = false }) {
   return (
-    <select
-      value={value}
-      onChange={onChange}
-      disabled={disabled}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--canvas)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
-    >
-      {children}
-    </select>
+    <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+      <KitDropdownView
+        options={options}
+        selectedValues={value ? [value] : []}
+        isMultiSelect={false}
+        isDisabled={disabled}
+        onToggleOption={(nextValue) => onChange?.({ target: { value: nextValue } })}
+      />
+    </div>
   );
 }
 
 function CheckboxRow({ checked, onChange, label, description }) {
   return (
-    <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+    <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
       <input
         type="checkbox"
         checked={checked}
@@ -138,7 +140,7 @@ function CheckboxRow({ checked, onChange, label, description }) {
 
 function StatCard({ label, value, detail = "" }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+    <div>
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
@@ -224,12 +226,12 @@ export default function ActorMechanicsProfileEditorView({
   const beyondScale = capabilityMode === "BEYOND_SCALE";
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <UserRoundCog size={18} />
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Actor Mechanics Profile · Actor State
             </p>
           </div>
@@ -262,7 +264,7 @@ export default function ActorMechanicsProfileEditorView({
             className={`rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition ${
               enabled
                 ? "border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
+                : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
             }`}
           >
             {enabled ? "Profile Enabled" : "Enable Profile"}
@@ -310,11 +312,11 @@ export default function ActorMechanicsProfileEditorView({
         </div>
       ) : null}
 
-      <div className="mt-7 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+      <div className="mt-7 border-t border-[var(--line-whisper)] pt-[var(--space-3)]">
         <div className="flex items-start gap-3">
           <RefreshCcw size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div className="min-w-0 flex-1">
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Profile Preset
             </p>
             <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
@@ -329,13 +331,11 @@ export default function ActorMechanicsProfileEditorView({
             <SelectInput
               value={pendingPresetId}
               onChange={(event) => onSelectPreset?.(event.target.value)}
-            >
-              {safePresetOptions.map((preset) => (
-                <option key={preset.presetId} value={preset.presetId}>
-                  {preset.title}
-                </option>
-              ))}
-            </SelectInput>
+              options={safePresetOptions.map((preset) => ({
+                value: preset.presetId,
+                label: preset.title,
+              }))}
+            />
             {selectedPreset ? (
               <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
                 {selectedPreset.summary}
@@ -397,7 +397,7 @@ export default function ActorMechanicsProfileEditorView({
             <UserRoundCog size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           )}
           <div>
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Actor Owner
             </p>
             <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -417,13 +417,11 @@ export default function ActorMechanicsProfileEditorView({
               onChange={(event) =>
                 onUpdateOwner?.("bindingMode", event.target.value)
               }
-            >
-              {ownerBindingModes.map((mode) => (
-                <option key={mode} value={mode}>
-                  {humanize(mode)}
-                </option>
-              ))}
-            </SelectInput>
+              options={ownerBindingModes.map((mode) => ({
+                value: mode,
+                label: humanize(mode),
+              }))}
+            />
           </div>
 
           <div>
@@ -432,13 +430,11 @@ export default function ActorMechanicsProfileEditorView({
               value={ownerType}
               disabled={ownerLocked}
               onChange={(event) => onUpdateOwner?.("ownerType", event.target.value)}
-            >
-              {ownerTypes.map((type) => (
-                <option key={type} value={type}>
-                  {humanize(type)}
-                </option>
-              ))}
-            </SelectInput>
+              options={ownerTypes.map((type) => ({
+                value: type,
+                label: humanize(type),
+              }))}
+            />
           </div>
 
           <div>
@@ -473,7 +469,7 @@ export default function ActorMechanicsProfileEditorView({
         <div className="flex items-start gap-3">
           <LockKeyhole size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Fixed State Policy
             </p>
             <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -503,7 +499,7 @@ export default function ActorMechanicsProfileEditorView({
         <div className="flex items-start gap-3">
           <CircleGauge size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Capability Policy
             </p>
             <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -521,13 +517,11 @@ export default function ActorMechanicsProfileEditorView({
               onChange={(event) =>
                 onUpdateCapabilityPolicy?.("mode", event.target.value)
               }
-            >
-              {capabilityModes.map((mode) => (
-                <option key={mode} value={mode}>
-                  {humanize(mode)}
-                </option>
-              ))}
-            </SelectInput>
+              options={capabilityModes.map((mode) => ({
+                value: mode,
+                label: humanize(mode),
+              }))}
+            />
           </div>
 
           <div>
@@ -540,13 +534,11 @@ export default function ActorMechanicsProfileEditorView({
                   event.target.value
                 )
               }
-            >
-              {opposedResolutionPolicies.map((policy) => (
-                <option key={policy} value={policy}>
-                  {humanize(policy)}
-                </option>
-              ))}
-            </SelectInput>
+              options={opposedResolutionPolicies.map((policy) => ({
+                value: policy,
+                label: humanize(policy),
+              }))}
+            />
           </div>
         </div>
 
@@ -599,7 +591,7 @@ export default function ActorMechanicsProfileEditorView({
         <div>
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <Boxes size={17} />
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Domain Bindings
             </p>
           </div>
@@ -626,7 +618,7 @@ export default function ActorMechanicsProfileEditorView({
       </div>
 
       {safeBindings.length ? (
-        <div className="mt-5 space-y-4">
+        <div className="mt-5 divide-y divide-[var(--line-whisper)]">
           {safeBindings.map((binding, index) => {
             const ToggleIcon = binding.expanded ? ChevronDown : ChevronRight;
             const managedDefinition =
@@ -659,7 +651,7 @@ export default function ActorMechanicsProfileEditorView({
             return (
               <article
                 key={`${binding.id}-${binding.order}-${index}`}
-                className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)]"
+                className="overflow-hidden py-4 first:pt-0"
               >
                 <div className="flex items-start gap-2 px-3 py-3 sm:px-4">
                   <button
@@ -681,7 +673,7 @@ export default function ActorMechanicsProfileEditorView({
                           Required
                         </span>
                       ) : null}
-                      <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-white/10 bg-black/30 px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
+                      <span className="inline-flex h-[var(--space-6)] items-center rounded-full border border-white/10 bg-[var(--surface-2)] px-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] font-medium uppercase text-[var(--ink-dim)]">
                         {humanize(binding.activationMode)}
                       </span>
                     </div>
@@ -703,7 +695,7 @@ export default function ActorMechanicsProfileEditorView({
                     className={`rounded-lg border px-3 py-2 text-[10px] uppercase tracking-[0.14em] transition ${
                       binding.enabled
                         ? "border-[var(--status-success-border)] bg-[var(--status-success-bed)] text-[var(--status-success)]"
-                        : "border-white/10 bg-black/25 text-[var(--ink-dim)]"
+                        : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
                     }`}
                   >
                     {binding.enabled ? "Enabled" : "Disabled"}
@@ -771,13 +763,8 @@ export default function ActorMechanicsProfileEditorView({
                               event.target.value
                             )
                           }
-                        >
-                          {domainOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </SelectInput>
+                          options={domainOptions}
+                        />
                       </div>
 
                       <div>
@@ -806,13 +793,8 @@ export default function ActorMechanicsProfileEditorView({
                               event.target.value
                             )
                           }
-                        >
-                          {activationModeOptions.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </SelectInput>
+                          options={activationModeOptions}
+                        />
                       </div>
                     </div>
 
@@ -856,12 +838,12 @@ export default function ActorMechanicsProfileEditorView({
                       />
                     </div>
 
-                    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
+                    <div className="mt-6 border-t border-[var(--line-whisper)] pt-[var(--space-3)]">
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div>
                           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                             <Link2 size={15} />
-                            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                               Reusable Definitions
                             </p>
                           </div>
@@ -894,13 +876,13 @@ export default function ActorMechanicsProfileEditorView({
                       </div>
 
                       {binding.references.length ? (
-                        <div className="mt-4 space-y-3">
+                        <div className="mt-4 divide-y divide-[var(--line-whisper)]">
                           {binding.references.map((reference) =>
                             managedDefinition &&
                             reference.referenceType === "CREATION" ? (
                               <div
                                 key={`${binding.id}-reference-${reference.index}`}
-                                className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-[var(--space-3)]"
+                                className="py-3 first:pt-0"
                               >
                                 <div className="flex flex-wrap items-start justify-between gap-3">
                                   <div className="min-w-0">
@@ -941,7 +923,7 @@ export default function ActorMechanicsProfileEditorView({
                                   </div>
                                 ) : null}
 
-                                <div className="mt-3 rounded-lg border border-white/10 bg-black/25 px-3 py-2">
+                                <div className="mt-3 border-t border-[var(--line-whisper)] pt-2">
                                   <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--ink-dim)]">
                                     Creation Reference
                                   </p>
@@ -953,10 +935,10 @@ export default function ActorMechanicsProfileEditorView({
                             ) : (
                               <div
                                 key={`${binding.id}-reference-${reference.index}`}
-                                className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]"
+                                className="py-3 first:pt-0"
                               >
                                 <div className="flex items-center justify-between gap-3">
-                                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                                     Reference {reference.index + 1}
                                   </p>
                                   <button
@@ -996,16 +978,8 @@ export default function ActorMechanicsProfileEditorView({
                                           event.target.value
                                         )
                                       }
-                                    >
-                                      {referenceTypeOptions.map((option) => (
-                                        <option
-                                          key={option.value}
-                                          value={option.value}
-                                        >
-                                          {option.label}
-                                        </option>
-                                      ))}
-                                    </SelectInput>
+                                      options={referenceTypeOptions}
+                                    />
                                   </div>
 
                                   <div>

@@ -99,7 +99,7 @@ function RecommendationGroup({
   onApply = null,
 }) {
   return (
-    <div className="min-w-0 rounded-xl border border-white/10 bg-black/25 p-4">
+    <div className="min-w-0 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {title}
       </p>
@@ -128,7 +128,7 @@ function RecommendationSingle({
   onApply = null,
 }) {
   return (
-    <div className="min-w-0 rounded-xl border border-white/10 bg-black/25 p-4">
+    <div className="min-w-0 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {title}
       </p>

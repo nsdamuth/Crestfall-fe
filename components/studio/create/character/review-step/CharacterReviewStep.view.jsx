@@ -19,7 +19,7 @@ function TextAreaField({ label, value, onChange, placeholder }) {
 
 function SummaryItem({ label, value }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)] p-4">
+    <div>
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>

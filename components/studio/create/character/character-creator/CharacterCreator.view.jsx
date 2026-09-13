@@ -7,6 +7,7 @@ import {
   Eye,
   MessageCircle,
 } from "lucide-react";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const STEP_ICONS = {
   identity: BadgeInfo,
@@ -63,7 +64,7 @@ export default function CharacterCreatorView({
           </button>
         </div>
 
-        <div className="mt-5 grid gap-2 sm:grid-cols-4 xl:grid-cols-5">
+        <div className="mt-5 grid grid-cols-2 gap-2 md:grid-cols-4 xl:grid-cols-5">
           {stepItems.map((step) => {
             const Icon = STEP_ICONS[step.iconKey] || BadgeInfo;
 
@@ -90,10 +91,17 @@ export default function CharacterCreatorView({
         </div>
       </section>
 
+      {/* MOBILE-SHELLS: min-w-0 on the authoring pane, and previewContent
+          is wrapped so the slot the binding shell passes in gets the same
+          guard. Without it the implicit base column below xl is sized by
+          min-width:auto and any nowrap descendant becomes the page's
+          horizontal scroll width. This is the single-column rule for this
+          shell: preview then editor, in DOM order, each full width minus
+          the page gutter. */}
       <section className="mt-6 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
-        {previewContent}
+        <div className="min-w-0">{previewContent}</div>
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-6">
+        <div className="min-w-0 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-6">
           {editorContent}
 
           {saveMessage ? (
@@ -106,12 +114,12 @@ export default function CharacterCreatorView({
             </p>
           ) : null}
 
-          <div className="mt-8 flex items-center justify-between gap-3">
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
             <button
               type="button"
               onClick={() => onBack?.()}
               disabled={activeIndex === 0}
-              className="cf-btn cf-btn--secondary"
+              className="cf-btn cf-btn--secondary w-full md:w-auto"
             >
               Back
             </button>
@@ -121,7 +129,7 @@ export default function CharacterCreatorView({
                 type="button"
                 onClick={() => onSave?.()}
                 disabled={saveDisabled}
-                className="cf-btn cf-btn--primary"
+                className="cf-btn cf-btn--primary w-full md:w-auto"
               >
                 {saveStatus === "saving" ? "Saving..." : "Finish draft"}
               </button>
@@ -129,7 +137,7 @@ export default function CharacterCreatorView({
               <button
                 type="button"
                 onClick={() => onNext?.()}
-                className="cf-btn cf-btn--primary"
+                className="cf-btn cf-btn--primary w-full md:w-auto"
               >
                 Next
               </button>
@@ -137,6 +145,16 @@ export default function CharacterCreatorView({
           </div>
         </div>
       </section>
+
+      {/* MOBILE-SHELLS: the progress row's Save draft is a full scroll away
+          on a phone, so the same action docks to the bottom edge below md.
+          The progress-row button is untouched and is what renders on
+          desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </>
   );
 }

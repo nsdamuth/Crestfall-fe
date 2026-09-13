@@ -1,4 +1,4 @@
-export const HOME_VIEW_CONTRACT_VERSION = "4.0.0";
+export const HOME_VIEW_CONTRACT_VERSION = "5.0.0";
 
 /**
  * V2 Home is the signed-in guidepost/dashboard. It is distinct from `/studio`,
@@ -16,6 +16,11 @@ export const HOME_VIEW_CONTRACT_VERSION = "4.0.0";
  *    its own Sort control; a rail with no items renders nothing
  * 3. Creation-oriented bottom banner routing to the next section (Stories)
  *
+ * Removed at 5.0.0 (12 Sep 2026, eight-fix package, FIX 1): welcomeName.
+ * The hero's "Welcome back, <name>." overlay is retired with no
+ * replacement copy; the hero keeps its eyebrow, continue block, and
+ * buttons.
+ *
  * Removed at 4.0.0: destinationTiles, the four named rails
  * (topRatedRail, recentlyAddedRail, fromTheCommunityRail,
  * creatorsToFollowRail), and the single page-level sortControl.
@@ -30,7 +35,6 @@ export const homeViewContract = Object.freeze({
   inputs: Object.freeze([
     "topBanner",
     "continueItem",
-    "welcomeName",
     "sectionRails",
     "bottomBanner",
     "errorMessage",

@@ -26,7 +26,7 @@ export default function IngredientSlotView({
             ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
             : hasValue
               ? "border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10"
-              : "border-white/10 bg-black/25 hover:border-[var(--gold-ornament)]/35 hover:bg-[var(--gold-ornament)]/10"
+              : "border-white/10 bg-[var(--surface-1)] hover:border-[var(--gold-ornament)]/35 hover:bg-[var(--gold-ornament)]/10"
         }`}
       >
         <span className="flex h-12 w-12 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)] transition group-hover:bg-[var(--gold-ornament)]/20">

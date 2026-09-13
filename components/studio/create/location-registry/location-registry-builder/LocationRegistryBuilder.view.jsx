@@ -15,12 +15,14 @@ import {
   X,
 } from "lucide-react";
 import CreationPickerPanelView from "@/components/studio/creations/pickers/creation-picker-panel/CreationPickerPanel.view";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import {
   SectionTitle,
   TextAreaField,
   SHORT_LONGFORM_MAX_LENGTH,
   DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const TAB_ICON_BY_KEY = Object.freeze({
   overview: BookOpen,
@@ -105,9 +107,14 @@ export default function LocationRegistryBuilderView({
 } = {}) {
   return (
     <section className="grid gap-6 xl:grid-cols-[1fr_380px]">
-      <div className="space-y-5">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. The right track is
+          a hard 380px, so without the guard the base column below xl was
+          floored at each child's subtree min-content. This is the
+          single-column rule for this shell: one column in DOM order below
+          xl, each panel free to shrink to the page gutter. */}
+      <div className="min-w-0 space-y-5">
         {hideTabs ? null : (
-          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+          <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
             <div className="flex flex-wrap gap-2">
               {tabs.map((tab) => {
                 const Icon = TAB_ICON_BY_KEY[tab.iconKey] || BookOpen;
@@ -121,7 +128,7 @@ export default function LocationRegistryBuilderView({
                     className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-xs uppercase tracking-[0.16em] transition ${
                       active
                         ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                        : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                        : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                     }`}
                   >
                     <Icon size={14} />
@@ -133,7 +140,7 @@ export default function LocationRegistryBuilderView({
           </div>
         )}
 
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
           {currentTab === "overview" ? (
             <OverviewTab
               registry={registry}
@@ -193,8 +200,8 @@ export default function LocationRegistryBuilderView({
         </div>
       </div>
 
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
-        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+      <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           Registry Summary
         </p>
 
@@ -230,7 +237,7 @@ export default function LocationRegistryBuilderView({
         </div>
 
         {mode === "edit" ? (
-          <p className="mt-5 rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+          <p className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-xs uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             Use the page Save button to persist changes.
           </p>
         ) : (
@@ -328,6 +335,14 @@ export default function LocationRegistryBuilderView({
           onSave={onSaveWeatherScope}
         />
       ) : null}
+      {/* MOBILE-SHELLS: the aside's Save registry is a full scroll away on
+          a phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save registry"}
+        onAction={onSave}
+        disabled={saveStatus === "saving"}
+      />
     </section>
   );
 }
@@ -412,11 +427,11 @@ function EntriesTab({
           entries.map((entry) => (
             <article
               key={entry.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                     {entry.kind === "CREATION_REF" ? "Linked Location" : "Basic Location"} ·{" "}
                     {entry.category || "Location"} · {entry.locationScale}
                   </p>
@@ -507,11 +522,11 @@ function ConnectionsTab({
           connections.map((connection) => (
             <article
               key={connection.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                     {connection.relation} · {connection.defaultRouteType || connection.routeType}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
@@ -611,11 +626,11 @@ function PresenceTab({
           bindings.map((binding) => (
             <article
               key={binding.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                     {formatRegistryOption(binding.relationshipRole)} · {formatRegistryOption(binding.frequency)}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
@@ -696,11 +711,11 @@ function WeatherTab({ weatherScopes, onAdd, onEdit, onDelete }) {
           weatherScopes.map((scope) => (
             <article
               key={scope.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                  <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                     {scope.scopeType || "Weather Scope"}
                   </p>
                   <h3 className="mt-2 font-display text-2xl">
@@ -755,7 +770,7 @@ function RuntimeTab({ registry, onUpdateRuntimeGuidance }) {
       />
 
       <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
-        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+        <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           Middleware Intent
         </p>
         <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-[var(--ink-dim)]">
@@ -962,7 +977,7 @@ function LocationEntryModal({
           />
 
           <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               People & Presence
             </p>
             <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -1261,7 +1276,7 @@ function PresenceBindingModal({
         </div>
 
         <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-3)]">
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             NPC Registry Person
           </p>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -1287,7 +1302,7 @@ function PresenceBindingModal({
 
         {draft.person?.displayName ? (
           <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-4">
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">Selected Person</p>
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">Selected Person</p>
             <p className="mt-2 font-display text-2xl">{draft.person.displayName}</p>
             <p className="mt-1 text-sm text-[var(--ink-dim)]">
               {draft.person.registryTitle || "NPC Registry"} · {formatRegistryOption(draft.person.entryKind || "NPC")}
@@ -1408,10 +1423,10 @@ function WeatherScopeModal({ draft, onClose, onChange, onSave }) {
 function ModalShell({ title, children, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[2px]">
-      <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-4)] shadow-[var(--shadow-modal)]">
+      <div className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[image:var(--grad-panel-lift)] shadow-[var(--shadow-modal)]">
         <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
           <div>
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Location Registry
             </p>
             <h2 className="mt-2 font-display text-4xl">{title}</h2>
@@ -1492,7 +1507,7 @@ function TextInput({ label, value, onChange, placeholder = "" }) {
         value={value ?? ""}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -1515,24 +1530,24 @@ function SelectInput({
       : option
   );
 
+  const dropdownOptions = includeBlank
+    ? [{ value: "", label: blankLabel }, ...normalizedOptions]
+    : normalizedOptions;
+
   return (
-    <label className="block">
+    <div className="block">
       <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
-      <select
-        value={value || ""}
-        onChange={(event) => onChange(event.target.value)}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
-      >
-        {includeBlank ? <option value="">{blankLabel}</option> : null}
-        {normalizedOptions.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    </label>
+      <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+        <KitDropdownView
+          options={dropdownOptions}
+          selectedValues={value ? [value] : includeBlank ? [""] : []}
+          isMultiSelect={false}
+          onToggleOption={(nextValue) => onChange(nextValue)}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -1567,12 +1582,13 @@ function OptionMultiSelect({
         {options.map((option) => (
           <label
             key={option}
-            className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3"
+            className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3"
           >
             <input
               type="checkbox"
               checked={selected.has(option)}
               onChange={() => toggleOption(option)}
+              className="h-4 w-4 accent-[var(--gold-ornament)]"
             />
             <span className="text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
               {formatRegistryOption(option)}
@@ -1615,12 +1631,13 @@ function RouteTypeMultiSelect({
         {options.map((routeType) => (
           <label
             key={routeType}
-            className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3"
+            className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3"
           >
             <input
               type="checkbox"
               checked={selected.has(routeType)}
               onChange={() => toggleRouteType(routeType)}
+              className="h-4 w-4 accent-[var(--gold-ornament)]"
             />
             <span className="text-xs uppercase tracking-[0.14em] text-[var(--gold-ornament)]">
               {formatRegistryOption(routeType)}
@@ -1634,11 +1651,12 @@ function RouteTypeMultiSelect({
 
 function CheckboxInput({ label, checked, onChange }) {
   return (
-    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+    <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
       <input
         type="checkbox"
         checked={Boolean(checked)}
         onChange={(event) => onChange(event.target.checked)}
+        className="h-4 w-4 accent-[var(--gold-ornament)]"
       />
       <span className="text-xs uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
         {label}
@@ -1649,7 +1667,7 @@ function CheckboxInput({ label, checked, onChange }) {
 
 function EmptyPanel({ message }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
       <p className="text-sm leading-6 text-[var(--ink-dim)]">{message}</p>
     </div>
   );
@@ -1683,7 +1701,7 @@ function SmallDangerAction({ onClick }) {
 
 function SummaryPill({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
       <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] tracking-[var(--track-label)] uppercase [font-weight:var(--weight-medium)] text-[var(--gold-bright)]">
         {label}
       </p>

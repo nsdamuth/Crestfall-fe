@@ -46,11 +46,22 @@ Only locked tokens may be written by an execution run.
 | Token | Dark | Light | Role | Legal on | Never on | Status |
 |---|---|---|---|---|---|---|
 | `--canvas` | `#090805` | `#ebe3d0` | Page background, behind all art | The page body, full-bleed backdrops | Panels, cards, controls | locked |
-| `--surface-1` | `#16130f` | `#f0e9d8` | Quiet sections, inset wells, inputs | Wells, input beds, quiet chips | Floating panels | locked |
-| `--surface-2` | `#1d1a15` | `#f4eee0` | Cards, list rows, icon-button fills | In-flow cards and rows, circular chrome controls | Modals | locked |
-| `--surface-3` | `#24211a` | `#f8f3e7` | Topbar, sidebar, sticky chrome | Persistent chrome | Content panels | locked |
-| `--surface-4` | `#2c271e` | `#fcf8ee` | Superseded on floating chrome 22 Aug 2026: modal panels moved off this token to `--grad-panel-lift` (B3), menus and popovers moved off it to `--panel-glass` (NEW LAW B, F3 closed GO 2B, Final Ruling Render). No floating-surface consumer remains | Reserved, no current floating-surface legal-on | Menus, popovers, `.cf-dropdown`, modal panels | locked |
+| `--surface-1` | `#1a1712` | `#f0e9d8` | Card: the first step up from the page (INSET model, RULED 12 Sep 2026); quiet sections, quiet chips | In-flow cards and top-level content panels, quiet chips | Field beds (use `--bed-deep`), dropdown triggers (use `--step-above`), floating panels | locked |
+| `--surface-2` | `#25211b` | `#f4eee0` | Nested card: a card inside a `--surface-1` card, one step up again (RULED 12 Sep 2026); list rows and icon-button fills inside a card | Cards nested in a card, list rows, circular chrome controls | Top-level cards on the page, field beds, modals | locked |
+| `--surface-3` | `#2f2a22` | `#f8f3e7` | Topbar, sidebar, sticky chrome; tooltip panels (RULED 12 Sep 2026: both InfoTip tooltips sit on the chrome tier, not interim, not waiting on CR-047) | Persistent chrome, tooltip panels | Content panels | locked |
+| `--surface-4` | `#3a342a` | `#fcf8ee` | Superseded on floating chrome 22 Aug 2026: modal panels moved off this token to `--grad-panel-lift` (B3), menus and popovers moved off it to `--panel-glass` (NEW LAW B, F3 closed GO 2B, Final Ruling Render). No floating-surface consumer remains | Reserved, no current floating-surface legal-on | Menus, popovers, `.cf-dropdown`, modal panels | locked |
 | `--surface-footer` | `#1a120b` | same | Marketing footer only, deliberate ramp exception | The site footer | Anything else | locked |
+
+Elevation model, RULED 12 Sep 2026: INSET. The page is darkest, a card sits one step up, a card nested inside a card sits one step up again, and every field bed sits below its container on `--bed-deep` with `--shadow-bed`. Gold is never a resting surface. Every adjacent step is a visible step at 390 by 844; Brian rules the values in the browser after each build. The dark ladder was rewritten in the same ruling from 3.3 L* steps to 4.4 to 5.7 L* steps (`app/theme.css` surface ramp comment); `--surface-3` and `--surface-4` moved only to stay above the nested card. (The first landing of this line also sank dropdown triggers onto `--bed-deep`; the refine the same day, after browser review, reversed that half. The next line is the rule.)
+
+A control you tap rises one step above its container. A control you type into sinks one step below it.
+
+Mechanism, RULED 12 Sep 2026 (refine, item 2), mandatory: every surface tier publishes its step above and its step below as two CSS variables, `--step-above` and `--step-below`, set on the tier's container class (`app/design-system.css`, "TIER STEPS"; page-tier defaults on `:root` in `app/theme.css`). A dropdown trigger is written once as `bg-[var(--step-above)]` with the `--line-whisper` hairline and the chevron: on a `--surface-1` card it renders `--surface-2`, on a `--surface-2` nested card it renders `--surface-3`, on chrome or a modal panel it renders `--surface-4`. A field bed resolves to `--step-below`, which is `--bed-deep` under every tier. Zero per-instance overrides; a fixed trigger surface is illegal because it disappears on a nested card.
+
+| Token | Dark | Light | Role | Legal on | Never on | Status |
+|---|---|---|---|---|---|---|
+| `--step-above` | alias, per tier | follows referent | The surface one step above the current container; page tier `var(--surface-1)` | Tap controls: dropdown triggers, and any future tap control the law names | Type controls, cards, chrome | locked |
+| `--step-below` | alias, per tier | follows referent | The surface one step below the current container; `var(--bed-deep)` under every tier | Type controls: text inputs, textareas | Tap controls, cards, chrome | locked |
 
 Surfaces are opaque and flip with the theme. Panels are never built from
 translucent black fills: `bg-black/NN` panel chrome cannot flip themes
@@ -235,7 +246,8 @@ theme the matrix below is computed against); WCAG 2.2 numbers,
 | `--blur-chrome` | `12px` | same | Persistent chrome frost, minted 8 Aug 2026 at the proof's create-hub `.topbar` value; scope extended 22 Aug 2026 (Gate 2 token law row 10) to the editor sticky nav and the mobile save row | Sticky top bars and other persistent (non-floating) chrome, the editor sticky nav, the mobile save row | Any floating panel (use `--blur-panel`), the image viewer veil, tile art, banners, tag beds | locked |
 | `--blur-glass` | `12px` | same | Tooltip glass only. Third blur token, no cross-borrowing with the two above (A2, ratified narrow, 22 Aug 2026): every glass-chrome surface actually built (kebab menus, the viewer header, the viewer's 390 close control) resolves through `--panel-glass` at `--blur-panel` (2px), not this token | Tooltips (pending the CR-047 component) | Any other surface, including glass-chrome menus and headers | locked |
 | `--chrome-wash` | `rgba(6,4,2,.62)` | same, interim (F1) | The near-black wash paired with `--blur-chrome`; ALSO the image viewer veil color, paired with `--blur-panel` per B7 | Sticky chrome, editor sticky nav, mobile save row, image viewer veil | Any surface not paired with `--blur-chrome` or the viewer's `--blur-panel` veil | locked |
-| `--panel-glass` | `rgba(36,32,25,.85)` | same, interim (F1) | Glass-panel background, paired with `--blur-panel` (2px), never `--blur-glass`. Scope widened 22 Aug 2026 (NEW LAW B, F3 closed GO 2B, Final Ruling Render): every menu and popover app-wide, not only kebab menus | Kebab menus (B6), the `KitCreationCard` viewer-owned kebab menu (NEW LAW A), `KitDropdown` and every other menu/popover surface app-wide, the viewer's two-line header (B7); selection modals (picker, sort) keep their own panel-lift-gradient modal surface, unchanged by this widening | Tooltip surfaces (use `--blur-glass`) | locked |
+| `--panel-glass` | `rgba(36,32,25,.85)` | same, by design: art under it does not flip | Over-art glass background, paired with `--blur-panel` (2px), never `--blur-glass`. NEW LAW B (22 Aug 2026) widened it to every menu and popover; NARROWED 12 Sep 2026 (Brian, INSET ladder ruling, option A): menus and popovers resolve through the themed `--panel-ui-glass` row below, and this token is over-art glass only | The lightbox and image viewer chrome (two-line header, controls, circular close chips), the image editor and image overlay panels, the modal-frame phone close chip, the asset-detail catalogue card over scrimmed art, the picker-modal selected-check chip over a thumbnail; selection modals (picker, sort) keep their own panel-lift-gradient modal surface | UI menus and popovers (use `--panel-ui-glass`), tooltip surfaces (use `--surface-3`, RULED 12 Sep 2026) | locked |
+| `--panel-ui-glass` | `rgba(36,32,25,.92)` | `rgba(252,248,238,.94)` | Themed UI glass for every menu and popover, paired with `--blur-panel` (2px), never `--blur-glass`. Minted in `app/theme.css` after the 30 Aug 2026 S02 render sitting so Eggshell menus read as parchment glass rather than stranded dark chrome; entered into law 12 Sep 2026 (Brian, option A: the law catches up with the build; replacing it with `--panel-glass` was rejected because it would darken every Eggshell menu until F1) | `KitDropdown` and every other menu/popover surface app-wide, `KitFilterPanel`, `KitGlobalSearch`, the form-field menu recipe, the `KitCreationCard` kebab menu | Over-art surfaces (use `--panel-glass`), tooltip surfaces (use `--surface-3`) | locked |
 
 Scrims do not flip with the theme because the artwork under them does
 not flip. `--blur-panel`, `--blur-chrome`, and `--blur-glass` are
@@ -397,7 +409,7 @@ column they sit in. This supersedes `docs/BUILD-BLUEPRINT.md`
 same commit; no new token is minted, `--container` and `--measure`
 were already locked.
 
-**SUPERSEDED FOR PRODUCT LAYOUT 24 Aug 2026 — V2 convergence W1.**
+**SUPERSEDED FOR PRODUCT LAYOUT 24 Aug 2026, V2 convergence W1.**
 The global 1200px shell cap is no longer authoritative. `StudioShell` is a
 fluid application workspace and uses the available viewport width. Individual
 reading, form, modal, or card regions may still apply `--measure`, a local
@@ -478,7 +490,7 @@ repeated here.
 | `--fill-ghost` | `rgba(242,209,148,.05)` | same, interim (F1) | Ghost-button and quiet-interactive-surface bed | `.cf-btn--secondary`, trait chips, quiet interactive surfaces | Whole large surfaces | locked |
 | `--control-editor-md` | `var(--control-filter)` (38) | same | Editor CTA height, desktop only; aliases `--control-filter` rather than re-minting the same literal (CR-053) | Editor CTAs, desktop widths | Any control needing the 44px touch floor | locked |
 | `--control-editor-sm` | `1.75rem` (28) | same | Editor CTA height, desktop only, genuinely new value | Editor CTAs, desktop widths | Any control needing the 44px touch floor | locked |
-| `--bed-deep` | `#0d0b08` | same, interim (F1) | Deepest field-bed fill | Field beds | Any surface already on the `--surface-1..4` ramp | locked |
+| `--bed-deep` | `#181510` | `#ded6c3` | Field-bed fill, the step below whatever contains it (INSET, RULED 12 Sep 2026). Refined the same day after browser review: both values now clear 4.4 L* from `--canvas` (dark 4.74, light 4.61) so a field never reads as a hole to the page; the dark bed sits 0.97 L* under `--surface-1` and separates from its card by `--shadow-bed`, the hairline, and the label | Field beds | Dropdown triggers (they rise, see `--step-above`), any surface already on the `--surface-1..4` ramp | locked |
 | `--shadow-bed` | `inset 0 1px 2px rgba(0,0,0,.25)` | same | Inset field-bed shadow, paired with `--bed-deep` | Field beds | Floating surfaces (use `--shadow-modal` / `--shadow-popover`) | locked |
 | `--line-fade` | `linear-gradient(90deg,transparent,rgba(242,209,148,.13) 12%,rgba(242,209,148,.13) 88%,transparent)` | same | 1px fade-out-ends divider, never edge-to-edge | Sidebar groups, card-header rules, rail progress rules; scope broadened 22 Aug 2026 (B1) to every modal-family divider, with a `.tight` compact-margin variant in dense contexts (picker, sort) | Edge-to-edge dividers | locked |
 | `--weight-light` | `300` | same | Ghost-button and typed-field-value weight | `.cf-btn--secondary` and other ghost-styled buttons/chips, `--ink-typed` field values | Body copy, headings | locked |
@@ -486,9 +498,11 @@ repeated here.
 F1, held for a Brian ruling: every row above marked "interim (F1)"
 declares the same value in both themes today; real light-theme values
 need a render sitting (the panel-lift gradient, creation-card
-gradient, `--fill-option-rest`, `--panel-glass`, `--bed-deep`,
+gradient, `--fill-option-rest`,
 `--grad-card`, `--grad-rail`, `--chrome-wash`, `--ink-typed`,
-`--fill-ghost`).
+`--fill-ghost`). `--bed-deep` left this list 12 Sep 2026 when its
+light value was ruled; `--panel-glass` left it the same day, its
+single dark value being by design for over-art glass.
 
 ## Ladder and state primitives, RULED 9 Aug 2026
 

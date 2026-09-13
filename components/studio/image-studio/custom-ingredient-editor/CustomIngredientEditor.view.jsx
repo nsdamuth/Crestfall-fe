@@ -50,7 +50,7 @@ export default function CustomIngredientEditorView({
           onChange={(event) => onChangePrompt?.(event.target.value)}
           placeholder={promptPlaceholder}
           rows={4}
-          className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+          className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
         />
       </label>
 

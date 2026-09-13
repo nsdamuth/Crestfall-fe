@@ -1,6 +1,14 @@
-export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.3.0";
+export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.4.0";
 
 /**
+ * 1.3.0 to 1.4.0 (eight-fix package FIX 5, RULED 12 Sep 2026),
+ * additive: `labelMode` "replace" lets a non-resting single-select
+ * value take the trigger over, so the trigger reads the chosen
+ * option's label alone and reads `label` while the value is the
+ * default (restingValue). The menu still marks the default option as
+ * selected. "prefix", the default, keeps the label-then-value grammar
+ * of 1.3.0 on every existing consumer.
+ *
  * 1.2.1 to 1.3.0 (FE/MEDIA-STUDIO session 3 review round 2, 10 Sep
  * 2026), additive: `align` sets the popover's baseline anchor, "left"
  * (the default, every existing consumer unchanged) or "right" for a
@@ -79,6 +87,10 @@ export const KIT_DROPDOWN_VIEW_CONTRACT_VERSION = "1.3.0";
  *   "right" anchors the menu to the trigger's right edge, for a
  *   trigger pinned to the right edge of a modal. The phone sheet is
  *   unaffected.
+ * @property {"prefix"|"replace"} [labelMode] (added 1.4.0, 12 Sep
+ *   2026) "replace": a non-resting single-select value replaces
+ *   `label` on the trigger; while resting, the trigger reads `label`
+ *   with no value. Default "prefix". Multi-select ignores it.
  */
 
 export {};

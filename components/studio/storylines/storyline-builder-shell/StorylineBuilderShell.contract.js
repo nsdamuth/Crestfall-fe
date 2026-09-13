@@ -1,7 +1,13 @@
-export const STORYLINE_BUILDER_SHELL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const STORYLINE_BUILDER_SHELL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable LOOM boundary for Storyline creation.
+ *
+ * 1.1.0, package MOBILE-SHELLS, additive and prop-free: the root grid's
+ * two children carry min-w-0 so the base column can shrink to the page
+ * gutter, and the existing saveButtonLabel/onSaveDraft/saveDisabled trio
+ * is repeated in a bottom-docked action bar below the md breakpoint. No
+ * prop was added, removed, or changed in meaning.
  *
  * The portable View receives display-ready field values, semantic callbacks,
  * save state, and injected authoring slots. It does not receive the raw form,

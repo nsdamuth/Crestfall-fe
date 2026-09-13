@@ -15,7 +15,7 @@ export default function StudioAccountMetricsView({
         {metricItems.map((item, index) => (
           <div
             key={item?.id || item?.label || index}
-            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-3"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-3"
           >
             <p className="font-display text-2xl">{item?.value ?? "0"}</p>
             <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">

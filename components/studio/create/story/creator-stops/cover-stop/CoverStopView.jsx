@@ -16,7 +16,7 @@ export default function CoverStopView({
 
   return (
     <>
-      <Eyebrow>The cover</Eyebrow>
+      <Eyebrow showRuleMark={false}>The cover</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Every choice, brought together.
       </h2>

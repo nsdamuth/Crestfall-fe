@@ -1,6 +1,6 @@
 "use client";
 
-export default function EyebrowView({ children = null, showRuleMark = true }) {
+export default function EyebrowView({ children = null, showRuleMark = false }) {
   return (
     <p className="flex items-center gap-[var(--space-3)] text-[var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
       <span>{children}</span>

@@ -54,7 +54,7 @@ const PANEL_RECIPE = {
   modal:
     "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] [--panel-width:64rem] min-[700px]:max-h-[92dvh] min-[700px]:w-[min(var(--panel-width),calc(100vw-var(--space-8)))] min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b min-[700px]:pb-0",
   sheet:
-    "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
+    "relative w-full max-w-[100vw] max-h-[92dvh] overflow-x-hidden overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
   // R2/R5 (10 Aug 2026, kit polish 3 pass, plan 1.2): the viewer is
   // its own surface, never a panel with an image inside it. No
   // background, border, shadow, or radius anywhere; a transparent
@@ -104,6 +104,7 @@ export function useKitModalFrameViewModel({
   variant = "modal",
   panelClassName = "",
   panelWidth = "",
+  panelStyle: callerPanelStyle = null,
   hasUnsavedChanges = false,
   sheetGrabber = false,
   headerSlot = null,
@@ -157,10 +158,22 @@ export function useKitModalFrameViewModel({
     // The modal variant's fixed width (1.5.0): a CSS length such as
     // "56rem". Ignored by the sheet and viewer variants by
     // construction (their recipes never read the variable).
-    panelStyle:
-      resolvedVariant === "modal" && typeof panelWidth === "string" && panelWidth.trim()
-        ? { "--panel-width": panelWidth.trim() }
-        : undefined,
+    // panelStyle (1.6.0, 12 Sep 2026, R11 refine item 3): a caller's
+    // inline style object for the panel, merged under the width
+    // variable so the fixed-width law still wins on the modal
+    // variant. Lets a sheet consumer (KitDropdown) set its surface,
+    // hairline, and gutter width as var() values without two
+    // arbitrary-value utilities competing on one property.
+    panelStyle: (() => {
+      const widthStyle =
+        resolvedVariant === "modal" && typeof panelWidth === "string" && panelWidth.trim()
+          ? { "--panel-width": panelWidth.trim() }
+          : null;
+      const ownStyle =
+        callerPanelStyle && typeof callerPanelStyle === "object" ? callerPanelStyle : null;
+      if (!widthStyle && !ownStyle) return undefined;
+      return { ...(ownStyle || {}), ...(widthStyle || {}) };
+    })(),
     ariaLabelledBy: hasOwnLabelledBy
       ? ariaLabelledBy
       : needsGeneratedLabel

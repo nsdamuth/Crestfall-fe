@@ -91,7 +91,7 @@ export default function InfoTip({ label, text, flip = false }) {
 
       <span
         role="tooltip"
-        className={`pointer-events-none absolute z-10 w-56 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-4)] px-[var(--space-2)] py-[var(--space-1)] text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--ink)] opacity-0 shadow-[var(--shadow-modal)] transition-opacity duration-150 group-hover:opacity-100 ${
+        className={`pointer-events-none absolute z-10 w-56 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-3)] px-[var(--space-2)] py-[var(--space-1)] text-[var(--text-label)] leading-[var(--lh-label)] text-[var(--ink)] opacity-0 shadow-[var(--shadow-modal)] transition-opacity duration-150 group-hover:opacity-100 ${
           open ? "opacity-100" : ""
         } ${flip ? "right-0" : "left-0"} ${
           openUp

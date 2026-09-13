@@ -12,7 +12,7 @@ export default function InvitedPlayersPanelView({
   const players = Array.isArray(invitedPlayers) ? invitedPlayers : [];
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
@@ -42,7 +42,7 @@ export default function InvitedPlayersPanelView({
           players.map((player, index) => (
             <div
               key={player.id || `${player.username}-${index}`}
-              className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 p-3"
+              className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3"
             >
               <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 font-display text-lg text-[var(--gold-ornament)]">
                 {player.avatarUrl ? (

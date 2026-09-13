@@ -1,4 +1,4 @@
-export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.2.0";
+export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.3.0";
 
 /**
  * Stable portable UI boundary for the shared sticky filter bar kit
@@ -6,9 +6,18 @@ export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.2.0";
  * line: search left; then, anchored right, optional quick tabs, one
  * Filter button opening the shared filter panel (KitFilterPanel:
  * active-count badge, search-within, chip-group sections, Clear in the header),
- * sort as a single-select dropdown whose trigger reads "Sort: <value>",
- * and a slot for the view-mode toggle. At 390 the search field takes
- * its own row inside the sticky block.
+ * sort as a single-select dropdown, and a slot for the view-mode
+ * toggle. At 390 the search field takes its own row inside the sticky
+ * block.
+ *
+ * 2.3.0 (12 Sep 2026, eight-fix package FIX 5, RULED by Brian,
+ * supersedes the 6 Sep sort label): every filter and sort trigger
+ * reads "Filter" with no value while its selection equals the
+ * default, and reads the chosen option's label alone once the user
+ * picks a non-default option; the menu still marks the default as
+ * selected. Additive `defaultSort` names the default sort value
+ * (absent: the first sort option). The per-group dropdowns keep the
+ * group name as their accessible name. Callbacks unchanged.
  *
  * The View does not know what list it filters, how selection is
  * persisted, or what a filter value maps to in a query; the caller
@@ -19,8 +28,8 @@ export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.2.0";
  * Filter groups render inside one KitFilterPanel instead of one
  * KitDropdown per group; `filterPresentation: "dropdowns"` restores
  * the 2.0.0 per-group row exactly (the ruled fallback and the
- * rollback lever). The Sort trigger literal changes from "Sort" to
- * "Sort:", copy only. onFilterToggle(groupId, value),
+ * rollback lever). The Sort trigger literal changed at 2.1.0, copy
+ * only (that literal is superseded at 2.3.0). onFilterToggle(groupId, value),
  * onSortChange(value), onSearchChange(value) report exactly what they
  * reported in 2.0.0 (contract law: presentation changed, reporting
  * did not). Every 2.0.0 consumer renders without a code change.
@@ -69,6 +78,9 @@ export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.2.0";
  * @property {((groupId: string, value: string) => void)|null} onFilterToggle
  * @property {KitStudioFilterBarSortOption[]} sortOptions
  * @property {string} selectedSort
+ * @property {string} [defaultSort] added 2.3.0. The sort value that
+ *   means the user has not chosen a sort; while selectedSort equals
+ *   it the trigger reads "Filter". Absent: the first sort option
  * @property {((value: string) => void)|null} onSortChange
  * @property {boolean} isLoadingCounts
  * @property {import("react").ReactNode|null} viewModeSlot

@@ -10,6 +10,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const tabs = [
   { id: "overview", label: "Overview", icon: BookOpen },
@@ -55,7 +56,12 @@ export default function NpcRegistryBuilderView({
 } = {}) {
   return (
     <section className="grid gap-6 xl:grid-cols-[1fr_380px]">
-      <div className="space-y-5">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. The right track is
+          a hard 380px, so without the guard the base column below xl was
+          floored at each child's subtree min-content. This is the
+          single-column rule for this shell: one column in DOM order below
+          xl, each panel free to shrink to the page gutter. */}
+      <div className="min-w-0 space-y-5">
         <div className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5">
           <div className="flex flex-wrap gap-2">
             {tabs.map((tab) => {
@@ -67,7 +73,7 @@ export default function NpcRegistryBuilderView({
                   key={tab.id}
                   type="button"
                   onClick={() => onSelectTab?.(tab.id)}
-                  className={`inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
+                  className={`inline-flex min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
                     active
                       ? "border-[var(--gold-action)] bg-[var(--surface-1)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
                       : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
@@ -127,7 +133,7 @@ export default function NpcRegistryBuilderView({
         </div>
       </div>
 
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
+      <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Registry Summary
         </p>
@@ -191,6 +197,14 @@ export default function NpcRegistryBuilderView({
       {relationshipModalContent}
       {knowledgeModalContent}
       {aliasModalContent}
+      {/* MOBILE-SHELLS: the aside's Save registry is a full scroll away on
+          a phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save registry"}
+        onAction={onSaveRegistry}
+        disabled={saveStatus === "saving"}
+      />
     </section>
   );
 }
@@ -500,7 +514,7 @@ function TextInput({ label, value, onChange, placeholder = "" }) {
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -517,7 +531,7 @@ function TextArea({ label, value, onChange, rows = 5, placeholder = "" }) {
         onChange={(event) => onChange?.(event.target.value)}
         rows={rows}
         placeholder={placeholder}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -541,7 +555,7 @@ function SectionHeader({ title, body }) {
 
 function EmptyPanel({ message }) {
   return (
-    <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+    <div className="rounded-2xl border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
       <p className="text-sm leading-6 text-[var(--ink-dim)]">{message}</p>
     </div>
   );

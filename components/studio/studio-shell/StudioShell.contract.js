@@ -1,4 +1,4 @@
-export const STUDIO_SHELL_VIEW_CONTRACT_VERSION = "1.2.0";
+export const STUDIO_SHELL_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Stable UI boundary for the studio canvas frame that wraps all 54 studio
@@ -8,6 +8,10 @@ export const STUDIO_SHELL_VIEW_CONTRACT_VERSION = "1.2.0";
  * and page padding. It does not own account context, auth, or the data
  * behind the sidebar, mobile nav, or top bar; those render into slots
  * supplied by the Binding Shell.
+ *
+ * 1.3.0, package MOBILE-SHELLS, additive and prop-free: the root <main>
+ * carries the data-studio-shell attribute, the scope hook for the mobile
+ * shell law in app/design-system.css. No prop changed.
  *
  * @typedef {Object} StudioShellViewProps
  * @property {import("react").ReactNode} sidebarSlot

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { getCreationCredits } from "@/lib/shared/creations/creationAttribution";
 import {
@@ -26,16 +26,28 @@ import {
 export const CREATION_PROFILE_INITIAL_VISIBLE_MEDIA = 12;
 export const CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT = 12;
 export const CREATION_PROFILE_EAGER_MEDIA_COUNT = 4;
-export const CREATION_PROFILE_DESCRIPTION_PREVIEW_LIMIT = 420;
+// Description clamp, RULED 12 Sep 2026 (eight-fix package FIX 8): the
+// description shows at most this many rendered lines at rest, measured
+// by line count, never by character count. The former 420-character
+// preview limit is retired.
+export const CREATION_PROFILE_DESCRIPTION_CLAMP_LINES = 4;
 
 
+// Media filter options, RULED 12 Sep 2026 (Brian's browser review of
+// the eight-fix package): the tab row is replaced by the standard
+// sticky search and filter bar, one single-select Filter dropdown with
+// All as the default (resting) value, then Images, Videos, Liked,
+// Saved. Ids are unchanged so filtering and the Credits option are
+// untouched.
 export const CREATION_PROFILE_MEDIA_TABS = [
+  { id: "ALL", label: "All", icon: "ALL" },
   { id: "IMAGES", label: "Images", icon: "IMAGE" },
   { id: "VIDEOS", label: "Videos", icon: "VIDEO" },
   { id: "LIKED", label: "Liked", icon: "HEART" },
-  { id: "BOOKMARKED", label: "Bookmarked", icon: "BOOKMARK" },
-  { id: "ALL", label: "All", icon: "ALL" },
+  { id: "BOOKMARKED", label: "Saved", icon: "BOOKMARK" },
 ];
+
+export const CREATION_PROFILE_DEFAULT_MEDIA_TAB = "ALL";
 
 export const CREATION_PROFILE_CREDITS_TAB = {
   id: "CREDITS",
@@ -129,9 +141,19 @@ export function projectCreationProfileLibraryPassPanel({
         : salesEnabled
           ? "Extended library locked"
           : "New pass sales paused",
+    // CTA label rewritten 12 Sep 2026 (FIX 6): no dash, the cost read
+    // from the served price.
     actionLabel: purchaseBusy
       ? "Unlocking..."
-      : `Unlock full library — ${formatCoinAmount(currentPriceCoins)} coins`,
+      : `Unlock full library for ${formatCoinAmount(currentPriceCoins)} coins`,
+    confirmLabel: `Unlock for ${formatCoinAmount(currentPriceCoins)} coins`,
+    unlockSummary: `${protectedImageCount} protected ${
+      protectedImageCount === 1 ? "image unlocks" : "images unlock"
+    } now${
+      state.includesFutureAdditions !== false
+        ? ", plus future eligible additions to this creation"
+        : ""
+    }.`,
   };
 }
 
@@ -226,21 +248,22 @@ export function filterCreationProfileMedia({
   return filtered;
 }
 
-export function getCreationProfileDescription(description, expanded = false) {
+// `overflows` is the measured fact that the text runs past the clamp
+// (see the measure ref in the hook); the toggle renders only then, so
+// a description of four lines or fewer shows no link.
+export function getCreationProfileDescription(
+  description,
+  expanded = false,
+  overflows = false
+) {
   const text = normalizeText(description, "No description has been added yet.");
-  const hasLongDescription =
-    text.length > CREATION_PROFILE_DESCRIPTION_PREVIEW_LIMIT;
+  const isExpanded = Boolean(expanded);
 
   return {
     text,
-    hasLongDescription,
-    visibleText:
-      hasLongDescription && !expanded
-        ? `${text
-            .slice(0, CREATION_PROFILE_DESCRIPTION_PREVIEW_LIMIT)
-            .trimEnd()}…`
-        : text,
-    toggleLabel: expanded ? "Show less" : "Show more",
+    isExpanded,
+    showToggle: Boolean(overflows) || isExpanded,
+    toggleLabel: isExpanded ? "Show less" : "Show more",
   };
 }
 
@@ -305,6 +328,8 @@ export function useCreationProfilePageViewModel({
   media = [],
   libraryPass = null,
   loadError = null,
+  coinBalance = null,
+  accountStatus = "idle",
   navigate,
   refreshPage,
   onStartStory,
@@ -319,7 +344,7 @@ export function useCreationProfilePageViewModel({
     [media]
   );
 
-  const [activeTab, setActiveTab] = useState("IMAGES");
+  const [activeTab, setActiveTab] = useState(CREATION_PROFILE_DEFAULT_MEDIA_TAB);
   const [query, setQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(
     CREATION_PROFILE_INITIAL_VISIBLE_MEDIA
@@ -329,12 +354,43 @@ export function useCreationProfilePageViewModel({
   const [bookmarkedMediaIds, setBookmarkedMediaIds] = useState(() => new Set());
   const [reactionMessage, setReactionMessage] = useState("");
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  // Line-count clamp measurement (FIX 8, 12 Sep 2026): the View hands
+  // its description paragraph to this callback ref; a ResizeObserver
+  // compares the paragraph's full content height with four line
+  // heights on mount and on every resize, so the Show more link
+  // appears only when the text really overflows the clamp.
+  const [descriptionOverflows, setDescriptionOverflows] = useState(false);
+  const descriptionObserverRef = useRef(null);
+  const descriptionMeasureRef = useCallback((node) => {
+    descriptionObserverRef.current?.disconnect();
+    descriptionObserverRef.current = null;
+
+    if (!node || typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(() => {
+      const lineHeight = Number.parseFloat(
+        window.getComputedStyle(node).lineHeight
+      );
+      if (!Number.isFinite(lineHeight) || lineHeight <= 0) return;
+
+      const clampedHeight =
+        lineHeight * CREATION_PROFILE_DESCRIPTION_CLAMP_LINES;
+      setDescriptionOverflows(node.scrollHeight > clampedHeight + 1);
+    });
+
+    observer.observe(node);
+    descriptionObserverRef.current = observer;
+  }, []);
   const [startingChat, setStartingChat] = useState(false);
   const [chatError, setChatError] = useState("");
   const [libraryPassPurchaseStatus, setLibraryPassPurchaseStatus] =
     useState("idle");
   const [libraryPassPurchaseMessage, setLibraryPassPurchaseMessage] =
     useState("");
+  // Unlock confirmation (FIX 6, 12 Sep 2026) and the Buy Coins info it
+  // opens when the balance is below the cost.
+  const [isUnlockDialogOpen, setIsUnlockDialogOpen] = useState(false);
+  const [isBuyCoinsInfoOpen, setIsBuyCoinsInfoOpen] = useState(false);
 
   useEffect(() => {
     const imageOutputIds = [
@@ -489,9 +545,32 @@ export function useCreationProfilePageViewModel({
     }
   }
 
-  async function purchaseLibraryPass() {
+  const libraryPassPanel = projectCreationProfileLibraryPassPanel({
+    state: libraryPass,
+    purchaseStatus: libraryPassPurchaseStatus,
+    purchaseMessage: libraryPassPurchaseMessage,
+  });
+
+  // Balance for the unlock confirmation: the studio account context's
+  // served coin balance, known only once the account has loaded. The
+  // cost is the served Library Pass price the panel already carries;
+  // nothing here computes either value.
+  const normalizedCoinBalance = Number.parseInt(coinBalance, 10);
+  const isBalanceKnown =
+    accountStatus === "loaded" && Number.isFinite(normalizedCoinBalance);
+  const canAffordUnlock = Boolean(
+    libraryPassPanel &&
+      isBalanceKnown &&
+      normalizedCoinBalance >= libraryPassPanel.currentPriceCoins
+  );
+
+  // Unlock confirmation primary handler, RULED 12 Sep 2026 (eight-fix
+  // package FIX 6): the CTA and every locked tile only open the dialog;
+  // this is the one place the charge call runs.
+  async function confirmUnlockFullLibrary() {
     if (
       !normalizedCreation?.id ||
+      !canAffordUnlock ||
       libraryPassPurchaseStatus === "purchasing"
     ) {
       return;
@@ -509,6 +588,7 @@ export function useCreationProfilePageViewModel({
       setLibraryPassPurchaseMessage(
         "Library Pass purchased. Unlocking the full library..."
       );
+      setIsUnlockDialogOpen(false);
       refreshPage?.();
     } catch (error) {
       setLibraryPassPurchaseStatus("error");
@@ -561,10 +641,24 @@ export function useCreationProfilePageViewModel({
       ? `Creation catalogue could not be loaded: ${loadError}`
       : "",
     creation: normalizedCreation,
-    description: getCreationProfileDescription(
-      normalizedCreation?.description,
-      descriptionExpanded
-    ),
+    // Breadcrumbs (eight-fix package FIX 4, 12 Sep 2026): the public
+    // creation detail sits under Community, the public catalogue, then
+    // the creation title. Section-by-type (a Story detail under
+    // Stories) is not ruled; one section keeps the row honest.
+    breadcrumbs: normalizedCreation
+      ? [
+          { label: "Community", href: "/studio/v2/community" },
+          { label: normalizedCreation.title },
+        ]
+      : [],
+    description: {
+      ...getCreationProfileDescription(
+        normalizedCreation?.description,
+        descriptionExpanded,
+        descriptionOverflows
+      ),
+      measureRef: descriptionMeasureRef,
+    },
     activeTab,
     credits: normalizedCreation?.credits || [],
     mediaTabs: buildCreationProfileTabs({
@@ -572,11 +666,34 @@ export function useCreationProfilePageViewModel({
       activeTab,
     }),
     query,
-    libraryPassPanel: projectCreationProfileLibraryPassPanel({
-      state: libraryPass,
-      purchaseStatus: libraryPassPurchaseStatus,
-      purchaseMessage: libraryPassPurchaseMessage,
-    }),
+    libraryPassPanel,
+    unlockDialog: libraryPassPanel
+      ? {
+          isOpen: isUnlockDialogOpen,
+          title: "Unlock full library?",
+          summary: libraryPassPanel.unlockSummary,
+          costLabel: libraryPassPanel.currentPriceLabel,
+          balanceLabel: isBalanceKnown
+            ? `${formatCoinAmount(normalizedCoinBalance)} coins`
+            : accountStatus === "error"
+              ? "Unavailable"
+              : "...",
+          isBalanceKnown,
+          canAfford: canAffordUnlock,
+          confirmLabel: libraryPassPanel.confirmLabel,
+          isBusy: libraryPassPanel.purchaseBusy,
+          errorMessage:
+            libraryPassPurchaseStatus === "error" ? libraryPassPurchaseMessage : "",
+        }
+      : null,
+    onOpenUnlockDialog: () => {
+      if (!libraryPassPanel?.canPurchase) return;
+      setIsUnlockDialogOpen(true);
+    },
+    onCloseUnlockDialog: () => setIsUnlockDialogOpen(false),
+    isBuyCoinsInfoOpen,
+    onOpenBuyCoinsInfo: () => setIsBuyCoinsInfoOpen(true),
+    onCloseBuyCoinsInfo: () => setIsBuyCoinsInfoOpen(false),
     visibleMedia,
     filteredMedia,
     activePreviewItem,
@@ -592,7 +709,7 @@ export function useCreationProfilePageViewModel({
         (current) => current + CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT
       ),
     onOpenMedia: openMedia,
-    onPurchaseLibraryPass: purchaseLibraryPass,
+    onPurchaseLibraryPass: confirmUnlockFullLibrary,
     onCloseMedia: () => setActivePreviewId(null),
     onSelectPreviewItem: (item) => setActivePreviewId(item?.id || null),
     onToggleLike: toggleLikedMedia,

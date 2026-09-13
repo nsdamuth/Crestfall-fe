@@ -1,5 +1,7 @@
 "use client";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 function StatsPoolsConfiguration({ statsConfiguration }) {
   if (!statsConfiguration) return null;
   const profiles = Array.isArray(statsConfiguration.profiles)
@@ -7,7 +9,7 @@ function StatsPoolsConfiguration({ statsConfiguration }) {
     : [];
 
   return (
-    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/20 p-5">
+    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--surface-1)] p-5">
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         Stats & Pools
       </p>
@@ -21,7 +23,7 @@ function StatsPoolsConfiguration({ statsConfiguration }) {
             const configuration = profile.configuration || {};
             const pointBudget = String(configuration.mode || "").toUpperCase() === "POINT_BUDGET";
             return (
-              <div key={profile.bindingId} className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div key={profile.bindingId} className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="font-medium text-[var(--foreground)]">{profile.profileTitle || profile.bindingTitle}</p>
@@ -64,7 +66,7 @@ function StatsPoolsConfiguration({ statsConfiguration }) {
                               event.target.value
                             )
                           }
-                          className="mt-3 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
+                          className="mt-3 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
                         />
                       </label>
                     ))}
@@ -105,7 +107,7 @@ function SkillsConfiguration({ skillsConfiguration }) {
     : [];
 
   return (
-    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/20 p-5">
+    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--surface-1)] p-5">
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         Skills
       </p>
@@ -119,7 +121,7 @@ function SkillsConfiguration({ skillsConfiguration }) {
             const configuration = profile.configuration || {};
             const slotsMode = String(configuration.mode || "").toUpperCase() === "SLOTS";
             return (
-              <div key={profile.bindingId} className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div key={profile.bindingId} className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="font-medium text-[var(--foreground)]">
@@ -142,26 +144,29 @@ function SkillsConfiguration({ skillsConfiguration }) {
                         <span className="mt-1 block text-xs text-[var(--muted)]">
                           Target rank {slot.targetRank} · {slot.required ? "required" : "optional"}
                         </span>
-                        <select
-                          value={slot.selectedSkillId || ""}
-                          onChange={(event) =>
-                            skillsConfiguration.onSelectSkill?.(
-                              profile.bindingId,
-                              slot.id,
-                              event.target.value
-                            )
-                          }
-                          className="mt-3 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
-                        >
-                          <option value="">
-                            {slot.required ? "Choose a Skill" : "No Skill selected"}
-                          </option>
-                          {(slot.eligibleSkills || []).map((skill) => (
-                            <option key={skill.id} value={skill.id}>
-                              {skill.title} · max {skill.maximumRank}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="mt-3 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                          <KitDropdownView
+                            options={[
+                              {
+                                value: "",
+                                label: slot.required ? "Choose a Skill" : "No Skill selected",
+                              },
+                              ...(slot.eligibleSkills || []).map((skill) => ({
+                                value: skill.id,
+                                label: `${skill.title} · max ${skill.maximumRank}`,
+                              })),
+                            ]}
+                            selectedValues={[slot.selectedSkillId || ""]}
+                            isMultiSelect={false}
+                            onToggleOption={(nextValue) =>
+                              skillsConfiguration.onSelectSkill?.(
+                                profile.bindingId,
+                                slot.id,
+                                nextValue
+                              )
+                            }
+                          />
+                        </div>
                         {slot.source === "EXISTING_PROFICIENCY" && slot.satisfied ? (
                           <span className="mt-2 block text-xs text-emerald-200">
                             Already satisfied by this player actor.
@@ -221,15 +226,14 @@ function RoomLocalChoiceField({
     return (
       <label className="text-xs text-[var(--muted)]">
         {label}
-        <select
-          value={normalizedValue}
-          onChange={(event) => onChange?.(event.target.value)}
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
-        >
-          {normalizedOptions.map((option) => (
-            <option key={option} value={option}>{option}</option>
-          ))}
-        </select>
+        <div className="mt-1 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+          <KitDropdownView
+            options={normalizedOptions.map((option) => ({ value: option, label: option }))}
+            selectedValues={normalizedValue ? [normalizedValue] : []}
+            isMultiSelect={false}
+            onToggleOption={(nextValue) => onChange?.(nextValue)}
+          />
+        </div>
       </label>
     );
   }
@@ -244,7 +248,7 @@ function RoomLocalChoiceField({
           value={value || ""}
           onChange={(event) => onChange?.(event.target.value)}
           placeholder="Choose or type a custom value"
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
         />
         <datalist id={effectiveListId}>
           {normalizedOptions.map((option) => (
@@ -262,7 +266,7 @@ function RoomLocalChoiceField({
         value={value || ""}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder="GENERAL"
-        className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+        className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
       />
     </label>
   );
@@ -288,7 +292,7 @@ function RoomLocalCustomField({ field = {}, value = "", listId = "", onChange = 
           value={value}
           onChange={(event) => onChange?.(event.target.value)}
           maxLength={field.maxLength}
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
         />
       </label>
     );
@@ -298,14 +302,17 @@ function RoomLocalCustomField({ field = {}, value = "", listId = "", onChange = 
     return (
       <label className="text-xs text-[var(--muted)] md:col-span-2">
         {label}
-        <select
-          value={value}
-          onChange={(event) => onChange?.(event.target.value)}
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
-        >
-          <option value="">Choose…</option>
-          {options.map((option) => <option key={option} value={option}>{option}</option>)}
-        </select>
+        <div className="mt-1 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+          <KitDropdownView
+            options={[
+              { value: "", label: "Choose…" },
+              ...options.map((option) => ({ value: option, label: option })),
+            ]}
+            selectedValues={[value || ""]}
+            isMultiSelect={false}
+            onToggleOption={(nextValue) => onChange?.(nextValue)}
+          />
+        </div>
       </label>
     );
   }
@@ -321,7 +328,7 @@ function RoomLocalCustomField({ field = {}, value = "", listId = "", onChange = 
           onChange={(event) => onChange?.(event.target.value)}
           maxLength={field.maxLength}
           placeholder="Choose or type a custom value"
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
         />
         <datalist id={effectiveListId}>
           {options.map((option) => <option key={option} value={option} />)}
@@ -338,7 +345,7 @@ function RoomLocalCustomField({ field = {}, value = "", listId = "", onChange = 
         onChange={(event) => onChange?.(event.target.value)}
         maxLength={field.maxLength}
         rows={3}
-        className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+        className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
       />
     </label>
   );
@@ -375,7 +382,7 @@ function RoomLocalAbilitySpellAuthoring({
           const definitions = group.authoredDefinitions || [];
           const canAdd = definitions.length < Number(group.maximumDefinitions || 0);
           return (
-            <div key={group.id} className="rounded-xl border border-white/10 bg-black/20 p-4">
+            <div key={group.id} className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="text-sm font-medium text-[var(--foreground)]">{group.title}</p>
@@ -434,28 +441,30 @@ function RoomLocalAbilitySpellAuthoring({
                                 event.target.value
                               )
                             }
-                            className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+                            className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
                           />
                         </label>
 
                         <label className="text-xs text-[var(--muted)]">
                           Type
-                          <select
-                            value={definition.type || "ABILITY"}
-                            onChange={(event) =>
-                              abilitySpellConfiguration.onChangeAuthoredDefinition?.(
-                                profile.profileId,
-                                definition.draftId,
-                                "type",
-                                event.target.value
-                              )
-                            }
-                            className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
-                          >
-                            {(group.typeOptions || []).map((option) => (
-                              <option key={option} value={option}>{String(option).replaceAll("_", " ")}</option>
-                            ))}
-                          </select>
+                          <div className="mt-1 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                            <KitDropdownView
+                              options={(group.typeOptions || []).map((option) => ({
+                                value: option,
+                                label: String(option).replaceAll("_", " "),
+                              }))}
+                              selectedValues={[definition.type || "ABILITY"]}
+                              isMultiSelect={false}
+                              onToggleOption={(nextValue) =>
+                                abilitySpellConfiguration.onChangeAuthoredDefinition?.(
+                                  profile.profileId,
+                                  definition.draftId,
+                                  "type",
+                                  nextValue
+                                )
+                              }
+                            />
+                          </div>
                         </label>
 
                         {group.showSchool !== false ? (
@@ -508,7 +517,7 @@ function RoomLocalAbilitySpellAuthoring({
                                 )
                               }
                               rows={3}
-                              className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+                              className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
                             />
                           </label>
                         ) : null}
@@ -527,7 +536,7 @@ function RoomLocalAbilitySpellAuthoring({
                                 )
                               }
                               rows={3}
-                              className="mt-1 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-[var(--foreground)]"
+                              className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--foreground)]"
                             />
                           </label>
                         ) : null}
@@ -597,7 +606,7 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
     : [];
 
   return (
-    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-black/20 p-5">
+    <div className="rounded-2xl border border-[var(--muted-gold)]/25 bg-[var(--surface-1)] p-5">
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         Abilities & Magic
       </p>
@@ -611,7 +620,7 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
             const configuration = profile.configuration || {};
             const groupsMode = String(configuration.mode || "").toUpperCase() === "GROUPS";
             return (
-              <div key={profile.profileId} className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <div key={profile.profileId} className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="font-medium text-[var(--foreground)]">
@@ -662,7 +671,7 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
                                 className={`flex cursor-pointer gap-3 rounded-lg border px-3 py-2 text-sm ${
                                   selected
                                     ? "border-[var(--muted-gold)]/40 bg-[var(--muted-gold)]/10"
-                                    : "border-white/10 bg-black/20"
+                                    : "border-white/10 bg-[var(--surface-2)]"
                                 } ${atMaximum ? "cursor-not-allowed opacity-50" : ""}`}
                               >
                                 <input
@@ -677,7 +686,7 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
                                       event.target.checked
                                     )
                                   }
-                                  className="mt-1"
+                                  className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
                                 />
                                 <span>
                                   <span className="block font-medium text-[var(--foreground)]">
@@ -765,7 +774,7 @@ export default function StoryCharacterConfigurationView({
 
   return (
     <section className="space-y-5">
-      <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+      <div className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5">
         <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
           Character Configuration
         </p>
@@ -778,7 +787,7 @@ export default function StoryCharacterConfigurationView({
       </div>
 
       {loading ? (
-        <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--muted)]">
+        <div className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5 text-sm text-[var(--muted)]">
           Loading Character Configuration…
         </div>
       ) : error ? (
@@ -786,12 +795,12 @@ export default function StoryCharacterConfigurationView({
           {error}
         </div>
       ) : !hasPlayerActor ? (
-        <div className="rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--muted)]">
+        <div className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5 text-sm text-[var(--muted)]">
           This Story does not currently have a player actor awaiting Character Configuration.
         </div>
       ) : (
         <>
-          <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+          <div className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5">
             <p className="text-sm font-medium text-[var(--foreground)]">
               Status: {status.replaceAll("_", " ")}
             </p>
@@ -848,7 +857,7 @@ export default function StoryCharacterConfigurationView({
 
       <LinkComponent
         href={backHref}
-        className="inline-flex rounded-xl border border-white/10 px-4 py-2 text-sm text-[var(--muted)] transition hover:text-[var(--foreground)]"
+        className="inline-flex min-h-[var(--control-md)] items-center rounded-xl border border-white/10 px-4 py-2 text-sm text-[var(--muted)] transition hover:text-[var(--foreground)]"
       >
         ← Back to Story
       </LinkComponent>

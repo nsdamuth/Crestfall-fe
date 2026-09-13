@@ -319,7 +319,7 @@ function BehaviorDefaultsStep({ form, updateField }) {
           updateField={updateField}
         />
 
-        <div className="md:col-span-2 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+        <div className="md:col-span-2 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Optional Personality Frameworks
           </p>
@@ -429,7 +429,7 @@ function ReviewTemplateStep({
         <SummaryItem label="Defaults Filled" value={String(filledFieldCount)} />
       </div>
 
-      <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+      <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
           Filled Sections
         </p>
@@ -473,7 +473,7 @@ function StepPanel({ eyebrow, title, body, children }) {
 
 function SummaryItem({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
@@ -492,7 +492,7 @@ function Field({ label, value, placeholder, onChange }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -500,7 +500,7 @@ function Field({ label, value, placeholder, onChange }) {
 
 function SectionStatus({ label, active }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/30 p-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
       <p className="text-sm text-[var(--ink)]">{label}</p>
       <p
         className={`mt-1 text-xs ${
@@ -530,7 +530,7 @@ function TextAreaField({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );

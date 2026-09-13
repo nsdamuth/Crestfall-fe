@@ -2,7 +2,6 @@ import StudioPageHeader from "@/components/studio/StudioPageHeader";
 import PublicProfileTabs from "@/components/studio/profile/PublicProfileTabs";
 import PublicProfileHero from "@/components/studio/profile/PublicProfileHero";
 import { getPublicProfilePageData } from "@/lib/server/studio/getPublicProfilePageData";
-import ProfileBackButton from "@/components/studio/profile/ProfileBackButton";
 import { getPublicProfileEngagementSummary } from "@/lib/server/studio/getPublicProfileEngagementSummary";
 import { getPublicProfileDonationEvents } from "@/lib/server/studio/getPublicProfileDonationEvents";
 
@@ -42,12 +41,13 @@ export default async function PublicProfilePage({ params }) {
 
   return (
     <>
-        <div className="mb-5">
-        <ProfileBackButton fallbackHref="/studio/community" />
-      </div>
       <StudioPageHeader
         eyebrow="Creator Profile"
         title={`@${publicUsername}`}
+        breadcrumbs={[
+          { label: "Community", href: "/studio/community" },
+          { label: `@${publicUsername}` },
+        ]}
       >
         Public Crestfall creator profile.
       </StudioPageHeader>

@@ -15,6 +15,12 @@ import { isSidebarV2PreviewEnabled } from "@/lib/shared/flags/sidebarV2Preview";
 // Vault iconKey reverted castle -> archive, RULED 23 Aug 2026
 // (build-0823 pass 4, sidebar refinement): the repo's standing
 // archive/vault glyph (witness: KitCreationCard's Archive action).
+//
+// Studio iconKey home -> hammer, RULED 12 Sep 2026 (eight-fix package,
+// FIX 2): Home and Studio shared one glyph. Refined the same day after
+// Brian's browser review: the hammer did not fit the rail's theme, so
+// Studio carries the quill (feather) from the same lucide set, in the
+// family of the scroll and book glyphs beside it, unique in the sidebar.
 export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
   Object.freeze({
     label: "Play",
@@ -27,7 +33,7 @@ export const STUDIO_SIDEBAR_PREVIEW_GROUPS = Object.freeze([
   Object.freeze({
     label: "Create",
     items: Object.freeze([
-      Object.freeze({ label: "Studio", href: "/studio", iconKey: "home", isBuilt: true }),
+      Object.freeze({ label: "Studio", href: "/studio", iconKey: "feather", isBuilt: true }),
       Object.freeze({ label: "Media", href: "/studio/v2/images", iconKey: "image", isBuilt: true }),
       Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive", isBuilt: true }),
     ]),

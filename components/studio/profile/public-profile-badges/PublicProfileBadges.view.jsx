@@ -10,7 +10,7 @@ export default function PublicProfileBadgesView({
 
   if (!safeBadges.length) {
     return (
-      <div className="mx-auto mt-5 w-full rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+      <div className="mx-auto mt-5 w-full rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
           <Award size={22} />
         </div>
@@ -27,7 +27,7 @@ export default function PublicProfileBadgesView({
       {safeBadges.map((badge, index) => (
         <article
           key={badge?.id || badge?.slug || `badge-${index}`}
-          className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-5 transition-colors hover:border-[var(--gold-ornament)]/25"
+          className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5 transition-colors hover:border-[var(--gold-ornament)]/25"
         >
           <div className="flex items-start gap-4">
             {badge?.imageUrl ? (

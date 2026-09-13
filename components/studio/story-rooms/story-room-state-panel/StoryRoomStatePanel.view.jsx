@@ -34,7 +34,7 @@ export default function StoryRoomStatePanelView({
   const safeActions = Array.isArray(actions) ? actions : [];
 
   return (
-    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5">
       <div className="mb-4 flex items-center justify-between gap-3">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           {eyebrow}
@@ -90,7 +90,7 @@ function StateCard({ section }) {
   const rows = Array.isArray(section?.rows) ? section.rows : [];
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
       <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         <Icon size={14} />
         {section?.title || "State"}

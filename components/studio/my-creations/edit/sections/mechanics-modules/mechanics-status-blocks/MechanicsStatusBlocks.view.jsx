@@ -15,7 +15,7 @@ import {
 } from "../../SharedFields";
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 function TextField({ label, value, onChange, placeholder }) {
   return (
@@ -27,7 +27,7 @@ function TextField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -71,7 +71,7 @@ function StatusBlockCard({
   }
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface-2)]">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"
@@ -164,7 +164,7 @@ function StatusBlockCard({
             />
           </div>
 
-          <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+          <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <p className={EYEBROW_CLASS}>
                 Rendered Lines
@@ -185,7 +185,7 @@ function StatusBlockCard({
                 }
               }}
               placeholder="[❤️ Affection: {{trackers.affection.value}}/100]"
-              className="mt-4 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+              className="mt-4 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
             />
 
             {block.lines.length ? (
@@ -193,7 +193,7 @@ function StatusBlockCard({
                 {block.lines.map((line, lineIndex) => (
                   <div
                     key={`${lineIndex}-${line}`}
-                    className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/35 p-3"
+                    className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3"
                   >
                     <div className="min-w-0 flex-1">
                       <TextAreaField
@@ -219,7 +219,7 @@ function StatusBlockCard({
                 ))}
               </div>
             ) : (
-              <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+              <p className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--ink-dim)]">
                 No rendered lines yet. Add at least one line for this status block.
               </p>
             )}

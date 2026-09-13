@@ -43,7 +43,7 @@ export default function LorePublicCreationPage({ creation, loadError = null }) {
       <div className="mx-auto mb-6 max-w-5xl">
         <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
           <BookOpenText size={18} />
-          <p className="flex items-center gap-3 text-xs uppercase tracking-[0.22em] after:h-px after:w-10 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-3 text-xs uppercase tracking-[0.22em]">
             Lore Publication
           </p>
         </div>

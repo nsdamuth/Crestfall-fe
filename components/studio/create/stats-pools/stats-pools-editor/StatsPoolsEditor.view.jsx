@@ -1,5 +1,6 @@
 "use client";
 
+import { Children, isValidElement } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -22,6 +23,7 @@ import {
 
 import StatsPoolsJsonEditorModal from "../stats-pools-json-editor/StatsPoolsJsonEditorModal";
 import { STATS_POOLS_EDITOR_LIMITS } from "./StatsPoolsEditor.contract";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import {
   TextAreaField,
   SHORT_LONGFORM_MAX_LENGTH,
@@ -57,27 +59,32 @@ function TextInput({ value = "", onChange, placeholder = "", disabled = false, t
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
     />
   );
 }
 
 function SelectInput({ value, onChange, children, disabled = false }) {
+  const options = Children.toArray(children)
+    .filter(isValidElement)
+    .map((child) => ({ value: child.props.value, label: child.props.children }));
+
   return (
-    <select
-      value={value}
-      onChange={onChange}
-      disabled={disabled}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50 disabled:cursor-not-allowed disabled:opacity-55"
-    >
-      {children}
-    </select>
+    <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+      <KitDropdownView
+        options={options}
+        selectedValues={value ? [value] : []}
+        isMultiSelect={false}
+        isDisabled={disabled}
+        onToggleOption={(nextValue) => onChange?.({ target: { value: nextValue } })}
+      />
+    </div>
   );
 }
 
 function CheckboxRow({ checked, onChange, label, description = "", disabled = false }) {
   return (
-    <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+    <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
       <input
         type="checkbox"
         checked={checked}
@@ -124,7 +131,7 @@ function IssueList({ issues = [] }) {
 
 function MetricCard({ label, value, detail = "" }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
       <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
         {label}
       </p>
@@ -165,7 +172,7 @@ function DefinitionHeader({
       <button
         type="button"
         onClick={onToggleExpanded}
-        className="rounded-lg border border-white/10 bg-black/25 p-2 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35"
+        className="rounded-lg border border-white/10 bg-[var(--surface-2)] p-2 text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35"
         aria-label={expanded ? "Collapse definition" : "Expand definition"}
       >
         {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
@@ -265,7 +272,7 @@ function FormulaEditor({
       <div className="flex items-start gap-3">
         <Calculator size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
         <div>
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Declarative Formula
           </p>
           <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
@@ -308,7 +315,7 @@ function FormulaEditor({
           return (
             <div
               key={`${definitionId}-operand-${index}`}
-              className="rounded-xl border border-white/10 bg-black/25 p-3"
+              className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-3"
             >
               <div className="grid gap-3 md:grid-cols-[160px_minmax(0,1fr)_auto]">
                 <div>
@@ -588,7 +595,7 @@ function StatDefinitionCard({
   onRemoveDefinition,
 }) {
   return (
-    <article className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]">
       <DefinitionHeader
         title={definition.title}
         id={definition.id}
@@ -771,7 +778,7 @@ function PoolDefinitionCard({
   onRemoveDefinition,
 }) {
   return (
-    <article className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]">
       <DefinitionHeader
         title={definition.title}
         id={definition.id}
@@ -975,7 +982,7 @@ function ModifierCard({
     : statOptions;
 
   return (
-    <article className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]">
       <DefinitionHeader
         title={definition.title}
         id={definition.id}
@@ -1184,7 +1191,7 @@ function ConditionCard({
   const selected = new Set(definition.modifierDefinitionIds || []);
 
   return (
-    <article className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
+    <article className="overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-1)]">
       <DefinitionHeader
         title={definition.title}
         id={definition.id}
@@ -1376,12 +1383,12 @@ export default function StatsPoolsEditorView({
   };
 
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-5 sm:p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-2)] p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <CircleGauge size={18} />
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Stats & Pools · Reusable Definitions
             </p>
           </div>
@@ -1415,7 +1422,7 @@ export default function StatsPoolsEditorView({
             className={`rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition disabled:opacity-50 ${
               enabled
                 ? "border-[var(--gold-ornament)]/50 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                : "border-white/10 bg-black/25 text-[var(--ink-dim)]"
+                : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)]"
             }`}
           >
             {enabled ? "Profile Enabled" : "Enable Profile"}
@@ -1499,11 +1506,11 @@ export default function StatsPoolsEditorView({
         />
       </div>
 
-      <div className="mt-7 rounded-xl border border-white/10 bg-black/25 p-4 sm:p-5">
+      <div className="mt-7 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 sm:p-5">
         <div className="flex items-start gap-3">
           <Layers3 size={17} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Capability Policy
             </p>
             <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
@@ -1569,12 +1576,12 @@ export default function StatsPoolsEditorView({
             className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2.5 text-xs uppercase tracking-[0.14em] transition ${
               activePanel === value
                 ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/12 text-[var(--ink)]"
-                : "border-white/10 bg-black/20 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
+                : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25"
             }`}
           >
             <Icon size={14} />
             {label}
-            <span className="rounded-full bg-black/35 px-2 py-0.5 text-[10px]">
+            <span className="rounded-full bg-[var(--surface-1)] px-2 py-0.5 text-[10px]">
               {panelCounts[value] || 0}
             </span>
           </button>
@@ -1785,7 +1792,7 @@ function PanelHeading({ title, body, actionLabel, onAction, disabled }) {
 
 function EmptyPanel({ icon: Icon, title, body }) {
   return (
-    <div className="rounded-xl border border-dashed border-white/10 bg-black/20 px-5 py-10 text-center">
+    <div className="rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] px-5 py-10 text-center">
       <Icon size={28} className="mx-auto text-[var(--gold-ornament)]/70" />
       <p className="mt-3 text-sm text-[var(--ink)]">{title}</p>
       <p className="mx-auto mt-2 max-w-xl text-xs leading-5 text-[var(--ink-dim)]">

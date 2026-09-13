@@ -22,7 +22,7 @@ export default function StorylinesHubView({
 
   return (
     <div className="mt-8 space-y-6">
-      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/40 p-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="font-display text-3xl">{heading}</h2>
           <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -40,7 +40,7 @@ export default function StorylinesHubView({
       </div>
 
       {showLoading ? (
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-6 text-sm text-[var(--ink-dim)]">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-6 text-sm text-[var(--ink-dim)]">
           {loadingMessage}
         </div>
       ) : null}
@@ -67,7 +67,7 @@ export default function StorylinesHubView({
             <InternalLinkComponent
               key={card.id}
               href={card.href}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 transition hover:border-[var(--gold-ornament)]/35"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5 transition hover:border-[var(--gold-ornament)]/35"
             >
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {card.eyebrow}

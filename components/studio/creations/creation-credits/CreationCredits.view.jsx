@@ -6,7 +6,7 @@ export default function CreationCreditsView({
 }) {
   return (
     <section
-      className={`${showHeading ? "mt-6" : ""} rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4`}
+      className={`${showHeading ? "mt-6" : ""} rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4`}
     >
       {showHeading ? (
         <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">

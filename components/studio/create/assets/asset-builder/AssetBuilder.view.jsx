@@ -14,6 +14,7 @@ import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import {
   ASSET_IMAGE_PROMPT_MAX_LENGTH,
 } from "./AssetBuilder.contract";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 export default function AssetBuilderView({
   config,
@@ -50,7 +51,12 @@ export default function AssetBuilderView({
 
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.46fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+          implicit base column is sized by min-width:auto, so any nowrap
+          descendant becomes the page's horizontal scroll width. This is
+          the single-column rule for this shell: one column in DOM order
+          below xl, each child free to shrink to the gutter. */}
+      <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           {config.typeLabel} Builder
         </p>
@@ -104,7 +110,7 @@ export default function AssetBuilderView({
               />
 
               {isOutfit ? (
-                <div className="grid gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-4">
+                <div className="grid gap-4 border-t border-[var(--line-whisper)] pt-4">
                   <div>
                     <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                       Lane-Specific Image Guidance
@@ -186,7 +192,7 @@ export default function AssetBuilderView({
           ) : null}
 
           {isLocation ? (
-            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+            <div className="border-t border-[var(--line-whisper)] pt-4">
               <div className="flex items-start gap-3">
                 <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
                   <CloudSun size={18} />
@@ -211,7 +217,7 @@ export default function AssetBuilderView({
               ) : null}
 
               {locationRegistryContent ? (
-                <div className="mt-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+                <div className="mt-4 border-t border-[var(--line-whisper)] pt-4">
                   {locationRegistryContent}
                 </div>
               ) : null}
@@ -295,7 +301,7 @@ export default function AssetBuilderView({
         </div>
       </aside>
 
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <div className="min-w-0 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
         {poseEditorContent ? (
           <div className="mb-6">{poseEditorContent}</div>
         ) : null}
@@ -328,7 +334,7 @@ export default function AssetBuilderView({
                 className={`aspect-[4/5] overflow-hidden rounded-[var(--radius-md)] border text-left transition hover:-translate-y-1 ${
                   active
                     ? "border-[var(--gold-ornament)]/65 bg-[var(--gold-ornament)]/15"
-                    : "border-white/10 bg-black/35 hover:border-[var(--gold-ornament)]/35"
+                    : "border-white/10 bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/35"
                 }`}
               >
                 <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
@@ -350,7 +356,7 @@ export default function AssetBuilderView({
           })}
         </div>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="mt-6 border-t border-[var(--line-whisper)] pt-5">
           <div className="flex items-start gap-3">
             <Tag className="mt-1 text-[var(--gold-ornament)]" size={18} />
             <div>
@@ -368,6 +374,14 @@ export default function AssetBuilderView({
       </div>
 
       {parentPickerContent}
+      {/* MOBILE-SHELLS: the aside's Save draft is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }
@@ -378,7 +392,7 @@ function LocationParentPanel({
   onClearParentLocation,
 }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+    <div className="border-t border-[var(--line-whisper)] pt-4">
       <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         Parent Location
       </span>
@@ -387,7 +401,7 @@ function LocationParentPanel({
         <div className="mt-3 flex flex-col gap-4">
           <div className="flex items-center gap-3">
             <div
-              className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-black/40 bg-cover bg-center"
+              className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-[var(--surface-1)] bg-cover bg-center"
               style={{
                 backgroundImage: `url(${
                   parentLocation.imageUrl || "/images/placeholder-card.jpg"
@@ -468,7 +482,7 @@ function RuntimeInheritancePanel({ inheritance = {}, onUpdateInheritance }) {
   }
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+    <div className="border-t border-[var(--line-whisper)] pt-4">
       <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         Runtime Inheritance
       </p>
@@ -537,7 +551,7 @@ function TextField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -564,7 +578,7 @@ function TextAreaField({
         placeholder={placeholder}
         rows={rows}
         maxLength={maxLength}
-        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
 
       {helperText ? (

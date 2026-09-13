@@ -79,7 +79,7 @@ export default function StoryRoomsHubView({
       />
 
       <div className="hidden md:block">
-        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+        <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
@@ -258,7 +258,7 @@ function MobileStoryRoomsDrawer({
       <button
         type="button"
         onClick={onToggle || undefined}
-        className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/45 px-4 py-3 text-left"
+        className="flex w-full items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] px-4 py-3 text-left"
       >
         <span className="flex min-w-0 items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
@@ -283,7 +283,7 @@ function MobileStoryRoomsDrawer({
       </button>
 
       {open ? (
-        <div className="mt-3 space-y-4 rounded-[var(--radius-md)] border border-white/10 bg-black/45 p-4">
+        <div className="mt-3 space-y-4 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4">
           <div className="flex min-h-[var(--control-md)] items-center gap-3 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)]">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
@@ -371,7 +371,7 @@ function RoomListRow({
     <>
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-[var(--gold-ornament)]">
         {/* SKIPPED: the manage-mode selection checkmark below keeps its raw
-            red-300/black fill — this is the solid-fill treatment Ruling 2
+            red-300/black fill, this is the solid-fill treatment Ruling 2
             explicitly reserves for the not-yet-applied danger button
             variant ("not applied anywhere in this pass"), so it is left
             untouched rather than mapped to --status-danger. */}
@@ -380,7 +380,7 @@ function RoomListRow({
             className={`flex h-5 w-5 items-center justify-center rounded-full border ${
               room.selected
                 ? "border-red-300 bg-red-300 text-black"
-                : "border-red-300/70 bg-black/20"
+                : "border-red-300/70 bg-[var(--surface-1)]"
             }`}
           >
             {room.selected ? "✓" : ""}
@@ -462,7 +462,7 @@ function RoomCard({
         <div className="flex h-full min-h-[220px] w-full items-center justify-center">
           <div className="text-center">
             {/* SKIPPED: the manage-mode selection checkmark below keeps its
-                raw red-300/black fill — see the SKIPPED note in RoomListRow;
+                raw red-300/black fill, see the SKIPPED note in RoomListRow;
                 this is the not-yet-applied danger-button solid-fill
                 treatment (Ruling 2), left untouched. */}
             {manageMode ? (
@@ -544,7 +544,7 @@ function RoomCard({
     </article>
   );
 
-  // SKIPPED: room.selected's red bed below keeps raw Tailwind red — tied
+  // SKIPPED: room.selected's red bed below keeps raw Tailwind red, tied
   // to the same manage/delete affordance as the buttons above, left
   // untouched per Ruling 2 rather than mapped to --status-danger.
   const className = `group overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] transition hover:-translate-y-1 ${
@@ -585,7 +585,7 @@ function PillButton({ active, onClick, children }) {
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
+      className={`shrink-0 min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
         active
           ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
           : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"

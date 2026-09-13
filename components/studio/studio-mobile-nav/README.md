@@ -74,7 +74,10 @@ Batch 2 (same day, GO with corrections): drawer rows resolve to
 `--control-md` (replacing the raw 2.35rem), item gap `--space-2`;
 the coins block is the shared Upgrade block (economy widget contract
 1.3.0). Vault uses the `archive` glyph in the v2 drawer and bottom
-dock; `castle` remains only as the Account link's identifier. The
+dock; `castle` remains only as the Account link's identifier. Studio
+uses the `feather` quill glyph in the v2 drawer and bottom dock (12 Sep
+2026, parity with the sidebar after Brian's browser review), so Home
+and Studio no longer share one glyph. The
 legacy list's "Storys" reads "Stories". Icons resolve inline so the
 static-components lint rule passes.
 

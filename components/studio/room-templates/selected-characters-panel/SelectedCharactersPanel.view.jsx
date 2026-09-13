@@ -11,7 +11,7 @@ export default function SelectedCharactersPanelView({
   const safeCharacters = Array.isArray(characters) ? characters : [];
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
@@ -37,7 +37,7 @@ export default function SelectedCharactersPanelView({
           safeCharacters.map((character) => (
             <div
               key={character.id}
-              className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 p-3"
+              className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--gold-ornament)]/20 bg-[var(--gold-ornament)]/10 font-display text-xl text-[var(--gold-ornament)]">
                 {character.initial || "?"}

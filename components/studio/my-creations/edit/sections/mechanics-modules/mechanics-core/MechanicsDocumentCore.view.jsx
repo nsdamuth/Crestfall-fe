@@ -1,15 +1,15 @@
 "use client";
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 function JsonPanel({ label, value }) {
   return (
-    <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+    <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
       <p className={EYEBROW_CLASS}>
         {label}
       </p>
-      <pre className="mt-4 max-h-[32rem] overflow-auto rounded-xl border border-white/10 bg-black/50 p-4 text-xs leading-6 text-white/75">
+      <pre className="mt-4 max-h-[32rem] overflow-auto rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 text-xs leading-6 text-white/75">
         {JSON.stringify(value, null, 2)}
       </pre>
     </div>
@@ -28,7 +28,7 @@ export default function MechanicsDocumentCoreView({
 }) {
   return (
     <section className="grid gap-6">
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/30 p-6">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] p-6">
         <p className={EYEBROW_CLASS}>
           Mechanics {phase}
         </p>
@@ -48,7 +48,7 @@ export default function MechanicsDocumentCoreView({
           ].map(([label, value]) => (
             <div
               key={label}
-              className="rounded-xl border border-white/10 bg-black/25 px-4 py-3"
+              className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
             >
               <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 {label}
@@ -62,7 +62,7 @@ export default function MechanicsDocumentCoreView({
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[0.3fr_0.7fr]">
-        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <p className={EYEBROW_CLASS}>
             M0 compatibility fixtures
           </p>
@@ -75,7 +75,7 @@ export default function MechanicsDocumentCoreView({
                 className={`rounded-xl border px-4 py-3 text-left transition ${
                   selectedFixtureId === fixture.id
                     ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/10"
-                    : "border-white/10 bg-black/20 hover:border-white/20"
+                    : "border-white/10 bg-[var(--surface-2)] hover:border-white/20"
                 }`}
               >
                 <p className="text-sm text-[var(--ink)]">
@@ -90,7 +90,7 @@ export default function MechanicsDocumentCoreView({
         </aside>
 
         <div className="grid gap-5">
-          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <p className={EYEBROW_CLASS}>
@@ -109,7 +109,7 @@ export default function MechanicsDocumentCoreView({
                 {Object.entries(domainCounts).map(([label, value]) => (
                   <div
                     key={label}
-                    className="rounded-xl border border-white/10 bg-black/20 px-3 py-3"
+                    className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-3 py-3"
                   >
                     <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
                       {label}

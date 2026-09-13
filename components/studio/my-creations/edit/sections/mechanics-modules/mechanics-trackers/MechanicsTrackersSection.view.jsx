@@ -17,7 +17,7 @@ import {
 } from "../../SharedFields";
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 function ActionButton({ children, onClick, variant = "gold", title }) {
   const className = `cf-btn cf-btn--sm ${variant === "danger" ? "cf-btn--danger" : "cf-btn--secondary"}`;
@@ -38,7 +38,7 @@ function TextField({ label, value, onChange, placeholder = "", type = "text" }) 
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+        className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
       />
     </label>
   );
@@ -60,7 +60,7 @@ function FoldableTracker({
   }, [foldSignal?.revision, foldSignal?.expanded]);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/25">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface-2)]">
       <div className="flex items-start justify-between gap-3 px-5 py-4">
         <button
           type="button"
@@ -101,7 +101,7 @@ function TrackerPhaseCard({ phase, phaseIndex, onPatch, onRemove }) {
   const safePhase = normalizeMechanicsTrackerPhase(phase, phaseIndex);
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <p className={EYEBROW_CLASS}>Phase {phaseIndex + 1}</p>
         <button
@@ -173,7 +173,7 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <p className={EYEBROW_CLASS}>Mutation Hint {hintIndex + 1}</p>
         <button
@@ -248,13 +248,13 @@ function MutationHintCard({ hint, hintIndex, onPatch, onRemove }) {
 
 function HintList({ title, values, empty, draft, setDraft, add, placeholder, addLabel, remove }) {
   return (
-    <div className="mt-4 rounded-xl border border-white/10 bg-black/20 p-4">
+    <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <p className={EYEBROW_CLASS}>{title}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {values.map((value, index) => (
           <span
             key={`${value}-${index}`}
-            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--ink)]"
+            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-[var(--surface-1)] px-3 py-1 text-xs text-[var(--ink)]"
           >
             <span className="break-all">{value}</span>
             <button
@@ -282,7 +282,7 @@ function HintList({ title, values, empty, draft, setDraft, add, placeholder, add
             }
           }}
           placeholder={placeholder}
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
         />
         <ActionButton onClick={add}>
           <Plus size={14} />
@@ -349,7 +349,7 @@ function TrackerCard({ entry, handlers }) {
           placeholder="100"
         />
       </div>
-      <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className={EYEBROW_CLASS}>Phases</p>
           <ActionButton onClick={() => handlers.addPhase(trackerIndex)}>
@@ -369,12 +369,12 @@ function TrackerCard({ entry, handlers }) {
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+          <p className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--ink-dim)]">
             No phases yet. Phases give display labels like Guarded, Curious, or Bare.
           </p>
         )}
       </div>
-      <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+      <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className={EYEBROW_CLASS}>Mutation Hints</p>
           <ActionButton onClick={() => handlers.addMutationHint(trackerIndex)}>
@@ -398,7 +398,7 @@ function TrackerCard({ entry, handlers }) {
             ))}
           </div>
         ) : (
-          <p className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+          <p className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-sm text-[var(--ink-dim)]">
             No mutation hints yet. Hints let the router map detected events into meter changes.
           </p>
         )}

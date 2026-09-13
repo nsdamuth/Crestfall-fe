@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, LockKeyhole } from "lucide-react";
 
+import KitBreadcrumbs from "@/components/kit/KitBreadcrumbs";
 import LoreDocumentRenderer from "@/components/studio/create/lore/LoreDocumentRenderer";
 import { normalizeTimelineDefinition } from "@/lib/shared/timelines/timelineContract";
 import { getOwnedCreationPageData } from "@/lib/server/studio/getOwnedCreationPageData";
@@ -53,6 +54,20 @@ export default async function TimelineOwnedLoreReaderPage({ params }) {
 
   return (
     <div className="mx-auto w-full max-w-[112rem] pb-16">
+      {/* Breadcrumbs (eight-fix package FIX 4, 12 Sep 2026): Lore, the
+          owning timeline, then this lore entry. */}
+      <div className="mb-[var(--space-2)]">
+        <KitBreadcrumbs
+          items={[
+            { label: "Lore", href: "/studio/v2/lore" },
+            {
+              label: normalizeString(timeline?.title) || "Untitled Timeline",
+              href: `/studio/v2/lore/timelines/${encodeURIComponent(timelineId)}`,
+            },
+            { label: normalizeString(lore?.title) || "Untitled Lore" },
+          ]}
+        />
+      </div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <Link
           href={`/studio/v2/lore/timelines/${encodeURIComponent(timelineId)}`}

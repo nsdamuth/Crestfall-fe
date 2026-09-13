@@ -6,7 +6,7 @@ import KitModalFrame from "@/components/kit/KitModalFrame";
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 export default function StructuredRegistrySampleLibraryModalView({
   title,
@@ -32,7 +32,7 @@ export default function StructuredRegistrySampleLibraryModalView({
       ariaLabel={title}
       panelClassName="w-full max-w-4xl"
     >
-      <div className="sticky top-0 z-[1] border-b border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] px-[var(--space-4)] py-[var(--space-3)]">
+      <div className="sticky top-0 z-[1] bg-[image:var(--grad-panel-lift)] px-[var(--space-4)] py-[var(--space-3)]">
         <p className={EYEBROW_CLASS}>
           <LibraryBig size={15} />
           Loom Sample Workflow
@@ -44,6 +44,7 @@ export default function StructuredRegistrySampleLibraryModalView({
           {description}
         </p>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="grid gap-4 p-5 xl:grid-cols-[21rem_minmax(0,1fr)]">
         <aside className="grid content-start gap-3">
@@ -51,7 +52,7 @@ export default function StructuredRegistrySampleLibraryModalView({
             <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
               Search samples
             </span>
-            <span className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-black/35 px-3 py-2.5">
+            <span className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-2.5">
               <Search size={14} className="shrink-0 text-[var(--gold-ornament)]" />
               <input
                 value={query}
@@ -95,7 +96,7 @@ export default function StructuredRegistrySampleLibraryModalView({
                 );
               })
             ) : (
-              <div className="rounded-xl border border-white/10 bg-black/25 p-4 text-xs leading-5 text-[var(--ink-dim)]">
+              <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 text-xs leading-5 text-[var(--ink-dim)]">
                 No samples match the current search.
               </div>
             )}
@@ -129,7 +130,7 @@ export default function StructuredRegistrySampleLibraryModalView({
                   {(selectedSample.demonstrates || []).map((item) => (
                     <span
                       key={item}
-                      className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-xs text-[var(--ink-dim)]"
+                      className="rounded-full border border-white/10 bg-[var(--surface-1)] px-3 py-1 text-xs text-[var(--ink-dim)]"
                     >
                       {item}
                     </span>
@@ -141,7 +142,7 @@ export default function StructuredRegistrySampleLibraryModalView({
                 <p className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                   Entry preview
                 </p>
-                <pre className="mt-3 max-h-[42vh] overflow-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-black/55 p-4 font-mono text-xs leading-6 text-[var(--ink-dim)]">
+                <pre className="mt-3 max-h-[42vh] overflow-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 font-mono text-xs leading-6 text-[var(--ink-dim)]">
                   {JSON.stringify(selectedSample.entry, null, 2)}
                 </pre>
               </div>
@@ -160,7 +161,8 @@ export default function StructuredRegistrySampleLibraryModalView({
         </section>
       </div>
 
-      <div className="sticky bottom-0 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-5">
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+      <div className="sticky bottom-0 flex flex-wrap items-center justify-between gap-3 bg-[image:var(--grad-panel-lift)] p-5">
         <p className="text-xs leading-5 text-[var(--ink-dim)]">
           Loading adds a fresh copy to the open builder only. It does not save, link shared assets, or create runtime authority.
           {statusMessage ? ` ${statusMessage}` : ""}

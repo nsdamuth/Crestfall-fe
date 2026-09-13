@@ -94,7 +94,7 @@ export default function CharacterTemplateModalView({
                     {template?.description || ""}
                   </p>
 
-                  <div className="mt-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-3)]">
+                  <div className="mt-[var(--space-4)] border-t border-[var(--line-whisper)] pt-[var(--space-3)]">
                     <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] font-medium uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
                       {template?.prefillLabel || "Prefills"}
                     </p>
