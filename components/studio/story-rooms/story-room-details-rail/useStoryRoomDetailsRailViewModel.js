@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import { fetchCreationPreview } from "@/lib/client/studio/creations/creationClient";
 
 export const STORY_ROOM_DETAILS_ROWS = Object.freeze([
   { id: "cast", label: "Cast" },
@@ -86,6 +88,53 @@ export function resolveStoryCatalogueHref({ room = {}, cast = [] } = {}) {
   return creationId ? `/studio/creations/${encodeURIComponent(creationId)}` : "";
 }
 
+// The source creation behind a story (brief 4 item 2): the template the
+// room launched from, `room.data.source.templateId`; "" for a private
+// character chat, which launched from no template.
+export function resolveStorySourceTemplateId(room = {}) {
+  const source = room?.rawRoom?.data?.source || {};
+  return normalizeText(source.templateId || source.template_id);
+}
+
+// The description under the title (brief 4 item 2, interim until CR-068
+// serves it on the room snapshot): read from the source creation
+// through the existing preview client, fetchCreationPreview in
+// lib/client/studio/creations/creationClient.js (GET
+// /api/creations/{id}/preview, the Chassis GET /v1/creations/{id}/preview),
+// whose `creation.description` is the served text. Hidden when the story
+// has no source creation, and while the fetch is in flight or failed.
+export function useStorySourceDescription(templateId = "", { loadPreview = fetchCreationPreview } = {}) {
+  const [state, setState] = useState({ templateId: "", description: "" });
+
+  useEffect(() => {
+    if (!templateId) return undefined;
+
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const preview = await loadPreview(templateId);
+        if (cancelled) return;
+        setState({
+          templateId,
+          description: normalizeText(preview?.creation?.description),
+        });
+      } catch {
+        if (cancelled) return;
+        setState({ templateId, description: "" });
+      }
+    }
+
+    void load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [loadPreview, templateId]);
+
+  return templateId && state.templateId === templateId ? state.description : "";
+}
+
 export function useStoryRoomDetailsRailViewModel({
   room = {},
   cast = [],
@@ -100,6 +149,8 @@ export function useStoryRoomDetailsRailViewModel({
     () => buildStoryMediaItems({ room, cast, messages }),
     [room, cast, messages]
   );
+  const sourceTemplateId = resolveStorySourceTemplateId(room);
+  const description = useStorySourceDescription(sourceTemplateId);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [viewerIndex, setViewerIndex] = useState(() =>
@@ -145,10 +196,12 @@ export function useStoryRoomDetailsRailViewModel({
   return {
     title: normalizeText(room?.title) || "Untitled story",
     chips,
-    // The Chassis serves no creator name and no description on the room
-    // snapshot (CR-067, CR-068); both stay hidden until they arrive.
+    // The Chassis serves no creator name on the room snapshot (CR-067);
+    // the byline stays hidden until it arrives. The description reads
+    // from the source creation's preview (brief 4 item 2) until CR-068
+    // serves it on the snapshot.
     byline: null,
-    description: "",
+    description,
     descriptionExpanded,
     onToggleDescription: () => setDescriptionExpanded((value) => !value),
     narratorLabel: normalizeText(room?.narrator) || "Crestfall Engine",

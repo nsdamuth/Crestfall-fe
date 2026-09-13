@@ -109,7 +109,7 @@ export default function StoryRoomDetailsRailView({
             <div className="mt-[var(--space-3)]">
               <p
                 className={`text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)] ${
-                  descriptionExpanded ? "" : "line-clamp-4"
+                  descriptionExpanded ? "" : "line-clamp-3"
                 }`}
               >
                 {description}

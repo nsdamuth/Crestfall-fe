@@ -1,9 +1,18 @@
-export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.2.0";
+export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.3.0";
 
 /**
  * Stable portable UI boundary for the story chat page's right rail
  * (fe/chat-studio item 6, 12 Sep 2026), also the content of the right
  * sheet below md.
+ *
+ * 1.3.0, fe/chat-studio brief 4 item 2 (13 Sep 2026). ADDITIVE in
+ * meaning, no prop shape changed: `description` is now populated from
+ * the source creation (the ViewModel reads `room.data.source.templateId`
+ * and fetches `creation.description` through the existing preview
+ * client, fetchCreationPreview, GET /api/creations/{id}/preview) until
+ * CR-068 serves it on the room snapshot; "" when the story has no
+ * source creation. The View clamps it to three lines (was four) with
+ * See more expanding in place.
  *
  * 1.2.0, fe/chat-studio brief 4 item 1 (13 Sep 2026). Presentation
  * only, no prop changed: the gallery is one bed at every state

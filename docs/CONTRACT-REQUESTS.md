@@ -1092,8 +1092,15 @@ four lines with See more. Call wanted: the same GET adds
 `room.description`, copied from the source template creation's
 description at launch (createChatRoomFromTemplate already reads
 `creation.description` for registry links). Expected response: a string,
-empty when the template has none. Interim: the description block is
-hidden (`description: ""`).
+empty when the template has none. Interim (revised 13 Sep 2026, brief 4
+item 2): the rail reads the source creation's preview
+(`fetchCreationPreview`, GET `/api/creations/{id}/preview`, keyed by
+`room.data.source.templateId`) and shows its `creation.description`;
+hidden for a private character chat, which has no source template. Note
+for Nick: the preview serves the literal "No description has been added
+yet." when the template has none (`creationPreviewGraph.js:546-550`), so
+the rail shows that sentence rather than hiding; an empty string on the
+snapshot field would let it hide.
 
 ### CR-069, Story media list on the room snapshot
 
