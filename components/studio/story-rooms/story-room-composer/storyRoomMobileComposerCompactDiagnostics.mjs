@@ -31,9 +31,11 @@ test("one bar replaces the desktop and mobile compositions", () => {
   assert.match(view, /function ParticipantMentionTextarea/);
 });
 
-test("row one holds cast circles, the Auto circle, the mode chip, and the scene image seat", () => {
+// Brief 2 item 1 (13 Sep 2026): the Auto circle left the cast row for
+// the send row, between the field and the gold send circle.
+test("row one holds cast circles, the mode chip, and the scene image seat", () => {
   assert.match(view, /castOptions\.map\(\(option\) => \(/);
-  assert.match(view, /option=\{autoOption\}/);
+  assert.doesNotMatch(view, /option=\{autoOption\}/);
   assert.match(view, /KitDropdownView/);
   assert.match(view, /labelMode="replace"/);
   assert.match(view, /restingValue=\{restingMode\.value\}/);
@@ -42,13 +44,17 @@ test("row one holds cast circles, the Auto circle, the mode chip, and the scene 
   assert.match(view, /ring-2 ring-\[var\(--gold-action\)\]/);
 });
 
-test("row two is the growing field and the gold send circle", () => {
+test("row two is the growing field, the Auto circle, and the gold send circle", () => {
   assert.match(view, /rows=\{1\}/);
-  assert.match(view, /max-h-\[220px\]/);
   assert.match(view, /bg-\[var\(--step-below\)\]/);
+  assert.match(view, /onClick=\{\(\) => onAuto\?\.\(\)\}/);
+  assert.match(view, /<Sparkles size=\{18\}/);
   assert.match(view, /bg-\[var\(--gold-action\)\] text-\[var\(--tag-fill-ink\)\]/);
   assert.match(view, /<ArrowUp size=\{20\}/);
   assert.match(view, /onClick=\{\(\) => onSend\?\.\(\)\}/);
+  assert.doesNotMatch(view, /submitIsContinuation/);
+  // Auto and send stay in this order: field, Auto, send.
+  assert.ok(view.indexOf("onAuto?.()") < view.indexOf("onSend?.()}\n            disabled={sendDisabled}"));
 });
 
 test("retired controls and copy are gone", () => {
@@ -63,12 +69,20 @@ test("retired controls and copy are gone", () => {
   assert.doesNotMatch(view, /Mic\b|microphone/i);
 });
 
-test("view model names the send circle and the placeholder", () => {
+test("view model names the send and Auto circles and the placeholder", () => {
   assert.match(viewModel, /STORY_ROOM_COMPOSER_PLACEHOLDER = "Send a message"/);
-  assert.match(viewModel, /submitLabel: autoContinuationAvailable \? "Continue" : "Send"/);
+  assert.match(viewModel, /submitLabel: "Send"/);
+  assert.match(viewModel, /sendDisabled: composerDisabled \|\| sending \|\| !draftText\.trim\(\)/);
+  assert.match(viewModel, /onAuto: continueAuto/);
   assert.match(viewModel, /sceneImageState: "soon"/);
   assert.match(viewModel, /PLAYER_YIELD_TO_CHARACTER/);
-  assert.match(viewModel, /PLAYER_YIELD_TO_AUTO/);
+  // The Auto circle is the existing continuation call with the AUTO
+  // speaker and never reads the draft.
+  assert.match(
+    viewModel,
+    /function continueAuto\(\) \{\n    if \(composerDisabled \|\| sending\) return;\n\n    setNextSpeaker\?\.\("AUTO"\);\n    onSend\?\.\(\{\n      requestedSpeakerId: "AUTO",\n      actionType: "PLAYER_YIELD_TO_AUTO",\n    \}\);/
+  );
+  assert.doesNotMatch(viewModel, /autoContinuationAvailable/);
 });
 
 console.log("Story Room composer bar diagnostics: 6/6 PASS");

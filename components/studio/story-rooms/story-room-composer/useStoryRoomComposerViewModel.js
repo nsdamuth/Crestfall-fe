@@ -526,22 +526,25 @@ export function useStoryRoomComposerViewModel({
   const draftText = String(draft || "");
   const sending = Boolean(isSending);
   const composerDisabled = Boolean(disabled);
-  const autoContinuationAvailable =
-    !draftText.trim() && String(nextSpeaker || "AUTO") === "AUTO";
 
+  // Send posts the draft (brief 2 item 1); it no longer folds the
+  // continuation in when the field is empty.
   function submitComposer(options = {}) {
-    if (
-      autoContinuationAvailable &&
-      !String(options?.actionType || "").trim()
-    ) {
-      onSend?.({
-        requestedSpeakerId: "AUTO",
-        actionType: "PLAYER_YIELD_TO_AUTO",
-      });
-      return;
-    }
-
     onSend?.(options);
+  }
+
+  // Auto (brief 2 item 1): the existing continuation call, the AUTO
+  // speaker and the PLAYER_YIELD_TO_AUTO action, never reading the
+  // draft. Auto also becomes the resting speaker so a cast circle's
+  // selected ring clears.
+  function continueAuto() {
+    if (composerDisabled || sending) return;
+
+    setNextSpeaker?.("AUTO");
+    onSend?.({
+      requestedSpeakerId: "AUTO",
+      actionType: "PLAYER_YIELD_TO_AUTO",
+    });
   }
 
   return {
@@ -560,18 +563,16 @@ export function useStoryRoomComposerViewModel({
     placeholder: getPlaceholder(inputMode),
     disabledReason: composerDisabled ? String(disabledReason || "") : "",
     textareaDisabled: composerDisabled || sending,
-    sendDisabled:
-      composerDisabled || sending || (!draftText.trim() && !autoContinuationAvailable),
+    sendDisabled: composerDisabled || sending || !draftText.trim(),
     isSending: sending,
-    submitIsContinuation: autoContinuationAvailable,
-    // The send circle's accessible name: an empty draft with Auto active
-    // continues the scene (the former continue yield).
-    submitLabel: autoContinuationAvailable ? "Continue" : "Send",
-    submitPendingLabel: autoContinuationAvailable
-      ? "Choosing the next speaker"
-      : "Sending",
+    submitLabel: "Send",
+    submitPendingLabel: "Sending",
+    autoDisabled: composerDisabled || sending,
+    autoLabel: "Auto: the story chooses who speaks next",
+    autoPendingLabel: "Choosing the next speaker",
     sceneImageState: "soon",
     sceneImageLabel: "Scene image, not available yet",
+    onAuto: continueAuto,
     onChangeInputMode: (nextValue) => setInputMode?.(nextValue),
     onChangeNextSpeaker: activateSpeaker,
     onChangeDraft: changeDraft,

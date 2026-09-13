@@ -34,7 +34,6 @@ function composerMenuRowClass(highlighted) {
 }
 
 const SPEAKER_ICONS = {
-  auto: Sparkles,
   narrator: BookOpen,
   participant: UserRound,
 };
@@ -42,14 +41,20 @@ const SPEAKER_ICONS = {
 const CIRCLE_BUTTON_CLASS =
   "flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)]";
 
+// A tap control rises one step above its container: the secondary
+// circles (scene image, Auto) sit on --step-above in the dim ink.
+const SECONDARY_CIRCLE_CLASS = `${CIRCLE_BUTTON_CLASS} bg-[var(--step-above)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`;
+
 // One composer bar at every width (fe/chat-studio item 2, 12 Sep 2026).
-// Row one: a 44px circle per cast member (tap: that character speaks
-// next, through the existing next-speaker handler), the Auto circle,
-// then the input mode chip and the scene image seat at the right end.
-// Row two: the growing message field and the gold send circle. The
-// former speaker and mode eyebrow labels, the Random speaker, the two
-// Soon scene buttons, the mobile tools drawer, and the old continue
-// label are retired.
+// Row one: the scene image seat, then a 44px circle per cast member
+// (tap: that character speaks next, through the existing next-speaker
+// handler), then the input mode chip pinned right. Row two: the growing
+// message field, the Auto circle (brief 2 item 1: the sparkle moved off
+// the cast row; a tap runs the existing continuation with the AUTO
+// speaker and never reads the draft), and the gold send circle, which
+// posts the draft. The former speaker and mode eyebrow labels, the
+// Random speaker, the two Soon scene buttons, the mobile tools drawer,
+// and the old continue label are retired.
 export default function StoryRoomComposerView({
   inputModeOptions = [],
   inputMode = "DIALOGUE",
@@ -68,11 +73,14 @@ export default function StoryRoomComposerView({
   textareaDisabled = false,
   sendDisabled = true,
   isSending = false,
-  submitIsContinuation = false,
   submitLabel = "Send",
   submitPendingLabel = "Sending",
+  autoDisabled = false,
+  autoLabel = "Auto: the story chooses who speaks next",
+  autoPendingLabel = "Choosing the next speaker",
   sceneImageState = "soon",
   sceneImageLabel = "Scene image, not available yet",
+  onAuto,
   onChangeInputMode,
   onChangeNextSpeaker,
   onChangeDraft,
@@ -96,7 +104,6 @@ export default function StoryRoomComposerView({
   useAutoResizeTextarea(textareaRef, draft, 220);
 
   const speakerOptions = Array.isArray(nextSpeakerOptions) ? nextSpeakerOptions : [];
-  const autoOption = speakerOptions.find((option) => option?.id === "AUTO") || null;
   const castOptions = speakerOptions.filter((option) => option?.id && option.id !== "AUTO");
 
   const modeOptions = (Array.isArray(inputModeOptions) ? inputModeOptions : [])
@@ -105,6 +112,7 @@ export default function StoryRoomComposerView({
   const restingMode = modeOptions[0] || { value: "DIALOGUE", label: "Dialogue" };
 
   const sendTitle = isSending ? submitPendingLabel : submitLabel;
+  const autoTitle = isSending ? autoPendingLabel : autoLabel;
 
   return (
     <div className="relative z-50 shrink-0 bg-transparent">
@@ -126,15 +134,6 @@ export default function StoryRoomComposerView({
                 onChange={onChangeNextSpeaker}
               />
             ))}
-
-            {autoOption ? (
-              <SpeakerCircle
-                option={autoOption}
-                active={nextSpeaker === autoOption.id}
-                disabled={textareaDisabled}
-                onChange={onChangeNextSpeaker}
-              />
-            ) : null}
           </div>
 
           <div className="flex shrink-0 items-center gap-[var(--space-2)]">
@@ -159,7 +158,7 @@ export default function StoryRoomComposerView({
               disabled={sceneImageState !== "ready"}
               aria-label={sceneImageLabel}
               title={sceneImageState === "ready" ? "Scene image" : "Not available yet"}
-              className={`${CIRCLE_BUTTON_CLASS} bg-[var(--step-above)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`}
+              className={SECONDARY_CIRCLE_CLASS}
             >
               <ImageIcon size={18} aria-hidden="true" />
             </button>
@@ -199,6 +198,19 @@ export default function StoryRoomComposerView({
             onSend={onSend}
           />
 
+          {/* Auto (brief 2 item 1): the existing continuation call with
+              the AUTO speaker; it never depends on the draft. */}
+          <button
+            type="button"
+            onClick={() => onAuto?.()}
+            disabled={autoDisabled}
+            aria-label={autoTitle}
+            title={autoTitle}
+            className={SECONDARY_CIRCLE_CLASS}
+          >
+            <Sparkles size={18} aria-hidden="true" />
+          </button>
+
           <button
             type="button"
             onClick={() => onSend?.()}
@@ -207,11 +219,7 @@ export default function StoryRoomComposerView({
             title={sendTitle}
             className={`${CIRCLE_BUTTON_CLASS} bg-[var(--gold-action)] text-[var(--tag-fill-ink)] transition-colors duration-[var(--dur-hover)] hover:bg-[var(--gold-bright)] focus-visible:shadow-[var(--focus-ring-ongold)] active:bg-[var(--state-pressed-gold)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)]`}
           >
-            {submitIsContinuation ? (
-              <Sparkles size={18} aria-hidden="true" />
-            ) : (
-              <ArrowUp size={20} aria-hidden="true" />
-            )}
+            <ArrowUp size={20} aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -220,14 +228,11 @@ export default function StoryRoomComposerView({
 }
 
 // A 44px hit area around a 36px circle: the avatar, the narrator glyph,
-// or the initial; the Auto circle carries the sparkle. The active one
-// carries the gold selected ring (gold only for selected and active).
+// or the initial. The active one carries the gold selected ring (gold
+// only for selected and active).
 function SpeakerCircle({ option, active = false, disabled = false, onChange }) {
-  const isAuto = option?.id === "AUTO";
   const Icon = SPEAKER_ICONS[option?.iconKind] || UserRound;
-  const label = isAuto
-    ? "Auto: the story chooses who speaks next"
-    : `${option?.label || "Character"} speaks next`;
+  const label = `${option?.label || "Character"} speaks next`;
   const initial = String(option?.label || "?").trim().charAt(0).toUpperCase();
 
   return (
@@ -247,9 +252,7 @@ function SpeakerCircle({ option, active = false, disabled = false, onChange }) {
             : "text-[var(--ink-dim)]"
         }`}
       >
-        {isAuto ? (
-          <Sparkles size={18} aria-hidden="true" />
-        ) : option?.avatarUrl ? (
+        {option?.avatarUrl ? (
           <img src={option.avatarUrl} alt="" className="h-full w-full object-cover" />
         ) : option?.iconKind === "narrator" ? (
           <Icon size={18} aria-hidden="true" />

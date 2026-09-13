@@ -23,9 +23,12 @@ const defaultCallbacks = {
   onSelectHighlightedMention: returnNull,
   onSelectMention: returnNull,
   onDismissMentionSuggestions: noop,
+  onAuto: noop,
   onSend: noop,
 };
 
+// Contract 3.0.0 (brief 2 item 1): the send circle posts the draft only,
+// so the default (empty) fixture has send disabled and Auto enabled.
 function createFixture(overrides = {}) {
   return {
     inputModeOptions: defaultInputModeOptions,
@@ -37,11 +40,13 @@ function createFixture(overrides = {}) {
     highlightedMentionIndex: 0,
     placeholder: "Send a message",
     textareaDisabled: false,
-    sendDisabled: false,
+    sendDisabled: true,
     isSending: false,
-    submitIsContinuation: true,
-    submitLabel: "Continue",
-    submitPendingLabel: "Choosing the next speaker",
+    submitLabel: "Send",
+    submitPendingLabel: "Sending",
+    autoDisabled: false,
+    autoLabel: "Auto: the story chooses who speaks next",
+    autoPendingLabel: "Choosing the next speaker",
     sceneImageState: "soon",
     sceneImageLabel: "Scene image, not available yet",
     ...defaultCallbacks,
@@ -58,17 +63,11 @@ export const storyRoomComposerDraftFixture = createFixture({
   nextSpeaker: "character-1",
   draft: "Seraphine steps between the envoy and the sealed gate.",
   sendDisabled: false,
-  submitIsContinuation: false,
-  submitLabel: "Send",
-  submitPendingLabel: "Sending",
 });
 
 export const storyRoomComposerMentionFixture = createFixture({
   draft: "I turn toward @ser",
   sendDisabled: false,
-  submitIsContinuation: false,
-  submitLabel: "Send",
-  submitPendingLabel: "Sending",
   mentionSuggestions: [
     {
       id: "character-1",
@@ -90,10 +89,8 @@ export const storyRoomComposerSendingFixture = createFixture({
   draft: "The bargain is accepted.",
   textareaDisabled: true,
   sendDisabled: true,
+  autoDisabled: true,
   isSending: true,
-  submitIsContinuation: false,
-  submitLabel: "Send",
-  submitPendingLabel: "Sending",
 });
 
 export const storyRoomComposerDisabledFixture = createFixture({
@@ -101,9 +98,7 @@ export const storyRoomComposerDisabledFixture = createFixture({
   disabledReason: "Chat is not available for this account.",
   textareaDisabled: true,
   sendDisabled: true,
-  submitIsContinuation: false,
-  submitLabel: "Send",
-  submitPendingLabel: "Sending",
+  autoDisabled: true,
 });
 
 export const storyRoomComposerMinimalOptionsFixture = createFixture({
@@ -128,7 +123,4 @@ export const storyRoomComposerLongContentFixture = createFixture({
   draft:
     "Slow the scene and let every present character react to the revelation before advancing the objective. Preserve the uncertainty around the sealed archive, emphasize the sound of distant machinery, and allow the player to interrupt before the narrator resolves the moment.",
   sendDisabled: false,
-  submitIsContinuation: false,
-  submitLabel: "Send",
-  submitPendingLabel: "Sending",
 });

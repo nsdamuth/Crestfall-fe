@@ -1,7 +1,18 @@
-export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "2.0.0";
+export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "3.0.0";
 
 /**
  * Stable UI boundary for the Story Room message composer.
+ *
+ * 3.0.0, fe/chat-studio brief 2 item 1 (13 Sep 2026). BREAKING: the
+ * Auto circle leaves the cast row and becomes a secondary circle on the
+ * send row, between the field and the gold send circle. `onAuto` runs
+ * the existing continuation (the AUTO speaker, PLAYER_YIELD_TO_AUTO)
+ * and never depends on the draft; `autoDisabled`, `autoLabel`, and
+ * `autoPendingLabel` describe it. The send circle posts the draft only:
+ * `submitIsContinuation` is removed, `submitLabel` is always "Send",
+ * and `sendDisabled` is true on an empty draft. `nextSpeakerOptions`
+ * still carries the "AUTO" option for the ViewModel; the View renders
+ * only the cast entries.
  *
  * 2.0.0, fe/chat-studio item 2 (12 Sep 2026). BREAKING: one composer bar
  * at every width replaces the desktop and mobile compositions; the
@@ -61,11 +72,14 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "2.0.0";
  * @property {boolean} textareaDisabled
  * @property {boolean} sendDisabled
  * @property {boolean} isSending
- * @property {boolean} submitIsContinuation Whether the empty Auto send continues the scene.
- * @property {string} submitLabel The send circle's accessible name at rest ("Send" or "Continue").
+ * @property {string} submitLabel The send circle's accessible name at rest ("Send").
  * @property {string} submitPendingLabel The send circle's accessible name while sending.
+ * @property {boolean} autoDisabled
+ * @property {string} autoLabel The Auto circle's accessible name at rest.
+ * @property {string} autoPendingLabel The Auto circle's accessible name while sending.
  * @property {"soon"|"ready"} sceneImageState "soon" renders the scene image seat disabled.
  * @property {string} sceneImageLabel The scene image seat's accessible name.
+ * @property {() => void} onAuto Runs the existing continuation with the AUTO speaker.
  * @property {(nextValue: string) => void} onChangeInputMode
  * @property {(speakerId: string) => void} onChangeNextSpeaker
  * @property {(nextValue: string, cursorPosition: number) => void} onChangeDraft

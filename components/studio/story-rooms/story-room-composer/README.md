@@ -16,22 +16,24 @@ mentions, command options, sending state, and disabled state.
 components/studio/story-rooms/story-room-composer/StoryRoomComposer.view.jsx
 ```
 
-One composer bar at every width (fe/chat-studio item 2, 12 Sep 2026):
+One composer bar at every width (fe/chat-studio item 2, 12 Sep 2026;
+send row and Auto reshaped by brief 2 item 1, 13 Sep 2026):
 
 - row one, left to right: a 44px circle per cast member (avatar, narrator
-  glyph, or initial), the Auto circle with the sparkle glyph, then the
-  input mode chip (Dialogue, Action, OOC, Direct on the shared KitDropdown
-  menu, the first mode resting) and the scene image seat at the right end;
-- row two: the growing message field (placeholder "Send a message") and
-  the circular gold send button with the arrow glyph at the field's right
-  edge.
+  glyph, or initial), then the input mode chip (Dialogue, Action, OOC,
+  Direct on the shared KitDropdown menu, the first mode resting) and the
+  scene image seat at the right end;
+- row two: the growing message field (placeholder "Send a message"), the
+  Auto circle (sparkle glyph, secondary circle on `--step-above`), and the
+  circular gold send button with the arrow glyph at the row's right edge.
 
 The active speaker circle carries the gold selected ring. Tapping a cast
 circle reports that speaker through `onChangeNextSpeaker`; with a draft the
 message goes to that speaker, with an empty field the turn is yielded to
-that speaker. An empty field with Auto active sends the continue yield
-(the former continue action), and the send circle's accessible name reads
-"Continue".
+that speaker. The Auto circle (`onAuto`) runs the existing continuation
+call with the AUTO speaker (`PLAYER_YIELD_TO_AUTO`) and never depends on
+the draft; it also makes Auto the resting speaker. The send circle posts
+the draft only and is disabled while the field is empty.
 
 The scene image seat is visible and disabled with the name "Scene image,
 not available yet" until the Chassis serves the operation (CR-070). There
@@ -58,8 +60,9 @@ The ViewModel owns:
 - active mention, command, and location query parsing and filtering;
 - highlighted suggestion selection;
 - mapping semantic View callbacks to the existing controlled setters;
-- send and textarea disabled-state decisions;
-- the send circle's accessible names and the scene image seat state.
+- send, Auto, and textarea disabled-state decisions;
+- the send and Auto circles' accessible names and the scene image seat
+  state.
 
 ## Live Caller
 
