@@ -148,15 +148,19 @@ export default function StoryRoomDetailsRailView({
   );
 }
 
-// The gallery (brief 3 item 4). No media: a placeholder, the circular
-// geometric Crestfall mark (StoryRoomMark, icons-v7 symbol i-59, the
-// sidebar lockup's mark) on a --surface-2 bed with --radius-md corners,
-// inset by --space-3 on each side. With media: the featured image full
-// bleed, previous and next paging through the images and, when the
-// story resolves to a creation page, one extra stop after the last
-// image: an end card on the asset detail popup's "Want to see more"
-// recipe whose primary link opens the creation page in a new tab so the
-// chat stays open.
+// The gallery (brief 3 item 4, replaced by brief 4 item 1). One bed at
+// every state: --surface-2 with --radius-md corners, --space-3 margin
+// each side, 4:5. No media: the circular geometric Crestfall mark
+// (StoryRoomMark, icons-v7 symbol i-59, the sidebar lockup's mark)
+// centered on the bed. With media: the image fills the bed edge to edge
+// inside the rounding, previous and next as 44px circles over the art,
+// an "n / total" counter chip centered at the bottom on the
+// tag-over-art recipe (--tag-bed-art bed, 1px --line, --art-ink), and,
+// when the story resolves to a creation page, one extra stop after the
+// last image: an end card on the asset detail popup's "Want to see
+// more" recipe whose primary link opens the creation page in a new tab
+// so the chat stays open. The brief 3 thumbnail strip is retired; the
+// counter chip carries the position.
 function Gallery({ gallery }) {
   const items = Array.isArray(gallery?.items) ? gallery.items : [];
   const activeIndex = Math.min(gallery?.activeIndex || 0, Math.max(items.length - 1, 0));
@@ -164,20 +168,14 @@ function Gallery({ gallery }) {
   const showEndCard = Boolean(gallery?.showEndCard && gallery?.catalogueHref && active);
   const canPage = items.length > 1 || (items.length === 1 && Boolean(gallery?.catalogueHref));
 
-  if (!active) {
-    return (
-      <div className="p-[var(--space-3)]">
-        <div className="flex aspect-[4/5] w-full items-center justify-center rounded-[var(--radius-md)] bg-[var(--surface-2)]">
-          <StoryRoomMark className="h-[var(--space-16)] w-[var(--space-16)]" />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--surface-2)]">
-        {showEndCard ? (
+    <div className="p-[var(--space-3)]">
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius-md)] bg-[var(--surface-2)]">
+        {!active ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <StoryRoomMark className="h-[var(--space-16)] w-[var(--space-16)]" />
+          </div>
+        ) : showEndCard ? (
           <GalleryEndCard backgroundSrc={active.url} href={gallery.catalogueHref} />
         ) : (
           <button
@@ -191,7 +189,7 @@ function Gallery({ gallery }) {
           </button>
         )}
 
-        {canPage ? (
+        {active && canPage ? (
           <>
             <button
               type="button"
@@ -211,27 +209,16 @@ function Gallery({ gallery }) {
             </button>
           </>
         ) : null}
-      </div>
 
-      {items.length > 1 ? (
-        <div className="flex gap-[var(--space-2)] overflow-x-auto px-[var(--space-3)] py-[var(--space-2)]">
-          {items.map((item, index) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => gallery?.onSelect?.(index)}
-              aria-label={item.altText}
-              aria-current={index === activeIndex && !showEndCard ? "true" : undefined}
-              className={`h-14 w-14 shrink-0 overflow-hidden rounded-[var(--radius-sm)] bg-[var(--surface-2)] ${
-                index === activeIndex && !showEndCard ? "ring-2 ring-[var(--gold-action)]" : ""
-              }`}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={item.url} alt="" className="h-full w-full object-cover" />
-            </button>
-          ))}
-        </div>
-      ) : null}
+        {active && !showEndCard ? (
+          <span
+            aria-live="polite"
+            className="absolute bottom-[var(--space-2)] left-1/2 -translate-x-1/2 rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--tag-bed-art)] px-[var(--space-2)] py-px text-[length:var(--text-label)] leading-[var(--lh-label)] tabular-nums text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)]"
+          >
+            {activeIndex + 1} / {items.length}
+          </span>
+        ) : null}
+      </div>
 
       {gallery?.viewerIndex !== null && gallery?.viewerIndex !== undefined && items.length ? (
         <StoryRoomGalleryViewer

@@ -1,9 +1,18 @@
-export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.1.0";
+export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.2.0";
 
 /**
  * Stable portable UI boundary for the story chat page's right rail
  * (fe/chat-studio item 6, 12 Sep 2026), also the content of the right
  * sheet below md.
+ *
+ * 1.2.0, fe/chat-studio brief 4 item 1 (13 Sep 2026). Presentation
+ * only, no prop changed: the gallery is one bed at every state
+ * (--surface-2, --radius-md, --space-3 margin each side); the image
+ * fills the bed edge to edge inside the rounding; previous and next
+ * are 44px circles over the art; an "n / total" counter chip sits
+ * centered at the bottom on the tag-over-art recipe; the thumbnail
+ * strip is retired (`gallery.onSelect` stays on the contract, unused
+ * by the View). The end card is unchanged from 1.1.0.
  *
  * 1.1.0, fe/chat-studio brief 3 item 4 (13 Sep 2026). ADDITIVE:
  * `gallery.showEndCard` and `gallery.catalogueHref`. When the story

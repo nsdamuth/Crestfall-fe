@@ -1109,6 +1109,38 @@ first. Expected response: the list, empty when the story has no images.
 Unverified: whether scene images belong in it. Interim: the client-side
 union above; nothing is faked.
 
+Finding, 13 Sep 2026 (fe/chat-studio brief 4 item 1, the Lilith of Nod
+gallery placeholder). The interim union is empty for every private
+character chat because the Chassis stamps the media keys on the
+participant only on the template launch path. Read:
+`services/api/src/services/chat/createChatRoomFromTemplate.js:1457`
+spreads `buildCreationParticipantMediaMetadata(character)` into the
+CHARACTER participant's metadata (`avatarUrl`, `primaryImageUrl`,
+`mediaImageUrls`), while `createPrivateCharacterChatRoom` in
+`services/api/src/services/chat/chatRepository.js:2449-2467` writes the
+CHARACTER participant with `creationType`, the content rating ceilings,
+`source: "PRIVATE_CHARACTER_CHAT"`, `loadPolicy`, `castClass`,
+`storyRole`, `cohortPolicy`, `mobilityPolicy` and no media key at all;
+the same builder is spread only into the opening MESSAGE record
+(`chatRepository.js:2515`), and `buildPublicMessageMetadata` does not
+serve it. Confirmed against the local database (PostGraphile,
+`allChatRooms`): the three Lilith of Nod rooms have `data.source: null`
+and their CHARACTER participant metadata keys are exactly
+`accountMaximumContentRating, castClass, cohortPolicy, contentRating,
+creationType, effectiveContentRating, loadPolicy,
+maximumContentRating, mobilityPolicy, platformMaximumContentRating,
+roomMaximumContentRating, source, storyRole`; the served message
+`speakerMediaImageUrls` derives from that same metadata
+(`chatRepository.js:2857`) so it is `[]` too. The creation itself
+(`9b45b53f-d4e7-472e-9a3b-a89846124120`) carries
+`data.featuredMedia[0].url` (the Primary image), which the builder
+would read. The media is not served under any other key on the room
+snapshot, so this is a Chassis fix, not a frontend one: spread
+`buildCreationParticipantMediaMetadata(character, { contentRating })`
+into the private character chat participant the way the template path
+does (and reissue it on existing rooms, or serve `room.media[]` as this
+CR asks). Frontend interim unchanged: the placeholder mark.
+
 ### CR-070, Scene image generation
 
 Filed 12 Sep 2026 by fe/chat-studio item 2 (the composer bar). The brief
