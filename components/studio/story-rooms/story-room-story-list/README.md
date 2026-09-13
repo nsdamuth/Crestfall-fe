@@ -1,0 +1,30 @@
+# Story list LOOM package
+
+The story chat page's left rail (ruling D4, fe/chat-studio item 1, 12 Sep 2026).
+
+## Boundary
+
+`components/studio/story-rooms/StoryRoomStoryList.jsx` is the Binding Shell. It owns only application integrations: the app router for row navigation and `next/link` for the New story link.
+
+`useStoryRoomStoryListViewModel.js` owns:
+
+- bounded Recent paging through the existing `fetchStoryRooms()` client: 10 rows below md, 25 at md+, plus one lookahead row to determine whether Load more is available; page requests carry `limit`/`offset`, while existing unpaged callers remain compatible
+- an explicit Load more append path with room-id deduplication; `refetchKey` resets the list to the newest first page
+- exhaustive search only after a query is actually entered, preserving full-list search semantics without making every normal sidebar open load every room
+- row projection through `projectStoryRoomToContinueItem`, the Stories page's own projector, so title, last line, and recency match that page
+- the relative day through `formatStudioNotificationRelativeTime`, the existing helper, never a new formatter
+- the search query and client-side filtering by title and last line after the on-demand exhaustive search fetch
+- newest activity first ordering
+- the loading, error, and empty states
+
+`StoryRoomStoryList.view.jsx` is the portable View. It renders the search field (`KitSearchFieldView`, the one shared search field the sticky filter bar and the Filter panel render, so the bed, hairline, glyph, and type are the filter bar's by construction and never restyled here; brief 2 item 7 verified this, no local override exists), the New chat button (brief 4 item 3, display-ready `newChat` from the chat shell, which owns the launch through `useStoryLaunchController`, the same controller the Stories page uses: prepare, the requirements sheet when a choice is needed, `POST /api/studio/story-rooms/from-template` for a template or `POST /api/studio/story-rooms` for a character, then navigate to the new chat; disabled with "not available yet" when the story resolves to no source creation), the New story link, the Recent heading, and one 56px row per story: art at 40px, or the circular geometric Crestfall mark (`../story-room-details-rail/StoryRoomMark.jsx`, icons-v7 symbol i-59, brief 3 item 5, never the rosette) on the `--surface-2` bed, title at the ui step, last line at the label step, the relative day right-aligned, hover on `--step-above`, the current story on a gold left rule and `--fill-whisper`. Gold marks the selected row only.
+
+## Placement
+
+Mounted by the story chat shell in its left rail at md and up when the rail is open, and below md as a left sheet (`KitModalFrame variant="drawer"`) opened from the composer's story list button (brief 2 item 11). The rail column paints the surface (`--surface-2`, one step above the primary sidebar, brief 2 item 6) and the sheet paints its own; the View carries no surface. The page's mobile bar still leads back to the Stories page.
+
+## Not in this package
+
+- creating a story from scratch (New story links to the Stories page, where a story begins; New chat only restarts the current story's source creation, and the chat shell owns that launch)
+- deleting, renaming, or reordering stories
+- any fixture or preview route

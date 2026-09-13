@@ -11,6 +11,10 @@ export default function CharacterAdvancedSectionView({
   greetingValue = "",
   greetingPlaceholder = "",
   onChangeGreeting = null,
+  scenarioLabel = "Scenario",
+  scenarioValue = "",
+  scenarioPlaceholder = "",
+  onChangeScenario = null,
   showRelationshipToPlayer = true,
   relationshipLabel = "Relationship to Player",
   relationshipValue = "",
@@ -44,6 +48,13 @@ export default function CharacterAdvancedSectionView({
           value={greetingValue}
           onChange={(value) => onChangeGreeting?.(value)}
           placeholder={greetingPlaceholder}
+        />
+
+        <TextAreaField
+          label={scenarioLabel}
+          value={scenarioValue}
+          onChange={(value) => onChangeScenario?.(value)}
+          placeholder={scenarioPlaceholder}
         />
 
         {showRelationshipToPlayer ? (

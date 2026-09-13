@@ -654,27 +654,40 @@ export function ReassignDialog({
   );
 }
 
-export function DetailsDialog({
+export function ImageDetailsPanel({
   status = "idle",
   message = "",
   publicRows = [],
   privateRows = [],
   canViewPrivate = false,
   onClose,
+  embedded = false,
 }) {
-  return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)]">
-      <section className="max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-modal)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="flex items-start justify-between gap-[var(--space-4)]">
-          <div>
-            <p className="text-[length:var(--text-label)] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-              Image Details
-            </p>
-            <h3 className="mt-[var(--space-1)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
-              Generation information
-            </h3>
-          </div>
+  const shellClassName = embedded
+    ? "h-full w-full overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-panel)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    : "max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-modal)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden";
 
+  return (
+    <section className={shellClassName}>
+      <div className="flex items-start justify-between gap-[var(--space-4)]">
+        <div>
+          <p className="text-[length:var(--text-label)] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+            Image Details
+          </p>
+          <h3 className="mt-[var(--space-1)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+            Generation information
+          </h3>
+        </div>
+
+        {embedded ? (
+          <button
+            type="button"
+            onClick={onClose}
+            className="cf-btn cf-btn--secondary cf-btn--sm"
+          >
+            Back to image
+          </button>
+        ) : (
           <button
             type="button"
             onClick={onClose}
@@ -683,47 +696,55 @@ export function DetailsDialog({
           >
             <X size={17} aria-hidden="true" />
           </button>
+        )}
+      </div>
+
+      {status === "loading" ? (
+        <div className="mt-[var(--space-5)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-[var(--space-5)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
+          <Loader2 className="mr-[var(--space-2)] inline animate-spin" size={16} aria-hidden="true" />
+          Loading image details...
         </div>
+      ) : null}
 
-        {status === "loading" ? (
-          <div className="mt-[var(--space-5)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] p-[var(--space-5)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
-            <Loader2 className="mr-[var(--space-2)] inline animate-spin" size={16} aria-hidden="true" />
-            Loading image details...
-          </div>
-        ) : null}
+      {status === "error" ? (
+        <p className="mt-[var(--space-5)] rounded-[var(--radius-md)] border border-[var(--status-danger)] bg-[var(--status-danger-fill)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--status-danger)]">
+          {message || "Image details could not be loaded."}
+        </p>
+      ) : null}
 
-        {status === "error" ? (
-          <p className="mt-[var(--space-5)] rounded-[var(--radius-md)] border border-[var(--status-danger)] bg-[var(--status-danger-fill)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--status-danger)]">
-            {message || "Image details could not be loaded."}
-          </p>
-        ) : null}
+      {status === "success" ? (
+        <div className="mt-[var(--space-5)] space-y-[var(--space-5)]">
+          <DetailRows rows={publicRows} />
 
-        {status === "success" ? (
-          <div className="mt-[var(--space-5)] space-y-[var(--space-5)]">
-            <DetailRows rows={publicRows} />
-
-            {canViewPrivate ? (
-              <div>
-                <p className="mb-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-                  Private generation data
-                </p>
-                {privateRows.length ? (
-                  <DetailRows rows={privateRows} />
-                ) : (
-                  <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
-                    No prompt/settings metadata was found for this image.
-                  </p>
-                )}
-              </div>
-            ) : (
-              <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] leading-6 text-[var(--ink-dim)]">
-                Prompt and generation settings are visible only to the image
-                creator or the owner of the linked creation.
+          {canViewPrivate ? (
+            <div>
+              <p className="mb-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                Private generation data
               </p>
-            )}
-          </div>
-        ) : null}
-      </section>
+              {privateRows.length ? (
+                <DetailRows rows={privateRows} />
+              ) : (
+                <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
+                  No prompt/settings metadata was found for this image.
+                </p>
+              )}
+            </div>
+          ) : (
+            <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] leading-6 text-[var(--ink-dim)]">
+              Prompt and generation settings are visible only to the image
+              creator or the owner of the linked creation.
+            </p>
+          )}
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+export function DetailsDialog(props) {
+  return (
+    <div className="fixed inset-0 z-[110] flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)]">
+      <ImageDetailsPanel {...props} />
     </div>
   );
 }

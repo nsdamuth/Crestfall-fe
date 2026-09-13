@@ -1,6 +1,6 @@
 # Kit Modal Frame LOOM package
 
-**Contract:** `KitModalFrame.contract.js` (`1.6.0`; 1.6.0 adds the optional `panelStyle` passthrough, 12 Sep 2026, so the mobile dropdown sheet can set its surface, hairline, and gutter width as tokens)
+**Contract:** `KitModalFrame.contract.js` (`1.8.0`; 1.8.0 adds the optional `panelRadius` passthrough, 13 Sep 2026, fe/share-og follow-up 2, so the share sheet can take the medium corner step without a competing radius utility; 1.6.0 adds the optional `panelStyle` passthrough, 12 Sep 2026, so the mobile dropdown sheet can set its surface, hairline, and gutter width as theme values; 1.7.0 extends `sheetGrabber` to the modal variant under 700px, 13 Sep 2026, fe/share-og follow-up 1, so the bottom-docked share sheet carries the bar)
 
 ## Purpose
 
@@ -50,6 +50,13 @@ was (`docs/SPRINT-A-PLAN.md` section 2.3).
   `hasUnsavedChanges` (default false) intercepts all three dismissal
   paths into an in-frame confirm step, "Keep editing" vs. "Discard"
   (B5 danger-fill recipe), instead of a silent discard.
+- `variant="drawer"` (added 1.7.0, 13 Sep 2026, fe/chat-studio brief 2
+  item 11): the sheet recipe docked to the left edge at full viewport
+  height, `w-[min(20rem,88vw)]`, `--line` hairline on its right edge,
+  `--radius-lg` right corners, the sheet's structural header row with
+  the close control, a flex column so caller content owns the scroll.
+  Positioned absolutely against the veil. For a side sheet such as the
+  story chat's mobile story list.
 - `variant="viewer"` (added 1.1.0, 10 Aug 2026): the chromeless image
   viewer surface (R2/R5): chrome-frost veil, transparent full-viewport
   panel. The panel is click-transparent (`pointer-events-none`, R3

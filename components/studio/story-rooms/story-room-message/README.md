@@ -29,8 +29,19 @@ message record, including:
 `StoryRoomMessage.view.jsx` owns only message-bubble presentation:
 
 - surface styling for each display tone;
+- the type steps (brief 3 item 6, RULED by Brian, replacing brief 2
+  item 8's body step): the body at `--text-chat` and `--lh-chat`, the
+  transcript body tier (14 over 22) minted in `app/theme.css` and legal
+  only in this package; the opening label, mode pill, and delivery
+  lines at `--text-label`; the speaker name (brief 4 item 10, review
+  rounds 4 and 5 item 1, RULED) in the display font at `--text-lead`,
+  `--weight-medium`, `--ink`, no uppercase, no tracking, so it reads
+  larger than the eyebrow above it and never matches it;
+  system notices stay at the ui step;
 - speaker identity, mode pill, and opening-scene label;
 - legacy inline bold/action/quote rendering;
+- wide roleplay bubbles (94% below 700px, 96% from 700px up) so long turns use the available transcript width while preserving left/right speaker alignment;
+- Player narration/action ink derived from the Player chat color so actions remain visibly distinct from spoken dialogue without borrowing a Character palette;
 - display-ready semantic segments and status blocks;
 - palette colors already supplied by the ViewModel;
 - failed and sending status copy;

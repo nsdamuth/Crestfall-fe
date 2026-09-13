@@ -21,10 +21,13 @@ test("player state sidebar exposes only Location, Time, and Weather", () => {
 
 test("runtime Mechanics prompt is omitted once a room binding exists", () => {
   const vm = read("components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js");
-  const view = read("components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx");
+  const railBinding = read("components/studio/story-rooms/StoryRoomDetailsRail.jsx");
   assert.match(vm, /getMechanicsModuleBindings\(room\)\.length > 0/);
   assert.match(vm, /hasRoomMechanicsModule\s*\?\s*null/);
-  assert.equal((view.match(/RuntimeMechanicsPanelComponent && runtimeMechanicsPanelProps/g) || []).length, 2);
+  // fe/chat-studio item 6: the Mechanics drill-in renders the panel only
+  // while the gate hands it props, otherwise one quiet line.
+  assert.match(railBinding, /mechanics: runtimeMechanicsPanelProps \? \(/);
+  assert.match(railBinding, /A mechanics module is attached to this story\./);
 });
 
 test("Character opening greetings use the persisted Character palette", () => {
@@ -33,6 +36,7 @@ test("Character opening greetings use the persisted Character palette", () => {
   assert.match(vm, /resolvedSpeakerType/);
   assert.match(vm, /openingCharacterPaletteId/);
   assert.match(vm, /getCharacterColorPalette\(openingCharacterPaletteId\)/);
+  assert.match(vm, /paletteColors: palette\?\.colors/);
   assert.match(vm, /speakerColor:/);
   assert.match(vm, /palette\?\.colors\?\.speaker/);
   assert.match(vm, /return STORY_ROOM_MESSAGE_SURFACE_TONES\.CHARACTER/);
@@ -43,13 +47,22 @@ test("Narrator opening scenes remain on the opening presentation path", () => {
   assert.match(vm, /if \(message\?\.kind === "OPENING_SCENE"\)[\s\S]*STORY_ROOM_MESSAGE_SURFACE_TONES\.OPENING/);
 });
 
-test("legacy greeting text consumes palette colors instead of generic gold", () => {
+test("Character semantic palette roles render while player chat color stays independent", () => {
   const view = read("components/studio/story-rooms/story-room-message/StoryRoomMessage.view.jsx");
-  assert.match(view, /hasPalettePresentation/);
-  assert.match(view, /paletteColors=\{hasPalettePresentation \? resolvedPaletteColors : null\}/);
-  assert.match(view, /paletteColors\.dialogue/);
-  assert.match(view, /paletteColors\.narration/);
-  assert.match(view, /resolvedPaletteColors\.speaker/);
+  const vm = read("components/studio/story-rooms/story-room-message/useStoryRoomMessageViewModel.js");
+
+  assert.match(vm, /paletteColors: palette\?\.colors/);
+  assert.match(vm, /bubbleColor/);
+  assert.match(view, /baseRole = "dialogue"/);
+  assert.match(view, /getPaletteColor\(paletteColors, baseRole\)/);
+  assert.match(view, /getPaletteColor\(paletteColors, "narration"\)/);
+  assert.match(view, /role = "emphasis"/);
+  assert.match(view, /role = "strong"/);
+  assert.match(view, /role = "whisper"/);
+  assert.match(view, /getPaletteColor\(paletteColors, "speaker"\)/);
+  assert.match(view, /bg-\[var\(--chat-bubble-fill\)\]/);
+  assert.match(view, /bg-\[var\(--chat-avatar-fill\)\]/);
+  assert.match(view, /rounded-\[var\(--radius-bubble\)\]/);
 });
 
 test("chat color change remains presentation-only", () => {
@@ -58,4 +71,13 @@ test("chat color change remains presentation-only", () => {
     read("components/studio/story-rooms/story-room-message/StoryRoomMessage.view.jsx"),
   ].join("\n");
   assert.doesNotMatch(sources, /fetch\(|createClient|PostGraphile|supabase/i);
+});
+
+
+test("Player chat color defaults to Crestfall stock instead of Character state", () => {
+  const vm = read("components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js");
+  assert.match(vm, /resolvePlayerChatColorDefaultPaletteId\(\)/);
+  assert.match(vm, /return DEFAULT_CHARACTER_COLOR_PALETTE_ID/);
+  assert.match(vm, /defaultPaletteId: defaultChatColorPaletteId/);
+  assert.doesNotMatch(vm, /resolveCreatorChatColorPaletteId/);
 });

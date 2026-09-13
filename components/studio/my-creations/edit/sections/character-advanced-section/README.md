@@ -27,13 +27,16 @@ The Binding Shell owns `AdvancedPromptingEditor`. The portable View does not imp
 The visible editor preserves:
 
 - `greeting`;
+- `scenario`;
 - `relationship_to_player`;
 - `appearance_notes`;
 - `personality_notes`;
 - `extra_runtime_notes`;
 - `creator_directives`.
 
-Historical `scenario` and `backstory` values remain untouched in stored Character data, but they are no longer exposed as Character authoring controls. Those concepts belong to Story/Scenario authoring rather than Character definition.
+`scenario` remains a Character-authored opening premise/environment guidance field. It is distinct from selecting or authoring a first-class `SCENARIO` Creation for a Story. Existing `data.scenario` values are read and written in place so older Characters retain their authored setup text.
+
+Historical `backstory` values remain untouched in stored Character data but are not exposed by this portable section.
 
 ## Development preview
 

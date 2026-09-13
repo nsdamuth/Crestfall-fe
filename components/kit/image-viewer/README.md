@@ -1,6 +1,6 @@
 # Kit Image Viewer LOOM package
 
-**Contract:** `KitImageViewer.contract.js` (`1.0.0`)
+**Contract:** `KitImageViewer.contract.js` (`2.1.0`)
 
 ## Purpose
 
@@ -52,6 +52,14 @@ to the application is unchanged (contract law).
   image has been upscaled.
 - **Frame**: the gold hairline hugging the image, zoom and pan (wheel
   and drag on desktop, pinch and drag on touch, double click to zoom).
+- **Details face** (2.1.0, RULED 13 Sep 2026): Details does not open a
+  modal. The fitted image box is a two-sided surface: the front keeps the
+  mounted `ImageFrame`, and the reverse face is the embedded generation
+  details panel at the exact same rendered width and height. Only the
+  details face scrolls; the hidden image face has pointer input disabled,
+  so zoom/pan cannot intercept scrolling. The face change uses a restrained
+  Y-axis flip and `prefers-reduced-motion` removes the transition. Keeping
+  the front mounted preserves the user's zoom/pan state on return.
 - **Bottom bar** (gold ink): Edit (no cost on it), then Assign or
   Remix, then Share. Assign is live when the page says the image can
   be reassigned; otherwise it renders disabled with the Soon chip (an

@@ -37,15 +37,14 @@ test("chat shell wires gestures to existing mobile panel state callbacks", () =>
 
   assert.match(view, /onTouchStart=\{handleSwipeStart\}/);
   assert.match(view, /onTouchEnd=\{handleSwipeEnd\}/);
-  assert.match(view, /onOpenMobileCast/);
-  assert.match(view, /onOpenMobileState/);
-  assert.match(view, /side="left"/);
-  assert.match(view, /side="right"/);
-  assert.match(vm, /onOpenMobileCast: \(\) => setMobilePanel\("cast"\)/);
-  assert.match(vm, /onOpenMobileState: \(\) => setMobilePanel\("state"\)/);
+  // fe/chat-studio item 6: a left swipe opens the story details sheet;
+  // the right swipe retired with the cast drawer.
+  assert.match(view, /if \(action === "OPEN_STATE"\) onOpenMobileDetails\?\.\(\);/);
+  assert.doesNotMatch(view, /onOpenMobileCast|MobileDrawerComponent/);
+  assert.match(vm, /onOpenMobileDetails: \(\) => setMobilePanel\("details"\)/);
 });
 
-test("mobile drawer is a directional side sheet with reverse-swipe and fallback close controls", () => {
+test("the retired mobile drawer package keeps its directional recipe until it is deleted", () => {
   const drawer = read("components/studio/story-rooms/story-room-mobile-drawer/StoryRoomMobileDrawer.view.jsx");
 
   assert.match(drawer, /data-drawer-side=\{normalizedSide\}/);
@@ -58,9 +57,15 @@ test("mobile drawer is a directional side sheet with reverse-swipe and fallback 
 
 test("gesture layer remains presentation-only and mobile scoped", () => {
   const view = read("components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx");
+  const vm = read("components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js");
   const gesture = read("components/studio/story-rooms/story-room-chat-shell/storyRoomMobileSwipe.js");
 
-  assert.match(view, /matchMedia\("\(min-width: 1280px\)"\)/);
+  // The viewport read moved into the ViewModel (fe/chat-studio item 1):
+  // rails exist at md and up, so swipes are enabled only below 48rem.
+  assert.doesNotMatch(view, /matchMedia/);
+  assert.match(view, /if \(!swipeEnabled\) return;/);
+  assert.match(vm, /\(min-width: 48rem\)/);
+  assert.match(vm, /swipeEnabled: !isMdUp/);
   assert.match(gesture, /button,a,input,textarea,select/);
   assert.doesNotMatch(gesture, /storyRoomClient|fetch\(|services\/api|supabase|PostGraphile/i);
 });

@@ -6,9 +6,12 @@ export default function KitLoadMoreView({
   remainingCount = null,
   onLoadMore = null,
 }) {
+  // --space-6 above the control in every state (fe/chat-studio brief 3
+  // item 12): the one place the gap between a list and its Show more
+  // is written, so every list view that mounts it gets the same air.
   if (!hasMore && !isLoading) {
     return (
-      <p className="text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+      <p className="mt-[var(--space-6)] text-center text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
         You have seen everything here.
       </p>
     );
@@ -18,7 +21,7 @@ export default function KitLoadMoreView({
     remainingCount !== null && remainingCount !== undefined && !isLoading;
 
   return (
-    <div className="flex flex-col items-center gap-[var(--space-2)]">
+    <div className="mt-[var(--space-6)] flex flex-col items-center gap-[var(--space-2)]">
       <button
         type="button"
         disabled={isLoading}

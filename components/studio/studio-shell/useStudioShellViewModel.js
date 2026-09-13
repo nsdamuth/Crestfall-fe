@@ -5,6 +5,7 @@ export function useStudioShellViewModel({
   mobileNavSlot = null,
   topBarSlot = null,
   reserveMobileDockSpace = true,
+  flush = false,
   themeMode = "dark",
   children = null,
 }) {
@@ -13,6 +14,7 @@ export function useStudioShellViewModel({
     mobileNavSlot,
     topBarSlot,
     reserveMobileDockSpace: reserveMobileDockSpace !== false,
+    flush: flush === true,
     themeMode: themeMode === "light" ? "light" : "dark",
     children,
   };

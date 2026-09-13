@@ -32,7 +32,10 @@ check("cast cards use image-dominant visual roster treatment", () => {
   const view = read("components/studio/story-rooms/story-room-cast-panel/StoryRoomCastPanel.view.jsx");
   assert.match(view, /aspect-\[5\/2\]/);
   assert.match(view, /object-cover object-center/);
-  assert.match(view, /bg-gradient-to-b from-black\/65/);
+  // Brief 4 item 6: the wash over the art is the --scrim token, one step
+  // lighter than --scrim-strong, never a literal gradient.
+  assert.match(view, /bg-\[var\(--scrim\)\]/);
+  assert.doesNotMatch(view, /from-black\/|text-\[10px\]|text-white/);
 });
 
 check("selection remains available through the whole card with visual confirmation", () => {

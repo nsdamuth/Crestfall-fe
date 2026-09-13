@@ -9,6 +9,7 @@ import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.
 import KitCreatorCardView from "@/components/kit/creator-card/KitCreatorCard.view";
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
+import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 import { isLegacyDefaultCreationImageSrc } from "@/lib/shared/creations/creationMedia";
 
@@ -73,12 +74,13 @@ function SectionRail({ rail }) {
         sortControl?.options?.length ? (
           // Trigger label, RULED 12 Sep 2026 (eight-fix package FIX 5,
           // supersedes the 6 Sep sort-prefix ruling): reads
-          // "Filter" while the rail sits on its default sort, and the
-          // chosen option's label alone once the user picks another
-          // (KitDropdown 1.4.0 labelMode "replace" with the default as
-          // restingValue). The menu still marks the default.
+          // "Sort" while the rail sits on its default sort (fe/chat-studio
+          // item 9, 12 Sep 2026), and the chosen option's label alone once
+          // the user picks another (KitDropdown 1.4.0 labelMode "replace"
+          // with the default as restingValue). The menu still marks the
+          // default.
           <KitDropdownView
-            label="Filter"
+            label="Sort"
             ariaLabel="Sort"
             labelMode="replace"
             restingValue={sortControl.defaultValue ?? null}
@@ -107,6 +109,7 @@ export default function HomeView({
   warningMessage = null,
   notice = null,
   onCloseNotice = null,
+  assetDetail = null,
 }) {
   const coldStartBannerImage = topBanner?.imageSrc ?? null;
   const topBannerImageSrc = continueItem
@@ -194,6 +197,10 @@ export default function HomeView({
       </KitStudioPageView>
 
       <FixtureActionNotice notice={notice} onClose={onCloseNotice} />
+
+      {/* Creator shortlist tiles open the asset detail popup, the same
+          piece the creator profile page opens (fe/chat-studio item 10). */}
+      {assetDetail ? <KitAssetDetailPopup {...assetDetail} /> : null}
     </>
   );
 }

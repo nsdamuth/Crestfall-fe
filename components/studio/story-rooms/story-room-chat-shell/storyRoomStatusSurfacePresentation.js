@@ -51,6 +51,21 @@ function resolvedReadouts(surface) {
   );
 }
 
+function actorMechanicsReadouts(surface) {
+  return normalizeArray(surface?.readouts)
+    .filter((readout) => {
+      const status = normalizeUpper(readout?.status);
+      return status === "RESOLVED" || status === "UNAVAILABLE";
+    })
+    .map((readout) => ({
+      ...readout,
+      displayValue:
+        normalizeString(readout?.displayValue) ||
+        (normalizeUpper(readout?.status) === "UNAVAILABLE" ? "—" : ""),
+      isUnavailable: normalizeUpper(readout?.status) === "UNAVAILABLE",
+    }));
+}
+
 function isActorMechanicsSurface(surface) {
   return (
     surface?.variant === "ACTOR_MECHANICS" ||
@@ -59,8 +74,10 @@ function isActorMechanicsSurface(surface) {
 }
 
 export function buildStoryRoomStatusSurfacePresentation(surface = {}) {
-  const readouts = resolvedReadouts(surface);
   const actorMechanics = isActorMechanicsSurface(surface);
+  const readouts = actorMechanics
+    ? actorMechanicsReadouts(surface)
+    : resolvedReadouts(surface);
 
   if (!actorMechanics) {
     return {

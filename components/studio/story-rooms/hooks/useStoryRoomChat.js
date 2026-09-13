@@ -94,6 +94,55 @@ function pickStableImage(images = [], seed = "") {
   return safeImages[hash % safeImages.length];
 }
 
+export function resolveStoryRoomOpeningHeroImage(room = {}) {
+  const roomData = normalizeObject(room?.data);
+  const candidates = [
+    roomData.openingHeroImage,
+    roomData.opening_hero_image,
+    roomData.heroImage,
+    roomData.hero_image,
+  ];
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.trim()) {
+      return {
+        displayUrl: candidate.trim(),
+        altText: `${String(room?.title || "Story").trim() || "Story"} opening image`,
+        width: null,
+        height: null,
+      };
+    }
+
+    const media = normalizeObject(candidate);
+    const displayUrl = String(
+      media.displayUrl ||
+        media.display_url ||
+        media.imageUrl ||
+        media.image_url ||
+        media.thumbnailUrl ||
+        media.thumbnail_url ||
+        media.url ||
+        ""
+    ).trim();
+
+    if (!displayUrl) continue;
+
+    const width = Number(media.width);
+    const height = Number(media.height);
+
+    return {
+      displayUrl,
+      altText:
+        String(media.altText || media.alt_text || "").trim() ||
+        `${String(room?.title || "Story").trim() || "Story"} opening image`,
+      width: Number.isFinite(width) && width > 0 ? width : null,
+      height: Number.isFinite(height) && height > 0 ? height : null,
+    };
+  }
+
+  return null;
+}
+
 function getLastVisualSpeaker({ messages = [], participants = [] }) {
   const latestSpeakerMessage = [...messages]
     .reverse()
@@ -112,6 +161,10 @@ function getLastVisualSpeaker({ messages = [], participants = [] }) {
         : getParticipantMediaImageUrls(participant);
 
     return {
+      participantId: participant?.id || latestSpeakerMessage.senderParticipantId || "",
+      creationId: participant?.creationId || null,
+      participantType:
+        participant?.participantType || String(latestSpeakerMessage.type || "").toUpperCase(),
       name: latestSpeakerMessage.speaker,
       avatarUrl:
         latestSpeakerMessage.speakerAvatarUrl ||
@@ -127,6 +180,9 @@ function getLastVisualSpeaker({ messages = [], participants = [] }) {
 
   if (!fallbackParticipant) {
     return {
+      participantId: "",
+      creationId: null,
+      participantType: "",
       name: "",
       avatarUrl: null,
       mediaImageUrls: [],
@@ -135,6 +191,9 @@ function getLastVisualSpeaker({ messages = [], participants = [] }) {
   }
 
   return {
+    participantId: fallbackParticipant.id || "",
+    creationId: fallbackParticipant.creationId || null,
+    participantType: fallbackParticipant.participantType || "",
     name: fallbackParticipant.displayName || fallbackParticipant.participantType,
     avatarUrl: getParticipantAvatarUrl(fallbackParticipant),
     mediaImageUrls: getParticipantMediaImageUrls(fallbackParticipant),
@@ -321,8 +380,14 @@ function buildRoomViewModel(snapshot, roomId) {
     rawRoom: room,
     rawState: state,
     roomId,
+    openingHeroImage: resolveStoryRoomOpeningHeroImage(room),
     featuredSpeakerImageUrl,
     featuredSpeakerName: lastVisualSpeaker.name || "",
+    featuredSpeakerParticipantId: lastVisualSpeaker.participantId || "",
+    featuredSpeakerCreationId: lastVisualSpeaker.creationId || null,
+    featuredSpeakerParticipantType: lastVisualSpeaker.participantType || "",
+    featuredSpeakerAvatarUrl: lastVisualSpeaker.avatarUrl || null,
+    featuredSpeakerMediaImageUrls: normalizeArray(lastVisualSpeaker.mediaImageUrls).filter(Boolean),
   };
 }
 

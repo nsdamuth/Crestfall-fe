@@ -1,13 +1,31 @@
-export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.1.0";
+export const STORY_ROOM_TRANSCRIPT_VIEW_CONTRACT_VERSION = "1.4.0";
 
 /**
  * Portable View contract.
+ *
+ * 1.4.0, Story Chat presentation restoration (13 Sep 2026). ADDITIVE:
+ * authoritative `openingHeroImage` renders before the first transcript
+ * message while the true beginning is visible; pagination never duplicates it.
+ *
+ * 1.3.0, fe/chat-studio review round 8 (13 Sep 2026, Brian's browser
+ * review). Presentation only: the notice cards' inset is --space-4 on
+ * every side (down from --space-5), the same inset the message bubbles
+ * take, so the player character prompt reads alike beside them.
+ *
+ * 1.2.0, fe/chat-studio review round 4 item 3 (13 Sep 2026, Brian's
+ * browser review, RULED). Presentation only, no prop changed: the
+ * notice cards' body copy (the player character prompt, the story
+ * error card) reads at the transcript's chat tier, --text-chat over
+ * --lh-chat, down from the body step, and their action button reads
+ * at the same size with tighter side padding through .cf-btn--notice
+ * (replacing .cf-btn--field), height still the 44px touch floor.
  *
  * @typedef {Object} StoryRoomTranscriptMessageItem
  * @property {string} id Stable render key for the transcript row.
  * @property {Object} message Direct StoryRoomMessage View-contract props.
  *
  * @typedef {Object} StoryRoomTranscriptViewProps
+ * @property {{displayUrl:string,altText:string,width:number|null,height:number|null}|null} openingHeroImage
  * @property {StoryRoomTranscriptMessageItem[]} messageItems
  * @property {boolean} loading
  * @property {boolean} sending

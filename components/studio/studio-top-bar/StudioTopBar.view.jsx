@@ -20,6 +20,7 @@ export default function StudioTopBarView({
   accountInitial = "?",
   accountLinkSlot = null,
   openMenuAriaLabel = "Open menu",
+  hiddenBelowMd = false,
   onOpenNotifications = () => {},
   onToggleTheme = () => {},
   onCloseNotifications = () => {},
@@ -32,7 +33,12 @@ export default function StudioTopBarView({
 
   return (
     <>
-      <header className="sticky top-0 z-40 flex w-full items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-[var(--blur-chrome)] px-[var(--space-5)] py-[var(--space-3)]">
+      {/* hiddenBelowMd (v9, fe/chat-studio item 1): the attribute is
+          the hook for one rule in app/design-system.css that hides the
+          bar under md on the story chat route, where the page renders
+          its own 44px bar. A prop on the header itself, never a wrapper
+          around it, so the sticky range is untouched. */}
+      <header className="sticky top-0 z-40 flex w-full items-center gap-[var(--space-3)] border-b border-[var(--line-whisper)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] backdrop-blur-[var(--blur-chrome)] px-[var(--space-5)] py-[var(--space-3)]" data-studio-top-bar-hidden-below-md={hiddenBelowMd ? "" : undefined}>
         <button
           type="button"
           onClick={onOpenMenu}

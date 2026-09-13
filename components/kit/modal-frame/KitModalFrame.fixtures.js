@@ -167,11 +167,44 @@ export const kitModalFrameFixtures = [
     },
   },
   {
+    id: "drawer",
+    label: "Drawer, left-docked (brief 2 item 11)",
+    props: {
+      variant: "drawer",
+      panelClassName: "",
+      ariaLabelledBy: "kit-modal-frame-sheet-title",
+      children: sheetContent,
+    },
+  },
+  {
     id: "sheetGrabber",
     label: "Sheet, grabber (build-0823 pass 2)",
     props: {
       variant: "sheet",
       panelClassName: "max-w-none",
+      ariaLabelledBy: "kit-modal-frame-sheet-title",
+      sheetGrabber: true,
+      children: sheetContent,
+    },
+  },
+  {
+    id: "modalGrabber",
+    label: "Modal, grabber under 700px (fe/share-og follow-up 1, item 2)",
+    props: {
+      variant: "modal",
+      panelWidth: "36rem",
+      ariaLabelledBy: "kit-modal-frame-sheet-title",
+      sheetGrabber: true,
+      children: sheetContent,
+    },
+  },
+  {
+    id: "modalMediumRadius",
+    label: "Modal, medium corner step (fe/share-og follow-up 2, item 3)",
+    props: {
+      variant: "modal",
+      panelWidth: "36rem",
+      panelRadius: "var(--radius-md)",
       ariaLabelledBy: "kit-modal-frame-sheet-title",
       sheetGrabber: true,
       children: sheetContent,

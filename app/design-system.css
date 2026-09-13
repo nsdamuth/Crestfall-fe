@@ -375,6 +375,42 @@
   line-height: var(--lh-label);
 }
 
+/* Notice-card button (fe/chat-studio review round 4 item 3, 13 Sep
+   2026, RULED by Brian; replaces the brief 2 item 9 .cf-btn--field
+   variant, whose only consumer was this card): a cf-btn whose label
+   reads at the transcript's chat tier (--text-chat, --lh-chat, the
+   same size as the notice card's body copy beside it) with tighter
+   side padding, so it sits a step smaller than the standard button.
+   Height stays --control-md, the touch floor. Sized here as a variant
+   because .cf-btn is unlayered and no text- utility can reach its
+   font-size (standing note, 10 Sep 2026). */
+.cf-btn--notice {
+  padding: 0 var(--space-4);
+  font-size: var(--text-chat);
+  line-height: var(--lh-chat);
+}
+
+/* Compact button (fe/chat-studio review rounds 6 and 7, 13 Sep 2026,
+   RULED by Brian for the story details rail's Export and Share): a
+   cf-btn one step smaller by label and padding, the ui step over
+   --space-4, and (round 7, "slightly shorter") one step shorter on a
+   fine pointer at --control-filter (38), the same pairing rule the
+   filter line uses: a coarse pointer keeps the --control-md touch
+   floor. Scope of --control-filter widened to this recipe by that
+   ruling (docs/DESIGN-TOKENS.md, Sizing). */
+.cf-btn--compact {
+  height: var(--control-filter);
+  padding: 0 var(--space-4);
+  font-size: var(--text-ui);
+  line-height: var(--lh-ui);
+}
+
+@media (pointer: coarse) {
+  .cf-btn--compact {
+    height: var(--control-md);
+  }
+}
+
 .cf-btn--lg {
   height: var(--control-lg);
   padding: 0 var(--space-8);
@@ -576,6 +612,49 @@
     display: block;
     max-width: 100%;
     overflow-x: auto;
+  }
+}
+
+/* --- STORY CHAT GRID, fe/chat-studio item 1 (K1) -------------
+   The story chat shell stamps data-rails on its cf-story-room-grid
+   element with the current rail state, so a rail opening changes
+   one attribute and no class string in JS. Below md the route is
+   one column and the page's own 44px bar owns rail access. At md
+   and up the two rails are 17.5rem and 20rem (the pre-existing
+   280 and 320) and a closed rail is the 44px control floor.       */
+
+.cf-story-room-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 48rem) {
+  .cf-story-room-grid[data-rails="none"] {
+    grid-template-columns: var(--control-md) minmax(0, 1fr) var(--control-md);
+  }
+
+  .cf-story-room-grid[data-rails="left"] {
+    grid-template-columns: 17.5rem minmax(0, 1fr) var(--control-md);
+  }
+
+  .cf-story-room-grid[data-rails="right"] {
+    grid-template-columns: var(--control-md) minmax(0, 1fr) 20rem;
+  }
+
+  .cf-story-room-grid[data-rails="both"] {
+    grid-template-columns: 17.5rem minmax(0, 1fr) 20rem;
+  }
+}
+
+/* --- TOP BAR, HIDDEN BELOW MD ON STORY CHAT (I1) --------------
+   StudioTopBar stamps data-studio-top-bar-hidden-below-md when the
+   Binding Shell says the route is story chat. Under md that page
+   renders its own 44px bar, so the sticky bar steps aside; at md
+   and up it stays on every route.                                 */
+
+@media (max-width: 47.99rem) {
+  [data-studio-top-bar-hidden-below-md] {
+    display: none;
   }
 }
 

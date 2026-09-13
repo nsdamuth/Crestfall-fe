@@ -1,17 +1,23 @@
+// Each command carries `example` (fe/chat-studio item 5, 12 Sep 2026):
+// the tappable slash command list shows the usage, the description, and
+// one example per row. Creator Mechanics commands merge with a null
+// example.
 export const STORY_ROOM_COMMANDS = Object.freeze([
   Object.freeze({
     name: "help",
     aliases: Object.freeze(["?"]),
     description: "Show the quick-start chat controls and shortcuts.",
     usage: "/help",
+    example: "/help",
     handling: "LOCAL_UI",
     panel: "HELP",
   }),
   Object.freeze({
     name: "commands",
     aliases: Object.freeze([]),
-    description: "Show every command currently available in this Story Room.",
+    description: "Show every command currently available in this story.",
     usage: "/commands",
+    example: "/commands",
     handling: "LOCAL_UI",
     panel: "COMMANDS",
   }),
@@ -20,6 +26,7 @@ export const STORY_ROOM_COMMANDS = Object.freeze([
     aliases: Object.freeze([]),
     description: "Show Crestfall Story text-formatting and message-semantics help.",
     usage: "/format",
+    example: "/format",
     handling: "LOCAL_UI",
     panel: "FORMAT",
   }),
@@ -29,6 +36,7 @@ export const STORY_ROOM_COMMANDS = Object.freeze([
     description:
       "Show the current Player Character inventory without advancing the Story.",
     usage: "/inventory",
+    example: "/inventory",
     handling: "SERVER_COMMAND",
   }),
   Object.freeze({
@@ -37,6 +45,7 @@ export const STORY_ROOM_COMMANDS = Object.freeze([
     description:
       "Save a scene-generated person or location as a private Vault draft.",
     usage: "/save person @Name · /save location #Name",
+    example: "/save person @Mara",
     handling: "SERVER_COMMAND",
     requiresArguments: true,
   }),
@@ -45,6 +54,7 @@ export const STORY_ROOM_COMMANDS = Object.freeze([
     aliases: Object.freeze([]),
     description: "Like a first-class Character or Location Creation in this Story.",
     usage: "/like @Character · /like #Location",
+    example: "/like @Mara",
     handling: "SERVER_COMMAND",
     requiresArguments: true,
   }),
@@ -53,6 +63,7 @@ export const STORY_ROOM_COMMANDS = Object.freeze([
     aliases: Object.freeze([]),
     description: "Bookmark a first-class Character or Location Creation in this Story.",
     usage: "/mark @Character · /mark #Location",
+    example: "/mark #Old Chapel",
     handling: "SERVER_COMMAND",
     requiresArguments: true,
   }),
@@ -117,6 +128,7 @@ function normalizeMechanicsCatalogCommand(entry = {}) {
       String(entry?.description || "").trim() ||
       "Creator-authored Mechanics command.",
     usage: String(entry?.usage || `/${name}`).trim() || `/${name}`,
+    example: null,
     handling: "MECHANICS",
     sourceLabel,
     ambiguous: entry?.ambiguous === true,

@@ -25,15 +25,27 @@ import {
   buildSemanticMessageParagraphs,
 } from "./storyRoomMessageSpacing";
 
-const DEFAULT_PALETTE_COLORS = Object.freeze({
-  dialogue: "#F5E7C7",
-  narration: "#C89B5A",
-  emphasis: "#E2B96F",
-  strong: "#FFD99A",
-  whisper: "#AFA08A",
-  speaker: "#D6B36A",
-  border: "#8A6A3C",
-});
+// Bubbles (fe/chat-studio item 4, 12 Sep 2026, on the 23 Aug tinted
+// bubble law): the player right-aligned on the chat color through the
+// locked --chat-bubble-fill recipe, every other speaker left-aligned on
+// the nested card surface, no borders, --radius-bubble, body one step
+// tighter (the ui step), narration italic, whispers as a quiet inset.
+// The speaker name keeps the redesigned display-font/lead geometry,
+// while Character-authored content restores its authored semantic color
+// palette (dialogue, narration, emphasis, strong, whisper, speaker).
+// The player bubble remains independently driven by the user's chat
+// color through --chat-speaker/--chat-bubble-fill.
+
+const WHISPER_INSET_CLASS =
+  "border-l-2 border-[var(--line-strong)] pl-[var(--space-3)] italic text-[var(--ink-dim)]";
+
+// Player-authored action/narration needs to remain visually distinct from
+// spoken dialogue even though Player bubbles intentionally do not inherit a
+// Character semantic palette. Keep the action ink in the Player's own hue,
+// but clamp it into a deliberately darker mid-lightness band so italic action
+// text cannot wash toward the near-white spoken dialogue color.
+const PLAYER_ACTION_COLOR =
+  "oklch(from var(--chat-speaker, var(--gold-ornament)) clamp(0.56, l, 0.64) min(c, 0.16) h)";
 
 function tokenizeInlineMarkup(text) {
   const tokens = [];
@@ -76,16 +88,28 @@ function tokenizeInlineMarkup(text) {
   return tokens;
 }
 
-function renderInlineMarkup(text, keyPrefix, paletteColors = null) {
+function getPaletteColor(paletteColors, role) {
+  const value = paletteColors?.[role];
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function renderInlineMarkup(
+  text,
+  keyPrefix,
+  paletteColors = null,
+  baseRole = "dialogue",
+  playerActionColor = false
+) {
   return tokenizeInlineMarkup(text).map((token, index) => {
     const key = `${keyPrefix}-${index}`;
 
     if (token.type === "bold") {
+      const strongColor = getPaletteColor(paletteColors, "strong");
       return (
         <strong
           key={key}
-          className="font-semibold"
-          style={paletteColors ? { color: paletteColors.strong } : undefined}
+          className="font-[var(--weight-medium)]"
+          style={strongColor ? { color: strongColor } : undefined}
         >
           {token.value}
         </strong>
@@ -93,22 +117,23 @@ function renderInlineMarkup(text, keyPrefix, paletteColors = null) {
     }
 
     if (token.type === "action") {
+      const narrationColor = getPaletteColor(paletteColors, "narration");
+      const actionColor =
+        narrationColor || (playerActionColor ? PLAYER_ACTION_COLOR : null);
       return (
         <em
           key={key}
           className="italic"
-          style={paletteColors ? { color: paletteColors.narration } : undefined}
+          style={actionColor ? { color: actionColor } : undefined}
         >
           {token.value}
         </em>
       );
     }
 
+    const baseColor = getPaletteColor(paletteColors, baseRole);
     return (
-      <span
-        key={key}
-        style={paletteColors ? { color: paletteColors.dialogue } : undefined}
-      >
+      <span key={key} style={baseColor ? { color: baseColor } : undefined}>
         {token.value}
       </span>
     );
@@ -119,6 +144,7 @@ function LegacyMessageBody({
   body = "",
   allowAutomaticSpacing = false,
   paletteColors = null,
+  playerActionColor = false,
 }) {
   const text = String(body || "");
   const blocks = allowAutomaticSpacing
@@ -138,14 +164,16 @@ function LegacyMessageBody({
       return (
         <blockquote
           key={`block-${blockIndex}`}
-          className="my-3 border-l-2 border-[var(--gold-ornament)]/50 pl-4 text-[var(--ink-dim)]"
+          className={`my-[var(--space-3)] ${WHISPER_INSET_CLASS}`}
         >
           {quoteLines.map((line, lineIndex) => (
             <span key={`quote-${blockIndex}-${lineIndex}`}>
               {renderInlineMarkup(
                 line,
                 `quote-${blockIndex}-${lineIndex}`,
-                paletteColors
+                paletteColors,
+                "whisper",
+                playerActionColor
               )}
               {lineIndex < quoteLines.length - 1 ? <br /> : null}
             </span>
@@ -155,13 +183,15 @@ function LegacyMessageBody({
     }
 
     return (
-      <p key={`block-${blockIndex}`} className="my-3 first:mt-0 last:mb-0">
+      <p key={`block-${blockIndex}`} className="my-[var(--space-3)] first:mt-0 last:mb-0">
         {lines.map((line, lineIndex) => (
           <span key={`line-${blockIndex}-${lineIndex}`}>
             {renderInlineMarkup(
               line,
               `line-${blockIndex}-${lineIndex}`,
-              paletteColors
+              paletteColors,
+              "dialogue",
+              playerActionColor
             )}
             {lineIndex < lines.length - 1 ? <br /> : null}
           </span>
@@ -171,42 +201,74 @@ function LegacyMessageBody({
   });
 }
 
-function getSegmentStyle(segment, paletteColors) {
-  const style = {
-    color:
-      segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.DIALOGUE
-        ? paletteColors.dialogue
-        : segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.NARRATION
-          ? paletteColors.narration
-          : "var(--ink)",
-    fontStyle:
-      segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.NARRATION
-        ? "italic"
-        : "normal",
-  };
+function getSegmentClassName(segment) {
+  const classes = [];
+
+  if (segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.NARRATION) {
+    classes.push("italic");
+  }
 
   if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.EMPHASIS) {
-    style.color = paletteColors.emphasis;
+    classes.push("italic");
   }
 
   if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.STRONG) {
-    style.color = paletteColors.strong;
-    style.fontWeight = 600;
+    classes.push("font-[var(--weight-medium)]");
   }
 
   if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.WHISPER) {
-    style.color = paletteColors.whisper;
-    style.fontStyle = "italic";
+    classes.push("italic");
   }
 
-  return style;
+  return classes.join(" ");
+}
+
+function getSegmentStyle(segment, paletteColors, playerActionColor = false) {
+  if (
+    playerActionColor &&
+    segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.NARRATION
+  ) {
+    return { color: PLAYER_ACTION_COLOR };
+  }
+
+  if (!paletteColors) return undefined;
+
+  let role =
+    segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.NARRATION
+      ? "narration"
+      : segment.type === STORY_ROOM_MESSAGE_SEGMENT_TYPES.DIALOGUE
+        ? "dialogue"
+        : null;
+
+  if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.EMPHASIS) {
+    role = "emphasis";
+  } else if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.STRONG) {
+    role = "strong";
+  } else if (segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.WHISPER) {
+    role = "whisper";
+  }
+
+  const color = role ? getPaletteColor(paletteColors, role) : null;
+  return color ? { color } : undefined;
+}
+
+function isWhisperParagraph(paragraph) {
+  return (
+    paragraph.length > 0 &&
+    paragraph.every(
+      (segment) =>
+        segment.emphasis === STORY_ROOM_MESSAGE_SEGMENT_EMPHASIS.WHISPER ||
+        !String(segment.text || "").trim()
+    )
+  );
 }
 
 function SemanticMessageBody({
   segments,
   statusBlocks,
-  paletteColors,
+  paletteColors = null,
   allowAutomaticSpacing = false,
+  playerActionColor = false,
 }) {
   const paragraphs = allowAutomaticSpacing
     ? buildSemanticMessageParagraphs(segments)
@@ -214,16 +276,23 @@ function SemanticMessageBody({
 
   return (
     <>
-      <div className={paragraphs.length > 1 ? "space-y-4" : ""}>
+      <div className={paragraphs.length > 1 ? "space-y-[var(--space-3)]" : ""}>
         {paragraphs.map((paragraph, paragraphIndex) => (
           <div
             key={`presentation-paragraph-${paragraphIndex}`}
-            className="whitespace-pre-wrap leading-7"
+            className={`whitespace-pre-wrap ${
+              isWhisperParagraph(paragraph) ? WHISPER_INSET_CLASS : ""
+            }`}
           >
             {paragraph.map((segment, segmentIndex) => (
               <span
                 key={`presentation-segment-${paragraphIndex}-${segmentIndex}`}
-                style={getSegmentStyle(segment, paletteColors)}
+                className={getSegmentClassName(segment)}
+                style={getSegmentStyle(
+                  segment,
+                  paletteColors,
+                  playerActionColor
+                )}
               >
                 {segment.text}
               </span>
@@ -233,7 +302,7 @@ function SemanticMessageBody({
       </div>
 
       {statusBlocks.length ? (
-        <div className="mt-4 space-y-2 border-t border-[var(--gold-ornament)]/20 pt-3 text-xs leading-5 text-[var(--gold-ornament)]/90">
+        <div className="mt-[var(--space-3)] space-y-[var(--space-1)] border-t border-[var(--line-whisper)] pt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--gold-ornament)]">
           {statusBlocks.map((block, index) => (
             <div
               key={block.id || `status-block-${index}`}
@@ -270,11 +339,11 @@ function AutoEventMediaMessage({ media }) {
       </div>
 
       {isLocation && media.caption ? (
-        <div className="border-t border-[var(--line-whisper)] px-4 py-3">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+        <div className="border-t border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)]">
+          <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             Location
           </p>
-          <p className="mt-1 text-sm text-[var(--ink-dim)]">
+          <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {media.caption}
           </p>
         </div>
@@ -283,43 +352,64 @@ function AutoEventMediaMessage({ media }) {
   );
 }
 
-function getArticleClassName(surfaceTone) {
+function getWrapperClassName(surfaceTone) {
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER) {
-    return "ml-auto max-w-3xl border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10";
-  }
-
-  if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.OPENING) {
-    return "border-[var(--gold-ornament)]/30 bg-[var(--gold-ornament)]/5";
+    return "flex w-full flex-col items-end";
   }
 
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
-    return "border-sky-400/20 bg-sky-400/10";
+    return "flex w-full flex-col items-center";
   }
 
-  if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.NARRATOR) {
-    return "border-[var(--gold-ornament)]/25 bg-[var(--surface-2)]";
-  }
-
-  return "border-white/10 bg-[var(--surface-2)]";
+  return "flex w-full flex-col items-start";
 }
 
+function getArticleClassName(surfaceTone) {
+  // min-w-0 and break-words (review round 5, mobile): a bubble never
+  // grows past its cap for an unbroken run of text, so the column
+  // stays inside 390 whatever a message carries. Padding (review round
+  // 8): --space-4 on every side, the same inset as the transcript's
+  // notice cards, up from --space-3 vertically.
+  const base = "min-w-0 break-words rounded-[var(--radius-bubble)] p-[var(--space-4)]";
+
+  // Bubble width (13 Sep 2026 presentation follow-up): keep only a small
+  // alignment gutter so long roleplay turns use the transcript width rather
+  // than wrapping into narrow columns. Mobile uses 94 percent; the shipped
+  // 700px breakpoint and up uses 96 percent (Player from the right, every
+  // other speaker from the left).
+  if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER) {
+    return `${base} max-w-[94%] min-[700px]:max-w-[96%] bg-[var(--chat-bubble-fill)]`;
+  }
+
+  if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
+    return `${base} max-w-xl border border-sky-400/20 bg-sky-400/10 text-center`;
+  }
+
+  return `${base} max-w-[94%] min-[700px]:max-w-[96%] bg-[var(--surface-1)]`;
+}
+
+// Transcript body type (brief 3 item 6, RULED by Brian, replacing brief
+// 2 item 8's body step): the message body reads at --text-chat and
+// --lh-chat (14 over 22), the transcript body tier minted in
+// app/theme.css and legal only in this package; the opening label, the
+// mode pill, and the delivery lines stay at --text-label, and the
+// speaker name reads the display font at --text-lead (brief 4 item 10,
+// raised one step by review round 4 item 1 and one more by round 5).
+// System notices are meta, not body, and stay at the ui step (the
+// brief named the body only).
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {
-  if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.OPENING) {
-    return "text-sm text-[var(--ink)]/90";
+  if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
+    return "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-sky-100/80";
   }
 
   if (
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.NARRATOR &&
     !hasSemanticPresentation
   ) {
-    return "font-serif text-lg italic text-[var(--ink-dim)]";
+    return "font-display text-[length:var(--text-chat)] leading-[var(--lh-chat)] italic text-[var(--ink-dim)]";
   }
 
-  if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM) {
-    return "text-sm text-sky-100/80";
-  }
-
-  return "text-[var(--ink)]";
+  return "text-[length:var(--text-chat)] leading-[var(--lh-chat)] text-[var(--ink)]";
 }
 
 export default function StoryRoomMessageView({
@@ -334,6 +424,8 @@ export default function StoryRoomMessageView({
   semanticSegments = [],
   statusBlocks = [],
   paletteColors = null,
+  speakerColor = null,
+  bubbleColor = null,
   media = null,
   deliveryState = null,
   canCopy = false,
@@ -369,13 +461,24 @@ export default function StoryRoomMessageView({
   const hasSemanticPresentation =
     bodyMode === STORY_ROOM_MESSAGE_BODY_MODES.SEMANTIC &&
     (safeSegments.length > 0 || safeStatusBlocks.length > 0);
-  const hasPalettePresentation = Boolean(paletteColors);
-  const resolvedPaletteColors = paletteColors || DEFAULT_PALETTE_COLORS;
   const allowAutomaticSpacing =
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.CHARACTER ||
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.NARRATOR;
   const isPlayerMessage =
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER;
+  const isSystemMessage =
+    surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.SYSTEM;
+  const hasPalettePresentation = Boolean(paletteColors);
+  const speakerPaletteColor =
+    getPaletteColor(paletteColors, "speaker") ||
+    (typeof speakerColor === "string" && speakerColor.trim() ? speakerColor.trim() : null);
+  // The anchor the locked --chat-* tokens derive from: the chat color
+  // for the player's bubble, the character's palette anchor otherwise.
+  const speakerAnchor = isPlayerMessage ? bubbleColor : speakerColor;
+  const articleStyle =
+    typeof speakerAnchor === "string" && speakerAnchor.trim()
+      ? { "--chat-speaker": speakerAnchor.trim() }
+      : undefined;
   const copyLabel =
     copyState === STORY_ROOM_MESSAGE_COPY_STATES.COPIED
       ? "Copied"
@@ -389,220 +492,219 @@ export default function StoryRoomMessageView({
     (canReport && typeof onReport === "function");
 
   return (
-    <div className="w-full">
-    <article
-      className={`rounded-[var(--radius-md)] border p-4 ${getArticleClassName(surfaceTone)}`}
-      style={
-        hasSemanticPresentation || hasPalettePresentation
-          ? { borderColor: resolvedPaletteColors.border }
-          : undefined
-      }
-    >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-2">
-          {speakerAvatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={speakerAvatarUrl}
-              alt={speakerLabel || "Speaker"}
-              className="h-7 w-7 shrink-0 rounded-full border object-cover"
-              style={
-                hasSemanticPresentation || hasPalettePresentation
-                  ? { borderColor: resolvedPaletteColors.border }
-                  : undefined
-              }
-            />
-          ) : null}
+    <div className={getWrapperClassName(surfaceTone)}>
+      <article className={getArticleClassName(surfaceTone)} style={articleStyle}>
+        {isSystemMessage ? null : (
+          <div className="flex flex-wrap items-center justify-between gap-[var(--space-2)]">
+            <div className="flex min-w-0 items-center gap-[var(--space-2)]">
+              {speakerAvatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={speakerAvatarUrl}
+                  alt={speakerLabel || "Speaker"}
+                  className="h-7 w-7 shrink-0 rounded-[var(--radius-full)] bg-[var(--chat-avatar-fill)] object-cover"
+                />
+              ) : null}
 
-          <div className="min-w-0">
-            {openingLabel ? (
-              <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-                {openingLabel}
-              </p>
-            ) : null}
+              <div className="min-w-0">
+                {openingLabel ? (
+                  <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+                    {openingLabel}
+                  </p>
+                ) : null}
 
-            <p
-              className="truncate text-xs uppercase tracking-[0.2em]"
-              style={
-                hasSemanticPresentation || hasPalettePresentation
-                  ? { color: resolvedPaletteColors.speaker }
-                  : undefined
-              }
-            >
-              {speakerLabel}
-            </p>
-          </div>
-        </div>
+                {/* The speaker name (brief 4 item 10, review rounds 4
+                    and 5 item 1): off the eyebrow tier and two steps
+                    larger than it, the lead step (19, "a little bit
+                    more" than the body step Brian saw in round 4), so it
+                    reads clearly above the Opening scene eyebrow;
+                    display font, medium weight, --ink, no uppercase, no
+                    tracking. */}
+                <p
+                  className="truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] font-[var(--weight-medium)] text-[var(--ink)]"
+                  style={speakerPaletteColor ? { color: speakerPaletteColor } : undefined}
+                >
+                  {speakerLabel}
+                </p>
+              </div>
+            </div>
 
-        {modeLabel ? <StatusPill>{modeLabel}</StatusPill> : null}
-      </div>
-
-      <div
-        className={`mt-3 ${getBodyClassName(
-          surfaceTone,
-          hasSemanticPresentation
-        )}`}
-      >
-        {hasSemanticPresentation ? (
-          <SemanticMessageBody
-            segments={safeSegments}
-            statusBlocks={safeStatusBlocks}
-            paletteColors={resolvedPaletteColors}
-            allowAutomaticSpacing={allowAutomaticSpacing}
-          />
-        ) : (
-          <div className="whitespace-pre-wrap leading-7">
-            <LegacyMessageBody
-              body={legacyBody}
-              allowAutomaticSpacing={allowAutomaticSpacing}
-              paletteColors={hasPalettePresentation ? resolvedPaletteColors : null}
-            />
+            {modeLabel ? <ModePill>{modeLabel}</ModePill> : null}
           </div>
         )}
-      </div>
 
-      {deliveryState === STORY_ROOM_MESSAGE_DELIVERY_STATES.FAILED ? (
-        <p className="mt-3 text-xs text-red-200">
-          Message failed to send. Copy and retry.
-        </p>
-      ) : deliveryState === STORY_ROOM_MESSAGE_DELIVERY_STATES.SENDING ? (
-        <p className="mt-3 text-xs text-[var(--ink-dim)]">Sending…</p>
+        <div
+          className={`${isSystemMessage ? "" : "mt-[var(--space-2)]"} ${getBodyClassName(
+            surfaceTone,
+            hasSemanticPresentation
+          )}`}
+        >
+          {hasSemanticPresentation ? (
+            <SemanticMessageBody
+              segments={safeSegments}
+              statusBlocks={safeStatusBlocks}
+              paletteColors={hasPalettePresentation ? paletteColors : null}
+              allowAutomaticSpacing={allowAutomaticSpacing}
+              playerActionColor={isPlayerMessage}
+            />
+          ) : (
+            <div className="whitespace-pre-wrap">
+              <LegacyMessageBody
+                body={legacyBody}
+                allowAutomaticSpacing={allowAutomaticSpacing}
+                paletteColors={hasPalettePresentation ? paletteColors : null}
+                playerActionColor={isPlayerMessage}
+              />
+            </div>
+          )}
+        </div>
+
+        {deliveryState === STORY_ROOM_MESSAGE_DELIVERY_STATES.FAILED ? (
+          <p className="mt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger-text)]">
+            Message failed to send. Copy and retry.
+          </p>
+        ) : deliveryState === STORY_ROOM_MESSAGE_DELIVERY_STATES.SENDING ? (
+          <p className="mt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+            Sending
+          </p>
+        ) : null}
+      </article>
+
+      {hasMessageActions ? (
+        <div
+          className={`mt-[var(--space-1)] flex items-center gap-[var(--space-1)] ${
+            isPlayerMessage ? "justify-end" : "justify-start"
+          }`}
+        >
+          {canCopy && typeof onCopy === "function" ? (
+            <MessageActionButton onClick={onCopy} label={copyLabel}>
+              {copyState === STORY_ROOM_MESSAGE_COPY_STATES.COPIED ? (
+                <Check size={14} aria-hidden="true" />
+              ) : copyState === STORY_ROOM_MESSAGE_COPY_STATES.FAILED ? (
+                <AlertCircle size={14} aria-hidden="true" />
+              ) : (
+                <Copy size={14} aria-hidden="true" />
+              )}
+            </MessageActionButton>
+          ) : null}
+
+          {canRegenerate && typeof onRegenerate === "function" ? (
+            <MessageActionButton
+              onClick={onRegenerate}
+              disabled={
+                regenerateDisabled ||
+                regeneratePending ||
+                continuePending ||
+                reportPending
+              }
+              label={
+                regenerateDisabled
+                  ? regenerateDisabledReason || "Regenerate response unavailable"
+                  : regeneratePending
+                    ? "Regenerating response"
+                    : regenerateError
+                      ? `Regenerate response. Last attempt failed: ${regenerateError}`
+                      : "Regenerate response"
+              }
+              title={
+                regenerateDisabled
+                  ? regenerateDisabledReason || "Regenerate response unavailable"
+                  : regeneratePending
+                    ? "Regenerating response"
+                    : regenerateError || "Regenerate response"
+              }
+            >
+              {regeneratePending ? (
+                <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+              ) : regenerateError ? (
+                <AlertCircle size={14} aria-hidden="true" />
+              ) : (
+                <RotateCcw size={14} aria-hidden="true" />
+              )}
+            </MessageActionButton>
+          ) : null}
+
+          {canContinue && typeof onContinue === "function" ? (
+            <MessageActionButton
+              onClick={onContinue}
+              disabled={
+                continueDisabled ||
+                continuePending ||
+                regeneratePending ||
+                reportPending
+              }
+              label={
+                continueDisabled
+                  ? continueDisabledReason || "Continue response unavailable"
+                  : continuePending
+                    ? "Continuing response"
+                    : continueError
+                      ? `Continue response. Last attempt failed: ${continueError}`
+                      : "Continue response"
+              }
+              title={
+                continueDisabled
+                  ? continueDisabledReason || "Continue response unavailable"
+                  : continuePending
+                    ? "Continuing response"
+                    : continueError || "Continue response"
+              }
+            >
+              {continuePending ? (
+                <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+              ) : continueError ? (
+                <AlertCircle size={14} aria-hidden="true" />
+              ) : (
+                <StepForward size={14} aria-hidden="true" />
+              )}
+            </MessageActionButton>
+          ) : null}
+
+          {canReport && typeof onReport === "function" ? (
+            <MessageActionButton
+              onClick={onReport}
+              disabled={
+                reportPending ||
+                regeneratePending ||
+                continuePending ||
+                reportSubmitted
+              }
+              label={
+                reportPending
+                  ? "Submitting report"
+                  : reportSubmitted
+                    ? "Message reported"
+                    : reportError
+                      ? `Report message. Last attempt failed: ${reportError}`
+                      : "Report message"
+              }
+              title={
+                reportPending
+                  ? "Submitting report"
+                  : reportSubmitted
+                    ? "Reported"
+                    : reportError || "Report message"
+              }
+            >
+              {reportPending ? (
+                <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+              ) : reportSubmitted ? (
+                <Check size={14} aria-hidden="true" />
+              ) : reportError ? (
+                <AlertCircle size={14} aria-hidden="true" />
+              ) : (
+                <Flag size={14} aria-hidden="true" />
+              )}
+            </MessageActionButton>
+          ) : null}
+        </div>
       ) : null}
-    </article>
-
-    {hasMessageActions ? (
-      <div
-        className={`mt-1.5 flex items-center gap-0.5 ${
-          isPlayerMessage ? "justify-end" : "justify-start"
-        }`}
-      >
-        {canCopy && typeof onCopy === "function" ? (
-          <MessageActionButton onClick={onCopy} label={copyLabel}>
-            {copyState === STORY_ROOM_MESSAGE_COPY_STATES.COPIED ? (
-              <Check size={13} aria-hidden="true" />
-            ) : copyState === STORY_ROOM_MESSAGE_COPY_STATES.FAILED ? (
-              <AlertCircle size={13} aria-hidden="true" />
-            ) : (
-              <Copy size={13} aria-hidden="true" />
-            )}
-          </MessageActionButton>
-        ) : null}
-
-        {canRegenerate && typeof onRegenerate === "function" ? (
-          <MessageActionButton
-            onClick={onRegenerate}
-            disabled={
-              regenerateDisabled ||
-              regeneratePending ||
-              continuePending ||
-              reportPending
-            }
-            label={
-              regenerateDisabled
-                ? regenerateDisabledReason || "Regenerate response unavailable"
-                : regeneratePending
-                ? "Regenerating response"
-                : regenerateError
-                  ? `Regenerate response. Last attempt failed: ${regenerateError}`
-                  : "Regenerate response"
-            }
-            title={
-              regenerateDisabled
-                ? regenerateDisabledReason || "Regenerate response unavailable"
-                : regeneratePending
-                  ? "Regenerating response"
-                : regenerateError || "Regenerate response"
-            }
-          >
-            {regeneratePending ? (
-              <Loader2 size={13} className="animate-spin" aria-hidden="true" />
-            ) : regenerateError ? (
-              <AlertCircle size={13} aria-hidden="true" />
-            ) : (
-              <RotateCcw size={13} aria-hidden="true" />
-            )}
-          </MessageActionButton>
-        ) : null}
-
-        {canContinue && typeof onContinue === "function" ? (
-          <MessageActionButton
-            onClick={onContinue}
-            disabled={
-              continueDisabled ||
-              continuePending ||
-              regeneratePending ||
-              reportPending
-            }
-            label={
-              continueDisabled
-                ? continueDisabledReason || "Continue response unavailable"
-                : continuePending
-                ? "Continuing response"
-                : continueError
-                  ? `Continue response. Last attempt failed: ${continueError}`
-                  : "Continue response"
-            }
-            title={
-              continueDisabled
-                ? continueDisabledReason || "Continue response unavailable"
-                : continuePending
-                  ? "Continuing response"
-                : continueError || "Continue response"
-            }
-          >
-            {continuePending ? (
-              <Loader2 size={13} className="animate-spin" aria-hidden="true" />
-            ) : continueError ? (
-              <AlertCircle size={13} aria-hidden="true" />
-            ) : (
-              <StepForward size={13} aria-hidden="true" />
-            )}
-          </MessageActionButton>
-        ) : null}
-
-        {canReport && typeof onReport === "function" ? (
-          <MessageActionButton
-            onClick={onReport}
-            disabled={
-              reportPending ||
-              regeneratePending ||
-              continuePending ||
-              reportSubmitted
-            }
-            label={
-              reportPending
-                ? "Submitting report"
-                : reportSubmitted
-                  ? "Message reported"
-                  : reportError
-                    ? `Report message. Last attempt failed: ${reportError}`
-                    : "Report message"
-            }
-            title={
-              reportPending
-                ? "Submitting report"
-                : reportSubmitted
-                  ? "Reported"
-                  : reportError || "Report message"
-            }
-          >
-            {reportPending ? (
-              <Loader2 size={13} className="animate-spin" aria-hidden="true" />
-            ) : reportSubmitted ? (
-              <Check size={13} aria-hidden="true" />
-            ) : reportError ? (
-              <AlertCircle size={13} aria-hidden="true" />
-            ) : (
-              <Flag size={13} aria-hidden="true" />
-            )}
-          </MessageActionButton>
-        ) : null}
-      </div>
-    ) : null}
     </div>
   );
 }
 
+// Quiet icon actions under a bubble: 32px on a fine pointer, the 44px
+// floor on touch, the global focus ring.
 function MessageActionButton({
   onClick,
   disabled = false,
@@ -617,16 +719,16 @@ function MessageActionButton({
       disabled={disabled}
       aria-label={label}
       title={title}
-      className="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--ink-dim)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold-ornament)]/60 disabled:cursor-not-allowed disabled:opacity-60"
+      className="inline-flex h-8 w-8 touch-manipulation items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)] disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] [@media(pointer:coarse)]:h-[var(--control-md)] [@media(pointer:coarse)]:w-[var(--control-md)]"
     >
       {children}
     </button>
   );
 }
 
-function StatusPill({ children }) {
+function ModePill({ children }) {
   return (
-    <span className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+    <span className="rounded-[var(--radius-full)] bg-[var(--surface-3)] px-[var(--space-2)] py-px text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
       {children}
     </span>
   );

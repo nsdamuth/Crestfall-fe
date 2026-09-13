@@ -320,6 +320,7 @@ Scale (all locked; ratio 1.2 from 16px, leadings on the 4px grid):
 | `--text-eyebrow` / `--lh-eyebrow` / `--track-eyebrow` | 13 / 20 / .16em | Eyebrows (aliases of the ui step) |
 | `--text-cta` / `--lh-cta` | 16 / 24 | Button text (aliases of the body step) |
 | `--text-hero` / `--lh-hero` | fluid | Hero only, never product UI |
+| `--text-chat` / `--lh-chat` | 14 / 22 | Transcript body tier, RULED by Brian 13 Sep 2026 (fe/chat-studio brief 3 item 6): the story transcript's message body, and, RULED by Brian's review round 4 item 3 the same day, the transcript's notice cards (the player character prompt and the story error card: body copy, and the action label through `.cf-btn--notice` in `app/design-system.css`, which replaced `.cf-btn--field`). Legal only in `components/studio/story-rooms/story-room-message` and `components/studio/story-rooms/story-room-transcript/StoryRoomNoticeCard.jsx`; meta stays at `--text-label` and the speaker name reads `--text-lead` in the display font (RULED 13 Sep 2026, brief 4 item 10, raised one step by review round 4 item 1 and one more by round 5 item 1); never a field bed (that is `--text-input`), never any other surface. Check: `grep -rn 'text-chat\|lh-chat' app/ components/ docs/` returns only `app/theme.css`, `app/design-system.css` (the `.cf-btn--notice` rule), this file, the message package, and the transcript package (the notice card and its contract note) |
 
 Weights `--weight-regular/medium/bold` (400/500/700; 800 and 900 are
 banned), joined 22 Aug 2026 by `--weight-light` (300, A1, Fable law
@@ -372,7 +373,16 @@ Gap-6 law: speaker-name ink derived from a user-picked anchor color is
 clamped to a legible lightness range on dark surfaces (0.70 to 0.88)
 and its chroma is capped (0.12) so no anchor can shout. Body text ink
 inside a bubble is NEVER speaker-colored; it stays the standard `--ink`
-token regardless of the speaker's anchor. This supersedes, on the
+token regardless of the speaker's anchor. RULED 13 Sep 2026 (Brian,
+fe/chat-studio brief 4 item 10): the story transcript's speaker name
+(`components/studio/story-rooms/story-room-message`) leaves this ink
+and reads `--ink` in the display font at `--text-lead` (raised from
+`--text-ui` to `--text-body` by Brian's review round 4 item 1 and to
+`--text-lead` by round 5 item 1, same day),
+`--weight-medium`, no uppercase, no tracking, so it reads larger than
+the Opening scene eyebrow and never matches it; `--chat-speaker-name` stays the speaker-name
+ink for the `components/studio/chat` packages, and the anchor still
+tints that transcript's bubble and avatar tile. This supersedes, on the
 display side only, the fixture-only `--chat-msg-*` palette family
 named in "Proposed" below; that demo code may remain in
 `components/studio/chat/chat-message/ChatMessage.view.jsx` gated by
@@ -385,7 +395,7 @@ height, splitting the difference between `--control-sm` and
 `--control-md`; legal on search, dropdown, sort, and view-toggle
 controls on the sticky filter line, desktop widths only, always
 paired with a `[@media(pointer:coarse)]:min-h-[var(--control-md)]`
-override so touch keeps the 44px floor; never on any other control),
+override so touch keeps the 44px floor; RULED 13 Sep 2026 by Brian's story chat review round 7: also the compact button recipe `.cf-btn--compact` in `app/design-system.css` (the story details rail's Export and Share), on the same coarse-pointer pairing; never on any other control),
 `--control-md` 44 (the default and the touch floor), `--control-lg`
 48, `--icon-sm/md/lg` 16/20/24, `--container` 1200, `--measure` 68ch.
 All locked.

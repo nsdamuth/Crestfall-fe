@@ -131,6 +131,7 @@ export default function KitDropdownView({
   restingValue = null,
   align = "left",
   labelMode = "prefix",
+  placement = "down",
 }) {
   // Open flag, chassis-select flag (Sprint A Phase 4, docs/SPRINT-A-
   // PLAN.md section 5.2), measured flip, and popover-only dismissal:
@@ -209,14 +210,19 @@ export default function KitDropdownView({
         // review, GATE-LOG.md "FINAL RULING RENDER" item 2, GO 2B):
         // UI popovers use --panel-ui-glass at --blur-panel so the
         // surface follows Eggshell while over-art glass stays dark.
+        // placement (1.5.0, brief 2 item 4): "up" anchors the panel
+        // above the trigger (the composer's mode chip sits on the
+        // bottom edge of the viewport), horizontal alignment unchanged.
         <div
           ref={panelRef}
           role="listbox"
           aria-label={ariaLabel || label}
           aria-multiselectable={isMultiSelect}
-          className={`absolute top-[calc(100%+var(--space-1))] z-50 w-max max-h-[19rem] min-w-[13rem] max-w-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--panel-ui-glass)] p-[var(--space-2)] backdrop-blur-[var(--blur-panel)] ${
-            panelAlign === "right" ? "right-0" : "left-0"
-          }`}
+          className={`absolute z-50 w-max max-h-[19rem] min-w-[13rem] max-w-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--panel-ui-glass)] p-[var(--space-2)] backdrop-blur-[var(--blur-panel)] ${
+            placement === "up"
+              ? "bottom-[calc(100%+var(--space-1))]"
+              : "top-[calc(100%+var(--space-1))]"
+          } ${panelAlign === "right" ? "right-0" : "left-0"}`}
         >
           <PanelRows
             options={options}

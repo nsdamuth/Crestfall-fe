@@ -31,7 +31,10 @@ test("Character Advanced View is API, persistence, and application-feature free"
     /updateDataField|form\.data|relationship_to_player|appearance_notes|personality_notes|extra_runtime_notes|creator_directives/
   );
   assert.doesNotMatch(view, /AdvancedPromptingEditor/);
-  assert.doesNotMatch(view, /Scenario|Backstory/);
+  assert.match(view, /scenarioLabel/);
+  assert.match(view, /scenarioValue/);
+  assert.match(view, /onChangeScenario/);
+  assert.doesNotMatch(view, /Backstory/);
 });
 
 test("Character Advanced ViewModel owns normalization and storage mapping", () => {
@@ -39,6 +42,8 @@ test("Character Advanced ViewModel owns normalization and storage mapping", () =
     "components/studio/my-creations/edit/sections/character-advanced-section/useCharacterAdvancedSectionViewModel.js"
   );
   assert.match(viewModel, /normalizeText/);
+  assert.match(viewModel, /data\.scenario/);
+  assert.match(viewModel, /updateDataField\?\.\("scenario", value\)/);
   assert.match(viewModel, /relationship_to_player/);
   assert.match(viewModel, /appearance_notes/);
   assert.match(viewModel, /personality_notes/);
@@ -58,8 +63,11 @@ test("Character Advanced contract and fixtures cover portable states", () => {
   );
   assert.match(contract, /CHARACTER_ADVANCED_SECTION_VIEW_CONTRACT_VERSION/);
   assert.match(contract, /advancedPromptingControl/);
+  assert.match(contract, /scenarioValue/);
+  assert.match(contract, /onChangeScenario/);
   assert.match(contract, /showRelationshipToPlayer/);
   assert.match(contract, /onChangeRuntimeNotes/);
+  assert.match(fixtures, /scenarioValue/);
   assert.match(fixtures, /characterAdvancedSectionPopulatedFixture/);
   assert.match(fixtures, /characterAdvancedSectionEmptyFixture/);
   assert.match(fixtures, /characterAdvancedSectionLongContentFixture/);
@@ -91,5 +99,6 @@ test("Character Advanced package includes its documented handoff", () => {
   );
   assert.match(readme, /Portable LOOM boundary/);
   assert.match(readme, /creator_directives/);
+  assert.match(readme, /`scenario`/);
   assert.match(readme, /\/dev\/ui-preview\/character-advanced-section/);
 });

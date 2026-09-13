@@ -767,7 +767,9 @@ export default function StoryCharacterConfigurationView({
   statsConfiguration = null,
   skillsConfiguration = null,
   abilitySpellConfiguration = null,
+  playerCharacterAction = null,
   backHref = "/studio/v2/stories",
+  backLabel = "← Back to Story",
   InternalLinkComponent = "a",
 } = {}) {
   const LinkComponent = InternalLinkComponent;
@@ -807,6 +809,26 @@ export default function StoryCharacterConfigurationView({
             <p className="mt-1 text-xs text-[var(--muted)]">
               Actor mode: {String(actorMode || "NONE").replaceAll("_", " ")}
             </p>
+
+            {playerCharacterAction?.visible ? (
+              <div className="mt-4 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => playerCharacterAction.onSelect?.()}
+                  disabled={playerCharacterAction.busy}
+                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-[var(--foreground)] transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {playerCharacterAction.busy
+                    ? "Changing Player Character…"
+                    : "Change Player Character"}
+                </button>
+                {playerCharacterAction.errorMessage ? (
+                  <span className="text-sm text-red-200">
+                    {playerCharacterAction.errorMessage}
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
 
             {attachmentDomains.length ? (
               <div className="mt-4">
@@ -859,7 +881,7 @@ export default function StoryCharacterConfigurationView({
         href={backHref}
         className="inline-flex min-h-[var(--control-md)] items-center rounded-xl border border-white/10 px-4 py-2 text-sm text-[var(--muted)] transition hover:text-[var(--foreground)]"
       >
-        ← Back to Story
+        {backLabel}
       </LinkComponent>
     </section>
   );

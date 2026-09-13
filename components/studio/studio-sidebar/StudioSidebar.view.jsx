@@ -21,6 +21,8 @@ import {
   Users,
 } from "lucide-react";
 
+import RailPanelGlyph from "@/components/studio/story-rooms/story-room-chat-shell/RailPanelGlyph";
+
 const PREVIEW_SOON_LABEL = "Soon";
 
 const ICONS = Object.freeze({
@@ -95,10 +97,14 @@ export default function StudioSidebarView({
   return (
     <aside
       className={`
-        hidden shrink-0 border-r border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-5 transition-all duration-300 lg:sticky lg:top-0 lg:block lg:h-dvh lg:self-start lg:overflow-y-auto
-        ${collapsed ? "lg:w-16" : "lg:w-56"}
+        hidden shrink-0 border-r border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-5 transition-all duration-300 lg:sticky lg:top-0 lg:z-10 lg:block lg:h-dvh lg:self-start lg:overflow-y-auto
+        ${collapsed ? "lg:w-16" : "lg:w-56 lg:shadow-[var(--shadow-modal)]"}
       `}
     >
+      {/* Expanded, the rail carries --shadow-modal (brief 3 item 8, the
+          drawer role's token, the one existing shadow token whose role
+          covers a full-height panel) and sits one layer up so the shadow
+          separates it from the page; collapsed it carries none. */}
       {/* Collapsed header stacks the logo icon (Home link) above the
           collapse control, RULED 6 Sep 2026 (sidebar batch 1). The
           expanded header keeps its one-row lockup; the shift below
@@ -143,23 +149,13 @@ export default function StudioSidebarView({
           // Bare icon, no circle (Brian, 10 Sep 2026, session 2 review):
           // the ringed button fought the ringed logo mark beside it.
           // Same 44px target; hover and active read as the gold icon.
+          // The glyph is the shared panel toggle glyph (brief 3 item 3):
+          // one drawing for this toggle and the story chat's two rail
+          // toggles, turning 180 degrees between expanded and collapsed.
           className="grid h-[var(--control-md)] w-[var(--control-md)] shrink-0 place-items-center rounded-[var(--radius-md)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--gold-action)] active:text-[var(--gold-deep)]"
           aria-label={collapseAriaLabel}
         >
-          <svg
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <rect x="3" y="4" width="18" height="16" rx="2" />
-            <path d="M9 4v16" />
-          </svg>
+          <RailPanelGlyph side="left" open={!collapsed} />
         </button>
       </div>
 

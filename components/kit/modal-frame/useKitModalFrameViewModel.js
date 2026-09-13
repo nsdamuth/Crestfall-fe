@@ -19,6 +19,9 @@ import { useModalShellViewModel } from "@/components/ui/modal-shell/useModalShel
 const VARIANT_ALIGNMENT = {
   modal: "items-end p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
   sheet: "items-end p-0",
+  // drawer (1.7.0): the panel positions itself against the veil's left
+  // edge, so the veil's own alignment is left alone.
+  drawer: "p-0",
   viewer:
     "items-stretch p-0 min-[700px]:items-center min-[700px]:p-[var(--space-4)]",
 };
@@ -50,11 +53,28 @@ const VARIANT_ALIGNMENT = {
 // panelClassName still caps the fixed width down (max-width is a
 // different property and never collides). Under 700px the panel
 // stays full width, bottom-anchored (mobile modal law).
+//
+// Panel radius (1.8.0, 13 Sep 2026, fe/share-og follow-up 2): the
+// modal panel's corner radius reads the --panel-radius variable the
+// same way the width reads --panel-width, defaulting to the large
+// step every modal has always had; a caller sets a squarer step
+// through the panelRadius prop (the share sheet takes the medium
+// step) and no second radius utility ever competes with the recipe.
 const PANEL_RECIPE = {
   modal:
-    "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] [--panel-width:64rem] min-[700px]:max-h-[92dvh] min-[700px]:w-[min(var(--panel-width),calc(100vw-var(--space-8)))] min-[700px]:rounded-[var(--radius-lg)] min-[700px]:border-b min-[700px]:pb-0",
+    "relative w-full max-h-[92dvh] overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--panel-radius)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)] [--panel-width:64rem] [--panel-radius:var(--radius-lg)] min-[700px]:max-h-[92dvh] min-[700px]:w-[min(var(--panel-width),calc(100vw-var(--space-8)))] min-[700px]:rounded-[var(--panel-radius)] min-[700px]:border-b min-[700px]:pb-0",
   sheet:
     "relative w-full max-w-[100vw] max-h-[92dvh] overflow-x-hidden overflow-y-auto bg-[image:var(--grad-panel-lift)] border border-[var(--line)] shadow-[var(--shadow-modal)] rounded-t-[var(--radius-lg)] rounded-b-none border-b-0 pb-[env(safe-area-inset-bottom)]",
+  // drawer (1.7.0, fe/chat-studio brief 2 item 11, 13 Sep 2026): the
+  // sheet's recipe docked to the LEFT edge at full viewport height, for
+  // a side sheet such as the story chat's mobile story list. Same
+  // panel-lift surface, --line hairline on its right edge, --radius-lg
+  // on the right corners, the sheet's structural header row with the
+  // close control, a flex column so the caller's content can own the
+  // scroll. Absolutely positioned against the veil so no alignment
+  // utility has to beat the shell's own centering.
+  drawer:
+    "absolute left-0 top-0 flex h-[100dvh] max-h-[100dvh] w-[min(20rem,88vw)] flex-col overflow-hidden bg-[image:var(--grad-panel-lift)] border-r border-[var(--line)] shadow-[var(--shadow-modal)] rounded-r-[var(--radius-lg)] pb-[env(safe-area-inset-bottom)]",
   // R2/R5 (10 Aug 2026, kit polish 3 pass, plan 1.2): the viewer is
   // its own surface, never a panel with an image inside it. No
   // background, border, shadow, or radius anywhere; a transparent
@@ -82,6 +102,7 @@ const PANEL_RECIPE = {
 const VARIANT_VEIL = {
   modal: undefined,
   sheet: undefined,
+  drawer: undefined,
   viewer: "bg-[var(--chrome-wash)] backdrop-blur-[var(--blur-panel)]",
 };
 
@@ -104,6 +125,7 @@ export function useKitModalFrameViewModel({
   variant = "modal",
   panelClassName = "",
   panelWidth = "",
+  panelRadius = "",
   panelStyle: callerPanelStyle = null,
   hasUnsavedChanges = false,
   sheetGrabber = false,
@@ -113,7 +135,13 @@ export function useKitModalFrameViewModel({
   ariaLabel,
 } = {}) {
   const resolvedVariant =
-    variant === "sheet" ? "sheet" : variant === "viewer" ? "viewer" : "modal";
+    variant === "sheet"
+      ? "sheet"
+      : variant === "drawer"
+        ? "drawer"
+        : variant === "viewer"
+          ? "viewer"
+          : "modal";
   const onCloseCallback = toCallback(onClose);
   const [isConfirmingDismiss, setIsConfirmingDismiss] = useState(false);
 
@@ -169,10 +197,14 @@ export function useKitModalFrameViewModel({
         resolvedVariant === "modal" && typeof panelWidth === "string" && panelWidth.trim()
           ? { "--panel-width": panelWidth.trim() }
           : null;
+      const radiusStyle =
+        resolvedVariant === "modal" && typeof panelRadius === "string" && panelRadius.trim()
+          ? { "--panel-radius": panelRadius.trim() }
+          : null;
       const ownStyle =
         callerPanelStyle && typeof callerPanelStyle === "object" ? callerPanelStyle : null;
-      if (!widthStyle && !ownStyle) return undefined;
-      return { ...(ownStyle || {}), ...(widthStyle || {}) };
+      if (!widthStyle && !radiusStyle && !ownStyle) return undefined;
+      return { ...(ownStyle || {}), ...(radiusStyle || {}), ...(widthStyle || {}) };
     })(),
     ariaLabelledBy: hasOwnLabelledBy
       ? ariaLabelledBy

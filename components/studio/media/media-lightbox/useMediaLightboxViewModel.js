@@ -418,21 +418,13 @@ export function useMediaLightboxViewModel({
     await persistRename("");
   }
 
+  // Copy link only (fe/share-og follow-up 2: no native share anywhere).
   async function handleShare() {
     setShareMessage("");
 
     try {
-      if (navigator?.share) {
-        await navigator.share({
-          title: activeTitleOverride || activeMedia?.title || "Image",
-          url: shareUrl,
-        });
-        setShareMessage("Shared.");
-        return;
-      }
-
       await navigator.clipboard.writeText(shareUrl);
-      setShareMessage("Link copied.");
+      setShareMessage("Link copied");
     } catch {
       setShareMessage("Share unavailable.");
     }

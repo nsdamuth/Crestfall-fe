@@ -19,20 +19,31 @@ test("Room & Cast no longer receives the Set Player Character quick action", () 
   assert.doesNotMatch(castBlock, /onSetPlayerCharacter/);
 });
 
-test("transcript receives a transient blue Player Character system prompt", () => {
+test("transcript receives a transient Player Character prompt on the notice card recipe", () => {
   const vm = read(
     "components/studio/story-rooms/story-room-chat-shell/useStoryRoomChatShellViewModel.js"
   );
   const transcript = read(
     "components/studio/story-rooms/story-room-transcript/StoryRoomTranscript.view.jsx"
   );
+  const noticeCard = read(
+    "components/studio/story-rooms/story-room-transcript/StoryRoomNoticeCard.jsx"
+  );
 
   assert.match(vm, /playerCharacterPrompt:/);
   assert.match(vm, /visible: Boolean\(canSetPlayerCharacter\) && !firstMessageSubmitted/);
   assert.match(transcript, /PlayerCharacterPromptCard/);
-  assert.match(transcript, /border-sky-400\/25 bg-sky-400\/10/);
-  assert.match(transcript, /Select Player Character/);
-  assert.match(transcript, /Change Player Character/);
+  // Story Chat presentation restoration: informational notices are blue
+  // again while the existing danger tokens remain reserved for errors.
+  assert.match(transcript, /StoryRoomNoticeCard/);
+  assert.match(noticeCard, /border-sky-400\/20 bg-sky-400\/10/);
+  assert.match(noticeCard, /text-sky-100\/80/);
+  assert.match(noticeCard, /cf-btn cf-btn--secondary/);
+  assert.match(noticeCard, /--status-danger-border/);
+  assert.match(noticeCard, /--status-danger-text/);
+  assert.match(transcript, /Select player character/);
+  assert.match(transcript, /Change player character/);
+  assert.match(transcript, /eyebrow="Story error"/);
 });
 
 test("first real sent message removes the prompt, but failed sends restore it", () => {

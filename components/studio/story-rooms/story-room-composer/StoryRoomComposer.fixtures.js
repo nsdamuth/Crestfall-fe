@@ -4,15 +4,14 @@ const returnNull = () => null;
 const defaultInputModeOptions = [
   { value: "DIALOGUE", label: "Dialogue" },
   { value: "ACTION", label: "Action" },
-  { value: "OOC", label: "OOC / Note" },
-  { value: "DIRECT", label: "Direct / GM" },
+  { value: "OOC", label: "OOC" },
+  { value: "DIRECT", label: "Direct" },
 ];
 
 const defaultSpeakerOptions = [
   { id: "AUTO", label: "Auto", iconKind: "auto" },
   { id: "narrator-1", label: "The Chronicler", iconKind: "narrator" },
-  { id: "character-1", label: "Seraphine Vale", iconKind: "participant" },
-  { id: "RANDOM", label: "Random", iconKind: "random" },
+  { id: "character-1", label: "Seraphine Vale", iconKind: "participant", avatarUrl: "" },
 ];
 
 const defaultCallbacks = {
@@ -24,11 +23,14 @@ const defaultCallbacks = {
   onSelectHighlightedMention: returnNull,
   onSelectMention: returnNull,
   onDismissMentionSuggestions: noop,
+  onAuto: noop,
+  onOpenStoryList: noop,
+  onOpenSettings: noop,
   onSend: noop,
-  onOpenCast: noop,
-  onOpenState: noop,
 };
 
+// Contract 3.0.0 (brief 2 item 1): the send circle posts the draft only,
+// so the default (empty) fixture has send disabled and Auto enabled.
 function createFixture(overrides = {}) {
   return {
     inputModeOptions: defaultInputModeOptions,
@@ -38,19 +40,40 @@ function createFixture(overrides = {}) {
     draft: "",
     mentionSuggestions: [],
     highlightedMentionIndex: 0,
-    placeholder: "Write dialogue or natural player input...",
+    placeholder: "Send a message",
     textareaDisabled: false,
-    sendDisabled: false,
+    sendDisabled: true,
     isSending: false,
-    submitIsContinuation: true,
-    submitLabel: "Continue Scene",
-    submitPendingLabel: "Choosing next responder...",
+    submitLabel: "Send",
+    submitPendingLabel: "Sending",
+    autoDisabled: false,
+    autoLabel: "Auto: the story chooses who speaks next",
+    autoPendingLabel: "Choosing the next speaker",
+    sceneImageState: "soon",
+    sceneImageLabel: "Scene image, not available yet",
+    addCharacter: { disabled: false, title: "Add character", onPress: noop },
     ...defaultCallbacks,
     ...overrides,
   };
 }
 
+// Contract 5.1.0 (brief 4 item 5): the add character circle at the cap.
+export const storyRoomComposerCastCapFixture = createFixture({
+  addCharacter: { disabled: true, title: "Up to 4 characters", onPress: noop },
+});
+
 export const storyRoomComposerDefaultFixture = createFixture();
+
+// Contract 5.0.0 (brief 4 item 4): the player circle as a button that
+// asks the player character to speak next.
+export const storyRoomComposerPlayerSpeaksFixture = createFixture({
+  playerCircle: {
+    label: "Rowan Vale",
+    avatarUrl: "",
+    canSpeak: true,
+    onSpeak: noop,
+  },
+});
 
 export const storyRoomComposerAutoContinueFixture = createFixture();
 
@@ -58,19 +81,12 @@ export const storyRoomComposerDraftFixture = createFixture({
   inputMode: "ACTION",
   nextSpeaker: "character-1",
   draft: "Seraphine steps between the envoy and the sealed gate.",
-  placeholder: "Describe an action visible in the scene...",
   sendDisabled: false,
-  submitIsContinuation: false,
-  submitLabel: "Send",
-  submitPendingLabel: "Sending...",
 });
 
 export const storyRoomComposerMentionFixture = createFixture({
   draft: "I turn toward @ser",
   sendDisabled: false,
-  submitIsContinuation: false,
-  submitLabel: "Send",
-  submitPendingLabel: "Sending...",
   mentionSuggestions: [
     {
       id: "character-1",
@@ -92,26 +108,20 @@ export const storyRoomComposerSendingFixture = createFixture({
   draft: "The bargain is accepted.",
   textareaDisabled: true,
   sendDisabled: true,
+  autoDisabled: true,
   isSending: true,
-  submitIsContinuation: false,
-  submitLabel: "Send",
-  submitPendingLabel: "Sending...",
 });
 
 export const storyRoomComposerDisabledFixture = createFixture({
-  draft: "This draft remains visible while the room is unavailable.",
+  draft: "This draft remains visible while the story is unavailable.",
+  disabledReason: "Chat is not available for this account.",
   textareaDisabled: true,
   sendDisabled: true,
-  submitIsContinuation: false,
-  submitLabel: "Send",
-  submitPendingLabel: "Sending...",
+  autoDisabled: true,
 });
 
 export const storyRoomComposerMinimalOptionsFixture = createFixture({
-  nextSpeakerOptions: [
-    { id: "AUTO", label: "Auto", iconKind: "auto" },
-    { id: "RANDOM", label: "Random", iconKind: "random" },
-  ],
+  nextSpeakerOptions: [{ id: "AUTO", label: "Auto", iconKind: "auto" }],
 });
 
 export const storyRoomComposerLongContentFixture = createFixture({
@@ -123,13 +133,13 @@ export const storyRoomComposerLongContentFixture = createFixture({
       label: "Aurelia Vespera, Last Cartographer of the Ninth Gate",
       iconKind: "participant",
     },
+    { id: "character-3", label: "Brannoc", iconKind: "participant" },
+    { id: "character-4", label: "Ilse of the Weir", iconKind: "participant" },
+    { id: "character-5", label: "Tamsin", iconKind: "participant" },
+    { id: "character-6", label: "Oren Vale", iconKind: "participant" },
   ],
   nextSpeaker: "character-long",
   draft:
     "Slow the scene and let every present character react to the revelation before advancing the objective. Preserve the uncertainty around the sealed archive, emphasize the sound of distant machinery, and allow the player to interrupt before the narrator resolves the moment.",
-  placeholder: "Steer pacing, scene direction, or GM-style movement...",
   sendDisabled: false,
-  submitIsContinuation: false,
-  submitLabel: "Send",
-  submitPendingLabel: "Sending...",
 });

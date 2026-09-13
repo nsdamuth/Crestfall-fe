@@ -94,8 +94,25 @@ function makeFixture(overrides = {}) {
     error: null,
     deletingRoom: false,
     deleteError: "",
-    leftOpen: true,
+    leftOpen: false,
     rightOpen: true,
+    railsState: "right",
+    swipeEnabled: false,
+    primaryCharacter: { label: "Mara Vale", avatarUrl: "" },
+    backHref: "/studio/v2/stories",
+    storyListProps: {
+      currentRoomId: "room-lantern",
+      refetchKey: 2,
+      newChat: {
+        label: "New chat",
+        pendingLabel: "Starting",
+        pending: false,
+        disabled: false,
+        title: "New chat from The Lantern Below",
+        errorMessage: "",
+        onPress: () => {},
+      },
+    },
     mobilePanel: null,
     composerHelpPanel: null,
     ...overrides,
@@ -125,6 +142,23 @@ export const storyRoomChatShellDeleteErrorFixture = makeFixture({
 export const storyRoomChatShellCollapsedFixture = makeFixture({
   leftOpen: false,
   rightOpen: false,
+  railsState: "none",
+});
+
+export const storyRoomChatShellStoryListFixture = makeFixture({
+  leftOpen: true,
+  rightOpen: false,
+  railsState: "left",
+});
+
+export const storyRoomChatShellBothRailsFixture = makeFixture({
+  leftOpen: true,
+  rightOpen: true,
+  railsState: "both",
+});
+
+export const storyRoomChatShellPhoneFixture = makeFixture({
+  swipeEnabled: true,
 });
 
 export const storyRoomChatShellCommandsFixture = makeFixture({
@@ -135,10 +169,20 @@ export const storyRoomChatShellHelpFixture = makeFixture({
   composerHelpPanel: "HELP",
 });
 
-export const storyRoomChatShellMobileCastFixture = makeFixture({
-  mobilePanel: "cast",
+// The story list as a left sheet below md (brief 2 item 11); the
+// gallery panel retired with the mobile bar's media button.
+export const storyRoomChatShellMobileStoryListFixture = makeFixture({
+  swipeEnabled: true,
+  mobilePanel: "stories",
 });
 
+// The preview harness (app/dev/ui-preview, never edited) imports this
+// name; the cast drawer retired in item 6, so it now names the story
+// list sheet.
+export const storyRoomChatShellMobileCastFixture = storyRoomChatShellMobileStoryListFixture;
+
+// The right sheet below md (item 6); the name predates the rail.
 export const storyRoomChatShellMobileStateFixture = makeFixture({
-  mobilePanel: "state",
+  swipeEnabled: true,
+  mobilePanel: "details",
 });

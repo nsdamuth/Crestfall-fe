@@ -10,6 +10,7 @@ import {
   fetchStoryRoom,
   fetchStorySkillsCharacterConfiguration,
   fetchStoryStatsPoolsCharacterConfiguration,
+  setStoryRoomPlayerCharacter,
 } from "@/lib/client/studio/story-rooms/storyRoomClient";
 import {
   getStoryPlayerActorConfigurationDescriptor,
@@ -452,6 +453,9 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
   const [savingAbilitySpell, setSavingAbilitySpell] = useState(false);
   const [error, setError] = useState("");
   const [saveMessage, setSaveMessage] = useState("");
+  const [playerCharacterPickerOpen, setPlayerCharacterPickerOpen] = useState(false);
+  const [settingPlayerCharacter, setSettingPlayerCharacter] = useState(false);
+  const [setPlayerCharacterError, setSetPlayerCharacterError] = useState("");
 
   async function load() {
     setLoading(true);
@@ -514,6 +518,28 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
     ),
     [abilitySpellConfiguration, abilitySpellSelectionDraft, abilitySpellAuthoringDraft]
   );
+
+
+  async function choosePlayerCharacter(playerCharacter) {
+    const playerCharacterId = String(playerCharacter?.id || "").trim();
+    if (!roomId || !playerCharacterId || settingPlayerCharacter) return;
+
+    setSettingPlayerCharacter(true);
+    setSetPlayerCharacterError("");
+    setError("");
+    setSaveMessage("");
+    try {
+      await setStoryRoomPlayerCharacter(roomId, playerCharacterId);
+      setPlayerCharacterPickerOpen(false);
+      await load();
+    } catch (selectionError) {
+      setSetPlayerCharacterError(
+        selectionError?.message || "Player Character could not be changed."
+      );
+    } finally {
+      setSettingPlayerCharacter(false);
+    }
+  }
 
   async function saveStats() {
     if (savingStats || !roomId) return;
@@ -649,6 +675,28 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
       status: descriptor?.configurationStatus || "NOT_APPLICABLE",
       attachmentDomains: normalizeArray(plan.attachmentDomains),
       configurationDomains: normalizeArray(plan.configurationDomains),
+      playerCharacterAction: descriptor
+        ? {
+            visible: true,
+            busy: settingPlayerCharacter,
+            errorMessage: setPlayerCharacterError,
+            onSelect: () => {
+              if (!settingPlayerCharacter) {
+                setSetPlayerCharacterError("");
+                setPlayerCharacterPickerOpen(true);
+              }
+            },
+          }
+        : null,
+      playerCharacterPickerProps: playerCharacterPickerOpen
+        ? {
+            selectedId: descriptor?.playerCharacterId || "",
+            onClose: () => {
+              if (!settingPlayerCharacter) setPlayerCharacterPickerOpen(false);
+            },
+            onSelect: choosePlayerCharacter,
+          }
+        : null,
       statsConfiguration: statsRequired
         ? {
             required: true,
@@ -771,9 +819,11 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
             onSave: saveAbilitySpell,
           }
         : null,
-      backHref: roomId
-        ? buildStoryChatHref(roomId)
-        : "/studio/v2/stories",
+      backHref:
+        required || !roomId
+          ? "/studio/v2/stories"
+          : buildStoryChatHref(roomId),
+      backLabel: required ? "← Exit to Stories" : "← Back to Story",
     };
   }, [
     abilitySpellAuthoringDraft,
@@ -785,6 +835,9 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
     loading,
     roomId,
     saveMessage,
+    playerCharacterPickerOpen,
+    setPlayerCharacterError,
+    settingPlayerCharacter,
     savingAbilitySpell,
     savingSkills,
     savingStats,

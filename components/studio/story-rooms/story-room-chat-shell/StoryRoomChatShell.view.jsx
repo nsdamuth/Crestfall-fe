@@ -1,16 +1,9 @@
-import {
-  Command,
-  HelpCircle,
-  Keyboard,
-  MapPin,
-  PanelLeftClose,
-  PanelLeftOpen,
-  PanelRightClose,
-  PanelRightOpen,
-} from "lucide-react";
+import { ChevronLeft, Command, HelpCircle, Keyboard, MapPin } from "lucide-react";
 
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
+import RailPanelGlyph, { BARE_ICON_BUTTON_CLASS } from "./RailPanelGlyph";
+import StoryChatDialog from "./StoryChatDialog";
 import { STORY_ROOM_DELETE_CONFIRMATION_LINES } from "./useStoryRoomChatShellViewModel";
 import {
   isStoryRoomSwipeInteractiveTarget,
@@ -20,47 +13,53 @@ import {
 const EYEBROW_CLASS =
   "text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
+// Three flush columns at md and up (fe/chat-studio item 1, 12 Sep 2026):
+// the grid geometry lives in app/design-system.css under
+// .cf-story-room-grid[data-rails], the rails collapse to one bare 44px
+// edge toggle each, and below md the page is one column under its own
+// 44px bar. An open rail sits on --surface-2, one step above the
+// primary sidebar, with a hairline against the center, which stays on
+// the canvas, so the three columns read as three surfaces (brief 2
+// item 6, replacing the card-surface amendment). The View owns no
+// viewport reads: `swipeEnabled` arrives from the ViewModel.
 export default function StoryRoomChatShellView({
   room = {},
-  layoutClass = "grid min-h-0 flex-1 gap-5",
-  leftOpen = true,
+  railsState = "right",
+  leftOpen = false,
   rightOpen = true,
+  swipeEnabled = false,
+  primaryCharacter = null,
+  backHref = "/studio/v2/stories",
   mobilePanel = null,
   composerHelpPanel = null,
   commands = [],
   statusSurfaces = [],
   commandCatalogError = "",
   statusSurfaceError = "",
-  castPanelProps = {},
-  mobileCastPanelProps = {},
+  storyListProps = {},
   transcriptProps = {},
   composerProps = {},
-  desktopStatePanelProps = {},
-  mobileStatePanelProps = {},
-  runtimeMechanicsPanelProps = null,
+  detailsRailProps = {},
+  mobileDetailsRailProps = {},
   onToggleLeftPanel,
   onToggleRightPanel,
-  onShowLeftPanel,
-  onShowRightPanel,
-  onOpenMobileCast,
-  onOpenMobileState,
+  onOpenMobileDetails,
+  onOpenMobileStoryList,
   onCloseMobilePanel,
   onCloseComposerHelpPanel,
   isConfirmingDeleteRoom = false,
+  isDeletingRoom = false,
   onCancelDeleteRoom,
   onConfirmDeleteRoom,
-  CastPanelComponent,
   ComposerComponent,
-  MobileDrawerComponent,
-  RuntimeMechanicsPanelComponent,
-  StatePanelComponent,
+  DetailsRailComponent,
   StatusSurfaceHostComponent,
+  StoryListComponent,
   TranscriptComponent,
+  LinkComponent = "a",
 }) {
   function handleSwipeStart(event) {
-    if (typeof window !== "undefined" && window.matchMedia("(min-width: 1280px)").matches) {
-      return;
-    }
+    if (!swipeEnabled) return;
 
     if (isStoryRoomSwipeInteractiveTarget(event.target)) {
       event.currentTarget.dataset.storyRoomSwipeStartX = "";
@@ -95,32 +94,55 @@ export default function StoryRoomChatShellView({
       deltaY: touch.clientY - startY,
     });
 
-    if (action === "OPEN_CAST") onOpenMobileCast?.();
-    if (action === "OPEN_STATE") onOpenMobileState?.();
+    // Below md a left swipe opens the story details sheet; the right
+    // swipe retired with the cast drawer (item 6).
+    if (action === "OPEN_STATE") onOpenMobileDetails?.();
   }
 
   return (
     <section
       onTouchStart={handleSwipeStart}
       onTouchEnd={handleSwipeEnd}
-      className="-mx-[var(--space-5)] -mt-[var(--topbar-h)] flex h-[100dvh] min-h-0 flex-col overflow-hidden sm:-mx-[var(--space-8)] lg:mx-0 lg:mt-0 lg:h-[calc(100dvh-5rem)] xl:h-[calc(100vh-7rem)]"
+      className="flex h-[100dvh] md:h-[calc(100dvh-var(--topbar-h))] min-h-0 w-full max-w-full min-w-0 flex-col overflow-hidden"
     >
-      <div className={layoutClass}>
-        <div className="hidden min-h-0 xl:block">
-          {leftOpen ? (
-            CastPanelComponent ? (
-              <CastPanelComponent {...castPanelProps} />
-            ) : null
-          ) : (
-            <PanelRevealButton
-              side="left"
-              label="Show Cast"
-              onClick={onShowLeftPanel}
-            />
-          )}
+      <StoryChatMobileBar
+        title={room?.title}
+        primaryCharacter={primaryCharacter}
+        backHref={backHref}
+        mobilePanel={mobilePanel}
+        onOpenStoryList={onOpenMobileStoryList}
+        onOpenDetails={onOpenMobileDetails}
+        LinkComponent={LinkComponent}
+      />
+
+      <div className="cf-story-room-grid min-h-0 flex-1" data-rails={railsState}>
+        {/* A closed rail carries no surface (brief 2 item 5): the toggle
+            is a bare icon on the page canvas, no fill, no border, no
+            column color. An open rail sits one step above the primary
+            sidebar's --surface-1 (brief 2 item 6), on --surface-2 with
+            the --line-whisper divider against the center; the rail
+            views paint no surface of their own, so the tier steps
+            resolve from this column. */}
+        <div
+          className={`hidden min-h-0 flex-col md:flex ${
+            leftOpen ? "border-r border-[var(--line-whisper)] bg-[var(--surface-2)]" : ""
+          }`}
+        >
+          <RailEdgeToggle
+            side="left"
+            open={leftOpen}
+            onClick={onToggleLeftPanel}
+            openLabel="Open story list"
+            closeLabel="Close story list"
+          />
+          {leftOpen && StoryListComponent ? (
+            <div className="min-h-0 flex-1">
+              <StoryListComponent {...storyListProps} />
+            </div>
+          ) : null}
         </div>
 
-        <main className="flex min-h-0 flex-col overflow-hidden bg-[var(--surface-1)] xl:rounded-[var(--radius-lg)] xl:border xl:border-[var(--line-whisper)]">
+        <main className="flex min-h-0 min-w-0 flex-col overflow-hidden bg-[var(--canvas)]">
           {StatusSurfaceHostComponent ? (
             <StatusSurfaceHostComponent
               surfaces={statusSurfaces}
@@ -128,14 +150,6 @@ export default function StoryRoomChatShellView({
               room={room}
             />
           ) : null}
-
-          <StoryRoomHeader
-            room={room}
-            leftOpen={leftOpen}
-            rightOpen={rightOpen}
-            onToggleLeftPanel={onToggleLeftPanel}
-            onToggleRightPanel={onToggleRightPanel}
-          />
 
           {TranscriptComponent ? (
             <TranscriptComponent {...transcriptProps} />
@@ -160,33 +174,47 @@ export default function StoryRoomChatShellView({
               {statusSurfaceError}
             </p>
           ) : null}
-
-          <div className="shrink-0">
-            {ComposerComponent ? <ComposerComponent {...composerProps} /> : null}
-          </div>
         </main>
 
-        <div className="hidden min-h-0 overflow-y-auto pr-1 xl:block">
-          {rightOpen ? (
-            <div className="min-w-0 pb-4">
-              {StatePanelComponent ? (
-                <StatePanelComponent {...desktopStatePanelProps} />
-              ) : null}
-              {RuntimeMechanicsPanelComponent && runtimeMechanicsPanelProps ? (
-                <RuntimeMechanicsPanelComponent
-                  {...runtimeMechanicsPanelProps}
-                />
-              ) : null}
+        <div
+          className={`hidden min-h-0 flex-col md:flex ${
+            rightOpen ? "border-l border-[var(--line-whisper)] bg-[var(--surface-2)]" : ""
+          }`}
+        >
+          <RailEdgeToggle
+            side="right"
+            open={rightOpen}
+            onClick={onToggleRightPanel}
+            openLabel="Open story details"
+            closeLabel="Close story details"
+          />
+          {rightOpen && DetailsRailComponent ? (
+            <div className="min-h-0 flex-1">
+              <DetailsRailComponent {...detailsRailProps} />
             </div>
-          ) : (
-            <PanelRevealButton
-              side="right"
-              label="Show State"
-              onClick={onShowRightPanel}
-            />
-          )}
+          ) : null}
         </div>
       </div>
+
+      {/* The composer bar (brief 3 item 1): one full-width row beneath
+          both rails. The rails end at this row's top edge; the bar's
+          surface and top hairline run edge to edge, and the composer's
+          content sits in the same grid column as the transcript, so the
+          field and its buttons keep the transcript's width and stay
+          centered under it at every rail state. The two side cells are
+          empty spacers at md and up and do not render below md. */}
+      {ComposerComponent ? (
+        <div
+          className="cf-story-room-grid relative z-50 shrink-0 border-t border-[var(--line-whisper)] bg-[var(--canvas)]"
+          data-rails={railsState}
+        >
+          <div aria-hidden="true" className="hidden md:block" />
+          <div className="min-w-0">
+            <ComposerComponent {...composerProps} />
+          </div>
+          <div aria-hidden="true" className="hidden md:block" />
+        </div>
+      ) : null}
 
       {composerHelpPanel ? (
         <StoryRoomComposerHelpPanel
@@ -196,81 +224,162 @@ export default function StoryRoomChatShellView({
         />
       ) : null}
 
-      {mobilePanel === "cast" && MobileDrawerComponent ? (
-        <MobileDrawerComponent
-          title="Room & Cast"
-          side="left"
-          onClose={onCloseMobilePanel}
-        >
-          {CastPanelComponent ? (
-            <CastPanelComponent {...mobileCastPanelProps} />
-          ) : null}
-        </MobileDrawerComponent>
+      {/* Below md the story list opens as a left sheet (brief 2 item 11)
+          from the mobile bar's story list button (brief 3 item 10), on
+          the frame's drawer variant; the same story list package the
+          left rail mounts. */}
+      {mobilePanel === "stories" && StoryListComponent ? (
+        <KitModalFrame variant="drawer" onClose={onCloseMobilePanel} ariaLabel="Stories">
+          <div className="flex min-h-0 flex-1 flex-col">
+            <StoryListComponent {...storyListProps} />
+          </div>
+        </KitModalFrame>
       ) : null}
 
-      {mobilePanel === "state" && MobileDrawerComponent ? (
-        <MobileDrawerComponent
-          title="Chronicle State"
-          side="right"
+      {mobilePanel === "details" && DetailsRailComponent ? (
+        <KitModalFrame
+          variant="sheet"
+          sheetGrabber
           onClose={onCloseMobilePanel}
+          ariaLabel="Story details"
         >
-          {StatePanelComponent ? (
-            <StatePanelComponent {...mobileStatePanelProps} />
-          ) : null}
-          {RuntimeMechanicsPanelComponent && runtimeMechanicsPanelProps ? (
-            <RuntimeMechanicsPanelComponent
-              {...runtimeMechanicsPanelProps}
-            />
-          ) : null}
-        </MobileDrawerComponent>
+          {/* The frame's sheet caps at 92dvh; the rail scrolls inside a
+              bounded column. Delete story is owned by the shared Details
+              rail content at the bottom, safely away from the sheet edge. */}
+          <div className="flex h-[84dvh] min-h-0 w-full flex-col">
+            <DetailsRailComponent {...mobileDetailsRailProps} />
+          </div>
+        </KitModalFrame>
       ) : null}
 
       {isConfirmingDeleteRoom ? (
-        <DeleteRoomConfirmSheet
-          onCancel={onCancelDeleteRoom}
-          onConfirm={onConfirmDeleteRoom}
+        <StoryChatDialog
+          eyebrow="Story"
+          title={STORY_ROOM_DELETE_CONFIRMATION_LINES[0]}
+          sentence={STORY_ROOM_DELETE_CONFIRMATION_LINES[2]}
+          tone="danger"
+          titleId="story-room-delete-title"
+          secondary={{ label: "Cancel", onPress: onCancelDeleteRoom }}
+          primary={{
+            label: "Delete story",
+            busyLabel: "Deleting",
+            busy: isDeletingRoom,
+            onPress: onConfirmDeleteRoom,
+          }}
+          onClose={onCancelDeleteRoom}
         />
       ) : null}
     </section>
   );
 }
 
-// B5 destructive-action modal confirm, RULED (ED1G ruling 5): replaces
-// the room delete flow's prior window.confirm. Same fade-divider,
-// ends-aligned Cancel / danger-filled CTA footer as the chat family's
-// own delete confirms.
-function DeleteRoomConfirmSheet({ onCancel, onConfirm }) {
-  return (
-    <KitModalFrame variant="sheet" onClose={onCancel} ariaLabel="Confirm delete Story">
-      <div className="p-[var(--space-5)]">
-        {STORY_ROOM_DELETE_CONFIRMATION_LINES.map((line, index) =>
-          line ? (
-            <p
-              key={`delete-room-line-${index}`}
-              className={
-                index === 0
-                  ? "font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
-                  : "mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]"
-              }
-            >
-              {line}
-            </p>
-          ) : (
-            <div key={`delete-room-gap-${index}`} className="h-[var(--space-2)]" />
-          )
-        )}
+// D2 below md: one 44px bar. Back chevron to the Stories page, the
+// primary character's circle, the title truncated, then the two panel
+// buttons pinned right (brief 3 item 10 returns them from the
+// composer's rows; the media button stays retired). Brief 4 item 7: both
+// carry the desktop rail toggles' glyph, the story list glyph on the
+// left and the details glyph on the right, no gear, with the same 180
+// degree turn while their sheet is open (RailPanelGlyph reads `open`).
+function StoryChatMobileBar({
+  title = "",
+  primaryCharacter = null,
+  backHref = "/studio/v2/stories",
+  mobilePanel = null,
+  onOpenStoryList,
+  onOpenDetails,
+  LinkComponent = "a",
+}) {
+  const initial = String(primaryCharacter?.label || title || "S")
+    .trim()
+    .charAt(0)
+    .toUpperCase();
 
-        <div aria-hidden="true" className="mt-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
-        <div className="mt-[var(--space-4)] flex flex-wrap items-center justify-between gap-[var(--space-2)]">
-          <button type="button" onClick={() => onCancel?.()} className="cf-btn cf-btn--secondary">
-            Cancel
-          </button>
-          <button type="button" onClick={() => onConfirm?.()} className="cf-btn cf-btn--danger-filled">
-            Delete Story
-          </button>
-        </div>
-      </div>
-    </KitModalFrame>
+  return (
+    // One tier above the canvas on --surface-1 with --shadow-modal
+    // beneath it (brief 3 item 11, the item 8 token), one layer up so
+    // the shadow falls on the transcript and bubbles and bar never blend.
+    <div className="relative z-10 flex h-[var(--control-md)] shrink-0 items-center gap-[var(--space-1)] border-b border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-2)] shadow-[var(--shadow-modal)] md:hidden">
+      <LinkComponent
+        href={backHref}
+        aria-label="Back to stories"
+        className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] text-[var(--ink-dim)] transition-colors duration-[var(--dur-hover)] hover:text-[var(--ink)]"
+      >
+        <ChevronLeft size={20} aria-hidden="true" />
+      </LinkComponent>
+
+      <span className="flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 items-center justify-center">
+        {primaryCharacter?.avatarUrl ? (
+          <img
+            src={primaryCharacter.avatarUrl}
+            alt=""
+            className="h-8 w-8 rounded-[var(--radius-full)] object-cover"
+          />
+        ) : (
+          <span
+            aria-hidden="true"
+            className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-full)] bg-[var(--surface-3)] font-display text-[length:var(--text-ui)] text-[var(--gold-ornament)]"
+          >
+            {initial}
+          </span>
+        )}
+      </span>
+
+      <h1 className="min-w-0 flex-1 truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] text-[var(--ink)]">
+        {title}
+      </h1>
+
+      <button
+        type="button"
+        onClick={() => onOpenStoryList?.()}
+        aria-label="Open story list"
+        aria-expanded={mobilePanel === "stories"}
+        title="Stories"
+        className={BARE_ICON_BUTTON_CLASS}
+      >
+        <RailPanelGlyph side="left" open={mobilePanel === "stories"} />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => onOpenDetails?.()}
+        aria-label="Story details"
+        aria-expanded={mobilePanel === "details"}
+        title="Story details"
+        className={BARE_ICON_BUTTON_CLASS}
+      >
+        <RailPanelGlyph side="right" open={mobilePanel === "details"} />
+      </button>
+    </div>
+  );
+}
+
+// One 44px toggle per rail (brief 2 item 5): the same glyph and recipe
+// as the primary sidebar's collapse toggle, shared from RailPanelGlyph
+// with the composer's mobile story list button (item 11). The glyph
+// turns 180 degrees between open and closed (brief 3 item 3). The story
+// list toggle anchors to the right edge of its panel and the details
+// toggle to the left edge, so each sits against the center column open
+// or closed.
+function RailEdgeToggle({ side, open = false, onClick, openLabel, closeLabel }) {
+  const label = open ? closeLabel : openLabel;
+
+  return (
+    <div
+      className={`flex shrink-0 items-center py-[var(--space-2)] ${
+        side === "left" ? "justify-end" : "justify-start"
+      }`}
+    >
+      <button
+        type="button"
+        onClick={() => onClick?.()}
+        title={label}
+        aria-label={label}
+        aria-expanded={open}
+        className={BARE_ICON_BUTTON_CLASS}
+      >
+        <RailPanelGlyph side={side} open={open} />
+      </button>
+    </div>
   );
 }
 
@@ -286,16 +395,16 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className={EYEBROW_CLASS}>Story Room Composer</p>
+          <p className={EYEBROW_CLASS}>Story composer</p>
           <h2
             id="story-room-composer-help-title"
             className="mt-[var(--space-2)] font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
           >
             {showCommands
-              ? "Available Commands"
+              ? "Available commands"
               : showFormat
-                ? "Story Text Formatting"
-                : "Quick Help"}
+                ? "Story text formatting"
+                : "Quick help"}
           </h2>
         </div>
       </div>
@@ -319,7 +428,7 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
                 </p>
               ) : null}
               {command.sourceLabel ? (
-                <p className="mt-2 text-[10px] uppercase tracking-[0.13em] text-[var(--ink-dim)]">
+                <p className="mt-2 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
                   {command.sourceLabel}
                   {command.ambiguous ? " · Multiple active definitions" : ""}
                 </p>
@@ -342,16 +451,16 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
             <FormatHelpItem label="Action" example="I take one step back.">
               With quote-style roleplay, plain prose is action. If you prefer the asterisk-action style, *action like this* is also supported.
             </FormatHelpItem>
-            <FormatHelpItem label="Private Thought" example="*Why is that ticking?*">
+            <FormatHelpItem label="Private thought" example="*Why is that ticking?*">
               In quote-style roleplay, italicized text is private inner thought. Ordinary Characters do not receive private thoughts unless explicit perception authority allows it.
             </FormatHelpItem>
-            <FormatHelpItem label="Written / Digital Message" example="> Meet me behind the station.">
+            <FormatHelpItem label="Written or digital message" example="> Meet me behind the station.">
               Begin a line with &gt; for a written, physical, or digital message.
             </FormatHelpItem>
             <FormatHelpItem label="Telepathy" example={'`Can you hear me?`'}>
               Wrap deliberately transmitted mental speech in backticks. Telepathy is distinct from a private inner thought and remains subject to recipient/perception rules.
             </FormatHelpItem>
-            <FormatHelpItem label="Alternate RP Style" example="*She steps closer.*  Hello there.">
+            <FormatHelpItem label="Alternate roleplay style" example="*She steps closer.*  Hello there.">
               If you use asterisks for actions and do not use quoted dialogue, ordinary unwrapped text is treated as spoken dialogue.
             </FormatHelpItem>
           </div>
@@ -409,100 +518,5 @@ function ComposerHelpItem({ icon: Icon, title, children }) {
         {children}
       </p>
     </div>
-  );
-}
-
-function StoryRoomHeader({
-  room,
-  leftOpen,
-  rightOpen,
-  onToggleLeftPanel,
-  onToggleRightPanel,
-}) {
-  return (
-    <div className="hidden shrink-0 border-b border-[var(--line-fade)] p-[var(--space-5)] xl:block">
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto]">
-        <div className="min-w-0">
-          <p className={EYEBROW_CLASS}>Story</p>
-
-          <h1 className="mt-[var(--space-2)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)]">
-            {room?.title}
-          </h1>
-
-          <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
-            {room?.scenario} · {room?.roomMode}
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-2 lg:items-end">
-          <div className="hidden flex-wrap justify-end gap-2 xl:flex">
-            <button
-              type="button"
-              onClick={() => onToggleLeftPanel?.()}
-              className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
-                leftOpen
-                  ? "border-[var(--gold-action)] bg-[var(--fill-whisper)] text-[var(--ink)]"
-                  : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-              }`}
-            >
-              {leftOpen ? (
-                <PanelLeftClose size={14} />
-              ) : (
-                <PanelLeftOpen size={14} />
-              )}
-              {leftOpen ? "Cast Open" : "Show Cast"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onToggleRightPanel?.()}
-              className={`inline-flex items-center gap-2 rounded-[var(--radius-md)] border px-4 py-2 text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] transition ${
-                rightOpen
-                  ? "border-[var(--gold-action)] bg-[var(--fill-whisper)] text-[var(--ink)]"
-                  : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
-              }`}
-            >
-              {rightOpen ? (
-                <PanelRightClose size={14} />
-              ) : (
-                <PanelRightOpen size={14} />
-              )}
-              {rightOpen ? "State Open" : "Show State"}
-            </button>
-          </div>
-
-          <div className="flex flex-wrap gap-2 lg:justify-end">
-            <StatusPill>{room?.contentRating}</StatusPill>
-            <StatusPill>{room?.visibility}</StatusPill>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function PanelRevealButton({ side, label, onClick }) {
-  const Icon = side === "left" ? PanelLeftOpen : PanelRightOpen;
-
-  return (
-    <div className="sticky top-24 flex justify-center">
-      <button
-        type="button"
-        onClick={onClick}
-        title={label}
-        aria-label={label}
-        className="flex h-12 w-11 items-center justify-center rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--gold-ornament)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)]"
-      >
-        <Icon size={16} />
-      </button>
-    </div>
-  );
-}
-
-function StatusPill({ children }) {
-  return (
-    <span className="whitespace-nowrap rounded-[var(--radius-full)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-3 py-1 text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--ink-dim)]">
-      {children}
-    </span>
   );
 }

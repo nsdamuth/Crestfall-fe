@@ -5,6 +5,8 @@ const DEFAULT_COPY = Object.freeze({
     "Advanced guidance is for power users who want deeper control. These fields are stored in the creation data payload.",
   greetingLabel: "Greeting",
   greetingPlaceholder: "Optional opening message.",
+  scenarioLabel: "Scenario",
+  scenarioPlaceholder: "Optional scenario/premise setup.",
   relationshipLabel: "Relationship to Player",
   relationshipPlaceholder: "Optional starting relationship or dynamic.",
   appearanceNotesLabel: "Appearance Notes",
@@ -35,12 +37,14 @@ export function getCharacterAdvancedSectionViewProps({
       : DEFAULT_COPY.sectionDescription,
     showRelationshipToPlayer: !isPlayerCharacter,
     greetingValue: normalizeText(data.greeting),
+    scenarioValue: normalizeText(data.scenario),
     relationshipValue: normalizeText(data.relationship_to_player),
     appearanceNotesValue: normalizeText(data.appearance_notes),
     personalityNotesValue: normalizeText(data.personality_notes),
     runtimeNotesValue: normalizeText(data.extra_runtime_notes),
     creatorDirectivesValue: data.creator_directives,
     onChangeGreeting: (value) => updateDataField?.("greeting", value),
+    onChangeScenario: (value) => updateDataField?.("scenario", value),
     onChangeRelationship: (value) =>
       updateDataField?.("relationship_to_player", value),
     onChangeAppearanceNotes: (value) =>
