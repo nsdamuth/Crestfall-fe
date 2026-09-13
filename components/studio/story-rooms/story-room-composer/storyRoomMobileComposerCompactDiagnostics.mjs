@@ -19,6 +19,8 @@ const viewModel = read(
 test("composer stays in Story chat flow with safe-area clearance", () => {
   assert.match(view, /relative z-50 shrink-0 bg-transparent/);
   assert.match(view, /safe-area-inset-bottom/);
+  // Brief 2 item 10: safe area plus --space-2 at 390, --space-3 at md and up.
+  assert.match(view, /pb-\[calc\(var\(--space-2\)\+env\(safe-area-inset-bottom\)\)\] pt-\[var\(--space-2\)\] md:pb-\[var\(--space-3\)\]/);
   assert.doesNotMatch(view, /fixed bottom-0 left-0 right-0/);
   assert.doesNotMatch(view, /fixed bottom-20 left-3 right-3/);
 });
