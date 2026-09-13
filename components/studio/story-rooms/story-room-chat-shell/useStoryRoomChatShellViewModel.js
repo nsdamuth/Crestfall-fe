@@ -705,19 +705,29 @@ export function useStoryRoomChatShellViewModel({
       isSending: sending,
       disabled: loading || Boolean(error) || !chatAllowed,
       disabledReason: chatUnavailableReason,
-      // The player circle (brief 3 item 2): the selected player
-      // character's name and avatar, or nothing when none is chosen;
-      // its tap opens the existing select player character flow while
-      // that flow is open (before the first message).
+      // The player circle (brief 3 item 2, brief 4 item 4): the selected
+      // player character's name and avatar, or nothing when none is
+      // chosen. Its tap never opens the picker (the player character is
+      // set once at the start, through the transcript prompt); it runs
+      // the existing continuation call with the player character as the
+      // requested speaker so the player character responds. The Chassis
+      // accepts any participant id on a yielded turn; its regulator
+      // notes PLAYER_CHARACTER_AS_RESPONDER for the middleware and does
+      // not reject the turn. Absent when no player character is set:
+      // the "You" mark has no participant that can be asked to speak.
       playerCharacter: selectedPlayerCharacter
         ? {
             label: selectedPlayerCharacter.name || "",
             avatarUrl: selectedPlayerCharacter.avatarUrl || "",
           }
         : null,
-      playerCharacterPickerAvailable:
-        Boolean(canSetPlayerCharacter) && !firstMessageSubmitted,
-      onOpenPlayerCharacterPicker: openPlayerCharacterPicker,
+      onPlayerSpeak: selectedPlayerCharacter?.id
+        ? () =>
+            sendMessage({
+              requestedSpeakerId: selectedPlayerCharacter.id,
+              actionType: "PLAYER_YIELD_TO_CHARACTER",
+            })
+        : null,
     },
     chatColorProps,
     onToggleLeftPanel: toggleLeftPanel,

@@ -153,12 +153,12 @@ export default function StoryRoomComposerView({
             <ImageIcon size={18} aria-hidden="true" />
           </button>
 
-          {/* Player circle (brief 3 item 2): the player before the cast,
-              from the selected player character (avatar or initial), or
-              "You" when none is chosen. Its tap opens the existing select
-              player character flow while that flow is available; it
-              reports no speaker (the Chassis accepts no player character
-              as a responder). */}
+          {/* Player circle (brief 3 item 2, brief 4 item 4): the player
+              before the cast, from the selected player character (avatar
+              or initial), or "You" when none is chosen. Its tap never
+              opens the player character picker (the player character is
+              set once at the start); it asks the player character to
+              speak next through the existing continuation call. */}
           <PlayerCircle circle={playerCircle} />
 
           <div className="flex min-w-0 flex-1 items-center gap-[var(--space-2)] overflow-x-auto">
@@ -251,16 +251,17 @@ export default function StoryRoomComposerView({
   );
 }
 
-// The player circle (brief 3 item 2): the same 44px hit area and 36px
-// circle as a cast circle, showing the player character's avatar or
-// initial, or "You" when none is chosen. A button while the select
-// player character flow is available, a plain mark once the story has
-// begun. It never carries the selected ring: the player is not a
-// speaker the story can be handed to.
+// The player circle (brief 3 item 2, brief 4 item 4): the same 44px hit
+// area and 36px circle as a cast circle, showing the player character's
+// avatar or initial, or "You" when none is chosen. While `canSpeak` is
+// true it is a button whose tap asks the player character to speak
+// next (the existing continuation call with the player character as
+// the requested speaker); otherwise a plain mark. It never opens the
+// player character picker and never carries the selected ring.
 function PlayerCircle({ circle = null }) {
   const label = String(circle?.label || "").trim();
   const avatarUrl = String(circle?.avatarUrl || "").trim();
-  const canPick = Boolean(circle?.canPick);
+  const canSpeak = Boolean(circle?.canSpeak);
   const face = avatarUrl ? (
     <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
   ) : (
@@ -274,7 +275,7 @@ function PlayerCircle({ circle = null }) {
     ? `${label}, your player character`
     : "You, no player character selected";
 
-  if (!canPick) {
+  if (!canSpeak) {
     return (
       <span className={CIRCLE_BUTTON_CLASS} title={title} aria-label={title} role="img">
         <span className={circleClass}>{face}</span>
@@ -282,12 +283,12 @@ function PlayerCircle({ circle = null }) {
     );
   }
 
-  const actionLabel = label ? "Change player character" : "Select player character";
+  const actionLabel = `${label || "You"} speaks next`;
 
   return (
     <button
       type="button"
-      onClick={() => circle?.onPick?.()}
+      onClick={() => circle?.onSpeak?.()}
       aria-label={actionLabel}
       title={actionLabel}
       className={CIRCLE_BUTTON_CLASS}

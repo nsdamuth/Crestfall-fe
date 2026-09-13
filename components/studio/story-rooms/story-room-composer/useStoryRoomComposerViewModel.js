@@ -193,8 +193,7 @@ export function useStoryRoomComposerViewModel({
   disabled = false,
   disabledReason = "",
   playerCharacter = null,
-  playerCharacterPickerAvailable = false,
-  onOpenPlayerCharacterPicker,
+  onPlayerSpeak = null,
 } = {}) {
   const [activeMentionQuery, setActiveMentionQuery] = useState(null);
   const [highlightedMentionIndex, setHighlightedMentionIndex] = useState(0);
@@ -575,16 +574,19 @@ export function useStoryRoomComposerViewModel({
     autoPendingLabel: "Choosing the next speaker",
     sceneImageState: "soon",
     sceneImageLabel: "Scene image, not available yet",
-    // The player circle (brief 3 item 2): the selected player character
-    // (avatar or initial), or "You" when none is chosen. Its tap opens
-    // the existing select player character flow while that flow is
-    // available; the player is never a responder the Chassis accepts,
-    // so the circle reports no speaker.
+    // The player circle (brief 3 item 2, brief 4 item 4): the selected
+    // player character (avatar or initial), or "You" when none is
+    // chosen. Its tap never opens the picker; while the shell hands down
+    // `onPlayerSpeak` (a player character is set) it runs the existing
+    // continuation with the player character as the requested speaker.
     playerCircle: {
       label: String(playerCharacter?.label || "").trim(),
       avatarUrl: String(playerCharacter?.avatarUrl || "").trim(),
-      canPick: Boolean(playerCharacterPickerAvailable) && !composerDisabled,
-      onPick: () => onOpenPlayerCharacterPicker?.(),
+      canSpeak: typeof onPlayerSpeak === "function" && !composerDisabled && !sending,
+      onSpeak: () => {
+        if (composerDisabled || sending) return;
+        onPlayerSpeak?.();
+      },
     },
     onAuto: continueAuto,
     onChangeInputMode: (nextValue) => setInputMode?.(nextValue),

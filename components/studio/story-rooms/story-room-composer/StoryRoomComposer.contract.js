@@ -1,7 +1,19 @@
-export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "4.0.0";
+export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "5.0.0";
 
 /**
  * Stable UI boundary for the Story Room message composer.
+ *
+ * 5.0.0, fe/chat-studio brief 4 item 4 (13 Sep 2026). BREAKING:
+ * `playerCircle.canPick` and `playerCircle.onPick` are replaced by
+ * `playerCircle.canSpeak` and `playerCircle.onSpeak`. The circle never
+ * opens the player character picker (the player character is set once
+ * at the start, through the transcript prompt); while `canSpeak` is
+ * true its tap asks the player character to speak next through the
+ * existing continuation call (the shell passes the player character
+ * participant as the requested speaker on a PLAYER_YIELD_TO_CHARACTER
+ * turn). The ViewModel input `onPlayerSpeak` replaces
+ * `playerCharacterPickerAvailable` and `onOpenPlayerCharacterPicker`.
+ * The "You" initial stays when no avatar exists.
  *
  * 4.0.0, fe/chat-studio brief 3 item 10 (13 Sep 2026). BREAKING:
  * `onOpenStoryList` and `onOpenSettings` are removed with the below-md
@@ -107,7 +119,7 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "4.0.0";
  * @property {string} autoPendingLabel The Auto circle's accessible name while sending.
  * @property {"soon"|"ready"} sceneImageState "soon" renders the scene image seat disabled.
  * @property {string} sceneImageLabel The scene image seat's accessible name.
- * @property {{ label: string, avatarUrl: string, canPick: boolean, onPick: () => void }} playerCircle The player circle: the selected player character (or "You"), a button opening the select player character flow while canPick is true.
+ * @property {{ label: string, avatarUrl: string, canSpeak: boolean, onSpeak: () => void }} playerCircle The player circle: the selected player character (or "You"), a button asking the player character to speak next while canSpeak is true.
  * @property {() => void} onAuto Runs the existing continuation with the AUTO speaker.
  * @property {(nextValue: string) => void} onChangeInputMode
  * @property {(speakerId: string) => void} onChangeNextSpeaker

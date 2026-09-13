@@ -8,7 +8,12 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * binding shell owns (`useStoryLaunchController`, the Stories page's);
  * a tap starts a new chat from the story's source creation
  * (`resolveStorySourceCreation`: the source template, else the default
- * Character) and the controller navigates to it.
+ * Character) and the controller navigates to it. Item 4: `composerProps`
+ * carries `onPlayerSpeak` (the existing continuation with the player
+ * character participant as the requested speaker, null when no player
+ * character is set) in place of `playerCharacterPickerAvailable` and
+ * `onOpenPlayerCharacterPicker` (composer contract 5.0.0); the
+ * transcript prompt still opens the picker before the first message.
  *
  * v4.1, fe/chat-studio brief 3 (13 Sep 2026), additive. Item 1: the
  * composer renders in a full-width shell row beneath the rails grid,

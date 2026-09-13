@@ -58,6 +58,17 @@ function createFixture(overrides = {}) {
 
 export const storyRoomComposerDefaultFixture = createFixture();
 
+// Contract 5.0.0 (brief 4 item 4): the player circle as a button that
+// asks the player character to speak next.
+export const storyRoomComposerPlayerSpeaksFixture = createFixture({
+  playerCircle: {
+    label: "Rowan Vale",
+    avatarUrl: "",
+    canSpeak: true,
+    onSpeak: noop,
+  },
+});
+
 export const storyRoomComposerAutoContinueFixture = createFixture();
 
 export const storyRoomComposerDraftFixture = createFixture({
