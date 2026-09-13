@@ -93,6 +93,7 @@ the details below carry only what is still actionable.
 | CR-065 | Remix a public image into the viewer's library | One Chassis operation: from a public image output, create a new asset owned by the viewer and record it as a new version in both the viewer's and the source creator's libraries with attribution; Remix and Edit on public images ship "soon" until then | open | Nick | non-blocking; filed 12 Sep 2026; KitImageViewer 2.0.0 remix context |
 | CR-064 | Viewer reaction state on the public profile payload | The public profile payload carries no `viewer.isLiked` or `viewer.isBookmarked`; the profile page fetches them from profile-reactions after first paint, so Liked and Saved rest unselected for one round trip | open | Nick | non-blocking; filed 12 Sep 2026; optimistic toggle in place |
 | CR-063 | Public lore approval-state projection | The community lore projection emits only canon or approved, so Draft and Archived never match community lore, and one state carries three names (IN_REVIEW, pending, Reviewing); confirm the states the public feed serves and the canonical name | open | Nick | non-blocking; filed 6 Sep 2026 |
+| CR-066 | Chat color preference | A per-account (or per-story) `chat_color_palette_id` on the profile, one of the 13 character palette ids, so the user's Preferences choice on the story chat page survives a reload; the chat page keeps the override in page state until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 4 |
 
 ## Details
 
@@ -1041,6 +1042,28 @@ three names across the stack: backend `IN_REVIEW`, value `pending`,
 label "Reviewing". Needed: confirmation of which states the public
 publications feed serves, and the canonical name for the review
 state.
+
+### CR-066, Chat color preference
+
+Filed 12 Sep 2026 by fe/chat-studio item 4 (bubbles and chat color).
+The player's bubble on the story chat page takes the chat color: by
+default the primary Character's palette anchor (the participant record
+the Chassis stamps at launch, `participant.metadata.characterColorPaletteId`,
+resolved through the 13-entry catalog in
+`components/studio/create/character/constants/characterColorPalettes.js`),
+and a Preferences panel in the right rail lets the user pick any of the
+13 palettes instead. No preference field exists for that choice:
+`PATCH /v1/profile/me` (through `/api/profile/me`) allowlists username,
+display_name, bio, tagline, description, announcement, contact_email,
+content_rating_preference, and default_player_character_id, and drops
+any other key. Call wanted: the same PATCH accepting
+`chat_color_palette_id` (one of the 13 palette ids, or null for the
+creator default), returned on `GET /v1/profile/me` under `profile`.
+Expected response: the profile payload carrying the field. Unverified:
+whether Nick wants the preference per account or per story room, and
+whether the id set stays the character palette catalog. Interim: the
+override is page state in `useStoryRoomChatShellViewModel.js`
+(`chatColorProps`), reset on reload; nothing is faked.
 
 ## Closed
 

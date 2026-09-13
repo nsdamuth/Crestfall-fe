@@ -43,13 +43,22 @@ test("Narrator opening scenes remain on the opening presentation path", () => {
   assert.match(vm, /if \(message\?\.kind === "OPENING_SCENE"\)[\s\S]*STORY_ROOM_MESSAGE_SURFACE_TONES\.OPENING/);
 });
 
-test("legacy greeting text consumes palette colors instead of generic gold", () => {
+test("speaker ink derives from the character palette anchor through the locked chat tokens", () => {
+  // fe/chat-studio item 4: the seven-role hex object is gone; the View
+  // writes one anchor (--chat-speaker) from contract data and the locked
+  // --chat-* tokens derive the speaker name, avatar fill, and the
+  // player's bubble fill. Body ink stays --ink.
   const view = read("components/studio/story-rooms/story-room-message/StoryRoomMessage.view.jsx");
-  assert.match(view, /hasPalettePresentation/);
-  assert.match(view, /paletteColors=\{hasPalettePresentation \? resolvedPaletteColors : null\}/);
-  assert.match(view, /paletteColors\.dialogue/);
-  assert.match(view, /paletteColors\.narration/);
-  assert.match(view, /resolvedPaletteColors\.speaker/);
+  const vm = read("components/studio/story-rooms/story-room-message/useStoryRoomMessageViewModel.js");
+  assert.doesNotMatch(view, /paletteColors|DEFAULT_PALETTE_COLORS|#[0-9A-Fa-f]{6}/);
+  assert.match(view, /"--chat-speaker": speakerAnchor\.trim\(\)/);
+  assert.match(view, /text-\[var\(--chat-speaker-name\)\]/);
+  assert.match(view, /bg-\[var\(--chat-bubble-fill\)\]/);
+  assert.match(view, /bg-\[var\(--chat-avatar-fill\)\]/);
+  assert.match(view, /rounded-\[var\(--radius-bubble\)\]/);
+  assert.doesNotMatch(view, /sky-\d|red-\d|pink-\d|purple-\d|border-white\/|bg-black\//);
+  assert.match(vm, /bubbleColor/);
+  assert.doesNotMatch(vm, /paletteColors/);
 });
 
 test("chat color change remains presentation-only", () => {

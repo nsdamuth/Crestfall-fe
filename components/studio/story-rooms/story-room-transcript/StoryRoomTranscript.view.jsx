@@ -130,12 +130,12 @@ function MessageReportDialog({
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[var(--blur-panel)]"
       role="dialog"
       aria-modal="true"
       aria-labelledby="story-room-report-title"
     >
-      <div className="w-full max-w-md rounded-[var(--radius-md)] border border-white/10 bg-[#15130f] p-5 shadow-2xl">
+      <div className="w-full max-w-md rounded-[var(--radius-lg)] border border-[var(--line)] bg-[image:var(--grad-panel-lift)] p-5 shadow-[var(--shadow-modal)]">
         <div className="flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
@@ -192,7 +192,7 @@ function MessageReportDialog({
             rows={4}
             maxLength={2000}
             placeholder="Describe what should be reviewed."
-            className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-3 py-2.5 text-sm normal-case leading-6 tracking-normal text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)]/70 focus:border-[var(--gold-ornament)]/50"
+            className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--step-below)] px-3 py-2.5 text-[length:var(--text-input)] normal-case leading-[var(--lh-input)] tracking-normal text-[var(--ink)] shadow-[var(--shadow-bed)] placeholder:text-[var(--ink-faint)]"
           />
         </label>
 
@@ -207,7 +207,7 @@ function MessageReportDialog({
             type="button"
             onClick={onCancel}
             disabled={pending}
-            className="rounded-lg border border-white/10 px-4 py-2 text-sm text-[var(--ink-dim)] transition hover:bg-[var(--fill-whisper)] hover:text-[var(--ink)] disabled:opacity-50"
+            className="cf-btn cf-btn--secondary"
           >
             Cancel
           </button>
@@ -215,7 +215,7 @@ function MessageReportDialog({
             type="button"
             onClick={onSubmit}
             disabled={pending}
-            className="inline-flex items-center gap-2 rounded-lg border border-[var(--gold-ornament)]/35 bg-[var(--gold-ornament)]/10 px-4 py-2 text-sm text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/20 disabled:cursor-wait disabled:opacity-60"
+            className="cf-btn cf-btn--primary disabled:cursor-wait"
           >
             {pending ? (
               <Loader2 size={14} className="animate-spin" aria-hidden="true" />

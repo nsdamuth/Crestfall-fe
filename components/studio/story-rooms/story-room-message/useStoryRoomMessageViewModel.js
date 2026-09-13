@@ -190,7 +190,7 @@ function getDeliveryState(message) {
 
 export function getStoryRoomMessageViewProps(
   message,
-  { persistentStatusSurfaceDomains = [] } = {}
+  { persistentStatusSurfaceDomains = [], chatColor = null } = {}
 ) {
   const safeMessage = normalizeObject(message);
   const autoEventMedia = getAutoEventMedia(safeMessage);
@@ -225,8 +225,19 @@ export function getStoryRoomMessageViewProps(
     ? openingGreetingSegments
     : presentation?.segments || [];
 
+  const surfaceTone = getSurfaceTone(safeMessage);
+  // The player's bubble takes the chat color (fe/chat-studio item 4):
+  // the creator default from the character palette, or the user's
+  // Preferences override, passed down by the shell as `chatColor`.
+  const bubbleColor =
+    surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER &&
+    typeof chatColor === "string" &&
+    chatColor.trim()
+      ? chatColor.trim()
+      : null;
+
   return {
-    surfaceTone: getSurfaceTone(safeMessage),
+    surfaceTone,
     contentType: autoEventMedia
       ? STORY_ROOM_MESSAGE_CONTENT_TYPES.AUTO_EVENT_MEDIA
       : STORY_ROOM_MESSAGE_CONTENT_TYPES.TEXT,
@@ -241,16 +252,16 @@ export function getStoryRoomMessageViewProps(
     legacyBody,
     semanticSegments,
     statusBlocks: presentation?.statusBlocks || [],
-    paletteColors: palette?.colors ? { ...palette.colors } : null,
     speakerColor:
       typeof palette?.colors?.speaker === "string" && palette.colors.speaker.trim()
         ? palette.colors.speaker.trim()
         : null,
+    bubbleColor,
     media: autoEventMedia,
     deliveryState: getDeliveryState(safeMessage),
   };
 }
 
-export function useStoryRoomMessageViewModel({ message } = {}) {
-  return getStoryRoomMessageViewProps(message);
+export function useStoryRoomMessageViewModel({ message, chatColor = null } = {}) {
+  return getStoryRoomMessageViewProps(message, { chatColor });
 }

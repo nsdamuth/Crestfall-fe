@@ -4,25 +4,11 @@ import {
   STORY_ROOM_MESSAGE_SURFACE_TONES,
 } from "./StoryRoomMessage.contract";
 
-const crestfallPalette = {
-  dialogue: "#F5E7C7",
-  narration: "#C89B5A",
-  emphasis: "#E2B96F",
-  strong: "#FFD99A",
-  whisper: "#AFA08A",
-  speaker: "#D6B36A",
-  border: "#8A6A3C",
-};
-
-const winterPalette = {
-  dialogue: "#F3F8FF",
-  narration: "#5FC6FF",
-  emphasis: "#D77CFF",
-  strong: "#FF5FA2",
-  whisper: "#93A8C7",
-  speaker: "#78D7FF",
-  border: "#315E8A",
-};
+// Palette anchors are fixture data standing in for the character
+// palette catalog's `speaker` role (the Crestfall default and Bright
+// Winter entries); the View applies them as the --chat-speaker anchor.
+const crestfallSpeakerAnchor = "#D6B36A";
+const winterSpeakerAnchor = "#78D7FF";
 
 export const storyRoomMessagePlayerFixture = {
   surfaceTone: STORY_ROOM_MESSAGE_SURFACE_TONES.PLAYER,
@@ -35,7 +21,8 @@ export const storyRoomMessagePlayerFixture = {
     "I step through the archway and **raise the lantern**.\n\n*The metal frame creaks softly in my hand.*",
   semanticSegments: [],
   statusBlocks: [],
-  paletteColors: null,
+  speakerColor: null,
+  bubbleColor: crestfallSpeakerAnchor,
   deliveryState: STORY_ROOM_MESSAGE_DELIVERY_STATES.SENDING,
 };
 
@@ -69,7 +56,8 @@ export const storyRoomMessageNarratorFixture = {
       text: "Weather: Cold rain",
     },
   ],
-  paletteColors: crestfallPalette,
+  speakerColor: crestfallSpeakerAnchor,
+  bubbleColor: null,
   deliveryState: null,
 };
 
@@ -84,7 +72,8 @@ export const storyRoomMessageOpeningFixture = {
     "> The bells of Crestfall ring thirteen times.\n> **No one remembers building the thirteenth tower.**\n\n*The city holds its breath.*",
   semanticSegments: [],
   statusBlocks: [],
-  paletteColors: null,
+  speakerColor: null,
+  bubbleColor: null,
   deliveryState: null,
 };
 
@@ -98,7 +87,8 @@ export const storyRoomMessageSystemFixture = {
   legacyBody: "The active location changed to The Glass Archive.",
   semanticSegments: [],
   statusBlocks: [],
-  paletteColors: null,
+  speakerColor: null,
+  bubbleColor: null,
   deliveryState: null,
 };
 
@@ -129,7 +119,8 @@ export const storyRoomMessageCharacterFixture = {
     },
   ],
   statusBlocks: [],
-  paletteColors: winterPalette,
+  speakerColor: winterSpeakerAnchor,
+  bubbleColor: null,
   deliveryState: null,
 };
 
@@ -170,7 +161,8 @@ export const storyRoomMessageMinimalFixture = {
   legacyBody: "",
   semanticSegments: [],
   statusBlocks: [],
-  paletteColors: null,
+  speakerColor: null,
+  bubbleColor: null,
   deliveryState: null,
 };
 

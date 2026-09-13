@@ -1,7 +1,14 @@
 export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
-  "story-room-chat-shell.view.v2.0";
+  "story-room-chat-shell.view.v2.1";
 
 /**
+ * v2.1, fe/chat-studio item 4 (12 Sep 2026), additive: `chatColorProps`
+ * ({ paletteId, creatorPaletteId, isOverridden, options, onChange,
+ * onReset }) carries the chat color state the ViewModel owns (creator
+ * default from the primary Character's palette, page-state override
+ * until CR-066) for the Preferences drill-in the right rail mounts in
+ * item 6; `transcriptProps.chatColor` is the resolved anchor.
+ *
  * v2.0, fe/chat-studio item 1 (12 Sep 2026). BREAKING: `layoutClass`,
  * `onShowLeftPanel`, and `onShowRightPanel` are removed; the desktop
  * header block (eyebrow, title, type line, Cast Open and State Open
@@ -37,6 +44,7 @@ export const STORY_ROOM_CHAT_SHELL_VIEW_CONTRACT_VERSION =
  * @property {Object} desktopStatePanelProps
  * @property {Object} mobileStatePanelProps
  * @property {Object|null} runtimeMechanicsPanelProps
+ * @property {{paletteId: string, creatorPaletteId: string, isOverridden: boolean, options: Array<{id: string, label: string, family: string, swatch: string}>, onChange: (paletteId: string) => void, onReset: () => void}} chatColorProps
  * @property {() => void} onToggleLeftPanel
  * @property {() => void} onToggleRightPanel
  * @property {() => void} onOpenMobileCast

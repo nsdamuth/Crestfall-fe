@@ -137,6 +137,7 @@ export function useStoryRoomTranscriptViewModel({
   chatGenerationDisabledReason = "",
   onReportMessage = null,
   messageActionState = {},
+  chatColor = null,
 } = {}) {
   const safeMessages = Array.isArray(messages) ? messages : [];
   const [copyFeedback, setCopyFeedback] = useState(null);
@@ -256,6 +257,7 @@ export function useStoryRoomTranscriptViewModel({
         const id = String(message?.id ?? `story-room-message-${index}`);
         const viewProps = getStoryRoomMessageViewProps(message, {
           persistentStatusSurfaceDomains,
+          chatColor,
         });
 
         if (
@@ -333,6 +335,7 @@ export function useStoryRoomTranscriptViewModel({
         };
       }),
     [
+      chatColor,
       chatGenerationAllowed,
       chatGenerationDisabledReason,
       copyFeedback,
