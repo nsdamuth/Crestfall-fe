@@ -1,7 +1,17 @@
-export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2.2.0";
+export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2.3.0";
 
 /**
  * Stable UI boundary for the Story Room cast panel.
+ *
+ * 2.3.0, fe/chat-studio brief 4 item 6 (13 Sep 2026). Presentation
+ * only, no prop changed: the cast card's name is centered at the bottom
+ * under the initial or the avatar; the type tag bed moves from the
+ * translucent --tag-bed-art (--scrim-strong, 70 percent) to the over-art
+ * glass --panel-glass (85 percent), one step more opaque; the wash over
+ * the art moves from a literal black gradient to --scrim (40 percent),
+ * one token step lighter than --scrim-strong; the selected card carries
+ * the gold ring; over-art ink and the 11px label floor replace the
+ * card's literals.
  *
  * 2.2.0, fe/chat-studio brief 4 item 5 (13 Sep 2026). ADDITIVE on the
  * ViewModel input: `onOpenManageCast`, handed down by the chat shell
