@@ -1,5 +1,10 @@
-export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.3.0";
+export const STORY_ROOM_MESSAGE_VIEW_CONTRACT_VERSION = "2.4.0";
 
+// 2.4.0, fe/chat-studio review round 5 item 1 (13 Sep 2026, Brian's
+// browser review, "a little bit more"). Presentation only: the speaker
+// name rises one more scale step, from --text-body (16) to --text-lead
+// (19 over 28). Everything else as 2.3.0.
+//
 // 2.3.0, fe/chat-studio review round 4 item 1 (13 Sep 2026, Brian's
 // browser review). Presentation only: the speaker name rises one scale
 // step, from --text-ui (13) to --text-body (16), about 20 percent, so

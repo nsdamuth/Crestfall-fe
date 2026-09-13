@@ -320,7 +320,7 @@ Scale (all locked; ratio 1.2 from 16px, leadings on the 4px grid):
 | `--text-eyebrow` / `--lh-eyebrow` / `--track-eyebrow` | 13 / 20 / .16em | Eyebrows (aliases of the ui step) |
 | `--text-cta` / `--lh-cta` | 16 / 24 | Button text (aliases of the body step) |
 | `--text-hero` / `--lh-hero` | fluid | Hero only, never product UI |
-| `--text-chat` / `--lh-chat` | 14 / 22 | Transcript body tier, RULED by Brian 13 Sep 2026 (fe/chat-studio brief 3 item 6): the story transcript's message body, and, RULED by Brian's review round 4 item 3 the same day, the transcript's notice cards (the player character prompt and the story error card: body copy, and the action label through `.cf-btn--notice` in `app/design-system.css`, which replaced `.cf-btn--field`). Legal only in `components/studio/story-rooms/story-room-message` and `components/studio/story-rooms/story-room-transcript/StoryRoomNoticeCard.jsx`; meta stays at `--text-label` and the speaker name reads `--text-body` in the display font (RULED 13 Sep 2026, brief 4 item 10, raised one step by review round 4 item 1); never a field bed (that is `--text-input`), never any other surface. Check: `grep -rn 'text-chat\|lh-chat' app/ components/ docs/` returns only `app/theme.css`, `app/design-system.css` (the `.cf-btn--notice` rule), this file, the message package, and the transcript package (the notice card and its contract note) |
+| `--text-chat` / `--lh-chat` | 14 / 22 | Transcript body tier, RULED by Brian 13 Sep 2026 (fe/chat-studio brief 3 item 6): the story transcript's message body, and, RULED by Brian's review round 4 item 3 the same day, the transcript's notice cards (the player character prompt and the story error card: body copy, and the action label through `.cf-btn--notice` in `app/design-system.css`, which replaced `.cf-btn--field`). Legal only in `components/studio/story-rooms/story-room-message` and `components/studio/story-rooms/story-room-transcript/StoryRoomNoticeCard.jsx`; meta stays at `--text-label` and the speaker name reads `--text-lead` in the display font (RULED 13 Sep 2026, brief 4 item 10, raised one step by review round 4 item 1 and one more by round 5 item 1); never a field bed (that is `--text-input`), never any other surface. Check: `grep -rn 'text-chat\|lh-chat' app/ components/ docs/` returns only `app/theme.css`, `app/design-system.css` (the `.cf-btn--notice` rule), this file, the message package, and the transcript package (the notice card and its contract note) |
 
 Weights `--weight-regular/medium/bold` (400/500/700; 800 and 900 are
 banned), joined 22 Aug 2026 by `--weight-light` (300, A1, Fable law
@@ -376,8 +376,9 @@ inside a bubble is NEVER speaker-colored; it stays the standard `--ink`
 token regardless of the speaker's anchor. RULED 13 Sep 2026 (Brian,
 fe/chat-studio brief 4 item 10): the story transcript's speaker name
 (`components/studio/story-rooms/story-room-message`) leaves this ink
-and reads `--ink` in the display font at `--text-body` (raised from
-`--text-ui` by Brian's review round 4 item 1, same day),
+and reads `--ink` in the display font at `--text-lead` (raised from
+`--text-ui` to `--text-body` by Brian's review round 4 item 1 and to
+`--text-lead` by round 5 item 1, same day),
 `--weight-medium`, no uppercase, no tracking, so it reads larger than
 the Opening scene eyebrow and never matches it; `--chat-speaker-name` stays the speaker-name
 ink for the `components/studio/chat` packages, and the anchor still

@@ -30,8 +30,8 @@ import {
 // locked --chat-bubble-fill recipe, every other speaker left-aligned on
 // the nested card surface, no borders, --radius-bubble, body one step
 // tighter (the ui step), narration italic, whispers as a quiet inset.
-// The speaker name reads --ink in the display font at the body step
-// (brief 4 item 10 and review round 4 item 1, RULED, off the
+// The speaker name reads --ink in the display font at the lead step
+// (brief 4 item 10, review rounds 4 and 5 item 1, RULED, off the
 // --chat-speaker-name clamp and off the eyebrow tier); body ink is
 // always --ink. The one inline value
 // the View writes is the --chat-speaker anchor, contract data, never a
@@ -301,8 +301,8 @@ function getArticleClassName(surfaceTone) {
 // --lh-chat (14 over 22), the transcript body tier minted in
 // app/theme.css and legal only in this package; the opening label, the
 // mode pill, and the delivery lines stay at --text-label, and the
-// speaker name reads the display font at --text-body (brief 4 item 10,
-// raised one step by review round 4 item 1).
+// speaker name reads the display font at --text-lead (brief 4 item 10,
+// raised one step by review round 4 item 1 and one more by round 5).
 // System notices are meta, not body, and stay at the ui step (the
 // brief named the body only).
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {
@@ -416,13 +416,14 @@ export default function StoryRoomMessageView({
                   </p>
                 ) : null}
 
-                {/* The speaker name (brief 4 item 10, review round 4
-                    item 1): off the eyebrow tier and one step larger
-                    than it, the body step (16, about 20 percent over the
-                    ui step), so it reads above the Opening scene eyebrow;
+                {/* The speaker name (brief 4 item 10, review rounds 4
+                    and 5 item 1): off the eyebrow tier and two steps
+                    larger than it, the lead step (19, "a little bit
+                    more" than the body step Brian saw in round 4), so it
+                    reads clearly above the Opening scene eyebrow;
                     display font, medium weight, --ink, no uppercase, no
                     tracking. */}
-                <p className="truncate font-display text-[length:var(--text-body)] leading-[var(--lh-body)] font-[var(--weight-medium)] text-[var(--ink)]">
+                <p className="truncate font-display text-[length:var(--text-lead)] leading-[var(--lh-lead)] font-[var(--weight-medium)] text-[var(--ink)]">
                   {speakerLabel}
                 </p>
               </div>
