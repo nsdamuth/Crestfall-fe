@@ -85,6 +85,7 @@ export default function StoryRoomComposerView({
   autoPendingLabel = "Choosing the next speaker",
   sceneImageState = "soon",
   sceneImageLabel = "Scene image, not available yet",
+  playerCircle = null,
   onAuto,
   onOpenStoryList,
   onOpenSettings,
@@ -166,6 +167,14 @@ export default function StoryRoomComposerView({
           >
             <ImageIcon size={18} aria-hidden="true" />
           </button>
+
+          {/* Player circle (brief 3 item 2): the player before the cast,
+              from the selected player character (avatar or initial), or
+              "You" when none is chosen. Its tap opens the existing select
+              player character flow while that flow is available; it
+              reports no speaker (the Chassis accepts no player character
+              as a responder). */}
+          <PlayerCircle circle={playerCircle} />
 
           <div className="flex min-w-0 flex-1 items-center gap-[var(--space-2)] overflow-x-auto">
             {castOptions.map((option) => (
@@ -265,6 +274,52 @@ export default function StoryRoomComposerView({
         </div>
       </div>
     </div>
+  );
+}
+
+// The player circle (brief 3 item 2): the same 44px hit area and 36px
+// circle as a cast circle, showing the player character's avatar or
+// initial, or "You" when none is chosen. A button while the select
+// player character flow is available, a plain mark once the story has
+// begun. It never carries the selected ring: the player is not a
+// speaker the story can be handed to.
+function PlayerCircle({ circle = null }) {
+  const label = String(circle?.label || "").trim();
+  const avatarUrl = String(circle?.avatarUrl || "").trim();
+  const canPick = Boolean(circle?.canPick);
+  const face = avatarUrl ? (
+    <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+  ) : (
+    <span className="font-display text-[length:var(--text-ui)] text-[var(--gold-ornament)]">
+      {label ? label.charAt(0).toUpperCase() : "You"}
+    </span>
+  );
+  const circleClass =
+    "flex h-9 w-9 items-center justify-center overflow-hidden rounded-[var(--radius-full)] bg-[var(--step-above)] text-[var(--ink-dim)]";
+  const title = label
+    ? `${label}, your player character`
+    : "You, no player character selected";
+
+  if (!canPick) {
+    return (
+      <span className={CIRCLE_BUTTON_CLASS} title={title} aria-label={title} role="img">
+        <span className={circleClass}>{face}</span>
+      </span>
+    );
+  }
+
+  const actionLabel = label ? "Change player character" : "Select player character";
+
+  return (
+    <button
+      type="button"
+      onClick={() => circle?.onPick?.()}
+      aria-label={actionLabel}
+      title={actionLabel}
+      className={CIRCLE_BUTTON_CLASS}
+    >
+      <span className={circleClass}>{face}</span>
+    </button>
   );
 }
 

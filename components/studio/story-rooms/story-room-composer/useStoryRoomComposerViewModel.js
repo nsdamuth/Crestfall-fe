@@ -192,6 +192,9 @@ export function useStoryRoomComposerViewModel({
   isSending = false,
   disabled = false,
   disabledReason = "",
+  playerCharacter = null,
+  playerCharacterPickerAvailable = false,
+  onOpenPlayerCharacterPicker,
   onOpenStoryList,
   onOpenSettings,
 } = {}) {
@@ -574,6 +577,17 @@ export function useStoryRoomComposerViewModel({
     autoPendingLabel: "Choosing the next speaker",
     sceneImageState: "soon",
     sceneImageLabel: "Scene image, not available yet",
+    // The player circle (brief 3 item 2): the selected player character
+    // (avatar or initial), or "You" when none is chosen. Its tap opens
+    // the existing select player character flow while that flow is
+    // available; the player is never a responder the Chassis accepts,
+    // so the circle reports no speaker.
+    playerCircle: {
+      label: String(playerCharacter?.label || "").trim(),
+      avatarUrl: String(playerCharacter?.avatarUrl || "").trim(),
+      canPick: Boolean(playerCharacterPickerAvailable) && !composerDisabled,
+      onPick: () => onOpenPlayerCharacterPicker?.(),
+    },
     onAuto: continueAuto,
     // Below md the composer carries the story list and settings
     // buttons (brief 2 item 11); the chat shell owns both sheets.

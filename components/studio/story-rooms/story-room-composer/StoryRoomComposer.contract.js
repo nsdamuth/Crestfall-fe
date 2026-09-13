@@ -1,7 +1,18 @@
-export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "3.1.0";
+export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "3.2.0";
 
 /**
  * Stable UI boundary for the Story Room message composer.
+ *
+ * 3.2.0, fe/chat-studio brief 3 item 2 (13 Sep 2026). ADDITIVE:
+ * `playerCircle` ({ label, avatarUrl, canPick, onPick }) backs the
+ * player circle the View renders first on the cast row, after the scene
+ * image seat and before the character circles: the selected player
+ * character's avatar or initial, or "You" when none is chosen. While
+ * `canPick` is true the circle is a button whose tap opens the existing
+ * select player character flow; otherwise it is a plain mark. It never
+ * reports a speaker: the Chassis regulator flags a player character
+ * chosen as responder, and no PLAYER speaker option exists, so the
+ * brief's player-as-next-speaker tap is held for Brian's ruling.
  *
  * 3.1.0, fe/chat-studio brief 2 item 11 (13 Sep 2026). ADDITIVE:
  * `onOpenStoryList` and `onOpenSettings` back two bare icon buttons the
@@ -87,6 +98,7 @@ export const STORY_ROOM_COMPOSER_VIEW_CONTRACT_VERSION = "3.1.0";
  * @property {string} autoPendingLabel The Auto circle's accessible name while sending.
  * @property {"soon"|"ready"} sceneImageState "soon" renders the scene image seat disabled.
  * @property {string} sceneImageLabel The scene image seat's accessible name.
+ * @property {{ label: string, avatarUrl: string, canPick: boolean, onPick: () => void }} playerCircle The player circle: the selected player character (or "You"), a button opening the select player character flow while canPick is true.
  * @property {() => void} onAuto Runs the existing continuation with the AUTO speaker.
  * @property {() => void} onOpenStoryList Below md: opens the story list as a left sheet.
  * @property {() => void} onOpenSettings Below md: opens the story details sheet.

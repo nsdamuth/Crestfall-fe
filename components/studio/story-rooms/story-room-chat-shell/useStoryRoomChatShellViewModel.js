@@ -637,6 +637,19 @@ export function useStoryRoomChatShellViewModel({
       isSending: sending,
       disabled: loading || Boolean(error) || !chatAllowed,
       disabledReason: chatUnavailableReason,
+      // The player circle (brief 3 item 2): the selected player
+      // character's name and avatar, or nothing when none is chosen;
+      // its tap opens the existing select player character flow while
+      // that flow is open (before the first message).
+      playerCharacter: selectedPlayerCharacter
+        ? {
+            label: selectedPlayerCharacter.name || "",
+            avatarUrl: selectedPlayerCharacter.avatarUrl || "",
+          }
+        : null,
+      playerCharacterPickerAvailable:
+        Boolean(canSetPlayerCharacter) && !firstMessageSubmitted,
+      onOpenPlayerCharacterPicker: openPlayerCharacterPicker,
       // Below md the composer carries the story list and settings
       // buttons (brief 2 item 11): the story list opens as a left
       // sheet, settings opens the details sheet.

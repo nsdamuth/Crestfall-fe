@@ -19,11 +19,15 @@ components/studio/story-rooms/story-room-composer/StoryRoomComposer.view.jsx
 One composer bar at every width (fe/chat-studio item 2, 12 Sep 2026;
 send row and Auto reshaped by brief 2 item 1, 13 Sep 2026):
 
-- row one, left to right (brief 2 item 2): the scene image seat at the
-  left edge, a 44px circle per cast member (avatar, narrator glyph, or
-  initial), then the input mode chip (Dialogue, Action, OOC, Direct on
-  the shared KitDropdown menu, the first mode resting) pinned right, and
-  nothing else;
+- row one, left to right (brief 2 item 2, player circle added by brief 3
+  item 2): the scene image seat at the left edge, the player circle (the
+  selected player character's avatar or initial, or "You" when none is
+  chosen; a button opening the existing select player character flow
+  while that flow is available, a plain mark once the story has begun;
+  it never reports a speaker), a 44px circle per cast member (avatar,
+  narrator glyph, or initial), then the input mode chip (Dialogue,
+  Action, OOC, Direct on the shared KitDropdown menu, the first mode
+  resting) pinned right, and nothing else;
 - row two: the growing message field (placeholder "Send a message"), the
   Auto circle (sparkle glyph, secondary circle on `--step-above`), and the
   circular gold send button with the arrow glyph at the row's right edge.
@@ -65,7 +69,9 @@ The ViewModel owns:
 - mapping semantic View callbacks to the existing controlled setters;
 - send, Auto, and textarea disabled-state decisions;
 - the send and Auto circles' accessible names and the scene image seat
-  state.
+  state;
+- the player circle's label, avatar, and whether its tap opens the
+  select player character flow (brief 3 item 2).
 
 ## Live Caller
 
