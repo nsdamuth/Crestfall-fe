@@ -52,9 +52,12 @@ export default function StoryRoomNoticeCard({
         <div className="min-w-0 flex-1">
           {/* Action placement (brief 2 item 9): the button anchors to the
               right edge of the card on the same row as the text at md
-              and up, and runs full width under the text below md. Its
-              label reads at the message field's type step through the
-              cf-btn--field variant. */}
+              and up, and runs full width under the text below md. Body
+              and label (review round 4 item 3, RULED): both read at the
+              transcript's chat tier, --text-chat over --lh-chat, the
+              body through the utility and the label through the
+              cf-btn--notice variant, which also tightens the button's
+              side padding; the height keeps the 44px touch floor. */}
           <div className="md:flex md:items-center md:gap-[var(--space-4)]">
             <div className="min-w-0 md:flex-1">
               {eyebrow ? (
@@ -66,7 +69,7 @@ export default function StoryRoomNoticeCard({
               ) : null}
 
               {body ? (
-                <p className="mt-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
+                <p className="mt-[var(--space-2)] text-[length:var(--text-chat)] leading-[var(--lh-chat)] text-[var(--ink-dim)]">
                   {body}
                 </p>
               ) : null}
@@ -77,7 +80,7 @@ export default function StoryRoomNoticeCard({
                 type="button"
                 onClick={() => safeAction.onPress?.()}
                 disabled={Boolean(safeAction.busy)}
-                className="cf-btn cf-btn--secondary cf-btn--field mt-[var(--space-4)] w-full disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] md:mt-0 md:w-auto md:shrink-0"
+                className="cf-btn cf-btn--secondary cf-btn--notice mt-[var(--space-4)] w-full disabled:cursor-not-allowed disabled:opacity-[var(--state-disabled-opacity)] md:mt-0 md:w-auto md:shrink-0"
               >
                 {safeAction.busy ? safeAction.busyLabel || safeAction.label : safeAction.label}
               </button>

@@ -375,16 +375,19 @@
   line-height: var(--lh-label);
 }
 
-/* Field-type button (fe/chat-studio brief 2 item 9, 13 Sep 2026): a
-   cf-btn whose label reads at the field bed's type step (--text-input,
-   --lh-input), for a button that sits beside typed copy such as the
-   story chat notice card's action. Height and padding stay the
-   recipe's own; sized here as a variant because .cf-btn is unlayered
-   and no text- utility can reach its font-size (standing note, 10 Sep
-   2026). */
-.cf-btn--field {
-  font-size: var(--text-input);
-  line-height: var(--lh-input);
+/* Notice-card button (fe/chat-studio review round 4 item 3, 13 Sep
+   2026, RULED by Brian; replaces the brief 2 item 9 .cf-btn--field
+   variant, whose only consumer was this card): a cf-btn whose label
+   reads at the transcript's chat tier (--text-chat, --lh-chat, the
+   same size as the notice card's body copy beside it) with tighter
+   side padding, so it sits a step smaller than the standard button.
+   Height stays --control-md, the touch floor. Sized here as a variant
+   because .cf-btn is unlayered and no text- utility can reach its
+   font-size (standing note, 10 Sep 2026). */
+.cf-btn--notice {
+  padding: 0 var(--space-4);
+  font-size: var(--text-chat);
+  line-height: var(--lh-chat);
 }
 
 .cf-btn--lg {
