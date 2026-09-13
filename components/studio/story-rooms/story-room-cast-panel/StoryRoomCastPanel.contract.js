@@ -1,4 +1,4 @@
-export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
+export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2.1.0";
 
 /**
  * Stable UI boundary for the Story Room cast panel.
@@ -10,6 +10,10 @@ export const STORY_ROOM_CAST_PANEL_VIEW_CONTRACT_VERSION = "2.0.0";
  * `roomListHref`, `roomListLabel`, `onClosePanel`, `onDeleteRoom`,
  * `LinkComponent`. The story's media, title, delete, and the way back
  * belong to the rail.
+ *
+ * 2.1.0, fe/chat-studio item 8: the Manage cast modal is the shared
+ * StoryChatDialog recipe (eyebrow Cast, title Manage cast, one sentence,
+ * Random liked left, Done right). No prop changed.
  *
  * The portable View owns the cast cards, the Set player character and
  * Manage Cast actions, errors, the Manage Cast modal, and composition of

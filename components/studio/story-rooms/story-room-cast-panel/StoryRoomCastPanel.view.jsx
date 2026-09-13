@@ -1,5 +1,6 @@
-import { Check, Shuffle, UserRound, Users, X } from "lucide-react";
+import { Check, UserRound, Users } from "lucide-react";
 
+import StoryChatDialog from "@/components/studio/story-rooms/story-room-chat-shell/StoryChatDialog";
 import StoryRoomNpcParticipantManagerView from "@/components/studio/story-rooms/story-room-npc-participant-manager/StoryRoomNpcParticipantManager.view";
 
 export default function StoryRoomCastPanelView({
@@ -95,6 +96,11 @@ export default function StoryRoomCastPanelView({
   );
 }
 
+// Manage cast on the shared dialog recipe (ruling D3, fe/chat-studio item
+// 8, decision F1): eyebrow, title, one sentence, the registry NPC tools as
+// the body, Random liked as the secondary action on the left, Done as the
+// gold primary on the right. The frame owns the veil, the close control,
+// and the sheet below 700px.
 function ManageCastModal({
   npcParticipantManager,
   randomLikedAction,
@@ -103,106 +109,60 @@ function ManageCastModal({
   onClose,
 }) {
   const safeRandomLikedAction = randomLikedAction || {};
+  const randomLikedAvailable = safeRandomLikedAction.visible !== false;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center sm:p-6">
-      <button
-        type="button"
-        tabIndex={-1}
-        aria-label="Close manage cast"
-        onClick={() => onClose?.()}
-        className="absolute inset-0 bg-[var(--scrim-strong)] backdrop-blur-sm"
-      />
+    <StoryChatDialog
+      eyebrow="Cast"
+      title="Manage cast"
+      sentence="Load registry NPCs or add one of your liked characters."
+      panelWidth="42rem"
+      titleId="story-room-manage-cast-title"
+      secondary={
+        randomLikedAvailable
+          ? {
+              label: safeRandomLikedAction.label || "Random liked",
+              busyLabel: safeRandomLikedAction.busyLabel || "Loading",
+              busy: Boolean(safeRandomLikedAction.busy),
+              disabled: Boolean(safeRandomLikedAction.disabled),
+              onPress: () => onLoadRandomLiked?.(),
+            }
+          : null
+      }
+      primary={{ label: "Done", onPress: () => onClose?.() }}
+      onClose={onClose}
+    >
+      <section>
+        <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+          Registry NPCs
+        </p>
+        <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+          Load, unload, and review NPCs supplied by the story or its active location registries.
+        </p>
 
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="story-room-manage-cast-title"
-        className="relative z-10 max-h-[90dvh] w-full overflow-y-auto rounded-t-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] shadow-2xl sm:max-w-2xl sm:rounded-[var(--radius-lg)]"
-      >
-        <div className="mx-auto mt-3 h-1 w-12 rounded-full bg-white/20 sm:hidden" />
-
-        <header className="flex items-start justify-between gap-4 border-b border-[var(--line)] px-5 pb-5 pt-4 sm:p-6">
-          <div>
-            <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-              Cast
+        <div className="mt-[var(--space-3)]">
+          {npcParticipantManager ? (
+            <StoryRoomNpcParticipantManagerView {...npcParticipantManager} />
+          ) : (
+            <p className="rounded-[var(--radius-md)] border border-dashed border-[var(--line-whisper)] p-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+              Registry NPC tools are unavailable for this story.
             </p>
-            <h2
-              id="story-room-manage-cast-title"
-              className="mt-2 font-display text-3xl text-[var(--ink)]"
-            >
-              Manage cast
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
-              Load registry NPCs or add one of your liked characters.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => onClose?.()}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--line)] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/40 hover:text-[var(--ink)]"
-            aria-label="Close manage cast"
-          >
-            <X size={16} />
-          </button>
-        </header>
-
-        <div className="space-y-6 p-5 sm:p-6">
-          <section>
-            <div className="mb-3">
-              <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-                Registry NPCs
-              </p>
-              <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
-                Load, unload, and review NPCs supplied by the story or its active location registries.
-              </p>
-            </div>
-
-            {npcParticipantManager ? (
-              <StoryRoomNpcParticipantManagerView {...npcParticipantManager} />
-            ) : (
-              <p className="rounded-[var(--radius-md)] border border-dashed border-[var(--line)] p-4 text-sm text-[var(--ink-dim)]">
-                Registry NPC tools are unavailable for this story.
-              </p>
-            )}
-          </section>
-
-          <section className="border-t border-[var(--line)] pt-5">
-            <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-              Quick add
-            </p>
-            <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
-              Add one of your liked characters without leaving the story.
-            </p>
-
-            {safeRandomLikedAction.visible !== false ? (
-              <button
-                type="button"
-                onClick={() => onLoadRandomLiked?.()}
-                disabled={safeRandomLikedAction.disabled}
-                className="cf-btn cf-btn--secondary mt-4 w-full"
-              >
-                <Shuffle size={14} />
-                {safeRandomLikedAction.busy
-                  ? safeRandomLikedAction.busyLabel || "Loading..."
-                  : safeRandomLikedAction.label || "Random liked"}
-              </button>
-            ) : (
-              <p className="mt-4 rounded-[var(--radius-md)] border border-dashed border-[var(--line)] p-4 text-sm text-[var(--ink-dim)]">
-                Random liked is not available for this story.
-              </p>
-            )}
-
-            {randomLikedError ? (
-              <p className="mt-3 rounded-xl border border-[var(--status-danger-border)] bg-[var(--status-danger-bed)] px-3 py-2 text-xs leading-5 text-[var(--status-danger)]">
-                {randomLikedError}
-              </p>
-            ) : null}
-          </section>
+          )}
         </div>
       </section>
-    </div>
+
+      {!randomLikedAvailable ? (
+        <p className="mt-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+          Random liked is not available for this story.
+        </p>
+      ) : null}
+
+      {randomLikedError ? (
+        <p className="mt-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--status-danger-text)]" role="alert">
+          {randomLikedError}
+        </p>
+      ) : null}
+    </StoryChatDialog>
   );
 }
 
