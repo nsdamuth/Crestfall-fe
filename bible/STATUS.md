@@ -1,15 +1,13 @@
-# STATUS, 29 Aug 2026
+# STATUS, 12 Sep 2026
 
-LIVE: production is Crestfall.Studio main via Railway.
-STAGING: design/fe-dev, created off origin/main at 9039758, per
-docs/reviews/FE-CONVERGENCE-AUDIT-2026-08.md. design/bible-collab-v1
-(6c832d4) is merged in, no conflicts.
-STAGING URL: none recorded; requested from Nick (Home PRD external
-input 1, bible/prds/2026-08-29-home.md); recorded here the day it
-exists.
-TRACKER: GitHub Issues.
-Sprint-h anchor for reference: design/sprint-h-final, tip 1236a3dd
-(the 26 Aug entry cited a816172, one commit short of the actual tip).
+BRANCH: fe/chat-studio off staging c67e6560; code tip 43029182 (item 10), this STATUS commit follows it; eleven commits, one per brief item, all pushed; no PR.
+LIVE: production is Crestfall.Studio main via Railway. STAGING: design/fe-dev (staging branch tip c67e6560 at cut). STAGING URL: none recorded. TRACKER: GitHub Issues.
+LANDED, story chat page (/studio/v2/stories/[id]): three flush columns at md and up with one bare 44px edge toggle per rail (rails on the card surface, center on the canvas), the left rail story list (search, New story, recent stories), one 44px mobile bar below md (back, character circle, title, details, gallery) with the studio top bar and dock hidden there, opening the story list collapses the primary nav.
+LANDED, composer and bubbles: one composer bar (cast circles, Auto sparkle, mode chip on the shared menu, one disabled scene image seat, growing field with Send a message, gold send circle); tappable slash command list with examples and the hidden-from-story footer; bubbles on the tinted bubble law (player right on the chat color, others left, no borders, ui step, narration italic, whisper inset); chat color from the character palette with a Preferences override in page state; notice cards on the card tier with the danger tokens.
+LANDED, right rail and dialogs: gallery (featured, previous and next, thumbnails, lean viewer on the shared image frame), title with the three-dot Delete story, rating and visibility chips, Export and Share, drill-ins Cast, Narrator, World state, Mechanics, Preferences; the same rail as a bottom sheet below md; every dialog on the shared StoryChatDialog recipe (Manage cast converted); retired words swept, sentence case applied; sort triggers read Sort at rest on the shared bar and the Home rails; Home creator tiles open the asset detail popup.
+CONTRACT REQUESTS FILED: CR-066 chat color preference, CR-067 creator byline, CR-068 story description, CR-069 story media list, CR-070 scene image generation (docs/CONTRACT-REQUESTS.md).
+OPEN FOR BRIAN: body type at the ui step pending the 390 readability check (revert to the body step is one line); the mobile bar hides the studio top bar below md on this route; the desktop cast panel lives in the Cast drill-in only.
+NEXT ACTION: Brian browser review of the story chat page at 390 then 1440, then a PR from fe/chat-studio to staging.
 FE/TUNING 6 Sep 2026: Home fine-tuning batch 1 landed as 2b271680
 (section lists replace tiles and rails, Home contract 4.0.0) and the
 next-section banner chain as f7a12029, branch fe/tuning. Review-mode

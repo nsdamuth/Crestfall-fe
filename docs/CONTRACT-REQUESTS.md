@@ -97,6 +97,7 @@ the details below carry only what is still actionable.
 | CR-067 | Creator byline on the room snapshot | `GET /v1/studio/story-rooms/{id}` carries `ownerId` only; the story chat details rail wants `room.creator` ({ id, username, displayName }) for the source template's owner so it can render "by @username"; the byline row stays hidden until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
 | CR-068 | Story description on the room snapshot | The room record has no description (room.data.source carries templateId and templateTitle only); the details rail wants `room.description` copied from the source template at launch; the description block stays hidden until then | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
 | CR-069 | Story media list on the room snapshot | No story-level media list exists; the details rail builds its gallery from each participant's `metadata.mediaImageUrls` and the transcript's scene images until `room.media[]` is served in display order | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 6 |
+| CR-070 | Scene image generation | No scene image operation exists in the Chassis (message actions accept REGENERATE_RESPONSE, CONTINUE_RESPONSE, REPORT_MESSAGE only); the composer keeps one visible, disabled scene image seat until a `POST /v1/studio/story-rooms/{id}/scene-image` call and its served coin cost exist | open | Nick | non-blocking; filed 12 Sep 2026 by fe/chat-studio item 2 |
 
 ## Details
 
@@ -1107,6 +1108,23 @@ deduplicated by url in first-seen order. Call wanted: the same GET adds
 first. Expected response: the list, empty when the story has no images.
 Unverified: whether scene images belong in it. Interim: the client-side
 union above; nothing is faked.
+
+### CR-070, Scene image generation
+
+Filed 12 Sep 2026 by fe/chat-studio item 2 (the composer bar). The brief
+asked for one scene image button wired to the working scene handler; no
+such handler exists on the live route (every scene control was a disabled
+stub) and the Chassis serves no scene image operation
+(`services/api/src/routes/chatRoute.js` accepts REGENERATE_RESPONSE,
+CONTINUE_RESPONSE, and REPORT_MESSAGE as message actions, nothing else).
+Call wanted: `POST /v1/studio/story-rooms/{id}/scene-image` with
+`{ requestedSpeakerId? }`, returning a job or a message that carries
+`metadata.autoEventMedia`, plus the coin cost served with it (never a
+frontend literal). Expected response: the transcript gains the scene image
+the way auto event media arrives today. Unverified: the cost, the gating,
+and whether it reuses the image generation job route. Interim: the seat is
+visible and disabled with the name "Scene image, not available yet"
+(`sceneImageState: "soon"` in `useStoryRoomComposerViewModel.js`).
 
 ## Closed
 
