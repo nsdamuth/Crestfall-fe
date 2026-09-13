@@ -5,6 +5,8 @@ const baseFixture = Object.freeze({
     "Advanced guidance is for power users who want deeper control. These fields are stored in the creation data payload.",
   greetingLabel: "Greeting",
   greetingPlaceholder: "Optional opening message.",
+  scenarioLabel: "Scenario",
+  scenarioPlaceholder: "Optional scenario/premise setup.",
   showRelationshipToPlayer: true,
   relationshipLabel: "Relationship to Player",
   relationshipPlaceholder: "Optional starting relationship or dynamic.",
@@ -20,6 +22,8 @@ export const characterAdvancedSectionPopulatedFixture = {
   ...baseFixture,
   greetingValue:
     "*The workshop bell gives a suspicious second chime.* \"Do not touch that. It has opinions.\"",
+  scenarioValue:
+    "A rain-darkened repair shop after closing, with one anomalous silver charm ticking on the central workbench.",
   relationshipValue:
     "She initially treats the player as a possible customer, possible hazard, and possible source of interesting trouble.",
   appearanceNotesValue:
@@ -33,6 +37,7 @@ export const characterAdvancedSectionPopulatedFixture = {
 export const characterAdvancedSectionEmptyFixture = {
   ...baseFixture,
   greetingValue: "",
+  scenarioValue: "",
   relationshipValue: "",
   appearanceNotesValue: "",
   personalityNotesValue: "",
@@ -43,6 +48,8 @@ export const characterAdvancedSectionLongContentFixture = {
   ...baseFixture,
   greetingValue:
     "This deliberately long greeting fixture verifies that the portable layout remains readable when the opening message contains several paragraphs of environmental description, character movement, dialogue, and scene framing without changing the application-owned storage or advanced-prompting behavior.",
+  scenarioValue:
+    "This deliberately long scenario fixture verifies that Character-specific opening premise and environment guidance remains authorable in Full Studio without being confused with a first-class SCENARIO creation or Story package selection.",
   relationshipValue:
     "The relationship begins with uncertainty and conditional cooperation, develops through observed behavior rather than automatic trust, and preserves the character's boundaries even when affection, rivalry, obligation, or shared danger becomes relevant.",
   appearanceNotesValue:
@@ -56,6 +63,7 @@ export const characterAdvancedSectionLongContentFixture = {
 export const characterAdvancedSectionMissingCallbacksFixture = {
   ...characterAdvancedSectionPopulatedFixture,
   onChangeGreeting: null,
+  onChangeScenario: null,
   onChangeRelationship: null,
   onChangeAppearanceNotes: null,
   onChangePersonalityNotes: null,
