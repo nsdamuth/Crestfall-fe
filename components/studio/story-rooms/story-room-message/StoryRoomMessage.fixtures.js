@@ -65,7 +65,7 @@ export const storyRoomMessageOpeningFixture = {
   surfaceTone: STORY_ROOM_MESSAGE_SURFACE_TONES.OPENING,
   speakerLabel: "Narrator",
   speakerAvatarUrl: null,
-  openingLabel: "Opening Scene",
+  openingLabel: "Opening scene",
   modeLabel: "Scene",
   bodyMode: STORY_ROOM_MESSAGE_BODY_MODES.LEGACY,
   legacyBody:

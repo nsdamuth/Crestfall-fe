@@ -82,7 +82,7 @@ function buildCastPanelState({
       visible: canLoadRandomLiked,
       disabled: !canLoadRandomLiked || randomLikedLoading,
       busy: randomLikedLoading,
-      label: "Random Liked",
+      label: "Random liked",
       busyLabel: "Loading",
     },
     randomLikedError: displayText(randomLikedError),

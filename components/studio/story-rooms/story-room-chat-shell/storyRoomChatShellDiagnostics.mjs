@@ -94,8 +94,8 @@ test("portable View owns responsive layout and uses injected children only", () 
   assert.doesNotMatch(castPanelView, /xl:sticky|xl:top-24|<aside/);
   assert.match(view, /variant="sheet"/);
   assert.match(view, /mobilePanel === "details" \|\| mobilePanel === "gallery"/);
-  assert.match(view, /Available Commands/);
-  assert.match(view, /Quick Help/);
+  assert.match(view, /Available commands/);
+  assert.match(view, /Quick help/);
   assert.doesNotMatch(
     view,
     /useStoryRoomChat\(|storyRoomClient|useRouter|next\/navigation|StoryRoomCastPanel from/
@@ -123,7 +123,7 @@ test("delete wording and navigation behavior remain explicit", () => {
   );
   const shell = read("components/studio/story-rooms/StoryRoomChatShell.jsx");
 
-  assert.match(viewModel, /Delete this Story\?/);
+  assert.match(viewModel, /Delete this story\?/);
   assert.match(viewModel, /permanently deletes this chat session and all messages/);
   assert.match(viewModel, /Interaction totals will remain/);
   assert.match(viewModel, /This cannot be undone/);

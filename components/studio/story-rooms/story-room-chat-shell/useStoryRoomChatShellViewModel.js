@@ -17,7 +17,7 @@ import {
 import { getPersistentStatusSurfaceDomains } from "./storyRoomStatusSurfacePresentation";
 
 export const STORY_ROOM_DELETE_CONFIRMATION_LINES = [
-  "Delete this Story?",
+  "Delete this story?",
   "",
   "This permanently deletes this chat session and all messages.",
   "Underlying characters, templates, scenarios, narrators, and locations are not deleted.",

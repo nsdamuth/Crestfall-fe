@@ -75,7 +75,7 @@ export default function StoryRoomCastPanelView({
           aria-haspopup="dialog"
         >
           <Users size={14} />
-          Manage Cast
+          Manage cast
         </button>
       </div>
       </div>
@@ -109,7 +109,7 @@ function ManageCastModal({
       <button
         type="button"
         tabIndex={-1}
-        aria-label="Close Manage Cast"
+        aria-label="Close manage cast"
         onClick={() => onClose?.()}
         className="absolute inset-0 bg-[var(--scrim-strong)] backdrop-blur-sm"
       />
@@ -125,16 +125,16 @@ function ManageCastModal({
         <header className="flex items-start justify-between gap-4 border-b border-[var(--line)] px-5 pb-5 pt-4 sm:p-6">
           <div>
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-              Cast Tools
+              Cast
             </p>
             <h2
               id="story-room-manage-cast-title"
               className="mt-2 font-display text-3xl text-[var(--ink)]"
             >
-              Manage Cast
+              Manage cast
             </h2>
             <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
-              Manage registry-linked NPCs or quickly add an eligible liked Character.
+              Load registry NPCs or add one of your liked characters.
             </p>
           </div>
 
@@ -142,7 +142,7 @@ function ManageCastModal({
             type="button"
             onClick={() => onClose?.()}
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--line)] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/40 hover:text-[var(--ink)]"
-            aria-label="Close Manage Cast"
+            aria-label="Close manage cast"
           >
             <X size={16} />
           </button>
@@ -155,7 +155,7 @@ function ManageCastModal({
                 Registry NPCs
               </p>
               <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
-                Load, unload, and review NPCs supplied by the Story or active Location registries.
+                Load, unload, and review NPCs supplied by the story or its active location registries.
               </p>
             </div>
 
@@ -163,17 +163,17 @@ function ManageCastModal({
               <StoryRoomNpcParticipantManagerView {...npcParticipantManager} />
             ) : (
               <p className="rounded-[var(--radius-md)] border border-dashed border-[var(--line)] p-4 text-sm text-[var(--ink-dim)]">
-                Registry NPC tools are unavailable for this Story.
+                Registry NPC tools are unavailable for this story.
               </p>
             )}
           </section>
 
           <section className="border-t border-[var(--line)] pt-5">
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-              Quick Add
+              Quick add
             </p>
             <p className="mt-1 text-xs leading-5 text-[var(--ink-dim)]">
-              Add one eligible Character from your liked creations without leaving the room.
+              Add one of your liked characters without leaving the story.
             </p>
 
             {safeRandomLikedAction.visible !== false ? (
@@ -190,7 +190,7 @@ function ManageCastModal({
               </button>
             ) : (
               <p className="mt-4 rounded-[var(--radius-md)] border border-dashed border-[var(--line)] p-4 text-sm text-[var(--ink-dim)]">
-                Random Liked is not available for this Story.
+                Random liked is not available for this story.
               </p>
             )}
 

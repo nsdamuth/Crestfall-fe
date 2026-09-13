@@ -81,7 +81,7 @@ const BASE_FIXTURE = {
   npcParticipantManager: storyRoomNpcParticipantClosedFixture,
   randomLikedAction: {
     visible: true,
-    label: "Random Liked",
+    label: "Random liked",
     busyLabel: "Loading...",
     disabled: false,
     busy: false,

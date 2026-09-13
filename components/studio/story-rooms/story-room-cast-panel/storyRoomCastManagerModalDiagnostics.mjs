@@ -15,12 +15,12 @@ for (const prop of ["manageCastOpen", "onOpenManageCast", "onCloseManageCast"]) 
   assert.match(contract, new RegExp(`@property .*${prop}`));
 }
 
-assert.match(view, />\s*Manage Cast\s*</);
+assert.match(view, />\s*Manage cast\s*</);
 assert.match(view, /aria-haspopup="dialog"/);
 assert.match(view, /role="dialog"/);
 assert.match(view, /aria-modal="true"/);
 assert.match(view, /Registry NPCs/);
-assert.match(view, /Quick Add/);
+assert.match(view, /Quick add/);
 assert.match(view, /<StoryRoomNpcParticipantManagerView \{\.\.\.npcParticipantManager\} \/>/);
 assert.match(view, /onLoadRandomLiked\?\.\(\)/);
 assert.match(view, /safeRandomLikedAction\.busy/);

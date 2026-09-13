@@ -36,7 +36,7 @@ function buildSections(room = {}) {
     {
       id: "world-state",
       iconKey: "world",
-      title: "World State",
+      title: "World state",
       rows: [
         createRow("location", "Location", room?.location, "Unknown"),
         createRow("time", "Time", room?.timeLabel, "Unknown"),

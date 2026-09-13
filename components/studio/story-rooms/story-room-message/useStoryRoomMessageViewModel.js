@@ -244,7 +244,7 @@ export function getStoryRoomMessageViewProps(
     speakerLabel: String(safeMessage.speaker || ""),
     speakerAvatarUrl: safeMessage.speakerAvatarUrl || null,
     openingLabel:
-      safeMessage.kind === "OPENING_SCENE" ? "Opening Scene" : "",
+      safeMessage.kind === "OPENING_SCENE" ? "Opening scene" : "",
     modeLabel: String(safeMessage.mode || ""),
     bodyMode: semanticSegments.length
       ? STORY_ROOM_MESSAGE_BODY_MODES.SEMANTIC

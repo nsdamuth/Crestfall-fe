@@ -74,7 +74,7 @@ export function buildStorySessionVisibleMessageOptions(messages = []) {
       const preview = body.length > 72 ? `${body.slice(0, 72)}…` : body;
       return {
         id: String(message.id),
-        label: `${index + 1}. ${text(message.speaker) || "Story"} — ${preview}`,
+        label: `${index + 1}. ${text(message.speaker) || "Story"}: ${preview}`,
       };
     });
 }
@@ -291,12 +291,12 @@ export function projectStorySessionShareExportActions({
   return {
     export: {
       id: "export-chat",
-      label: "Export Chat",
+      label: "Export",
       enabled: hasRoom && hasMessages && Boolean(canExport),
     },
     share: {
       id: "share-snapshot",
-      label: "Share Snapshot",
+      label: "Share",
       enabled: hasRoom && hasMessages && Boolean(canCreateTemporaryShare),
     },
     messageOptions,

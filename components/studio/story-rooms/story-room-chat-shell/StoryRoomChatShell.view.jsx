@@ -229,7 +229,7 @@ export default function StoryRoomChatShellView({
           titleId="story-room-delete-title"
           secondary={{ label: "Cancel", onPress: onCancelDeleteRoom }}
           primary={{
-            label: "Delete Story",
+            label: "Delete story",
             busyLabel: "Deleting",
             busy: isDeletingRoom,
             onPress: onConfirmDeleteRoom,
@@ -357,10 +357,10 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
             className="mt-[var(--space-2)] font-display text-[length:var(--text-subhead)] leading-[var(--lh-subhead)] text-[var(--ink)]"
           >
             {showCommands
-              ? "Available Commands"
+              ? "Available commands"
               : showFormat
-                ? "Story Text Formatting"
-                : "Quick Help"}
+                ? "Story text formatting"
+                : "Quick help"}
           </h2>
         </div>
       </div>
@@ -407,16 +407,16 @@ function StoryRoomComposerHelpPanel({ panel, commands = [], onClose }) {
             <FormatHelpItem label="Action" example="I take one step back.">
               With quote-style roleplay, plain prose is action. If you prefer the asterisk-action style, *action like this* is also supported.
             </FormatHelpItem>
-            <FormatHelpItem label="Private Thought" example="*Why is that ticking?*">
+            <FormatHelpItem label="Private thought" example="*Why is that ticking?*">
               In quote-style roleplay, italicized text is private inner thought. Ordinary Characters do not receive private thoughts unless explicit perception authority allows it.
             </FormatHelpItem>
-            <FormatHelpItem label="Written / Digital Message" example="> Meet me behind the station.">
+            <FormatHelpItem label="Written or digital message" example="> Meet me behind the station.">
               Begin a line with &gt; for a written, physical, or digital message.
             </FormatHelpItem>
             <FormatHelpItem label="Telepathy" example={'`Can you hear me?`'}>
               Wrap deliberately transmitted mental speech in backticks. Telepathy is distinct from a private inner thought and remains subject to recipient/perception rules.
             </FormatHelpItem>
-            <FormatHelpItem label="Alternate RP Style" example="*She steps closer.*  Hello there.">
+            <FormatHelpItem label="Alternate roleplay style" example="*She steps closer.*  Hello there.">
               If you use asterisks for actions and do not use quoted dialogue, ordinary unwrapped text is treated as spoken dialogue.
             </FormatHelpItem>
           </div>

@@ -90,13 +90,13 @@ export default function StoryRoomTranscriptView({
 
         {loading ? (
           <StatusCard icon={Loader2} spin>
-            Loading Story...
+            Loading story
           </StatusCard>
         ) : null}
 
         {!loading && !safeMessageItems.length && !errorMessage ? (
           <StatusCard icon={Sparkles}>
-            This Story has no messages yet. Send the opening message to begin.
+            This story has no messages yet. Send the opening message to begin.
           </StatusCard>
         ) : null}
 
