@@ -21,7 +21,7 @@ The story chat page's right rail at md and up, and the content of the right shee
 
 ## Placement
 
-Mounted by the chat shell in its right rail (320px, open by default at md and up) and inside the right sheet below md, opened from the mobile bar's settings and media buttons.
+Mounted by the chat shell in its right rail (320px, open by default at md and up) and inside the right sheet below md, opened from the mobile bar's settings and media buttons. The rail column paints the surface (`--surface-2`, one step above the primary sidebar, brief 2 item 6) and the sheet paints its own; the View carries no surface, so its tap controls rise from whichever container holds it.
 
 ## Not in this package
 

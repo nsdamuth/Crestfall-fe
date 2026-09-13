@@ -85,10 +85,10 @@ export default function StoryRoomStoryListView({
   const safeItems = Array.isArray(items) ? items : [];
 
   return (
-    <nav
-      aria-label="Stories"
-      className="flex h-full min-h-0 flex-col bg-[var(--surface-1)]"
-    >
+    // The rail column paints the surface (brief 2 item 6); the list
+    // carries none of its own, so it reads on --surface-2 in the rail
+    // and on the sheet's own surface below md.
+    <nav aria-label="Stories" className="flex h-full min-h-0 flex-col">
       <div className="flex flex-col gap-[var(--space-2)] px-[var(--space-3)] pb-[var(--space-3)]">
         <KitSearchFieldView
           value={query}

@@ -24,10 +24,11 @@ const EYEBROW_CLASS =
 // the grid geometry lives in app/design-system.css under
 // .cf-story-room-grid[data-rails], the rails collapse to one bare 44px
 // edge toggle each, and below md the page is one column under its own
-// 44px bar. The two rails sit on the card surface with a hairline
-// against the center, which stays on the canvas, so the three columns
-// read as three surfaces (Brian's amendment to item 6). The View owns
-// no viewport reads: `swipeEnabled` arrives from the ViewModel.
+// 44px bar. An open rail sits on --surface-2, one step above the
+// primary sidebar, with a hairline against the center, which stays on
+// the canvas, so the three columns read as three surfaces (brief 2
+// item 6, replacing the card-surface amendment). The View owns no
+// viewport reads: `swipeEnabled` arrives from the ViewModel.
 export default function StoryRoomChatShellView({
   room = {},
   railsState = "right",
@@ -123,10 +124,14 @@ export default function StoryRoomChatShellView({
       <div className="cf-story-room-grid min-h-0 flex-1" data-rails={railsState}>
         {/* A closed rail carries no surface (brief 2 item 5): the toggle
             is a bare icon on the page canvas, no fill, no border, no
-            column color. The open rail paints its surface here. */}
+            column color. An open rail sits one step above the primary
+            sidebar's --surface-1 (brief 2 item 6), on --surface-2 with
+            the --line-whisper divider against the center; the rail
+            views paint no surface of their own, so the tier steps
+            resolve from this column. */}
         <div
           className={`hidden min-h-0 flex-col md:flex ${
-            leftOpen ? "border-r border-[var(--line-whisper)] bg-[var(--surface-1)]" : ""
+            leftOpen ? "border-r border-[var(--line-whisper)] bg-[var(--surface-2)]" : ""
           }`}
         >
           <RailEdgeToggle
@@ -183,7 +188,7 @@ export default function StoryRoomChatShellView({
 
         <div
           className={`hidden min-h-0 flex-col md:flex ${
-            rightOpen ? "border-l border-[var(--line-whisper)] bg-[var(--surface-1)]" : ""
+            rightOpen ? "border-l border-[var(--line-whisper)] bg-[var(--surface-2)]" : ""
           }`}
         >
           <RailEdgeToggle

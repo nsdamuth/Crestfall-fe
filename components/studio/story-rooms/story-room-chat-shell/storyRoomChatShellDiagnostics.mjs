@@ -86,8 +86,19 @@ test("portable View owns responsive layout and uses injected children only", () 
   // Brief 2 item 5: a closed rail carries no surface, the open rail
   // paints its own; the toggle is the sidebar's bare panel glyph and
   // recipe, anchored to the panel edge nearest the center.
-  assert.match(view, /rightOpen \? "border-l border-\[var\(--line-whisper\)\] bg-\[var\(--surface-\d\)\]" : ""/);
-  assert.match(view, /leftOpen \? "border-r border-\[var\(--line-whisper\)\] bg-\[var\(--surface-\d\)\]" : ""/);
+  // Brief 2 item 6: an open rail sits on --surface-2, one step above
+  // the primary sidebar, and the rail views paint no surface of their
+  // own.
+  assert.match(view, /rightOpen \? "border-l border-\[var\(--line-whisper\)\] bg-\[var\(--surface-2\)\]" : ""/);
+  assert.match(view, /leftOpen \? "border-r border-\[var\(--line-whisper\)\] bg-\[var\(--surface-2\)\]" : ""/);
+  assert.doesNotMatch(
+    read("components/studio/story-rooms/story-room-story-list/StoryRoomStoryList.view.jsx"),
+    /flex h-full min-h-0 flex-col bg-\[var\(--surface-1\)\]/
+  );
+  assert.doesNotMatch(
+    read("components/studio/story-rooms/story-room-details-rail/StoryRoomDetailsRail.view.jsx"),
+    /flex h-full min-h-0 flex-col bg-\[var\(--surface-1\)\]/
+  );
   assert.match(view, /RailEdgeToggle/);
   assert.match(view, /function RailPanelGlyph/);
   assert.match(view, /<rect x="3" y="4" width="18" height="16" rx="2" \/>/);

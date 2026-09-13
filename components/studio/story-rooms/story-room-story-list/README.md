@@ -19,7 +19,7 @@ The story chat page's left rail (ruling D4, fe/chat-studio item 1, 12 Sep 2026).
 
 ## Placement
 
-Mounted by the story chat shell in its left rail at md and up when the rail is open. Below md the list is not mounted; the page's mobile bar leads back to the Stories page.
+Mounted by the story chat shell in its left rail at md and up when the rail is open. The rail column paints the surface (`--surface-2`, one step above the primary sidebar, brief 2 item 6); the View carries no surface of its own. Below md the list is not mounted; the page's mobile bar leads back to the Stories page.
 
 ## Not in this package
 

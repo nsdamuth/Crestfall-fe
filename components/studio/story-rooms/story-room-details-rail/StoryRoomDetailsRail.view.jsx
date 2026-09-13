@@ -40,9 +40,12 @@ export default function StoryRoomDetailsRailView({
   const safeRows = Array.isArray(rows) ? rows : [];
   const activeRow = safeRows.find((row) => row.id === activeDetail) || null;
 
+  // The rail column paints the surface (brief 2 item 6); the rail views
+  // carry none of their own, so the same View reads on --surface-2 in
+  // the rail and on the sheet's own surface below md.
   if (activeRow) {
     return (
-      <div className="flex h-full min-h-0 flex-col bg-[var(--surface-1)]">
+      <div className="flex h-full min-h-0 flex-col">
         <button
           type="button"
           onClick={() => onBack?.()}
@@ -64,7 +67,7 @@ export default function StoryRoomDetailsRailView({
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-[var(--surface-1)]">
+    <div className="flex h-full min-h-0 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto">
         <Gallery gallery={gallery} title={title} />
 
