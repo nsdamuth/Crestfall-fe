@@ -125,8 +125,10 @@ export default function StoryRoomComposerView({
     <div className="relative z-50 shrink-0 bg-transparent">
       {/* Bottom margin (brief 2 item 10): the safe-area inset plus
           --space-2 at 390 so the field never touches the bottom edge,
-          --space-3 below the send row at md and up. */}
-      <div className="border-t border-[var(--line-whisper)] bg-[var(--canvas)] px-[var(--space-3)] pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-[var(--space-2)] md:pb-[var(--space-3)]">
+          --space-3 below the send row at md and up. The bar's surface
+          and top hairline belong to the chat shell's full-width composer
+          row (brief 3 item 1); this View paints the content only. */}
+      <div className="px-[var(--space-3)] pb-[calc(var(--space-2)+env(safe-area-inset-bottom))] pt-[var(--space-2)] md:pb-[var(--space-3)]">
         {disabledReason ? (
           <p className="mb-[var(--space-2)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
             {disabledReason}

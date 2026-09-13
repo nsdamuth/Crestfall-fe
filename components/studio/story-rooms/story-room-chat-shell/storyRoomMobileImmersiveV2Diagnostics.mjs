@@ -53,7 +53,11 @@ test("mobile composer replaces the dock in Story chat flow with safe-area cleara
   assert.doesNotMatch(composer, /fixed bottom-0 left-0 right-0 z-50/);
   assert.match(composer, /relative z-50 shrink-0 bg-transparent/);
   assert.match(composer, /safe-area-inset-bottom/);
-  assert.match(shell, /<div className="shrink-0">[\s\S]*ComposerComponent/);
+  // Brief 3 item 1: the composer sits in a full-width shell row beneath
+  // the rails grid, its content in the transcript's grid column.
+  assert.match(shell, /cf-story-room-grid relative z-50 shrink-0 border-t border-\[var\(--line-whisper\)\] bg-\[var\(--canvas\)\]"\n\s+data-rails=\{railsState\}/);
+  assert.match(shell, /<div className="min-w-0">\n\s+<ComposerComponent/);
+  assert.doesNotMatch(shell, /<div className="shrink-0">\n\s+\{ComposerComponent/);
   assert.doesNotMatch(shell, /9rem\+env\(safe-area-inset-bottom\)/);
 });
 

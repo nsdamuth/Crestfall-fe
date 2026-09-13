@@ -170,10 +170,6 @@ export default function StoryRoomChatShellView({
               {statusSurfaceError}
             </p>
           ) : null}
-
-          <div className="shrink-0">
-            {ComposerComponent ? <ComposerComponent {...composerProps} /> : null}
-          </div>
         </main>
 
         <div
@@ -195,6 +191,26 @@ export default function StoryRoomChatShellView({
           ) : null}
         </div>
       </div>
+
+      {/* The composer bar (brief 3 item 1): one full-width row beneath
+          both rails. The rails end at this row's top edge; the bar's
+          surface and top hairline run edge to edge, and the composer's
+          content sits in the same grid column as the transcript, so the
+          field and its buttons keep the transcript's width and stay
+          centered under it at every rail state. The two side cells are
+          empty spacers at md and up and do not render below md. */}
+      {ComposerComponent ? (
+        <div
+          className="cf-story-room-grid relative z-50 shrink-0 border-t border-[var(--line-whisper)] bg-[var(--canvas)]"
+          data-rails={railsState}
+        >
+          <div aria-hidden="true" className="hidden md:block" />
+          <div className="min-w-0">
+            <ComposerComponent {...composerProps} />
+          </div>
+          <div aria-hidden="true" className="hidden md:block" />
+        </div>
+      ) : null}
 
       {composerHelpPanel ? (
         <StoryRoomComposerHelpPanel
