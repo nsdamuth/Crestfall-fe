@@ -77,7 +77,8 @@ diagnostics:loom:share`).
 
 - `KitShareSheet.view.jsx`: eyebrow "Share", the title, the creator
   byline, the preview (the card image for a playable public creation,
-  else the link preview row), the link in a read-only field on
+  on the strong line so it stands off the panel's own gradient, else
+  the link preview row), the link in a read-only field on
   `--bed-deep` (a control you read sinks one step below), Copy link
   (the gold primary, full width, 44px), and a status chip (Link
   copied, Share unavailable) that clears after 1.6 seconds.

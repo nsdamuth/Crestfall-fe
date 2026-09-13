@@ -36,9 +36,13 @@ function Eyebrow() {
   );
 }
 
+// The card and the panel share the lift gradient, so the preview's
+// edge is its only boundary: the strong line (the sole-identifier
+// step, 3:1) rather than the quiet one, ruled at Brian's browser
+// review, 13 Sep 2026.
 function CardPreview({ src = "", title = "" }) {
   return (
-    <div className="w-full max-w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-1)]">
+    <div className="w-full max-w-full overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-strong)] bg-[var(--surface-1)]">
       <img
         src={src}
         alt={title ? `Share card for ${title}` : "Share card"}
