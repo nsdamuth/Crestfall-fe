@@ -30,9 +30,12 @@ export const STUDIO_MOBILE_NAV_PRIMARY_LINKS = Object.freeze([
 ]);
 
 
+// Studio iconKey home -> feather, 12 Sep 2026 (Brian's browser review,
+// same-day parity with the sidebar): the quill glyph, so Home and
+// Studio no longer share one glyph in the drawer or the bottom dock.
 export const STUDIO_MOBILE_NAV_V2_PRIMARY_LINKS = Object.freeze([
   Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home" }),
-  Object.freeze({ label: "Studio", href: "/studio", iconKey: "home" }),
+  Object.freeze({ label: "Studio", href: "/studio", iconKey: "feather" }),
   Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare" }),
   Object.freeze({ label: "Adventures", href: "/studio/v2/adventures", iconKey: "scrollText" }),
   Object.freeze({ label: "Media", href: "/studio/v2/images", iconKey: "image" }),
@@ -45,7 +48,7 @@ export const STUDIO_MOBILE_NAV_V2_PRIMARY_LINKS = Object.freeze([
 export const STUDIO_MOBILE_NAV_V2_BOTTOM_LINKS = Object.freeze([
   Object.freeze({ label: "Home", href: "/studio/v2/home", iconKey: "home" }),
   Object.freeze({ label: "Stories", href: "/studio/v2/stories", iconKey: "messagesSquare" }),
-  Object.freeze({ label: "Studio", href: "/studio", iconKey: "home" }),
+  Object.freeze({ label: "Studio", href: "/studio", iconKey: "feather" }),
   Object.freeze({ label: "Media", href: "/studio/v2/images", iconKey: "image" }),
   Object.freeze({ label: "Vault", href: "/studio/v2/vault", iconKey: "archive" }),
 ]);

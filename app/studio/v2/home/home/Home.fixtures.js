@@ -59,7 +59,7 @@ const CREATOR_SORT_OPTIONS = [{ value: "likes", label: "Likes" }];
 
 function sortControl(options) {
   return options.length
-    ? { options, selectedValue: options[0].value, onChange: noop }
+    ? { options, selectedValue: options[0].value, defaultValue: options[0].value, onChange: noop }
     : null;
 }
 
@@ -93,7 +93,6 @@ const SECTION_RAILS = [
 export const homeFullPageFixture = {
   topBanner: TOP_BANNER,
   continueItem: CONTINUE_ITEM,
-  welcomeName: "Player",
   sectionRails: SECTION_RAILS,
   bottomBanner: BOTTOM_BANNER,
   errorMessage: null,

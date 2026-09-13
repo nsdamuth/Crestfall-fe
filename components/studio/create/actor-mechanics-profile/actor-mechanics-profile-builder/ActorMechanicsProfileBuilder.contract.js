@@ -1,4 +1,11 @@
-export const ACTOR_MECHANICS_PROFILE_BUILDER_VIEW_CONTRACT_VERSION = "1.0.0";
+/**
+ * 1.1.0, package MOBILE-SHELLS, additive and prop-free: the root grid's
+ * two children carry min-w-0 so the base column can shrink to the page
+ * gutter, and the existing saveStatus/onSave/saveDisabled trio is
+ * repeated in a bottom-docked action bar below the md breakpoint. No
+ * prop was added, removed, or changed in meaning.
+ */
+export const ACTOR_MECHANICS_PROFILE_BUILDER_VIEW_CONTRACT_VERSION = "1.1.0";
 export const ACTOR_MECHANICS_PROFILE_CREATION_TYPE = "ACTOR_MECHANICS_PROFILE";
 
 export const ACTOR_MECHANICS_PROFILE_VISIBILITY_OPTIONS = Object.freeze([

@@ -7,13 +7,14 @@ import {
   SHORT_LONGFORM_MAX_LENGTH,
   TextAreaField,
 } from "../../../my-creations/edit/sections/SharedFields";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 function EditorCard({ eyebrow, title, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
       <p className={EYEBROW_CLASS}>{eyebrow}</p>
       <h2 className="mt-2 font-display text-4xl">{title}</h2>
       <div className="mt-6">{children}</div>
@@ -31,7 +32,7 @@ function TextField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -39,7 +40,7 @@ function TextField({ label, value, onChange, placeholder }) {
 
 function RuntimeFieldsFixtureFallback() {
   return (
-    <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 bg-black/20 p-6 text-sm leading-6 text-[var(--ink-dim)]">
+    <div className="rounded-[var(--radius-md)] border border-dashed border-white/15 bg-[var(--surface-1)] p-6 text-sm leading-6 text-[var(--ink-dim)]">
       The live Binding Shell supplies the Crestfall mechanics fields editor here.
       Fixture previews keep this application-owned editor disconnected from
       persistence and runtime state.
@@ -66,7 +67,12 @@ export default function MechanicsModuleBuilderView({
 } = {}) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.38fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+          implicit base column is sized by min-width:auto, so any nowrap
+          descendant becomes the page's horizontal scroll width. This is
+          the single-column rule for this shell: one column in DOM order
+          below xl, each child free to shrink to the gutter. */}
+      <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className={EYEBROW_CLASS}>Mechanics Module Builder</p>
 
         <h2 className="mt-2 font-display text-4xl">
@@ -78,7 +84,7 @@ export default function MechanicsModuleBuilderView({
           locations, characters, scenarios, or narrators.
         </p>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
           <p className={EYEBROW_CLASS}>Runtime Contract</p>
           <p className="mt-3">
             Module ID:{" "}
@@ -128,7 +134,7 @@ export default function MechanicsModuleBuilderView({
         ) : null}
       </aside>
 
-      <div className="grid gap-6">
+      <div className="min-w-0 grid gap-6">
         <EditorCard eyebrow="Mechanics Module" title="Identity">
           <div className="grid gap-5">
             <TextField
@@ -168,7 +174,7 @@ export default function MechanicsModuleBuilderView({
           eyebrow="Runtime Fields"
           title="Meters, Commands, Status Blocks, and Guards"
         >
-          <div className="mb-6 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <div className="mb-6 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
             <Activity className="mt-1 text-[var(--gold-ornament)]" size={20} />
             <div>
               <p className="text-sm text-[var(--ink)]">
@@ -183,6 +189,14 @@ export default function MechanicsModuleBuilderView({
           {runtimeFieldsContent || <RuntimeFieldsFixtureFallback />}
         </EditorCard>
       </div>
+      {/* MOBILE-SHELLS: the aside's Save draft is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }

@@ -60,7 +60,7 @@ export default function PublicProfileDonateButtonView({
               <button
                 type="button"
                 onClick={() => onCloseDonation?.()}
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
                 aria-label="Close donation dialog"
               >
                 <X size={17} />
@@ -85,7 +85,7 @@ export default function PublicProfileDonateButtonView({
                   value={amountValue}
                   disabled={isBusy || isSuccess}
                   onChange={(event) => onChangeAmount?.(event.target.value)}
-                  className="mt-2 w-full rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 disabled:opacity-60"
+                  className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 disabled:opacity-60"
                 />
               </label>
 
@@ -107,12 +107,12 @@ export default function PublicProfileDonateButtonView({
                   onChange={(event) => onChangeMessage?.(event.target.value)}
                   rows={4}
                   maxLength={500}
-                  className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/50 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 disabled:opacity-60"
+                  className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 disabled:opacity-60"
                   placeholder="Add a message to your donation..."
                 />
               </label>
 
-              <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/35 p-3">
+              <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
                 <input
                   type="checkbox"
                   checked={isAnonymous}
@@ -120,7 +120,7 @@ export default function PublicProfileDonateButtonView({
                   onChange={(event) =>
                     onChangeAnonymous?.(event.target.checked)
                   }
-                  className="mt-1"
+                  className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
                 />
                 <span className="text-sm leading-6 text-[var(--ink-dim)]">
                   Donate anonymously. You will appear as Mystery Donor publicly.

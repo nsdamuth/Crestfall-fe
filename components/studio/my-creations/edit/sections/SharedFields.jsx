@@ -1,5 +1,5 @@
 import { createContext, useContext, useLayoutEffect, useRef, useState } from "react";
-import { Check, ChevronDown } from "lucide-react";
+import { Check } from "lucide-react";
 
 import KitFormField from "@/components/kit/KitFormField";
 
@@ -62,7 +62,7 @@ const LABEL_CLASS =
 // focus treatment on every focusable element app-wide, this field
 // bed included.
 const FIELD_BED_CLASS =
-  "min-w-0 max-w-full w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] overflow-hidden text-ellipsis whitespace-nowrap";
+  "min-w-0 max-w-full w-full min-h-[var(--control-md)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-[var(--space-4)] py-[var(--space-2)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)] overflow-hidden text-ellipsis whitespace-nowrap";
 
 const HELPER_CLASS =
   "text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]";
@@ -114,7 +114,7 @@ export function SectionTitle({ eyebrow, title, body }) {
 
   return (
     <div>
-      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
       <h2 className="mt-2 font-display text-[length:var(--text-heading-m)] leading-[var(--lh-heading-m)] min-[700px]:text-[length:var(--text-heading)] min-[700px]:leading-[var(--lh-heading)]">
@@ -290,7 +290,7 @@ export function TextAreaField({
     setIsFocused(false);
   }
 
-  const bedClass = `min-w-0 max-w-full w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] px-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
+  const bedClass = `min-w-0 max-w-full w-full rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--bed-deep)] shadow-[var(--shadow-bed)] px-[var(--space-4)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)] outline-none transition-colors placeholder:text-[var(--ink-faint)] hover:border-[var(--state-hover-line)] disabled:pointer-events-none disabled:opacity-[var(--state-disabled-opacity)]${
     mono ? " font-mono" : ""
   }`;
 
@@ -329,11 +329,6 @@ export function TextAreaField({
           >
             {value || placeholder || " "}
           </span>
-          <ChevronDown
-            size={16}
-            aria-hidden="true"
-            className="flex-none text-[var(--ink-faint)]"
-          />
         </button>
       )}
       {helperText ? (
@@ -414,7 +409,7 @@ export function ActionPanel({
 }) {
   return (
     <div className="border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
-      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
         {title}
       </p>
       <p className={`mt-[var(--space-2)] ${HELPER_CLASS}`}>{body}</p>

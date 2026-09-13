@@ -16,7 +16,7 @@ export default function LookStopView({
 
   return (
     <>
-      <Eyebrow>The look</Eyebrow>
+      <Eyebrow showRuleMark={false}>The look</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Every choice, brought together.
       </h2>

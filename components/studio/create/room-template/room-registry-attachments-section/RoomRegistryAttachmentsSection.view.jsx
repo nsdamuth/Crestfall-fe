@@ -33,7 +33,7 @@ export default function RoomRegistryAttachmentsSectionView({
           return (
             <div
               key={group?.id || group?.label}
-              className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/30 p-5"
+              className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5"
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
@@ -75,7 +75,7 @@ export default function RoomRegistryAttachmentsSectionView({
                   ))}
                 </div>
               ) : (
-                <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+                <p className="mt-4 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
                   {group?.emptyLabel || "No registries attached."}
                 </p>
               )}
@@ -93,17 +93,17 @@ function RegistryAttachmentCard({
   onNotesChange = null,
 } = {}) {
   return (
-    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-black/35">
-      <div className="flex items-center gap-3 border-b border-white/10 bg-black/25 p-3">
+    <div className="overflow-hidden rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)]">
+      <div className="flex items-center gap-3 border-b border-white/10 bg-[var(--surface-1)] p-3">
         {attachment?.imageUrl ? (
           <div
-            className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-black/45 bg-cover bg-center"
+            className="h-16 w-16 shrink-0 rounded-xl border border-white/10 bg-[var(--surface-1)] bg-cover bg-center"
             style={{
               backgroundImage: `url(${attachment.imageUrl})`,
             }}
           />
         ) : (
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-black/45 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-[var(--surface-1)] text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
             Registry
           </div>
         )}
@@ -142,7 +142,7 @@ function RegistryAttachmentCard({
           value={attachment?.notes || ""}
           onChange={(event) => onNotesChange?.(event.target.value)}
           placeholder="Optional attachment notes..."
-          className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+          className="w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
         />
       </div>
     </div>

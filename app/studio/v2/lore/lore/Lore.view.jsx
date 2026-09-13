@@ -35,7 +35,7 @@ import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 // the page eyebrow itself (that's StudioPageHeaderView, below).
 function SectionLabel({ children }) {
   return (
-    <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+    <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
       {children}
     </p>
   );
@@ -62,7 +62,7 @@ function TimelineGrid({ items = [] }) {
           onClick={() => item.onOpen?.()}
           className="group overflow-hidden rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-left transition hover:border-[var(--gold-ornament)]/40"
         >
-          <div className="grid min-h-36 grid-cols-[7rem_1fr]">
+          <div className="grid min-h-36 grid-cols-[4.5rem_minmax(0,1fr)] md:grid-cols-[7rem_minmax(0,1fr)]">
             <div className="overflow-hidden border-r border-[var(--line)]" aria-hidden="true">
               {item.imageSrc ? (
                 <div

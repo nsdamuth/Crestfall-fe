@@ -62,7 +62,7 @@ function formatDate(value) {
 
 function StatusPill({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
       <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </p>
@@ -96,7 +96,7 @@ function ReadinessCheck({ check }) {
       : "text-[var(--ink-dim)]";
 
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/20 p-4">
+    <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <Icon size={18} className={`mt-0.5 shrink-0 ${iconClass}`} />
       <div>
         <div className="flex flex-wrap items-center gap-2">
@@ -140,7 +140,7 @@ function IssueList({ title, issues, hiddenCount = 0, tone = "warning" }) {
         {issues.map((item, index) => (
           <div
             key={`${item.code}-${item.path}-${index}`}
-            className="rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+            className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
           >
             <p className="text-sm text-[var(--ink)]">{item.message}</p>
             <p className="mt-1 break-all font-mono text-[10px] text-[var(--ink-dim)]">
@@ -187,14 +187,14 @@ function ValidationHistory({ submissions = [] }) {
 
   return (
     <div className="mt-6 border-t border-white/10 pt-5">
-      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         Recent submissions
       </p>
       <div className="mt-3 grid gap-2">
         {submissions.slice(0, 5).map((submission) => (
           <div
             key={submission.id}
-            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
           >
             <div>
               <p className="text-sm text-[var(--ink)]">
@@ -234,10 +234,10 @@ function SecurityValidationPanel({
     : [];
 
   return (
-    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-black/25 p-5">
+    <div className="mt-6 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="max-w-3xl">
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Security validation
           </p>
           <h3 className="mt-2 font-display text-3xl">Submit the saved Lore revision</h3>
@@ -280,7 +280,7 @@ function SecurityValidationPanel({
       ) : null}
 
       {latestValidation ? (
-        <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
@@ -348,7 +348,7 @@ function SecurityValidationPanel({
           ) : null}
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/15 px-4 py-5 text-sm text-[var(--ink-dim)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-[var(--surface-1)] px-4 py-5 text-sm text-[var(--ink-dim)]">
           This Lore Asset has not been submitted for security validation.
         </div>
       )}
@@ -447,7 +447,7 @@ function PublicReleasePanel({
       </div>
 
       {activePublication ? (
-        <div className="mt-5 rounded-xl border border-emerald-300/20 bg-black/20 p-4">
+        <div className="mt-5 rounded-xl border border-emerald-300/20 bg-[var(--surface-2)] p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.18em] text-emerald-200">
@@ -463,14 +463,14 @@ function PublicReleasePanel({
           </div>
         </div>
       ) : (
-        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/15 px-4 py-5 text-sm text-[var(--ink-dim)]">
+        <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-[var(--surface-1)] px-4 py-5 text-sm text-[var(--ink-dim)]">
           This Lore Asset does not have a public revision yet.
         </div>
       )}
 
       {publishableValidation ? (
-        <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+        <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Ready to publish
           </p>
           <p className="mt-2 text-sm text-[var(--ink)]">
@@ -575,7 +575,7 @@ export default function LorePublicationReadinessView({
         <div className="flex items-start gap-3">
           <LockKeyhole size={22} className="mt-0.5 shrink-0 text-[var(--gold-ornament)]" />
           <div>
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Validated release boundary
             </p>
             <h3 className="mt-2 font-display text-3xl">Draft and public revisions stay separate</h3>
@@ -628,10 +628,10 @@ export default function LorePublicationReadinessView({
       {engineUsePanel}
 
       <div className="mt-8 grid gap-5 xl:grid-cols-[1fr_0.42fr]">
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+              <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                 Authoring checklist
               </p>
               <h3 className="mt-2 font-display text-3xl">
@@ -663,7 +663,7 @@ export default function LorePublicationReadinessView({
           </div>
         </div>
 
-        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <aside className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
           <Info size={20} className="text-[var(--gold-ornament)]" />
           <h3 className="mt-3 font-display text-3xl">Owner verification</h3>
           <p className="mt-3 leading-7 text-[var(--ink-dim)]">

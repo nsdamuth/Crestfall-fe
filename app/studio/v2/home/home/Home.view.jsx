@@ -13,13 +13,16 @@ import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 import { isLegacyDefaultCreationImageSrc } from "@/lib/shared/creations/creationMedia";
 
 
-function HomeHeroBanner({ welcomeName = "Player", children }) {
+// The by-name greeting overlay is retired, RULED 12 Sep 2026
+// (eight-fix package, FIX 1): the hero keeps its eyebrow, continue
+// block, and buttons, with no replacement copy.
+function HomeHeroBanner({ children }) {
   const [sheenPass, setSheenPass] = useState(0);
   const triggerSheen = () => setSheenPass((value) => value + 1);
 
   return (
     <div
-      className="group/home-hero relative mt-[var(--space-4)] rounded-[var(--radius-lg)]"
+      className="group/home-hero relative mt-[var(--space-4)] overflow-hidden rounded-[var(--radius-lg)]"
       onMouseEnter={triggerSheen}
       onMouseLeave={triggerSheen}
     >
@@ -29,12 +32,6 @@ function HomeHeroBanner({ welcomeName = "Player", children }) {
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-[2] rounded-[var(--radius-lg)] border border-[color-mix(in_srgb,var(--gold-ornament)_66%,transparent)] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.24),0_12px_30px_rgba(0,0,0,0.22)]"
       />
-
-      <div className="pointer-events-none absolute left-[var(--space-5)] top-[var(--space-5)] z-[3] min-[700px]:left-[var(--space-8)] min-[700px]:top-[var(--space-6)]">
-        <p className="cf-art-text-readable font-display text-[clamp(1.55rem,2.35vw,2.65rem)] leading-[1.05] tracking-[-0.015em] text-[var(--art-ink)]">
-          Welcome back, {welcomeName}.
-        </p>
-      </div>
 
       {sheenPass > 0 ? (
         <div
@@ -74,12 +71,17 @@ function SectionRail({ rail }) {
       cellSize={isCreatorRail ? "creator" : "fluid"}
       headControlSlot={
         sortControl?.options?.length ? (
-          // Trigger reads "Sort: <value>" (colon, space, current value),
-          // RULED 6 Sep 2026 (Home quick fix). The dropdown renders the
-          // label and the selected value side by side, so the colon
-          // rides on the label; the shared kit is untouched.
+          // Trigger label, RULED 12 Sep 2026 (eight-fix package FIX 5,
+          // supersedes the 6 Sep sort-prefix ruling): reads
+          // "Filter" while the rail sits on its default sort, and the
+          // chosen option's label alone once the user picks another
+          // (KitDropdown 1.4.0 labelMode "replace" with the default as
+          // restingValue). The menu still marks the default.
           <KitDropdownView
-            label="Sort:"
+            label="Filter"
+            ariaLabel="Sort"
+            labelMode="replace"
+            restingValue={sortControl.defaultValue ?? null}
             options={sortControl.options}
             selectedValues={sortControl.selectedValue ? [sortControl.selectedValue] : []}
             isMultiSelect={false}
@@ -99,7 +101,6 @@ function SectionRail({ rail }) {
 export default function HomeView({
   topBanner,
   continueItem = null,
-  welcomeName = "Player",
   sectionRails = [],
   bottomBanner,
   errorMessage = null,
@@ -132,7 +133,7 @@ export default function HomeView({
           />
         }
       >
-        <HomeHeroBanner welcomeName={welcomeName}>
+        <HomeHeroBanner>
           <KitPromoBannerView
             treatment="top"
             enhanceTextReadability

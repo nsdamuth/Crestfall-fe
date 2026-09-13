@@ -7,9 +7,9 @@ import {
 } from "lucide-react";
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 const EYEBROW_CLASS_INLINE =
-  "inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 export default function MechanicsPresetValidationPanelView({
   eyebrow = "Preset Applied",
@@ -59,14 +59,14 @@ export default function MechanicsPresetValidationPanelView({
               {statusLabel}
             </span>
             {expectedOutcomeLabel ? (
-              <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
+              <span className="rounded-full border border-white/10 bg-[var(--surface-1)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]">
                 Expected: {expectedOutcomeLabel}
               </span>
             ) : null}
             {domainLaneLabels.map((lane) => (
               <span
                 key={lane}
-                className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
+                className="rounded-full border border-white/10 bg-[var(--surface-1)] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[var(--ink-dim)]"
               >
                 {lane}
               </span>
@@ -74,7 +74,7 @@ export default function MechanicsPresetValidationPanelView({
           </div>
 
           {testCommand ? (
-            <div className="rounded-xl border border-white/10 bg-black/30 p-4">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className={EYEBROW_CLASS}>
@@ -100,7 +100,7 @@ export default function MechanicsPresetValidationPanelView({
           ) : null}
 
           {steps.length ? (
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <p className={EYEBROW_CLASS_INLINE}>
                 <Route size={14} />
                 Live Validation Steps
@@ -124,7 +124,7 @@ export default function MechanicsPresetValidationPanelView({
 
         <aside className="grid content-start gap-4">
           {checks.length ? (
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
               <p className={EYEBROW_CLASS_INLINE}>
                 <CheckCircle2 size={14} />
                 Expected Checks
@@ -145,7 +145,7 @@ export default function MechanicsPresetValidationPanelView({
           {notes.map((note, index) => (
             <p
               key={`${index}-${note}`}
-              className="rounded-xl border border-white/10 bg-black/20 p-4 text-xs leading-5 text-[var(--ink-dim)]"
+              className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 text-xs leading-5 text-[var(--ink-dim)]"
             >
               {note}
             </p>

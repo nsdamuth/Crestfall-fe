@@ -43,7 +43,7 @@ export default function IngredientPickerModalView({
 
   return (
     <KitModalFrame onClose={onClose} ariaLabel={ingredientLabel} panelClassName="max-w-4xl">
-      <div className="flex items-start justify-between gap-4 border-b border-[var(--line-fade)] p-5">
+      <div className="flex items-start justify-between gap-4 p-5">
         <div>
           <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             <HeaderIcon size={15} />
@@ -61,13 +61,14 @@ export default function IngredientPickerModalView({
           </p>
         </div>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="p-5">
         {sourceOptions.length > 1 ? (
           <div
             role="tablist"
             aria-label="Ingredient source"
-            className="mb-4 inline-flex rounded-xl border border-white/10 bg-black/25 p-1"
+            className="mb-4 inline-flex rounded-xl border border-white/10 bg-[var(--surface-1)] p-1"
           >
             {sourceOptions.map((option) => {
               const active = option.id === sourceMode;
@@ -137,7 +138,7 @@ export default function IngredientPickerModalView({
                   <button
                     type="button"
                     onClick={() => onCreatePreset?.()}
-                    className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-left transition hover:border-[var(--gold-ornament)]/35 hover:bg-[var(--gold-ornament)]/10"
+                    className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4 text-left transition hover:border-[var(--gold-ornament)]/35 hover:bg-[var(--gold-ornament)]/10"
                   >
                     <p className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
                       <Plus size={14} />

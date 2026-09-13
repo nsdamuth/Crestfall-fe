@@ -22,6 +22,7 @@ import ScenarioRecommendationsPanelView from "@/components/studio/room-templates
 import InvitedPlayersPanelView from "@/components/studio/room-templates/invited-players-panel/InvitedPlayersPanel.view";
 import OpeningMessageCardView from "@/components/studio/room-templates/opening-message-card/OpeningMessageCard.view";
 import StoryOpeningLocationAuthoringView from "@/components/studio/create/room-template/story-opening-location-authoring/StoryOpeningLocationAuthoring.view";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 export default function RoomTemplateBuilderView({
   form = {},
@@ -60,7 +61,12 @@ export default function RoomTemplateBuilderView({
 
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.42fr_1fr]">
-      <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+          implicit base column is sized by min-width:auto, so any nowrap
+          descendant becomes the page's horizontal scroll width. This is
+          the single-column rule for this shell: one column in DOM order
+          below xl, each child free to shrink to the gutter. */}
+      <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Story Builder
         </p>
@@ -75,7 +81,7 @@ export default function RoomTemplateBuilderView({
           rules into a reusable playable setup.
         </p>
 
-        <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+        <div className="mt-6 border-t border-[var(--line-whisper)] pt-5">
           <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
             Draft Progress
           </p>
@@ -111,7 +117,7 @@ export default function RoomTemplateBuilderView({
         ) : null}
       </aside>
 
-      <div className="space-y-6">
+      <div className="min-w-0 space-y-6">
         <BuilderSection
           eyebrow="Overview"
           title="Story Identity"
@@ -219,7 +225,7 @@ export default function RoomTemplateBuilderView({
               className={`rounded-[var(--radius-md)] border p-5 text-left transition ${
                 effectiveTurnBased
                   ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                  : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
               }`}
             >
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
@@ -301,7 +307,7 @@ export default function RoomTemplateBuilderView({
             </div>
 
             <div>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 gap-2 min-[30rem]:grid-cols-4">
                 {[0, 1, 2, 3].map((slot) => {
                   const active = displayMediaSlot === slot;
 
@@ -313,7 +319,7 @@ export default function RoomTemplateBuilderView({
                       className={`aspect-square rounded-xl border text-[10px] uppercase tracking-[0.12em] transition ${
                         active
                           ? "border-[var(--gold-ornament)]/60 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                          : "border-white/10 bg-black/30 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
+                          : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/35"
                       }`}
                     >
                       Slot {slot + 1}
@@ -375,7 +381,7 @@ export default function RoomTemplateBuilderView({
             />
           </div>
 
-          <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
             <div className="flex items-start gap-3">
               <ShieldCheck
                 className="mt-1 text-[var(--gold-ornament)]"
@@ -395,6 +401,14 @@ export default function RoomTemplateBuilderView({
           </div>
         </BuilderSection>
       </div>
+      {/* MOBILE-SHELLS: the aside's Save draft is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }

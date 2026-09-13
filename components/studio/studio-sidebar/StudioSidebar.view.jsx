@@ -7,6 +7,7 @@ import {
   ChevronDown,
   ChevronUp,
   Compass,
+  Feather,
   Home,
   Image,
   LogOut,
@@ -27,6 +28,7 @@ const ICONS = Object.freeze({
   bookOpen: BookOpen,
   castle: Castle,
   compass: Compass,
+  feather: Feather,
   home: Home,
   image: Image,
   megaphone: Megaphone,
@@ -94,7 +96,7 @@ export default function StudioSidebarView({
     <aside
       className={`
         hidden shrink-0 border-r border-[var(--line-whisper)] bg-[var(--surface-1)] px-3 py-5 transition-all duration-300 lg:sticky lg:top-0 lg:block lg:h-dvh lg:self-start lg:overflow-y-auto
-        ${collapsed ? "w-16" : "w-56"}
+        ${collapsed ? "lg:w-16" : "lg:w-56"}
       `}
     >
       {/* Collapsed header stacks the logo icon (Home link) above the
@@ -489,7 +491,7 @@ function SidebarInternalLink({
         }
         ${
           link.variant === "return"
-            ? "border-[color:var(--gold-ornament)]/15 bg-black/35 text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"
+            ? "border-[color:var(--gold-ornament)]/15 bg-[var(--surface-2)] text-[color:var(--gold-ornament)] hover:border-[color:var(--gold-ornament)]/40 hover:bg-[color:var(--gold-ornament)]/10 hover:text-[color:var(--ink)]"
             : "text-[color:var(--ink-faint)]"
         }
         ${collapsed ? "justify-center px-2" : ""}

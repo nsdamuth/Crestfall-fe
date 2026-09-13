@@ -253,7 +253,7 @@ function AutoEventMediaMessage({ media }) {
     media?.subtype === STORY_ROOM_MESSAGE_MEDIA_SUBTYPES.LOCATION_EVENT_IMAGE;
 
   return (
-    <article className="w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-black/25">
+    <article className="w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-2)]">
       <div
         className="flex w-full items-center justify-center overflow-hidden bg-[var(--scrim)]"
         style={{ maxHeight: "26rem" }}
@@ -297,10 +297,10 @@ function getArticleClassName(surfaceTone) {
   }
 
   if (surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.NARRATOR) {
-    return "border-[var(--gold-ornament)]/25 bg-black/30";
+    return "border-[var(--gold-ornament)]/25 bg-[var(--surface-2)]";
   }
 
-  return "border-white/10 bg-black/25";
+  return "border-white/10 bg-[var(--surface-2)]";
 }
 
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {

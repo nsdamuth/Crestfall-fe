@@ -30,6 +30,7 @@ export default function TimelineBuilderShell({
   return (
     <TimelineBuilderView
       {...viewProps}
+      LinkComponent={Link}
       lorePickerSlot={
         viewProps.pickerOpen ? (
           <TimelineLorePicker

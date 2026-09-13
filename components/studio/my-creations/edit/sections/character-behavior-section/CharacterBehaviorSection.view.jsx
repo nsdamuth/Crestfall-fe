@@ -44,7 +44,7 @@ export default function CharacterBehaviorSectionView({
 
         {/* Section 5: no second bordered depth inside a box. */}
         <div className="md:col-span-2 border-t border-[var(--line-whisper)] pt-[var(--space-4)]">
-          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+          <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-label)] leading-[var(--lh-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
             {personalityFrameworksEyebrow}
           </p>
           <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">

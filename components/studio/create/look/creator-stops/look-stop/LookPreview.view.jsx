@@ -26,7 +26,7 @@ export default function LookPreviewView({
   const [hasGenerated, setHasGenerated] = useState(false);
 
   return (
-    <aside className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6">
+    <aside className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6">
       <div className="flex flex-col gap-[var(--space-6)] sm:flex-row">
         <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[var(--radius-md)] border border-white/10 sm:w-48 sm:flex-none">
           {hasGenerated ? (

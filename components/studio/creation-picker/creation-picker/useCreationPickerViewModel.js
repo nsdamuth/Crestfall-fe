@@ -68,7 +68,7 @@ export function useCreationPickerViewModel({
     }));
     const sortChip = {
       value: SORT_RECENCY,
-      label: sortMode === "alpha" ? "Sort: A-Z" : "Sort: Recent",
+      label: sortMode === "alpha" ? "A-Z" : "Recent",
       isSelected: sortMode === "alpha",
     };
     return [...bucketChips, sortChip];

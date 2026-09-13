@@ -13,7 +13,7 @@ import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudio
 import KitCreatorCardView from "@/components/kit/creator-card/KitCreatorCard.view";
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
-import KitImageOverlay from "@/components/kit/KitImageOverlay";
+import KitImageViewer from "@/components/kit/KitImageViewer";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import usePersistentViewMode from "@/components/studio/usePersistentViewMode";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
@@ -143,16 +143,16 @@ function CreatorListRow({ creator, cardProps, isFollowing, onFollow, onViewProfi
         <span><span className="tabular-nums text-[var(--ink-dim)]">{cardProps?.stats?.works ?? 0}</span> works</span>
       </div>
 
-      <div className="flex flex-none gap-[var(--space-2)] min-[800px]:ml-auto">
+      <div className="flex w-full flex-wrap gap-[var(--space-2)] min-[800px]:w-auto min-[800px]:flex-none min-[800px]:flex-nowrap min-[800px]:ml-auto">
         <button
           type="button"
           disabled={!creator.canFollow}
           onClick={() => onFollow?.()}
-          className={`cf-btn min-w-[7rem] ${creator.canFollow && isFollowing ? "cf-btn--primary" : "cf-btn--secondary"}`}
+          className={`cf-btn w-full min-[800px]:w-auto min-[800px]:min-w-[7rem] ${creator.canFollow && isFollowing ? "cf-btn--primary" : "cf-btn--secondary"}`}
         >
           {!creator.canFollow ? "You" : isFollowing ? "Following" : "Follow"}
         </button>
-        <button type="button" onClick={() => onViewProfile?.()} className="cf-btn cf-btn--secondary min-w-[7rem]">
+        <button type="button" onClick={() => onViewProfile?.()} className="cf-btn cf-btn--secondary w-full min-[800px]:w-auto min-[800px]:min-w-[7rem]">
           View profile
         </button>
       </div>
@@ -218,8 +218,12 @@ export default function CreatorsV2Mockup({
   const [followingIds, setFollowingIds] = useState(() =>
     sourceCreators.filter((creator) => creator.isFollowing).map((creator) => creator.id)
   );
+  // Creator card tiles open the Kit image viewer in remix context
+  // (RULED 12 Sep 2026, Brian's browser review): the image is public,
+  // so the bottom bar offers Remix instead of Assign, and Edit creates
+  // a new asset off the public one. Both wait on the Chassis remix
+  // operation (CR-065) and ship "soon".
   const [overlayImage, setOverlayImage] = useState(null);
-  const [lovedThumbIds, setLovedThumbIds] = useState([]);
   const [savedThumbIds, setSavedThumbIds] = useState([]);
   const [actionNotice, setActionNotice] = useState(null);
 
@@ -348,15 +352,11 @@ export default function CreatorsV2Mockup({
 
           if (!thumbnail) return;
 
-          if (live && thumbnail.creationId) {
-            router.push(`/studio/creations/${encodeURIComponent(thumbnail.creationId)}`);
-            return;
-          }
-
           setOverlayImage({
             id: thumbnail.id,
             imageSrc: thumbnail.imageSrc,
             title: thumbnail.title || creator.handle,
+            creationId: thumbnail.creationId || null,
           });
         },
         onViewProfile: () =>
@@ -528,18 +528,11 @@ export default function CreatorsV2Mockup({
       </KitStudioPageView>
 
       {overlayImage && (
-        <KitImageOverlay
+        <KitImageViewer
           imageSrc={overlayImage.imageSrc}
           title={overlayImage.title}
-          isLoved={lovedThumbIds.includes(overlayImage.id)}
+          pixelSize={null}
           isSaved={savedThumbIds.includes(overlayImage.id)}
-          onLove={() =>
-            setLovedThumbIds((ids) =>
-              ids.includes(overlayImage.id)
-                ? ids.filter((id) => id !== overlayImage.id)
-                : [...ids, overlayImage.id]
-            )
-          }
           onSave={() =>
             setSavedThumbIds((ids) =>
               ids.includes(overlayImage.id)
@@ -547,12 +540,44 @@ export default function CreatorsV2Mockup({
                 : [...ids, overlayImage.id]
             )
           }
+          onDelete={null}
+          onReport={() =>
+            setActionNotice({
+              label: "Report",
+              message: "Reporting a creator's image is wired once the Chassis serves it. Nothing was sent.",
+            })
+          }
+          onDetails={() => {
+            if (overlayImage.creationId) {
+              router.push(`/studio/creations/${encodeURIComponent(overlayImage.creationId)}`);
+              return;
+            }
+            setActionNotice({
+              label: "Details",
+              message: "This preview image has no creation page yet.",
+            });
+          }}
           onShare={() =>
             setActionNotice({
               label: "Share",
-              message: "Sharing is wired when the page goes live. Nothing leaves this preview.",
+              message: "Sharing a creator's image is wired once the Chassis serves it. Nothing left this page.",
             })
           }
+          shareMessage=""
+          downloadOptions={[]}
+          bottomBarAction="remix"
+          remixState="soon"
+          onRemix={null}
+          assignState="soon"
+          onAssign={null}
+          upscaleCoinCost={0}
+          upscaleState="soon"
+          onUpscale={null}
+          editRunCoinCost={0}
+          editState="soon"
+          onSubmitEdit={null}
+          overlaySlot={null}
+          overlayReplacesBody={false}
           onClose={() => setOverlayImage(null)}
         />
       )}

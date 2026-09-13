@@ -18,9 +18,9 @@ export default function RegistryLinkedCreationPickerModalView({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
       <section className="max-h-[92vh] w-full max-w-5xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+        <div className="flex items-start justify-between gap-4 p-5">
           <div>
-            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+            <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
               Registry Links
             </p>
 
@@ -40,9 +40,10 @@ export default function RegistryLinkedCreationPickerModalView({
             <X size={18} />
           </button>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="max-h-[75vh] overflow-y-auto p-5">
-          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+          <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}
@@ -55,7 +56,7 @@ export default function RegistryLinkedCreationPickerModalView({
           </label>
 
           {isLoading ? (
-            <p className="mt-5 rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+            <p className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
               Loading creations...
             </p>
           ) : null}
@@ -67,7 +68,7 @@ export default function RegistryLinkedCreationPickerModalView({
           ) : null}
 
           {showEmptyState ? (
-            <p className="mt-5 rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+            <p className="mt-5 rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
               No matching creations found.
             </p>
           ) : null}
@@ -80,7 +81,7 @@ export default function RegistryLinkedCreationPickerModalView({
                   type="button"
                   onClick={() => onChooseCreation?.(creation?.id)}
                   aria-pressed={Boolean(creation?.isSelected)}
-                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-black/35 text-left transition hover:border-[var(--gold-ornament)]/45 ${
+                  className={`overflow-hidden rounded-[var(--radius-md)] border bg-[var(--surface-2)] text-left transition hover:border-[var(--gold-ornament)]/45 ${
                     creation?.isSelected
                       ? "border-[var(--gold-ornament)]/60"
                       : "border-white/10"

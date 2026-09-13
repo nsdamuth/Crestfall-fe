@@ -9,7 +9,7 @@ export default function NameStopView({
 } = {}) {
   return (
     <>
-      <Eyebrow>Found a world</Eyebrow>
+      <Eyebrow showRuleMark={false}>Found a world</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Every setting starts with a name.
       </h2>

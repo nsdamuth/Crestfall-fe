@@ -1,4 +1,9 @@
-export const TIMELINE_READER_VIEW_CONTRACT_VERSION = "1.1.0";
+export const TIMELINE_READER_VIEW_CONTRACT_VERSION = "1.2.0";
+
+// 1.2.0 (additive, eight-fix package FIX 4, 12 Sep 2026): optional
+// `breadcrumbs` items (Lore, then the timeline title) render the
+// shared KitBreadcrumbs row above the action row, through the same
+// LinkComponent the View already receives. Absent, 1.1.0 is unchanged.
 
 /**
  * @typedef {Object} TimelineReaderEntry

@@ -90,7 +90,7 @@ test("portable View consumes display-ready state and semantic slots", () => {
     "shareButtonSlot",
     "mediaActionSlots",
     "lightboxSlot",
-    "description?.visibleText",
+    "description?.text",
     "mediaTabs.map",
     "creditsSlot",
     "showingCredits",
@@ -117,7 +117,8 @@ test("legacy catalogue behavior and fallback states remain present", () => {
   assert.match(view, /Search this creation's media/);
   assert.match(view, /Load more/i);
   assert.match(view, /Starting\.\.\./);
-  assert.match(vm, /CREATION_PROFILE_DESCRIPTION_PREVIEW_LIMIT = 420/);
+  assert.match(vm, /CREATION_PROFILE_DESCRIPTION_CLAMP_LINES = 4/);
+  assert.match(view, /line-clamp-4/);
   assert.match(vm, /No description has been added yet\./);
   assert.match(vm, /Like could not be saved\./);
   assert.match(vm, /Bookmark could not be saved\./);

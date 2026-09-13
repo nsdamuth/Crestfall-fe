@@ -1,20 +1,14 @@
-// Fixture states: default (view mode, four items, soon everywhere),
-// single item (no strip), assignable, saved with a share message,
-// longest title, no stored size (measured on load), no image, upscale
-// pending. Costs in fixtures are sample props, never a source of
-// truth: the live page reads the two workbench constants.
+// Fixture states: default (view mode, soon everywhere), assignable,
+// remix context (2.0.0, a public image from a creator card), saved
+// with a share message, longest title, no stored size (measured on
+// load), no image, upscale pending. The thumbnail strip and its items
+// are gone at 2.0.0. Costs in fixtures are sample props, never a
+// source of truth: the live page reads the two workbench constants.
 const noop = () => {};
 
 function art(name) {
   return encodeURI(`/tmp-mockup-images/alpha-test-creator-images/${name}.png`);
 }
-
-const ITEMS = [
-  { id: "img-1", title: "Generated image, 10 Sep 2026", thumbnailUrl: art("vermillion-8") },
-  { id: "img-2", title: "Generated image, 10 Sep 2026", thumbnailUrl: art("vermillion-2") },
-  { id: "img-3", title: "Generated image, 9 Sep 2026", thumbnailUrl: art("vermillion-4") },
-  { id: "img-4", title: "Generated image, 9 Sep 2026", thumbnailUrl: null },
-];
 
 const DOWNLOAD_OPTIONS = [
   { id: "small", label: "Small", href: "#small" },
@@ -26,26 +20,26 @@ const DOWNLOAD_OPTIONS = [
 const BASE = {
   imageSrc: art("vermillion-8"),
   title: "Generated image, 10 Sep 2026",
-  items: ITEMS,
-  activeId: "img-1",
   pixelSize: { width: 832, height: 1216 },
   isSaved: false,
   shareMessage: "",
   downloadOptions: DOWNLOAD_OPTIONS,
   assignState: "soon",
+  bottomBarAction: "assign",
+  remixState: "soon",
   upscaleCoinCost: 10,
   upscaleState: "soon",
   editRunCoinCost: 20,
   editState: "soon",
   overlaySlot: null,
   overlayReplacesBody: false,
-  onSelectItem: noop,
   onSave: noop,
   onDelete: noop,
   onReport: noop,
   onDetails: noop,
   onShare: noop,
   onAssign: noop,
+  onRemix: noop,
   onUpscale: noop,
   onSubmitEdit: noop,
   onClose: noop,
@@ -53,8 +47,12 @@ const BASE = {
 
 export const kitImageViewerFixtures = [
   { id: "default", label: "Default", props: { ...BASE } },
-  { id: "single", label: "Single item", props: { ...BASE, items: [ITEMS[0]] } },
   { id: "assignable", label: "Assignable", props: { ...BASE, assignState: "ready" } },
+  {
+    id: "remix",
+    label: "Remix context (public image)",
+    props: { ...BASE, bottomBarAction: "remix", remixState: "soon", onDelete: null, downloadOptions: [] },
+  },
   { id: "saved-shared", label: "Saved, link copied", props: { ...BASE, isSaved: true, shareMessage: "Link copied" } },
   {
     id: "longest",

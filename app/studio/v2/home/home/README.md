@@ -4,7 +4,11 @@
 creation workspace: `/studio` remains authoritative for Quick Start, Guided
 Build and Full Studio.
 
-## Composition (contract 4.0.0, Home fine-tuning batch 1, 6 Sep 2026)
+## Composition (contract 5.0.0; 4.0.0 was Home fine-tuning batch 1, 6 Sep 2026)
+
+Contract 5.0.0 (12 Sep 2026, eight-fix package, FIX 1) removes the
+`welcomeName` input: the hero's "Welcome back, <name>." overlay is retired
+with no replacement copy.
 
 1. Continue/cold-start hero (Eden confrontation art on cold start).
 2. One list per sidebar section, in sidebar order: Stories, Adventures,

@@ -1,5 +1,8 @@
 "use client";
 
+import { SelectField } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
+
 function Field({ label, children }) {
   return (
     <div>
@@ -11,7 +14,7 @@ function Field({ label, children }) {
   );
 }
 
-const inputClass = "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50";
+const inputClass = "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50";
 
 export default function SkillsProfileBuilderView({
   title = "",
@@ -31,7 +34,7 @@ export default function SkillsProfileBuilderView({
 }) {
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-[var(--surface-2)] p-5">
         <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-gold)]">
           Create Skills Profile
         </p>
@@ -42,25 +45,17 @@ export default function SkillsProfileBuilderView({
           <Field label="Creation title">
             <input className={inputClass} value={title} onChange={(event) => onUpdateIdentity?.("title", event.target.value)} />
           </Field>
-          <Field label="Visibility">
-            <select className={inputClass} value={visibility} onChange={(event) => onUpdateIdentity?.("visibility", event.target.value)}>
-              {visibilityOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </Field>
+          <SelectField label="Visibility" value={visibility} onChange={(value) => onUpdateIdentity?.("visibility", value)} options={visibilityOptions} />
           <Field label="Description">
             <textarea rows={3} className={inputClass} value={description} onChange={(event) => onUpdateIdentity?.("description", event.target.value)} />
           </Field>
-          <Field label="Content rating">
-            <select className={inputClass} value={contentRating} onChange={(event) => onUpdateIdentity?.("contentRating", event.target.value)}>
-              {contentRatingOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </Field>
+          <SelectField label="Content rating" value={contentRating} onChange={(value) => onUpdateIdentity?.("contentRating", value)} options={contentRatingOptions} />
         </div>
       </section>
 
       {editor}
 
-      <section className="sticky bottom-4 rounded-2xl border border-white/10 bg-[#100f0d]/95 p-4 shadow-2xl backdrop-blur">
+      <section className="sticky bottom-4 rounded-2xl border border-white/10 bg-[var(--surface-3)] p-4 shadow-2xl backdrop-blur max-[47.99rem]:hidden">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="text-sm text-[var(--muted)]">
             {errorCount} errors · {warningCount} warnings
@@ -76,6 +71,19 @@ export default function SkillsProfileBuilderView({
           </button>
         </div>
       </section>
+
+      {/* MOBILE-SHELLS: this shell already docked its primary action, but as
+          an in-flow sticky panel that scrolls away at the end of the page
+          and whose control carried no height floor. Below md that panel is
+          hidden and the same action renders in the bottom-docked bar, full
+          width minus the page gutter with the 44px floor. At md and up the
+          panel renders exactly where it does today and the bar is
+          display:none. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save Draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </div>
   );
 }

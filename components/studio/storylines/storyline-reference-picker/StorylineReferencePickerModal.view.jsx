@@ -35,7 +35,7 @@ export default function StorylineReferencePickerModalView({
       ariaLabelledBy={dialogTitleId}
     >
       <div className="flex max-h-[100dvh] flex-col min-[700px]:max-h-[92dvh]">
-        <header className="flex flex-col gap-3 border-b border-[var(--line-whisper)] p-5">
+        <header className="flex flex-col gap-3 p-5">
           <button
             type="button"
             onClick={() => onClose?.()}
@@ -59,8 +59,9 @@ export default function StorylineReferencePickerModalView({
             ) : null}
           </div>
         </header>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
-        <div className="border-b border-[var(--line-whisper)] p-5">
+        <div className="p-5">
           <div className="flex flex-wrap gap-2">
             {tabs.map((tab) => (
               <button
@@ -78,7 +79,7 @@ export default function StorylineReferencePickerModalView({
             ))}
           </div>
 
-          <label className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3">
+          <label className="mt-4 flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3">
             <Search size={17} className="text-[var(--gold-ornament)]" />
             <input
               value={searchQuery}
@@ -90,6 +91,7 @@ export default function StorylineReferencePickerModalView({
             />
           </label>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="overflow-y-auto p-5">
           {items.length ? (
@@ -100,7 +102,7 @@ export default function StorylineReferencePickerModalView({
                   type="button"
                   disabled={item.isSelected}
                   onClick={() => onSelectItem?.(item.id)}
-                  className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4 text-left transition hover:border-[var(--gold-ornament)]/40 disabled:cursor-not-allowed disabled:opacity-45"
+                  className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4 text-left transition hover:border-[var(--gold-ornament)]/40 disabled:cursor-not-allowed disabled:opacity-45"
                 >
                   <div className="flex items-start gap-3">
                     <BookOpen

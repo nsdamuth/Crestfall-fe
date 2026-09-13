@@ -43,7 +43,8 @@ state or reads the owned-creations shape.
 Six filter chips ride the kit picker's existing `filters` row:
 Characters, Worlds, Looks, Stories, Adventures, More (single-active,
 selecting the active bucket again clears back to "all"), plus one
-trailing sort chip toggling "Sort: Recent" / "Sort: A-Z". Composing
+trailing sort chip toggling "Recent" / "A-Z" (the "Sort:" prefix
+retired 12 Sep 2026, eight-fix package FIX 5). Composing
 the sort control as a chip means zero changes to the kit package;
 `onToggleFilter` already reports an opaque string value and the
 Chassis decides what it means.

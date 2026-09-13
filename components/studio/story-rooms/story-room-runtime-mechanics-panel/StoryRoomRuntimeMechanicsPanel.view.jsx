@@ -1,5 +1,7 @@
 import { Activity, Plus, Trash2 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 export default function StoryRoomRuntimeMechanicsPanelView({
   eyebrow = "Room Runtime",
   title = "Mechanics Module",
@@ -18,7 +20,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
   onChangePriority = null,
 }) {
   return (
-    <div className="mt-6 min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/30 p-4">
+    <div className="mt-6 min-w-0 overflow-hidden rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-4">
       <div className="flex items-start gap-3">
         <div className="rounded-xl border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 p-3 text-[var(--gold-ornament)]">
           <Activity size={18} />
@@ -41,7 +43,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
 
       <div className="mt-4 grid gap-3">
         {binding ? (
-          <div className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-black/25 p-3">
+          <div className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[var(--surface-2)] p-3">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
@@ -70,7 +72,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
             </div>
 
             <div className="mt-3 grid gap-3">
-              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-3 py-2 text-xs text-[var(--ink-dim)]">
+              <label className="flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-xs text-[var(--ink-dim)]">
                 <input
                   type="checkbox"
                   checked={binding.enabled}
@@ -85,21 +87,18 @@ export default function StoryRoomRuntimeMechanicsPanelView({
 
               <label className="grid gap-2 text-xs text-[var(--ink-dim)]">
                 <span>Mechanics Scope</span>
-                <select
-                  value={binding.scopeMode}
-                  disabled={saving}
-                  onChange={(event) =>
-                    onChangeScopeMode?.(event.target.value)
-                  }
-                  className="w-full min-w-0 rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)] disabled:opacity-60"
-                >
-                  <option value="STORY_ROOM">
-                    STORY_ROOM · root room mechanics
-                  </option>
-                  <option value="BINDING_OWNER">
-                    BINDING_OWNER · scoped to binding owner
-                  </option>
-                </select>
+                <div className="w-full min-w-0 [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                  <KitDropdownView
+                    options={[
+                      { value: "STORY_ROOM", label: "STORY_ROOM · root room mechanics" },
+                      { value: "BINDING_OWNER", label: "BINDING_OWNER · scoped to binding owner" },
+                    ]}
+                    selectedValues={binding.scopeMode ? [binding.scopeMode] : []}
+                    isMultiSelect={false}
+                    isDisabled={saving}
+                    onToggleOption={(nextValue) => onChangeScopeMode?.(nextValue)}
+                  />
+                </div>
               </label>
 
               <label className="grid gap-2 text-xs text-[var(--ink-dim)]">
@@ -111,12 +110,12 @@ export default function StoryRoomRuntimeMechanicsPanelView({
                   onChange={(event) =>
                     onChangePriority?.(event.target.value)
                   }
-                  className="rounded-xl border border-white/10 bg-black/40 px-3 py-2 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)] disabled:opacity-60"
+                  className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)] disabled:opacity-60"
                 />
               </label>
             </div>
 
-            <div className="mt-3 min-w-0 break-words rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
+            <div className="mt-3 min-w-0 break-words rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-[11px] leading-5 text-[var(--ink-dim)]">
               <p>
                 Module ID:{" "}
                 <span className="text-[var(--ink)]">
@@ -138,7 +137,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
             </div>
           </div>
         ) : (
-          <div className="rounded-xl border border-white/10 bg-black/20 px-3 py-3 text-xs leading-5 text-[var(--ink-dim)]">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-3 text-xs leading-5 text-[var(--ink-dim)]">
             No room-level Mechanics Module attached.
           </div>
         )}
@@ -154,7 +153,7 @@ export default function StoryRoomRuntimeMechanicsPanelView({
         </button>
 
         {saving ? (
-          <p className="rounded-xl border border-white/10 bg-black/20 px-3 py-2 text-xs text-[var(--ink-dim)]">
+          <p className="rounded-xl border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-xs text-[var(--ink-dim)]">
             {savingMessage}
           </p>
         ) : null}

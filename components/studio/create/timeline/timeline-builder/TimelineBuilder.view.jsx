@@ -12,8 +12,12 @@ import {
   Trash2,
 } from "lucide-react";
 
+import KitBreadcrumbsView from "@/components/kit/breadcrumbs/KitBreadcrumbs.view";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
+
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
+  "mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50";
 
 function Field({ label, help = "", children }) {
   return (
@@ -33,7 +37,7 @@ function Field({ label, help = "", children }) {
 
 function ToggleRow({ label, description, checked, onChange }) {
   return (
-    <label className="flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-white/10 bg-black/25 p-4">
+    <label className="flex min-h-[var(--control-md)] cursor-pointer items-start justify-between gap-4 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <span className="min-w-0">
         <span className="block text-sm font-medium text-[var(--ink)]">{label}</span>
         <span className="mt-1 block text-xs leading-5 text-[var(--ink-dim)]">
@@ -60,7 +64,7 @@ function EntryRow({
   const chronology = entry.displayDate || entry.era || "Undated / unplaced";
 
   return (
-    <article className="rounded-xl border border-white/10 bg-black/25 p-4 sm:p-5">
+    <article className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 sm:p-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
         <div className="flex min-w-0 flex-1 gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--gold-ornament)]/10 text-xs font-semibold text-[var(--gold-bright)]">
@@ -80,25 +84,25 @@ function EntryRow({
           </div>
         </div>
 
-        <div className="grid shrink-0 gap-2 sm:grid-cols-[12rem_10rem_auto]">
+        <div className="grid min-w-0 gap-2 md:shrink-0 md:grid-cols-[12rem_10rem_auto]">
           <label className="block">
             <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
               Chapter
             </span>
-            <select
-              value={entry.chapterId || ""}
-              onChange={(event) =>
-                onUpdateEntryChapter?.(entry.id, event.target.value)
-              }
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
-            >
-              <option value="">Unassigned</option>
-              {chapters.map((chapter) => (
-                <option key={chapter.id} value={chapter.id}>
-                  {chapter.title}
-                </option>
-              ))}
-            </select>
+            <div className="mt-1 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+              <KitDropdownView
+                options={[
+                  { value: "", label: "Unassigned" },
+                  ...chapters.map((chapter) => ({
+                    value: chapter.id,
+                    label: chapter.title,
+                  })),
+                ]}
+                selectedValues={[entry.chapterId || ""]}
+                isMultiSelect={false}
+                onToggleOption={(nextValue) => onUpdateEntryChapter?.(entry.id, nextValue)}
+              />
+            </div>
           </label>
           <label className="block">
             <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
@@ -114,7 +118,7 @@ function EntryRow({
               placeholder={
                 entry.timelineOrder === null ? "Unplaced" : String(entry.timelineOrder)
               }
-              className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+              className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
             />
           </label>
           <button
@@ -132,7 +136,7 @@ function EntryRow({
 
 function ChapterRow({ chapter, onUpdateChapter, onRemoveChapter }) {
   return (
-    <article className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-4 md:grid-cols-[8rem_minmax(0,1fr)_auto] md:items-end">
+    <article className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 md:grid-cols-[8rem_minmax(0,1fr)_auto] md:items-end">
       <label className="block">
         <span className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-faint)]">
           Order
@@ -144,7 +148,7 @@ function ChapterRow({ chapter, onUpdateChapter, onRemoveChapter }) {
           onChange={(event) =>
             onUpdateChapter?.(chapter.id, "order", event.target.value)
           }
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
         />
       </label>
       <label className="block min-w-0">
@@ -157,8 +161,8 @@ function ChapterRow({ chapter, onUpdateChapter, onRemoveChapter }) {
           onChange={(event) =>
             onUpdateChapter?.(chapter.id, "title", event.target.value)
           }
-          className="mt-1 w-full rounded-lg border border-white/10 bg-black/35 px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
-          placeholder="Arc I — Origins to Bronze Age"
+          className="mt-1 w-full rounded-lg border border-white/10 bg-[var(--surface-1)] px-3 py-2 text-sm text-[var(--ink)] outline-none focus:border-[var(--gold-ornament)]/50"
+          placeholder="Arc I, Origins to Bronze Age"
         />
       </label>
       <button
@@ -203,10 +207,12 @@ export default function TimelineBuilderView({
   onRemoveChapter = null,
   onSave = null,
   onBackToLore = null,
+  breadcrumbs = [],
+  LinkComponent = "a",
 }) {
   if (loadStatus === "loading") {
     return (
-      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-8 text-sm text-[var(--ink-dim)]">
+      <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-8 text-sm text-[var(--ink-dim)]">
         Loading Timeline…
       </div>
     );
@@ -225,6 +231,14 @@ export default function TimelineBuilderView({
 
   return (
     <>
+      {/* Breadcrumbs (1.2.0, eight-fix package FIX 4, 12 Sep 2026):
+          the origin section, then this timeline, above the Back
+          control. */}
+      {breadcrumbs?.length ? (
+        <div className="mb-[var(--space-2)]">
+          <KitBreadcrumbsView items={breadcrumbs} LinkComponent={LinkComponent} />
+        </div>
+      ) : null}
       <div className="mb-5">
         <button type="button" onClick={() => onBackToLore?.()} className="cf-btn">
           <ArrowLeft size={14} /> Back to Lore
@@ -232,7 +246,12 @@ export default function TimelineBuilderView({
       </div>
 
       <section className="grid gap-6 xl:grid-cols-[0.32fr_1fr]">
-        <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+        {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+            implicit base column is sized by min-width:auto and any nowrap
+            descendant becomes the page's horizontal scroll width. This is
+            the single-column rule for this shell: one column in DOM order
+            below xl, each panel free to shrink to the page gutter. */}
+        <aside className="min-w-0 self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
           <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
             <ListOrdered size={18} />
             <p className="text-xs uppercase tracking-[0.18em]">
@@ -248,12 +267,12 @@ export default function TimelineBuilderView({
             ordering.
           </p>
 
-          <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
-            <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+          <div className="mt-5 grid grid-cols-2 gap-3 text-sm divide-x divide-[var(--line-whisper)]">
+            <div className="pr-3">
               <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Lore</p>
               <p className="mt-2 text-lg">{entryCount}</p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+            <div className="pl-3">
               <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">Unplaced</p>
               <p className="mt-2 text-lg">{unplacedCount}</p>
             </div>
@@ -274,8 +293,8 @@ export default function TimelineBuilderView({
           ) : null}
         </aside>
 
-        <div className="space-y-6">
-          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
+        <div className="min-w-0 space-y-6">
+          <section className="min-w-0 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 sm:p-6">
             <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
               <Globe2 size={17} />
               <p className="text-xs uppercase tracking-[0.18em]">Timeline Identity</p>
@@ -305,39 +324,36 @@ export default function TimelineBuilderView({
 
               <div className="grid gap-4 md:grid-cols-3">
                 <Field label="Workspace visibility" help="Controls owner/internal access to the Timeline asset itself.">
-                  <select
-                    className={inputClass}
-                    value={visibility}
-                    onChange={(event) => onUpdateField?.("visibility", event.target.value)}
-                  >
-                    {visibilityOptions.map((option) => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
+                  <div className="w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                    <KitDropdownView
+                      options={visibilityOptions}
+                      selectedValues={visibility ? [visibility] : []}
+                      isMultiSelect={false}
+                      onToggleOption={(nextValue) => onUpdateField?.("visibility", nextValue)}
+                    />
+                  </div>
                 </Field>
 
                 <Field label="Chronology direction">
-                  <select
-                    className={inputClass}
-                    value={sortDirection}
-                    onChange={(event) => onUpdateField?.("sortDirection", event.target.value)}
-                  >
-                    {sortOptions.map((option) => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
+                  <div className="w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                    <KitDropdownView
+                      options={sortOptions}
+                      selectedValues={sortDirection ? [sortDirection] : []}
+                      isMultiSelect={false}
+                      onToggleOption={(nextValue) => onUpdateField?.("sortDirection", nextValue)}
+                    />
+                  </div>
                 </Field>
 
                 <Field label="Viewer grouping" help="Chapters are authored by this Timeline; Lore eras remain owned by Lore.">
-                  <select
-                    className={inputClass}
-                    value={groupingMode}
-                    onChange={(event) => onUpdateField?.("groupingMode", event.target.value)}
-                  >
-                    {groupingOptions.map((option) => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
+                  <div className="w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+                    <KitDropdownView
+                      options={groupingOptions}
+                      selectedValues={groupingMode ? [groupingMode] : []}
+                      isMultiSelect={false}
+                      onToggleOption={(nextValue) => onUpdateField?.("groupingMode", nextValue)}
+                    />
+                  </div>
                 </Field>
               </div>
 
@@ -350,7 +366,7 @@ export default function TimelineBuilderView({
             </div>
           </section>
 
-          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
+          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
@@ -379,13 +395,13 @@ export default function TimelineBuilderView({
                 ))}
               </div>
             ) : (
-              <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/20 px-5 py-8 text-center">
+              <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-[var(--surface-1)] px-5 py-8 text-center">
                 <p className="text-sm text-[var(--ink-dim)]">No authored chapters yet. Era grouping and continuous chronology still work without them.</p>
               </div>
             )}
           </section>
 
-          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5 sm:p-6">
+          <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 sm:p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
@@ -416,7 +432,7 @@ export default function TimelineBuilderView({
                 ))}
               </div>
             ) : (
-              <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-black/20 px-5 py-10 text-center">
+              <div className="mt-5 rounded-xl border border-dashed border-white/15 bg-[var(--surface-1)] px-5 py-10 text-center">
                 <p className="text-sm text-[var(--ink-dim)]">No Lore is attached yet.</p>
                 <button type="button" onClick={() => onOpenLorePicker?.()} className="cf-btn mt-4">
                   <Plus size={14} /> Add the first Lore Asset
@@ -425,6 +441,21 @@ export default function TimelineBuilderView({
             )}
           </section>
         </div>
+
+        {/* MOBILE-SHELLS: the aside's save is a full scroll away on a phone,
+            so the same action docks to the bottom edge below md. The aside
+            button is untouched and is what renders on desktop. */}
+        <CreateActionBar
+          label={
+            saveStatus === "saving"
+              ? "Saving..."
+              : isEditing
+                ? "Save Timeline"
+                : "Create Timeline"
+          }
+          onAction={onSave}
+          disabled={saveDisabled}
+        />
       </section>
 
       {lorePickerSlot}

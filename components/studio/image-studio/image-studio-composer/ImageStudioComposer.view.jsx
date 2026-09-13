@@ -49,7 +49,7 @@ export default function ImageStudioComposerView({
   const isVideoMode = mode === "VIDEO";
 
   return (
-    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-4 xl:sticky xl:top-24">
+    <aside className="self-start rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-4 xl:sticky xl:top-24">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-[10px] uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
@@ -84,7 +84,7 @@ export default function ImageStudioComposerView({
               className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs uppercase tracking-[0.16em] transition disabled:cursor-not-allowed disabled:opacity-45 ${
                 mode === option.id
                   ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                  : "border-white/10 bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
               }`}
             >
               <Icon size={14} />
@@ -123,7 +123,7 @@ export default function ImageStudioComposerView({
               onChange={(event) => onChangePrompt?.(event.target.value)}
               placeholder="Describe what you want to see..."
               rows={5}
-              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
             />
           </label>
           <button
@@ -151,7 +151,7 @@ export default function ImageStudioComposerView({
           <button
             type="button"
             onClick={() => setImageOptionsOpen((current) => !current)}
-            className="mt-4 flex w-full items-center justify-between rounded-xl border border-white/10 bg-black/25 px-4 py-3 text-left text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
+            className="mt-4 flex w-full items-center justify-between rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3 text-left text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)] transition hover:border-[var(--gold-ornament)]/35 hover:text-[var(--ink)]"
           >
             <span className="inline-flex items-center gap-2">
               <SlidersHorizontal size={14} />
@@ -161,7 +161,7 @@ export default function ImageStudioComposerView({
           </button>
 
           {imageOptionsOpen ? (
-            <div className="mt-3 grid gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+            <div className="mt-3 grid gap-4 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
               {imageOptionFields.map((field) => (
                 <CrestfallSelect
                   key={field.id}
@@ -183,12 +183,12 @@ export default function ImageStudioComposerView({
                   }
                   placeholder="Optional: describe what to avoid for this request..."
                   rows={3}
-                  className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+                  className="mt-2 w-full resize-y rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
                 />
               </label>
 
               {inheritedNegativePromptItems.length ? (
-                <div className="rounded-xl border border-[var(--gold-ornament)]/15 bg-black/20 p-3">
+                <div className="rounded-xl border border-[var(--gold-ornament)]/15 bg-[var(--surface-1)] p-3">
                   <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                     Inherited from selected assets
                   </p>
@@ -199,7 +199,7 @@ export default function ImageStudioComposerView({
                     {inheritedNegativePromptItems.map((item) => (
                       <div
                         key={item.id}
-                        className="rounded-lg border border-white/10 bg-black/25 px-3 py-2"
+                        className="rounded-lg border border-white/10 bg-[var(--surface-2)] px-3 py-2"
                       >
                         <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--ink-faint)]">
                           {item.sourceLabel} · {item.label}
@@ -215,7 +215,7 @@ export default function ImageStudioComposerView({
 
 
               {advancedTuningProps?.enabled ? (
-                <section className="rounded-xl border border-[var(--gold-ornament)]/15 bg-black/25">
+                <section className="rounded-xl border border-[var(--gold-ornament)]/15 bg-[var(--surface-2)]">
                   <button
                     type="button"
                     onClick={() => setAdvancedTuningOpen((current) => !current)}
@@ -323,7 +323,7 @@ export default function ImageStudioComposerView({
             </div>
           ) : null}
 
-          <div className="mt-4 rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+          <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
             <div className="flex items-center justify-between gap-3">
               <span className="text-xs uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
                 Coins

@@ -501,6 +501,7 @@ export default function VaultV2Mockup({
           }}
           sortOptions={SORT_OPTIONS}
           selectedSort={selectedSort}
+          defaultSort="recent"
           onSortChange={(value) => {
             setSelectedSort(value);
             setVisibleCount(PAGE_SIZE);

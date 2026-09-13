@@ -52,6 +52,14 @@ function toQuickTabs(value) {
 }
 
 export function useKitStudioFilterBarViewModel(props) {
+  const sortOptions = toSortOptions(props?.sortOptions);
+  // defaultSort (2.3.0, FIX 5): the value that means "unsorted by the
+  // user". Absent, the first sort option is the default.
+  const defaultSort =
+    typeof props?.defaultSort === "string" && props.defaultSort
+      ? props.defaultSort
+      : sortOptions[0]?.value || "";
+
   return {
     searchValue: typeof props?.searchValue === "string" ? props.searchValue : "",
     searchPlaceholder:
@@ -63,8 +71,9 @@ export function useKitStudioFilterBarViewModel(props) {
         ? props.selectedValues
         : {},
     onFilterToggle: toCallback(props?.onFilterToggle),
-    sortOptions: toSortOptions(props?.sortOptions),
+    sortOptions,
     selectedSort: typeof props?.selectedSort === "string" ? props.selectedSort : "",
+    defaultSort,
     onSortChange: toCallback(props?.onSortChange),
     isLoadingCounts: Boolean(props?.isLoadingCounts),
     viewModeSlot: props?.viewModeSlot ?? null,

@@ -9,7 +9,7 @@ export default function PremiseStopView({
 } = {}) {
   return (
     <>
-      <Eyebrow>The premise</Eyebrow>
+      <Eyebrow showRuleMark={false}>The premise</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         What is this world about?
       </h2>

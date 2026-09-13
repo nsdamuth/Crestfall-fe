@@ -12,7 +12,7 @@ export default function PolicyPage({ policy }) {
         Terms & policies
       </Link>
 
-      <header className="rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/20 bg-black/40 p-6 md:p-8">
+      <header className="rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-6 md:p-8">
         <p className="text-xs uppercase tracking-[0.28em] text-[var(--gold-ornament)]">
           {policy.category}
         </p>
@@ -49,7 +49,7 @@ export default function PolicyPage({ policy }) {
         {policy.sections.map((section) => (
           <section
             key={section.heading}
-            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-5 md:p-6"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5 md:p-6"
           >
             <h2 className="font-display text-3xl text-[var(--ink)]">
               {section.heading}
@@ -62,7 +62,7 @@ export default function PolicyPage({ policy }) {
         ))}
       </div>
 
-      <footer className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5 text-sm leading-7 text-[var(--ink-dim)]">
+      <footer className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5 text-sm leading-7 text-[var(--ink-dim)]">
         Future versions of this page should include effective date, last updated
         date, contact method, jurisdiction-specific notices where applicable,
         and any required legal language after review.

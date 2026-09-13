@@ -44,7 +44,8 @@ function toAdventureCard(item, engagement, router) {
 export default function AdventuresLive({ creations = [], loadError = null } = {}) {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
-  const [sortValue, setSortValue] = useState(ADVENTURES_SORT_OPTIONS[0].value);
+  const defaultSort = ADVENTURES_SORT_OPTIONS[0].value;
+  const [selectedSort, setSortValue] = useState(defaultSort);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const adventures = useMemo(
@@ -69,16 +70,16 @@ export default function AdventuresLive({ creations = [], loadError = null } = {}
       : adventures;
     const sorted = [...scoped];
 
-    if (sortValue === "plays") {
+    if (selectedSort === "plays") {
       sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
-    } else if (sortValue === "recent") {
+    } else if (selectedSort === "recent") {
       sorted.sort((a, b) => (b.recency || 0) - (a.recency || 0));
     } else {
       sorted.sort((a, b) => (b.hearts || 0) - (a.hearts || 0));
     }
 
     return sorted;
-  }, [adventures, searchValue, sortValue]);
+  }, [adventures, searchValue, selectedSort]);
 
   const catalogItems = filtered
     .slice(0, visibleCount)
@@ -103,7 +104,8 @@ export default function AdventuresLive({ creations = [], loadError = null } = {}
           setVisibleCount(PAGE_SIZE);
         },
         sortOptions: ADVENTURES_SORT_OPTIONS,
-        selectedSort: sortValue,
+        selectedSort,
+        defaultSort,
         onSortChange: (value) => {
           setSortValue(value);
           setVisibleCount(PAGE_SIZE);

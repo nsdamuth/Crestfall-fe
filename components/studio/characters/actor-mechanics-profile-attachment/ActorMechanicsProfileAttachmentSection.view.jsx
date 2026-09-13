@@ -93,13 +93,13 @@ function ActorMechanicsProfileAttachmentCard({
       <div className="flex flex-wrap items-center gap-3 border-b border-[var(--line)] bg-[var(--surface-1)] p-4">
         {attachment.imageUrl ? (
           <div
-            className="h-16 w-16 shrink-0 rounded-xl border border-[var(--line)] bg-black/45 bg-cover bg-center"
+            className="h-16 w-16 shrink-0 rounded-xl border border-[var(--line)] bg-[var(--surface-1)] bg-cover bg-center"
             style={{ backgroundImage: `url(${attachment.imageUrl})` }}
             role="img"
             aria-label={`${attachment.title || "Actor Mechanics Profile"} cover`}
           />
         ) : (
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-[var(--line)] bg-black/45 text-[var(--gold-ornament)]">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-[var(--line)] bg-[var(--surface-1)] text-[var(--gold-ornament)]">
             <Activity size={22} />
           </div>
         )}
@@ -178,7 +178,7 @@ function ActorMechanicsProfileAttachmentCard({
             onChange={(event) => onNotesChange?.(event.target.value)}
             disabled={disabled}
             placeholder="Optional notes about how this actor uses the profile..."
-            className="mt-2 w-full resize-y rounded-xl border border-[var(--line)] bg-black/45 px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-2 w-full resize-y rounded-xl border border-[var(--line)] bg-[var(--surface-1)] px-3 py-2 text-xs leading-5 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45 disabled:cursor-not-allowed disabled:opacity-60"
           />
         </label>
       </div>

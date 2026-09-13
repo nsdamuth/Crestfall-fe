@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const TAB_ICONS = {
   overview: ClipboardList,
@@ -70,7 +71,7 @@ export default function ItemRegistryBuilderView({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
@@ -134,7 +135,7 @@ export default function ItemRegistryBuilderView({
                 key={tab.id}
                 type="button"
                 onClick={() => onSelectTab?.(tab.id)}
-                className={`inline-flex min-h-[var(--control-sm)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
+                className={`inline-flex min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] items-center gap-[var(--space-2)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition ${
                   tab.active
                     ? "border-[var(--gold-action)] bg-[var(--surface-1)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
                     : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
@@ -203,13 +204,25 @@ export default function ItemRegistryBuilderView({
           reviewPayloadText={reviewPayloadText}
         />
       ) : null}
+      {/* MOBILE-SHELLS: the header row's Save is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          header button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }
 
+/* MOBILE-SHELLS: min-w-0 on Panel's root is what lets the two-pane
+   region at xl collapse to one column below it without either pane
+   being floored at its subtree min-content and pushing the page
+   sideways. Both panes render through this one component. */
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+    <section className="min-w-0 rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
       <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
@@ -239,7 +252,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-[var(--radius-md)] border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -248,7 +261,7 @@ function TextArea(props) {
   return (
     <textarea
       {...props}
-      className="w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -313,7 +326,7 @@ function EntriesTab({
   onDeleteEntry,
 }) {
   return (
-    <div className="grid gap-5 xl:grid-cols-[0.42fr_1fr]">
+    <div className="grid min-w-0 gap-5 xl:grid-cols-[0.42fr_1fr]">
       <Panel
         eyebrow="Entries"
         title="Objects"
@@ -338,7 +351,7 @@ function EntriesTab({
                 className={`w-full rounded-[var(--radius-md)] border px-4 py-3 text-left transition ${
                   activeEntryId === entry.id
                     ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
-                    : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
+                    : "border-white/10 bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/30"
                 }`}
               >
                 <p className="line-clamp-1 font-display text-xl">
@@ -350,7 +363,7 @@ function EntriesTab({
               </button>
             ))
           ) : (
-            <p className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+            <p className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No entries yet. Add an object to begin.
             </p>
           )}
@@ -375,7 +388,7 @@ function EntriesTab({
             onDelete={() => onDeleteEntry?.(activeEntry.id)}
           />
         ) : (
-          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
             <Box size={28} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an object entry or add a new one.
@@ -504,7 +517,7 @@ function AssociationsTab({ entries, onUpdateEntry }) {
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <p className="font-display text-2xl">
                 {entry.name || "Untitled Object"}
@@ -566,7 +579,7 @@ function TrackingTab({
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
             >
               <p className="font-display text-2xl">
                 {entry.name || "Untitled Object"}
@@ -642,7 +655,7 @@ function TrackingTab({
                 </Field>
               </div>
 
-              <label className="mt-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-3">
+              <label className="mt-4 flex items-start gap-3 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-3">
                 <input
                   type="checkbox"
                   checked={entry.doNotHallucinateAvailability !== false}
@@ -651,7 +664,7 @@ function TrackingTab({
                       doNotHallucinateAvailability: event.target.checked,
                     })
                   }
-                  className="mt-1"
+                  className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
                 />
                 <span className="text-sm leading-6 text-[var(--ink-dim)]">
                   Runtime systems should not assume this item is available
@@ -720,7 +733,7 @@ function PromptTab({
         {entries.map((entry) => (
           <div
             key={entry.id}
-            className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4"
+            className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4"
           >
             <p className="font-display text-2xl">
               {entry.name || "Untitled Object"}
@@ -768,7 +781,7 @@ function ReviewTab({ entries, scope, reviewPayloadText }) {
       body="This is the current structured registry payload that will be saved into creations.data."
     >
       <div className="grid gap-4 lg:grid-cols-[0.35fr_0.65fr]">
-        <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4">
+        <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
           <p className="text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
             Summary
           </p>
@@ -790,7 +803,7 @@ function ReviewTab({ entries, scope, reviewPayloadText }) {
           </dl>
         </div>
 
-        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-black/50 p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <pre className="max-h-[520px] overflow-auto rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4 text-xs leading-5 text-[var(--ink-dim)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {reviewPayloadText}
         </pre>
       </div>
@@ -800,7 +813,7 @@ function ReviewTab({ entries, scope, reviewPayloadText }) {
 
 function EmptyEntriesMessage({ text }) {
   return (
-    <p className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+    <p className="rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
       {text}
     </p>
   );

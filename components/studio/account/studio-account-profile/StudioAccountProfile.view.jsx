@@ -36,7 +36,7 @@ export default function StudioAccountProfileView({
 }) {
   if (isLoading) {
     return (
-      <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-4 text-sm text-[var(--ink-dim)]">
+      <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-4 text-sm text-[var(--ink-dim)]">
         Loading profile…
       </div>
     );
@@ -53,7 +53,7 @@ export default function StudioAccountProfileView({
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-6"
+      className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-6"
     >
       <div className="flex flex-wrap items-start justify-between gap-5">
         <div className="flex items-center gap-4">
@@ -93,7 +93,7 @@ export default function StudioAccountProfileView({
           {hasPublicProfile ? (
             profileMediaContent
           ) : (
-            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
               Set a username to enable your public profile page and profile
               media controls.
             </div>
@@ -103,7 +103,7 @@ export default function StudioAccountProfileView({
         </section>
 
         <section className="grid gap-5">
-          <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+          <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               Account Contact
             </p>
@@ -155,7 +155,7 @@ export default function StudioAccountProfileView({
               />
             </div>
 
-            <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-4">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
               <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
                 Default Player Character
               </p>
@@ -171,7 +171,7 @@ export default function StudioAccountProfileView({
                   playerCharacter={defaultPlayerCharacter}
                 />
               ) : (
-                <p className="mt-4 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+                <p className="mt-4 rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-2)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
                   No default Player Character selected.
                 </p>
               )}
@@ -200,7 +200,7 @@ export default function StudioAccountProfileView({
         </section>
       </div>
 
-      <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+      <section className="mt-6 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-5">
         <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
           Public Profile Text
         </p>
@@ -269,7 +269,7 @@ function SaveButton({ isSaving }) {
 
 function DefaultPlayerCharacterCard({ playerCharacter }) {
   return (
-    <div className="mt-4 flex items-start gap-4 rounded-[var(--radius-md)] border border-white/10 bg-black/35 p-4">
+    <div className="mt-4 flex items-start gap-4 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-4">
       {playerCharacter.imageUrl ? (
         <div
           className="h-16 w-16 shrink-0 rounded-[var(--radius-md)] border border-white/10 bg-cover bg-center"
@@ -313,7 +313,7 @@ function LabeledInput({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
       {note ? (
         <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">{note}</p>
@@ -340,7 +340,7 @@ function LabeledTextarea({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+        className="mt-2 w-full resize-none rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>
   );
@@ -367,7 +367,7 @@ function ReadOnlyValue({ label, value, note }) {
       <span className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
         {label}
       </span>
-      <div className="mt-2 rounded-[var(--radius-md)] border border-white/10 bg-black/20 px-4 py-3 text-sm text-[var(--ink-dim)]">
+      <div className="mt-2 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink-dim)]">
         {value}
       </div>
       {note ? (

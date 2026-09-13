@@ -243,6 +243,12 @@ export function useTimelineReaderViewModel({
     entryCount: entries.length,
     groups,
     showEditAction: true,
+    // Breadcrumbs (eight-fix package FIX 4, 12 Sep 2026): Lore, then
+    // this timeline.
+    breadcrumbs: [
+      { label: "Lore", href: "/studio/v2/lore" },
+      { label: normalizeString(timeline.title) || "Untitled Timeline" },
+    ],
     onBack: () => router.push("/studio/v2/lore"),
     onEdit: () =>
       router.push(

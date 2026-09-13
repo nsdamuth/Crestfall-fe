@@ -20,7 +20,7 @@ import { useState } from "react";
 import { Info } from "lucide-react";
 
 export const TOOLTIP_RECIPE =
-  "pointer-events-none absolute bottom-full z-20 mb-[var(--space-1)] w-56 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-4)] px-[var(--space-2)] py-[var(--space-1)] text-left text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink)] shadow-[var(--shadow-modal)] transition-opacity duration-150";
+  "pointer-events-none absolute bottom-full z-20 mb-[var(--space-1)] w-56 rounded-[var(--radius-sm)] border border-[var(--line)] bg-[var(--surface-3)] px-[var(--space-2)] py-[var(--space-1)] text-left text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink)] shadow-[var(--shadow-modal)] transition-opacity duration-150";
 
 export function InfoTip({ label, text, align = "right" }) {
   const [open, setOpen] = useState(false);

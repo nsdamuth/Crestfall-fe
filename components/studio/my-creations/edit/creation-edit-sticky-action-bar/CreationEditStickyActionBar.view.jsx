@@ -83,7 +83,7 @@ export default function CreationEditStickyActionBarView({
               type="button"
               disabled={Boolean(visibilityOption.disabled)}
               onClick={() => onSelectVisibility?.(visibilityOption.value)}
-              className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] tracking-[var(--track-label)] transition ${
+              className={`min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] tracking-[var(--track-label)] transition ${
                 visibilityOption.active
                   ? "border-[var(--gold-action)] text-[var(--gold-bright)] shadow-[inset_0_0_0_1px_var(--gold-action)]"
                   : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
@@ -101,7 +101,7 @@ export default function CreationEditStickyActionBarView({
           <button
             type="button"
             disabled={Boolean(publicVisibility?.disabled)}
-            className={`min-h-[var(--control-sm)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] tracking-[var(--track-label)] transition ${
+            className={`min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)] rounded-[var(--radius-md)] border px-[var(--space-4)] text-[length:var(--text-label)] tracking-[var(--track-label)] transition ${
               publicVisibility?.active
                 ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-100"
                 : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)]"

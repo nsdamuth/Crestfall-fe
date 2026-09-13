@@ -16,7 +16,7 @@ import {
 } from "../../SharedFields";
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 // Local TextField, not SharedFields.TextField: this file needs native
 // numeric inputs (type="number") for argument bounds, which
@@ -68,13 +68,13 @@ function TokenListField({
       <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
         {label}
       </span>
-      <div className="mt-2 rounded-xl border border-white/10 bg-black/35 p-3 focus-within:border-[var(--gold-ornament)]/50">
+      <div className="mt-2 rounded-xl border border-white/10 bg-[var(--surface-1)] p-3 focus-within:border-[var(--gold-ornament)]/50">
         {safeValues.length ? (
           <div className="mb-3 flex flex-wrap gap-2">
             {safeValues.map((value, index) => (
               <span
                 key={`${value}-${index}`}
-                className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--ink)]"
+                className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-[var(--surface-1)] px-3 py-1 text-xs text-[var(--ink)]"
               >
                 <span className="break-all">{value}</span>
                 <button
@@ -270,7 +270,7 @@ export function MechanicsCommandArgumentsView({ model }) {
       {model.invocation.arguments.map((argument, argumentIndex) => (
         <div
           key={`${argument.name}-${argumentIndex}`}
-          className="rounded-xl border border-white/10 bg-black/35 p-4"
+          className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4"
         >
           <div className="flex items-center justify-between gap-3">
             <p className={EYEBROW_CLASS}>
@@ -436,7 +436,7 @@ export function MechanicsCommandTriggersView({ model }) {
   }
 
   return (
-    <div className="mt-5 rounded-xl border border-white/10 bg-black/20 p-4">
+    <div className="mt-5 rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
       <p className={EYEBROW_CLASS}>
         Triggers
       </p>
@@ -444,7 +444,7 @@ export function MechanicsCommandTriggersView({ model }) {
         {model.triggers.map((trigger, triggerIndex) => (
           <span
             key={`${trigger}-${triggerIndex}`}
-            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs text-[var(--ink)]"
+            className="inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-[var(--surface-1)] px-3 py-1 text-xs text-[var(--ink)]"
           >
             <span className="break-all">{trigger}</span>
             <button
@@ -473,7 +473,7 @@ export function MechanicsCommandTriggersView({ model }) {
             }
           }}
           placeholder="/settled"
-          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
+          className="min-w-0 flex-1 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] transition placeholder:text-[var(--ink-dim)]"
         />
         <SmallActionButton onClick={submitTrigger}>
           <Plus size={14} />

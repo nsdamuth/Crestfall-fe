@@ -11,7 +11,7 @@ export default function SettingStopView({
 } = {}) {
   return (
     <>
-      <Eyebrow>The setting</Eyebrow>
+      <Eyebrow showRuleMark={false}>The setting</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Where and what kind of place is it?
       </h2>

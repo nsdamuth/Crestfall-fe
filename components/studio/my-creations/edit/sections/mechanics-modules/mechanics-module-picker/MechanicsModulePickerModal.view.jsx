@@ -6,7 +6,7 @@ import { Activity, Search } from "lucide-react";
 import KitModalFrame from "@/components/kit/KitModalFrame";
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 function MechanicsModuleCard({ item, onChooseModule }) {
   return (
@@ -149,7 +149,7 @@ export default function MechanicsModulePickerModalView({
       panelClassName="w-full max-w-4xl"
     >
       <div className="flex max-h-[100dvh] flex-col min-[700px]:max-h-[92dvh]">
-        <div className="flex items-start justify-between gap-[var(--space-3)] border-b border-[var(--line-whisper)] px-[var(--space-4)] py-[var(--space-3)] pr-16">
+        <div className="flex items-start justify-between gap-[var(--space-3)] px-[var(--space-4)] py-[var(--space-3)] pr-16">
           <div>
             <p className={EYEBROW_CLASS}>
               {eyebrow}
@@ -162,8 +162,9 @@ export default function MechanicsModulePickerModalView({
             </p>
           </div>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
-        <div className="border-b border-white/10 p-6">
+        <div className="p-6">
           <div className="flex flex-wrap gap-2">
             {sources.map((source) => {
               const active = source?.id === activeSource?.id;
@@ -188,7 +189,7 @@ export default function MechanicsModulePickerModalView({
             })}
           </div>
 
-          <label className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink-dim)]">
+          <label className="mt-5 flex items-center gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink-dim)]">
             <Search size={16} className="text-[var(--gold-ornament)]" />
             <input
               value={query}
@@ -198,10 +199,11 @@ export default function MechanicsModulePickerModalView({
             />
           </label>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="min-h-0 flex-1 overflow-y-auto p-6">
           {loadStatus === "loading" ? (
-            <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm text-[var(--ink-dim)]">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-5 text-sm text-[var(--ink-dim)]">
               Loading mechanics modules...
             </div>
           ) : null}
@@ -225,7 +227,7 @@ export default function MechanicsModulePickerModalView({
           ) : null}
 
           {loadStatus === "loaded" && !visibleItems.length ? (
-            <div className="rounded-xl border border-white/10 bg-black/20 p-5 text-sm leading-6 text-[var(--ink-dim)]">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-5 text-sm leading-6 text-[var(--ink-dim)]">
               {activeSource?.emptyMessage ||
                 "No available mechanics modules found for this tab."}
             </div>

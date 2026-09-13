@@ -14,6 +14,7 @@ export function useKitDropdownViewModel({
   ariaLabel = null,
   restingValue = null,
   align = "left",
+  labelMode = "prefix",
 } = {}) {
   return {
     label,
@@ -25,5 +26,6 @@ export function useKitDropdownViewModel({
     ariaLabel: ariaLabel || null,
     restingValue: restingValue ?? null,
     align: align === "right" ? "right" : "left",
+    labelMode: labelMode === "replace" ? "replace" : "prefix",
   };
 }

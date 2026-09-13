@@ -2,6 +2,8 @@
 
 import { BookOpenCheck, Braces, Plus, Trash2 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 function Label({ children }) {
   return (
     <label className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
@@ -19,7 +21,7 @@ function TextInput({ value, onChange, placeholder = "", type = "text", min, max 
       value={value ?? ""}
       onChange={(event) => onChange?.(event.target.value)}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
     />
   );
 }
@@ -31,7 +33,7 @@ function TextArea({ value, onChange, rows = 3, placeholder = "" }) {
       value={value ?? ""}
       onChange={(event) => onChange?.(event.target.value)}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--foreground)] outline-none placeholder:text-[var(--muted)] focus:border-[var(--muted-gold)]/50"
     />
   );
 }
@@ -78,7 +80,7 @@ function RankCard({ rank, skillIndex, rankIndex, onUpdateRankField }) {
   const grants = rank.grants || {};
 
   return (
-    <div className="rounded-xl border border-white/10 bg-black/25 p-4">
+    <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm font-semibold text-[var(--foreground)]">
           Rank {rank.rank}
@@ -201,7 +203,7 @@ export default function SkillsProfileEditorView({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-black/35 p-5">
+      <section className="rounded-2xl border border-[var(--muted-gold)]/20 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 text-[var(--muted-gold)]">
@@ -270,6 +272,7 @@ export default function SkillsProfileEditorView({
             onChange={(event) =>
               onUpdateProfileField?.("enabled", event.target.checked)
             }
+            className="h-4 w-4 accent-[var(--gold-ornament)]"
           />
           Profile enabled
         </label>
@@ -277,7 +280,7 @@ export default function SkillsProfileEditorView({
 
       <ValidationPanel errors={errors} warnings={warnings} />
 
-      <section className="rounded-2xl border border-white/10 bg-black/30 p-5">
+      <section className="rounded-2xl border border-white/10 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
@@ -304,19 +307,14 @@ export default function SkillsProfileEditorView({
         <div className="mt-5 grid gap-4 lg:grid-cols-2">
           <div>
             <Label>Starter selection mode</Label>
-            <select
-              value={starterSelection.mode || "NONE"}
-              onChange={(event) =>
-                onUpdateStarterSelectionMode?.(event.target.value)
-              }
-              className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--muted-gold)]/50"
-            >
-              {starterSelectionModeOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+              <KitDropdownView
+                options={starterSelectionModeOptions}
+                selectedValues={[starterSelection.mode || "NONE"]}
+                isMultiSelect={false}
+                onToggleOption={(nextValue) => onUpdateStarterSelectionMode?.(nextValue)}
+              />
+            </div>
           </div>
           <label className="flex items-end gap-3 pb-3 text-sm text-[var(--foreground)]">
             <input
@@ -326,6 +324,7 @@ export default function SkillsProfileEditorView({
               onChange={(event) =>
                 onUpdateStarterSelectionUnique?.(event.target.checked)
               }
+              className="h-4 w-4 accent-[var(--gold-ornament)]"
             />
             Each starter slot must use a different Skill
           </label>
@@ -336,7 +335,7 @@ export default function SkillsProfileEditorView({
             {starterSlots.map((slot, slotIndex) => (
               <div
                 key={`${slot.id}-${slotIndex}`}
-                className="grid gap-3 rounded-xl border border-white/10 bg-black/25 p-4 md:grid-cols-[1fr_1fr_140px_auto_auto] md:items-end"
+                className="grid gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] p-4 md:grid-cols-[1fr_1fr_140px_auto_auto] md:items-end"
               >
                 <div>
                   <Label>Slot ID</Label>
@@ -379,6 +378,7 @@ export default function SkillsProfileEditorView({
                         event.target.checked
                       )
                     }
+                    className="h-4 w-4 accent-[var(--gold-ornament)]"
                   />
                   Required
                 </label>
@@ -402,7 +402,7 @@ export default function SkillsProfileEditorView({
         ) : null}
       </section>
 
-      <section className="rounded-2xl border border-white/10 bg-black/30 p-5">
+      <section className="rounded-2xl border border-white/10 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-gold)]">
@@ -425,7 +425,7 @@ export default function SkillsProfileEditorView({
           {skills.map((skill, skillIndex) => (
             <article
               key={`${skill.id}-${skillIndex}`}
-              className="rounded-2xl border border-white/10 bg-black/25 p-5"
+              className="rounded-2xl border border-white/10 bg-[var(--surface-1)] p-5"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
@@ -531,6 +531,7 @@ export default function SkillsProfileEditorView({
                       event.target.checked
                     )
                   }
+                  className="h-4 w-4 accent-[var(--gold-ornament)]"
                 />
                 Skill enabled
               </label>

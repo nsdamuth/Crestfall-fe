@@ -26,7 +26,7 @@ export default function SaveIngredientPresetModalView({
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4">
       <div className="w-full max-w-2xl overflow-hidden rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/25 bg-[#080706] shadow-2xl">
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
+        <div className="flex items-start justify-between gap-4 p-5">
           <div>
             <p className="text-xs uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
               Save Preset
@@ -51,6 +51,7 @@ export default function SaveIngredientPresetModalView({
             <X size={18} />
           </button>
         </div>
+        <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
         <div className="grid gap-4 p-5">
           <label className="block">
@@ -61,7 +62,7 @@ export default function SaveIngredientPresetModalView({
               value={nameValue}
               onChange={(event) => onChangeName?.(event.target.value)}
               placeholder="Name this preset..."
-              className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
             />
           </label>
 
@@ -74,7 +75,7 @@ export default function SaveIngredientPresetModalView({
               onChange={(event) => onChangeDescription?.(event.target.value)}
               placeholder="Optional description for later browsing and editing..."
               rows={3}
-              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
             />
           </label>
 
@@ -87,7 +88,7 @@ export default function SaveIngredientPresetModalView({
               onChange={(event) => onChangePrompt?.(event.target.value)}
               placeholder="The reusable prompt fragment lives here..."
               rows={5}
-              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+              className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
             />
           </label>
 
@@ -99,12 +100,12 @@ export default function SaveIngredientPresetModalView({
               value={tagsValue}
               onChange={(event) => onChangeTags?.(event.target.value)}
               placeholder="fantasy, formal, battle-ready..."
-              className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+              className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
             />
           </label>
 
           {helperText ? (
-            <div className="rounded-xl border border-white/10 bg-black/25 p-4 text-xs leading-5 text-[var(--ink-dim)]">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 text-xs leading-5 text-[var(--ink-dim)]">
               {helperText}
             </div>
           ) : null}

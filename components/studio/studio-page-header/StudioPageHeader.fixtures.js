@@ -67,6 +67,21 @@ export const studioPageHeaderFixtures = [
     },
   },
   {
+    // 1.3.0 (12 Sep 2026, FIX 4): the breadcrumb row sits between the
+    // description and the divider on every detail page.
+    id: "with-breadcrumbs",
+    label: "With Breadcrumbs",
+    props: {
+      eyebrow: "Creator Profile",
+      title: "Vermillion Ash",
+      description: "@vermillion",
+      breadcrumbs: [
+        { label: "Creators", href: "/studio/v2/creators" },
+        { label: "Vermillion Ash" },
+      ],
+    },
+  },
+  {
     id: "long-content",
     label: "Long Content",
     props: {

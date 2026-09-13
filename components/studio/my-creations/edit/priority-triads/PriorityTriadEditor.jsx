@@ -31,7 +31,7 @@ export default function PriorityTriadEditor({
   }
 
   return (
-    <div className="rounded-2xl border border-[var(--line-whisper)] bg-black/10 p-4 md:p-5">
+    <div className="rounded-2xl border border-[var(--line-whisper)] bg-[var(--surface-1)] p-4 md:p-5">
       <div>
         <h3 className="font-display text-xl text-[var(--ink)]">{title}</h3>
         <p className="mt-2 text-sm leading-6 text-[var(--ink-dim)]">
@@ -59,7 +59,7 @@ export default function PriorityTriadEditor({
             return (
               <div
                 key={priority}
-                className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-[var(--line-whisper)] bg-black/15 p-3"
+                className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-[var(--line-whisper)] bg-[var(--surface-2)] p-3"
               >
                 <div className="font-display text-xl text-[var(--gold-ornament)]">
                   {index + 1}

@@ -40,9 +40,7 @@ const PRESET_FOLDER_DEFINITIONS = Object.freeze([
 ]);
 
 const EYEBROW_CLASS =
-  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
-const EYEBROW_RULE_AFTER =
-  "after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]";
+  "flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]";
 
 function IssueList({ title, issues = [], tone = "error" }) {
   if (!issues.length) return null;
@@ -150,7 +148,7 @@ function PresetFolder({
         </span>
 
         <span className="flex shrink-0 items-center gap-2">
-          <span className="rounded-full border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] text-[var(--ink-dim)]">
+          <span className="rounded-full border border-white/10 bg-[var(--surface-1)] px-2 py-0.5 text-[10px] text-[var(--ink-dim)]">
             {folder.cards.length}
           </span>
           <ChevronDown
@@ -183,7 +181,7 @@ function PresetFolder({
                     <p className="truncate text-sm text-[var(--ink)]">
                       {preset.label}
                     </p>
-                    <p className={`mt-1 truncate text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
+                    <p className="mt-1 truncate text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                       {preset.eyebrow}
                     </p>
                   </div>
@@ -281,8 +279,8 @@ export default function MechanicsPresetApplicationModalView({
 
   return (
     <PresetLibraryModalFrame onClose={onClose}>
-      <div className="sticky top-0 z-[1] border-b border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] px-[var(--space-4)] py-[var(--space-3)] pr-[calc(var(--control-md)+var(--space-6))]">
-        <p className={`inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
+      <div className="sticky top-0 z-[1] bg-[image:var(--grad-panel-lift)] px-[var(--space-4)] py-[var(--space-3)] pr-[calc(var(--control-md)+var(--space-6))]">
+        <p className="inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
           <LibraryBig size={15} />
           Loom Preset Workflow
         </p>
@@ -296,6 +294,7 @@ export default function MechanicsPresetApplicationModalView({
           {description}
         </p>
       </div>
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
 
       <div className="min-w-0">
         <div className="grid min-w-0 gap-4 p-4 md:grid-cols-[18rem_minmax(0,1fr)] md:items-start">
@@ -361,7 +360,7 @@ export default function MechanicsPresetApplicationModalView({
             ))}
 
             {!presetFolders.length ? (
-              <p className="rounded-xl border border-white/10 bg-black/25 p-4 text-sm text-[var(--ink-dim)]">
+              <p className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4 text-sm text-[var(--ink-dim)]">
                 No presets match the current filter.
               </p>
             ) : null}
@@ -446,7 +445,7 @@ export default function MechanicsPresetApplicationModalView({
                   />
                 ) : null}
 
-                <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+                <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                   <p className={EYEBROW_CLASS}>
                     Application Mode
                   </p>
@@ -521,8 +520,8 @@ export default function MechanicsPresetApplicationModalView({
               </section>
 
               <aside className="grid content-start gap-4">
-                <section className="rounded-xl border border-white/10 bg-black/25 p-4">
-                  <p className={`inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] ${EYEBROW_RULE_AFTER}`}>
+                <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
+                  <p className="inline-flex items-center gap-2 text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                     <ShieldCheck size={14} />
                     Atomic Compliance
                   </p>
@@ -532,7 +531,7 @@ export default function MechanicsPresetApplicationModalView({
                 </section>
 
                 {selectedPreset.replacementPaths.length ? (
-                  <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+                  <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                     <p className={EYEBROW_CLASS}>
                       Declared Boundary
                     </p>
@@ -572,7 +571,7 @@ export default function MechanicsPresetApplicationModalView({
                 ) : null}
 
                 {statusMessage ? (
-                  <section className="rounded-xl border border-white/10 bg-black/25 p-4">
+                  <section className="rounded-xl border border-white/10 bg-[var(--surface-2)] p-4">
                     <p className="text-xs leading-5 text-[var(--ink-dim)]">
                       {statusMessage}
                     </p>
@@ -581,7 +580,7 @@ export default function MechanicsPresetApplicationModalView({
               </aside>
             </div>
           ) : (
-            <div className="flex min-h-[20rem] items-center justify-center rounded-[var(--radius-md)] border border-dashed border-white/10 bg-black/15 p-8 text-center">
+            <div className="flex min-h-[20rem] items-center justify-center rounded-[var(--radius-md)] border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
               <div>
                 <AlertTriangle
                   size={24}
@@ -598,7 +597,8 @@ export default function MechanicsPresetApplicationModalView({
         </div>
       </div>
 
-      <div className="sticky bottom-0 z-[1] flex flex-wrap items-center justify-between gap-[var(--space-3)] border-t border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-4)]">
+      <div aria-hidden="true" className="h-px bg-[image:var(--line-fade)]" />
+      <div className="sticky bottom-0 z-[1] flex flex-wrap items-center justify-between gap-[var(--space-3)] bg-[image:var(--grad-panel-lift)] p-[var(--space-4)]">
         <p className="text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
           Applying updates the current builder only. Use the normal page Save action to persist the result.
         </p>

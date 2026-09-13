@@ -12,7 +12,7 @@ export default function StudioAccountCoinsView({
 }) {
   return (
     <>
-      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <div className="rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/20 bg-[var(--surface-1)] p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
@@ -49,7 +49,7 @@ export default function StudioAccountCoinsView({
           {statItems.map((item, index) => (
             <div
               key={item?.id || item?.label || index}
-              className="rounded-[var(--radius-md)] border border-white/10 bg-black/30 p-3"
+              className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-2)] p-3"
             >
               <p className="font-display text-2xl">{item?.value ?? "0"}</p>
               <p className="mt-1 text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">

@@ -14,6 +14,8 @@ import {
   XCircle,
 } from "lucide-react";
 
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+
 const STATUS_PRESENTATION = {
   QUEUED: {
     label: "Queued",
@@ -168,7 +170,7 @@ function ActiveEngineConfiguration({ latest, source }) {
         </span>
       </div>
 
-      <div className="mt-4 rounded-xl border border-white/10 bg-black/20 px-4 py-3">
+      <div className="mt-4 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
         <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">Lore scope</p>
         <p className="mt-1 text-sm text-[var(--ink)]">{scopeLabel}</p>
       </div>
@@ -184,7 +186,7 @@ function ActiveEngineConfiguration({ latest, source }) {
               return (
                 <div
                   key={binding.id || `${binding.subjectId}:${binding.scopeType}`}
-                  className="rounded-xl border border-emerald-300/20 bg-black/20 px-4 py-3"
+                  className="rounded-xl border border-emerald-300/20 bg-[var(--surface-2)] px-4 py-3"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="flex min-w-0 items-start gap-3">
@@ -227,7 +229,7 @@ function ActiveEngineConfiguration({ latest, source }) {
             {locationBindings.map((binding) => (
               <div
                 key={binding.id || `${binding.subjectId}:location`}
-                className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+                className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
               >
                 <MapPin size={17} className="mt-0.5 shrink-0 text-violet-200" />
                 <div>
@@ -392,74 +394,72 @@ function CharacterAccessControls({
     <div className="grid gap-3">
       <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
         Knowledge relationship
-        <select
-          value={knowledgeMode || "SECONDHAND"}
-          onChange={(event) => onKnowledgeModeChange(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-        >
-          {knowledgeModeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+          <KitDropdownView
+            options={knowledgeModeOptions}
+            selectedValues={knowledgeMode ? [knowledgeMode] : ["SECONDHAND"]}
+            isMultiSelect={false}
+            onToggleOption={(nextValue) => onKnowledgeModeChange(nextValue)}
+          />
+        </div>
       </label>
 
       <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
         Knowledge scope
-        <select
-          value={scopeType}
-          onChange={(event) => onScopeTypeChange(event.target.value)}
-          className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-        >
-          {characterScopeOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+          <KitDropdownView
+            options={characterScopeOptions}
+            selectedValues={scopeType ? [scopeType] : []}
+            isMultiSelect={false}
+            onToggleOption={(nextValue) => onScopeTypeChange(nextValue)}
+          />
+        </div>
       </label>
 
       {scopeType === "CHAPTER" ? (
         <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           Chapter
-          <select
-            value={access.chapterId || ""}
-            onChange={(event) => onChapterChange(event.target.value)}
-            className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-          >
-            <option value="">Select a chapter</option>
-            {chapterOptions.map((chapter) => (
-              <option key={chapter.id} value={chapter.id}>
-                {chapter.title}
-              </option>
-            ))}
-          </select>
+          <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+            <KitDropdownView
+              options={[
+                { value: "", label: "Select a chapter" },
+                ...chapterOptions.map((chapter) => ({
+                  value: chapter.id,
+                  label: chapter.title,
+                })),
+              ]}
+              selectedValues={[access.chapterId || ""]}
+              isMultiSelect={false}
+              onToggleOption={(nextValue) => onChapterChange(nextValue)}
+            />
+          </div>
         </label>
       ) : null}
 
       {scopeType === "SECTION" ? (
         <label className="block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           Section
-          <select
-            value={access.sectionId || ""}
-            onChange={(event) => onSectionChange(event.target.value)}
-            className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-          >
-            <option value="">Select a section</option>
-            {includedSections.map((section) => (
-              <option key={section.id} value={section.id}>
-                {section.chapterTitle} · {section.title}
-              </option>
-            ))}
-          </select>
+          <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+            <KitDropdownView
+              options={[
+                { value: "", label: "Select a section" },
+                ...includedSections.map((section) => ({
+                  value: section.id,
+                  label: `${section.chapterTitle} · ${section.title}`,
+                })),
+              ]}
+              selectedValues={[access.sectionId || ""]}
+              isMultiSelect={false}
+              onToggleOption={(nextValue) => onSectionChange(nextValue)}
+            />
+          </div>
         </label>
       ) : null}
 
       {(scopeType === "ASSET" ||
         (scopeType === "CHAPTER" && access.chapterId) ||
         (scopeType === "SECTION" && access.sectionId)) ? (
-        <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+        <div className="rounded-lg border border-white/10 bg-[var(--surface-2)] p-3">
           <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
             Explicit exclusions
           </p>
@@ -501,7 +501,7 @@ function CharacterAccessControls({
         </div>
       ) : null}
 
-      <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+      <div className="rounded-lg border border-white/10 bg-[var(--surface-2)] p-3">
         <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           Knowledge availability
         </p>
@@ -510,17 +510,14 @@ function CharacterAccessControls({
         </p>
         <label className="mt-3 block text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           Availability window
-          <select
-            value={access.availabilityMode || "ALWAYS"}
-            onChange={(event) => onAvailabilityModeChange(event.target.value)}
-            className="mt-2 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm normal-case tracking-normal text-[var(--ink)]"
-          >
-            {availabilityModeOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+            <KitDropdownView
+              options={availabilityModeOptions}
+              selectedValues={[access.availabilityMode || "ALWAYS"]}
+              isMultiSelect={false}
+              onToggleOption={(nextValue) => onAvailabilityModeChange(nextValue)}
+            />
+          </div>
         </label>
         {(["FROM", "BETWEEN"].includes(access.availabilityMode || "ALWAYS")) ? (
           <div className="mt-3">
@@ -549,7 +546,7 @@ function CharacterAccessControls({
         </p>
       </div>
 
-      <div className="rounded-lg border border-white/10 bg-black/20 p-3">
+      <div className="rounded-lg border border-white/10 bg-[var(--surface-2)] p-3">
         <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--ink-dim)]">
           Story context
         </p>
@@ -633,14 +630,14 @@ function SubmissionHistory({ submissions }) {
 
   return (
     <div className="mt-5 border-t border-white/10 pt-5">
-      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+      <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
         Recent engine-use submissions
       </p>
       <div className="mt-3 grid gap-2">
         {submissions.slice(0, 5).map((submission) => (
           <div
             key={submission.id}
-            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
           >
             <div>
               <p className="text-sm text-[var(--ink)]">
@@ -799,7 +796,7 @@ export default function LoreEngineUseView({
       ) : (
         <>
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
               <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200">
                 Source revision
               </p>
@@ -809,7 +806,7 @@ export default function LoreEngineUseView({
                   : "Current Lore draft"}
               </p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
               <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200">
                 Tagged Characters
               </p>
@@ -817,7 +814,7 @@ export default function LoreEngineUseView({
                 {characterRefs.length}
               </p>
             </div>
-            <div className="rounded-xl border border-white/10 bg-black/25 px-4 py-3">
+            <div className="rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3">
               <p className="text-[10px] uppercase tracking-[0.18em] text-violet-200">
                 Tagged Locations
               </p>
@@ -828,7 +825,7 @@ export default function LoreEngineUseView({
           </div>
 
           {latest ? (
-            <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-black/25 p-5">
+            <div className="mt-5 rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-xs uppercase tracking-[0.18em] text-[var(--ink-dim)]">
@@ -905,7 +902,7 @@ export default function LoreEngineUseView({
               <div className="rounded-xl border border-violet-300/20 bg-violet-300/5 px-4 py-3 text-sm leading-6 text-[var(--ink-dim)]">
                 Use <span className="text-[var(--ink)]">Engine Use JSON</span> to import or export this complete unsent configuration. On a draft, applying JSON updates the staged <span className="font-mono text-[var(--ink)]">metadata.engineUseAuthoring</span> data shown by these controls; use the page Save action to persist it. Submission remains a separate later action.
               </div>
-              <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
+              <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
                 <div className="flex items-center gap-3">
                   <BookOpenCheck size={19} className="text-violet-200" />
                   <div>
@@ -959,7 +956,7 @@ export default function LoreEngineUseView({
                     {availableSections.map((section) => (
                       <label
                         key={section.id}
-                        className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-black/20 px-4 py-3"
+                        className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-2)] px-4 py-3"
                       >
                         <input
                           type="checkbox"
@@ -981,7 +978,7 @@ export default function LoreEngineUseView({
                 ) : null}
               </div>
 
-              <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
+              <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
                 <div className="flex items-center gap-3">
                   <UserRound size={19} className="text-violet-200" />
                   <div>
@@ -1061,7 +1058,7 @@ export default function LoreEngineUseView({
                 )}
               </div>
 
-              <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/20 p-5">
+              <div className="rounded-[var(--radius-md)] border border-white/10 bg-[var(--surface-1)] p-5">
                 <div className="flex items-center gap-3">
                   <MapPin size={19} className="text-violet-200" />
                   <div>

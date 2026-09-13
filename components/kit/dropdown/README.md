@@ -97,6 +97,16 @@ counts), pressed, disabled.
 
 Fixture-only; no query, persistence, or navigation is wired.
 
+## Label mode, 12 Sep 2026 (eight-fix package FIX 5, 1.4.0)
+
+`labelMode="replace"` with a `restingValue` is the ruled grammar for
+every filter and sort trigger in the shared filter bar: while the
+selection equals the default the trigger reads "Filter" with no value;
+once the user picks a non-default option the trigger reads that
+option's label alone. The menu still marks the default option as
+selected. The former "Sort: <value>" prefix pattern (6 Sep 2026) is
+superseded.
+
 ## Shared mechanics, 6 Sep 2026 (FE/FILTERS)
 
 The open flag, the phone-width chassis select, the measured left/right

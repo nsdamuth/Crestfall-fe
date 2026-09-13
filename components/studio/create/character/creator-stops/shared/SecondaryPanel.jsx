@@ -10,7 +10,7 @@ import { Eyebrow } from "./Controls";
 export default function SecondaryPanel({ eyebrow, title, description, children }) {
   return (
     <>
-      {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
+      {eyebrow ? <Eyebrow showRuleMark={false}>{eyebrow}</Eyebrow> : null}
       {title ? (
         <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">{title}</h2>
       ) : null}

@@ -56,7 +56,7 @@ export default function CreationCardView({
       <article
         onClick={() => onOpenPreview?.()}
         aria-busy={isPreviewLoading}
-        className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-black/35 transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/35"
+        className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-[var(--surface-2)] transition hover:-translate-y-1 hover:border-[var(--gold-ornament)]/35"
       >
         <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-black via-black/80 to-[var(--gold-ornament)]/10">
           {imageUrl ? (
@@ -102,7 +102,7 @@ export default function CreationCardView({
                 onClick={(event) =>
                   stopPropagationAndInvoke(event, onToggleLike)
                 }
-                className={`flex h-9 w-9 items-center justify-center rounded-full bg-black/65 transition hover:bg-[var(--gold-ornament)]/25 ${
+                className={`flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-2)] transition hover:bg-[var(--gold-ornament)]/25 ${
                   liked ? "text-pink-300" : "text-[var(--ink)]"
                 }`}
                 title={liked ? "Unlike" : "Like"}
@@ -118,7 +118,7 @@ export default function CreationCardView({
                 onClick={(event) =>
                   stopPropagationAndInvoke(event, onToggleBookmark)
                 }
-                className={`flex h-9 w-9 items-center justify-center rounded-full bg-black/65 transition hover:bg-[var(--gold-ornament)]/25 ${
+                className={`flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-2)] transition hover:bg-[var(--gold-ornament)]/25 ${
                   bookmarked ? "text-pink-300" : "text-[var(--ink)]"
                 }`}
                 title={bookmarked ? "Remove bookmark" : "Bookmark"}
@@ -145,7 +145,7 @@ export default function CreationCardView({
                   )
                 }
                 disabled={isSettingDefaultPlayerCharacter}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25 disabled:cursor-wait disabled:opacity-60"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-2)] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25 disabled:cursor-wait disabled:opacity-60"
                 title={
                   isSettingDefaultPlayerCharacter
                     ? "Setting default Player Character..."
@@ -164,7 +164,7 @@ export default function CreationCardView({
                   stopPropagationAndInvoke(event, onStartChat)
                 }
                 disabled={isStartingChat}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25 disabled:cursor-wait disabled:opacity-60"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-2)] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25 disabled:cursor-wait disabled:opacity-60"
                 title={isStartingChat ? "Starting story..." : "Start chat"}
                 aria-label={isStartingChat ? "Starting story" : "Start chat"}
               >
@@ -175,7 +175,7 @@ export default function CreationCardView({
             <LinkComponent
               href={imageHref}
               onClick={(event) => event.stopPropagation()}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-2)] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25"
               title="Generate image"
             >
               <ImageIcon size={15} />
@@ -185,7 +185,7 @@ export default function CreationCardView({
               <LinkComponent
                 href={editHref}
                 onClick={(event) => event.stopPropagation()}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-black/65 text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-2)] text-[var(--ink)] transition hover:bg-[var(--gold-ornament)]/25"
                 title="Edit"
               >
                 <PenLine size={15} />

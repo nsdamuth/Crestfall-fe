@@ -87,9 +87,6 @@ export default function ImagesV2ImageViewer({ viewerCoinCosts = null, ...lightbo
     <KitImageViewer
       imageSrc={media.imageUrl}
       title={media.title}
-      items={lightbox.mediaItems}
-      activeId={lightbox.activeId}
-      onSelectItem={lightbox.onSelectMedia}
       pixelSize={pixelSize}
       isSaved={lightbox.isBookmarked}
       onSave={lightbox.onBookmark}

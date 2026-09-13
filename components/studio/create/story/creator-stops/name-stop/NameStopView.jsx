@@ -9,7 +9,7 @@ export default function NameStopView({
 } = {}) {
   return (
     <>
-      <Eyebrow>Gather a story</Eyebrow>
+      <Eyebrow showRuleMark={false}>Gather a story</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         Every story starts with a name.
       </h2>

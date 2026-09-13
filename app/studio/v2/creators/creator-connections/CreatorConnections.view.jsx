@@ -11,7 +11,6 @@ import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioP
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
-import ProfileBackButton from "@/components/studio/profile/ProfileBackButton";
 
 // Same left-aligned eyebrow-with-trailing-rule recipe as every other
 // v2 page's section labels (Lore.view.jsx SectionLabel, LORE HEADER
@@ -33,7 +32,7 @@ function TabSwitcher({ activeTab, followersCount, followingCount, onChangeTab })
     <div
       role="tablist"
       aria-label="Followers and following"
-      className="inline-flex w-fit rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-1)]"
+      className="flex w-full flex-wrap rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-1)] md:inline-flex md:w-fit md:flex-nowrap"
     >
       <TabButton
         id="followers"
@@ -161,14 +160,21 @@ export default function CreatorConnectionsView({
     <KitStudioPageView
       harnessSlot={harnessSlot}
       headerSlot={
-        <div className="flex flex-col gap-[var(--space-4)]">
-          <ProfileBackButton fallbackHref={handle ? `/studio/v2/creators/${handle}` : "/studio/v2/creators"} />
-          <StudioPageHeaderView
-            eyebrow="Creator Profile"
-            title={displayName ? `${displayName}'s connections` : "Connections"}
-            description={handle ? `@${handle}` : ""}
-          />
-        </div>
+        // Breadcrumbs replace the floating circular back button,
+        // RULED 12 Sep 2026 (eight-fix package, FIX 4): Creators, the
+        // creator (linking to the profile), then Connections.
+        <StudioPageHeaderView
+          eyebrow="Creator Profile"
+          title={displayName ? `${displayName}'s connections` : "Connections"}
+          description={handle ? `@${handle}` : ""}
+          breadcrumbs={[
+            { label: "Creators", href: "/studio/v2/creators" },
+            ...(handle
+              ? [{ label: displayName || `@${handle}`, href: `/studio/v2/creators/${handle}` }]
+              : []),
+            { label: "Connections" },
+          ]}
+        />
       }
       bannerSlot={
         <KitPromoBannerView

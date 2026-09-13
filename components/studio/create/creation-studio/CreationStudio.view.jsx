@@ -64,7 +64,7 @@ export default function CreationStudioView({
 
 function ModeSelector({ mode, onModeChange }) {
   return (
-    <section className="sticky top-3 z-20 rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/90 p-2 shadow-2xl backdrop-blur-xl">
+    <section className="sticky top-3 z-20 rounded-2xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-3)] p-2 shadow-2xl backdrop-blur-xl">
       <div className="grid gap-2 md:grid-cols-3">
         {CREATION_STUDIO_MODE_OPTIONS.map((option) => {
           const active = option.id === mode;
@@ -78,7 +78,7 @@ function ModeSelector({ mode, onModeChange }) {
               className={`rounded-[var(--radius-md)] border px-4 py-3 text-left transition ${
                 active
                   ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                  : "border-transparent bg-black/20 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
+                  : "border-transparent bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/25 hover:text-[var(--ink)]"
               }`}
             >
               <span className="block text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
@@ -228,7 +228,7 @@ function GuidedBuildView({
       />
 
       <div className="mt-5 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.16em]">
-        <span className="rounded-full border border-[var(--gold-ornament)]/25 bg-black/35 px-3 py-2 text-[var(--gold-ornament)]">
+        <span className="rounded-full border border-[var(--gold-ornament)]/25 bg-[var(--surface-1)] px-3 py-2 text-[var(--gold-ornament)]">
           {isLoading
             ? "Loading progress"
             : progress.coreComplete
@@ -392,7 +392,7 @@ function GuidedChapter({
       className={`group rounded-[var(--radius-md)] border p-[var(--space-5)] ${
         chapter.current
           ? "border-[var(--gold-ornament)]/40 bg-[var(--gold-ornament)]/10"
-          : "border-[var(--gold-ornament)]/20 bg-black/20"
+          : "border-[var(--gold-ornament)]/20 bg-[var(--surface-2)]"
       }`}
     >
       <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
@@ -627,7 +627,7 @@ function GuidedStep({
                 <LinkComponent
                   key={optionalAsset.title}
                   href={optionalAsset.href}
-                  className="rounded-full border border-white/10 bg-black/25 px-4 py-2 text-xs text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                  className="rounded-full border border-white/10 bg-[var(--surface-2)] px-4 py-2 text-xs text-[var(--ink-dim)] transition hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                 >
                   {optionalAsset.title}
                   {count > 0 ? ` · ${count} created` : ""}
@@ -747,7 +747,7 @@ function CreationSection({
   return (
     <details
       open={defaultOpen}
-      className="group rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-black/20 p-[var(--space-5)]"
+      className="group rounded-[var(--radius-md)] border border-[var(--gold-ornament)]/15 bg-[var(--surface-2)] p-[var(--space-5)]"
     >
       <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
         <div className="flex items-start justify-between gap-4">

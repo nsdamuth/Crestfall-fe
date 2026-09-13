@@ -16,8 +16,14 @@
 // fallback, kept behind `filterPresentation="dropdowns"` so the
 // consumer flips one prop to roll back. Optional quick tabs sit
 // between search and the Filter button where a page has one dominant
-// split (Images). The Sort trigger reads "Sort: <value>", matching
-// Home's rail sort. Semantic callbacks are unchanged from 2.0.0.
+// split (Images). Semantic callbacks are unchanged from 2.0.0.
+//
+// TRIGGER LABEL, RULED 12 Sep 2026 (eight-fix package FIX 5,
+// supersedes the 6 Sep sort label): every filter and sort trigger in
+// this bar reads "Filter" with no value while its selection equals
+// the default, and reads the chosen option's label alone once the
+// user picks a non-default option (KitDropdown 1.4.0 labelMode
+// "replace" with restingValue). The menu still marks the default.
 //
 // Sticky stack, RULED 10 Aug 2026 (kit polish 3 pass): this bar docks
 // directly beneath the sticky StudioTopBar, not at the viewport top.
@@ -121,6 +127,7 @@ export default function KitStudioFilterBarView({
   onFilterToggle = null,
   sortOptions = [],
   selectedSort = "",
+  defaultSort = "",
   onSortChange = null,
   isLoadingCounts = false,
   viewModeSlot = null,
@@ -178,7 +185,9 @@ export default function KitStudioFilterBarView({
             filterGroups.map((group) => (
               <KitDropdownView
                 key={group.id}
-                label={group.label}
+                label="Filter"
+                ariaLabel={group.label}
+                labelMode="replace"
                 options={(group.options || []).map((option) => ({
                   ...option,
                   count: isLoadingCounts ? null : option.count,
@@ -192,10 +201,13 @@ export default function KitStudioFilterBarView({
 
           {sortOptions.length > 0 && (
             <KitDropdownView
-              label="Sort:"
+              label="Filter"
+              ariaLabel="Sort"
+              labelMode="replace"
               options={sortOptions}
               selectedValues={selectedSort ? [selectedSort] : []}
               isMultiSelect={false}
+              restingValue={defaultSort || null}
               onToggleOption={(value) => onSortChange?.(value)}
             />
           )}

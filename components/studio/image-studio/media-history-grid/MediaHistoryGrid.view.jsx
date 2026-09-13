@@ -609,7 +609,7 @@ function MediaHistoryCard({
       ref={cardRef}
       aria-busy={isPending}
       style={{ gridRowEnd: `span ${gridSpan}` }}
-      className={`group relative overflow-hidden rounded-[var(--radius-md)] bg-black/35 text-left transition ${
+      className={`group relative overflow-hidden rounded-[var(--radius-md)] bg-[var(--surface-2)] text-left transition ${
         item.selected
           ? "border border-[var(--gold-action)] ring-2 ring-[var(--gold-action)]/35"
           : "border border-[var(--line)]"

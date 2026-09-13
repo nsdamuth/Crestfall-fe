@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import CrestfallSelect from "@/components/ui/CrestfallSelect";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 const TAB_ICONS = {
   overview: ClipboardList,
@@ -63,7 +64,7 @@ export default function WardrobeBuilderView({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+      <div className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
@@ -116,7 +117,7 @@ export default function WardrobeBuilderView({
                 className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.14em] transition ${
                   tab.active
                     ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                    : "border-white/10 bg-black/25 text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
+                    : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30 hover:text-[var(--ink)]"
                 }`}
               >
                 <Icon size={14} />
@@ -166,13 +167,25 @@ export default function WardrobeBuilderView({
           onNegativePromptChange={onNegativePromptChange}
         />
       ) : null}
+      {/* MOBILE-SHELLS: the header row's Save is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          header button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }
 
+/* MOBILE-SHELLS: min-w-0 on Panel's root is what lets the two-pane
+   region at xl collapse to one column below it without either pane
+   being floored at its subtree min-content and pushing the page
+   sideways. Both panes render through this one component. */
 function Panel({ eyebrow, title, body, children }) {
   return (
-    <section className="rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5">
+    <section className="min-w-0 rounded-2xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5">
       <p className="text-xs uppercase tracking-[0.25em] text-[var(--gold-ornament)]">
         {eyebrow}
       </p>
@@ -202,7 +215,7 @@ function TextInput(props) {
   return (
     <input
       {...props}
-      className="w-full rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -211,7 +224,7 @@ function TextArea(props) {
   return (
     <textarea
       {...props}
-      className="w-full resize-none rounded-xl border border-white/10 bg-black/45 px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
+      className="w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none transition hover:border-[var(--gold-ornament)]/35 focus:border-[var(--gold-ornament)]/45"
     />
   );
 }
@@ -275,7 +288,7 @@ function EntriesTab({
   onChooseOutfit,
 }) {
   return (
-    <div className="grid gap-5 xl:grid-cols-[0.42fr_1fr]">
+    <div className="grid min-w-0 gap-5 xl:grid-cols-[0.42fr_1fr]">
       <Panel
         eyebrow="Entries"
         title="Outfit Entries"
@@ -303,7 +316,7 @@ function EntriesTab({
                   className={`w-full rounded-xl border px-4 py-3 text-left transition ${
                     active
                       ? "border-[var(--gold-ornament)]/45 bg-[var(--gold-ornament)]/10"
-                      : "border-white/10 bg-black/30 hover:border-[var(--gold-ornament)]/30"
+                      : "border-white/10 bg-[var(--surface-2)] hover:border-[var(--gold-ornament)]/30"
                   }`}
                 >
                   <p className="line-clamp-1 font-display text-xl">
@@ -317,7 +330,7 @@ function EntriesTab({
               );
             })
           ) : (
-            <p className="rounded-xl border border-dashed border-white/10 bg-black/25 p-4 text-sm leading-6 text-[var(--ink-dim)]">
+            <p className="rounded-xl border border-dashed border-white/10 bg-[var(--surface-1)] p-4 text-sm leading-6 text-[var(--ink-dim)]">
               No outfit entries yet. Add one to begin.
             </p>
           )}
@@ -345,7 +358,7 @@ function EntriesTab({
             onChooseOutfit={() => onChooseOutfit?.(activeEntry.id)}
           />
         ) : (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-black/25 p-8 text-center">
+          <div className="rounded-2xl border border-dashed border-white/10 bg-[var(--surface-1)] p-8 text-center">
             <Shirt size={28} className="mx-auto text-[var(--gold-ornament)]" />
             <p className="mt-4 text-sm text-[var(--ink-dim)]">
               Select an outfit entry or add a new one.
@@ -377,7 +390,7 @@ function WardrobeEntryEditor({
         </Field>
 
         <Field label="Outfit">
-          <div className="rounded-xl border border-white/10 bg-black/35 p-4">
+          <div className="rounded-xl border border-white/10 bg-[var(--surface-1)] p-4">
             {entry.outfitCreationId ? (
               <div className="flex items-start gap-4">
                 {entry.outfitImageUrl ? (
@@ -455,12 +468,12 @@ function WardrobeEntryEditor({
         </div>
       </div>
 
-      <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
+      <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
         <input
           type="checkbox"
           checked={entry.enabled !== false}
           onChange={(event) => onChange?.({ enabled: event.target.checked })}
-          className="mt-1"
+          className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
         />
         <span className="text-sm leading-6 text-[var(--ink-dim)]">
           This outfit entry is enabled for future default wardrobe selection.
@@ -509,14 +522,14 @@ function RulesTab({
           />
         </Field>
 
-        <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 p-3">
+        <label className="flex items-start gap-3 rounded-xl border border-white/10 bg-[var(--surface-1)] p-3">
           <input
             type="checkbox"
             checked={Boolean(selectionRules.allowRandom)}
             onChange={(event) =>
               onSelectionRuleChange?.("allowRandom", event.target.checked)
             }
-            className="mt-1"
+            className="mt-1 h-4 w-4 accent-[var(--gold-ornament)]"
           />
           <span className="text-sm leading-6 text-[var(--ink-dim)]">
             Allow random selection among matching enabled outfits later.

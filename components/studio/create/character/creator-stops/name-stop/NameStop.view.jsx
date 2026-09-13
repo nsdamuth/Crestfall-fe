@@ -12,7 +12,7 @@ export default function NameStopView({
 } = {}) {
   return (
     <>
-      <Eyebrow>Forge a soul</Eyebrow>
+      <Eyebrow showRuleMark={false}>Forge a soul</Eyebrow>
       <h2 className="mt-2 font-display text-3xl text-[var(--ink)]">
         A name is the first spell anyone casts on you.
       </h2>

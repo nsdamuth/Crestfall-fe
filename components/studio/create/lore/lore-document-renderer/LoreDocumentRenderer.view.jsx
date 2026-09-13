@@ -242,7 +242,7 @@ export default function LoreDocumentRendererView({
             <div>
               <div className="flex items-center gap-2 text-[var(--gold-ornament)]">
                 <BookOpenText size={17} />
-                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)] after:content-[''] after:h-px after:w-[var(--space-8)] after:shrink-0 after:bg-[image:var(--grad-rule)]">
+                <p className="flex items-center gap-[var(--space-3)] text-[length:var(--text-eyebrow)] leading-[var(--lh-eyebrow)] font-medium uppercase tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
                   Reader Index
                 </p>
               </div>
@@ -383,7 +383,7 @@ export default function LoreDocumentRendererView({
       ))}
 
       {!chapters.length ? (
-        <div className="mx-auto max-w-5xl rounded-[var(--radius-md)] border border-dashed border-[var(--gold-ornament)]/30 bg-black/30 p-10 text-center text-sm text-[var(--ink-dim)]">
+        <div className="mx-auto max-w-5xl rounded-[var(--radius-md)] border border-dashed border-[var(--gold-ornament)]/30 bg-[var(--surface-1)] p-10 text-center text-sm text-[var(--ink-dim)]">
           Add a chapter to begin the Lore publication.
         </div>
       ) : null}

@@ -3,11 +3,13 @@
 import { Activity, Save, ShieldCheck } from "lucide-react";
 
 import ProgressionProfileEditorView from "@/components/studio/create/progression/progression-profile-editor/ProgressionProfileEditor.view";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import {
   SectionTitle,
   TextAreaField,
   SHORT_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
+import CreateActionBar from "@/components/studio/create/create-action-bar/CreateActionBar";
 
 function FieldLabel({ children }) {
   return (
@@ -23,24 +25,21 @@ function TextInput({ value, onChange, placeholder }) {
       value={value}
       onChange={(event) => onChange?.(event.target.value)}
       placeholder={placeholder}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-black/35 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
+      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
     />
   );
 }
 
 function SelectInput({ value, options, onChange }) {
   return (
-    <select
-      value={value}
-      onChange={(event) => onChange?.(event.target.value)}
-      className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--gold-ornament)]/50"
-    >
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <div className="mt-2 w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+      <KitDropdownView
+        options={options}
+        selectedValues={value ? [value] : []}
+        isMultiSelect={false}
+        onToggleOption={(nextValue) => onChange?.(nextValue)}
+      />
+    </div>
   );
 }
 
@@ -62,7 +61,12 @@ export default function ProgressionProfileBuilderView({
 }) {
   return (
     <section className="mt-8 grid gap-6 xl:grid-cols-[0.34fr_1fr]">
-      <aside className="self-start rounded-2xl border border-[var(--gold-ornament)]/20 bg-black/45 p-5 xl:sticky xl:top-24">
+      {/* MOBILE-SHELLS: min-w-0 on both grid children. Without it the
+          implicit base column is sized by min-width:auto, so any nowrap
+          descendant becomes the page's horizontal scroll width. This is
+          the single-column rule for this shell: one column in DOM order
+          below xl, each child free to shrink to the gutter. */}
+      <aside className="min-w-0 self-start rounded-2xl border border-[var(--gold-ornament)]/20 bg-[var(--surface-2)] p-5 xl:sticky xl:top-24">
         <SectionTitle
           eyebrow={
             <>
@@ -84,14 +88,14 @@ export default function ProgressionProfileBuilderView({
           </div>
         </div>
 
-        <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
-          <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+        <div className="mt-5 grid gap-3 text-sm sm:grid-cols-2 sm:divide-x sm:divide-[var(--line-whisper)]">
+          <div className="sm:pr-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Errors
             </p>
             <p className="mt-2 text-lg">{errorCount}</p>
           </div>
-          <div className="rounded-xl border border-white/10 bg-black/25 p-3">
+          <div className="sm:pl-3">
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--gold-ornament)]">
               Warnings
             </p>
@@ -156,7 +160,17 @@ export default function ProgressionProfileBuilderView({
         ) : null}
       </aside>
 
-      <ProgressionProfileEditorView {...editorViewProps} />
+      <div className="min-w-0">
+        <ProgressionProfileEditorView {...editorViewProps} />
+      </div>
+      {/* MOBILE-SHELLS: the aside's Save draft is a full scroll away on a
+          phone, so the same action docks to the bottom edge below md. The
+          aside button is untouched and is what renders on desktop. */}
+      <CreateActionBar
+        label={saveStatus === "saving" ? "Saving..." : "Save draft"}
+        onAction={onSave}
+        disabled={saveDisabled}
+      />
     </section>
   );
 }
