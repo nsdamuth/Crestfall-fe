@@ -60,6 +60,32 @@ export function buildStoryMediaItems({ room = {}, cast = [], messages = [] } = {
   return items;
 }
 
+// The story's creation page (brief 3 item 4, the end card's View
+// catalogue link): the room's source template when it started from one,
+// else the default Character's creation, else any Character's creation;
+// the same resolution the Stories page uses for a story's source.
+export function resolveStoryCatalogueHref({ room = {}, cast = [] } = {}) {
+  const rawRoom = room?.rawRoom || {};
+  const source = rawRoom?.data?.source || {};
+  const templateId = normalizeText(source.templateId || source.template_id);
+
+  const members = Array.isArray(cast) ? cast : [];
+  const isCharacter = (member) =>
+    String(member?.participantType || "").toUpperCase() === "CHARACTER" &&
+    normalizeText(member?.participant?.creationId);
+  const defaultCharacter = members.find(
+    (member) => isCharacter(member) && member?.participant?.isDefault
+  );
+  const anyCharacter = members.find(isCharacter);
+
+  const creationId =
+    templateId ||
+    normalizeText(defaultCharacter?.participant?.creationId) ||
+    normalizeText(anyCharacter?.participant?.creationId);
+
+  return creationId ? `/studio/creations/${encodeURIComponent(creationId)}` : "";
+}
+
 export function useStoryRoomDetailsRailViewModel({
   room = {},
   cast = [],
@@ -84,11 +110,27 @@ export function useStoryRoomDetailsRailViewModel({
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 
   const count = mediaItems.length;
-  const safeActiveIndex = count ? Math.min(activeIndex, count - 1) : 0;
+  const catalogueHref = useMemo(
+    () => resolveStoryCatalogueHref({ room, cast }),
+    [room, cast]
+  );
+  // The end card (brief 3 item 4) is one extra stop after the last image
+  // when the story resolves to a creation page; the rail's page count is
+  // the images plus that stop, and the viewer's is the images alone.
+  const endCardIndex = catalogueHref && count ? count : null;
+  const railStopCount = endCardIndex === null ? count : count + 1;
+  const safeRailIndex = railStopCount ? Math.min(activeIndex, railStopCount - 1) : 0;
+  const showEndCard = endCardIndex !== null && safeRailIndex === endCardIndex;
+  const safeActiveIndex = showEndCard ? count - 1 : safeRailIndex;
 
   const step = useCallback(
     (from, delta) => (count ? (from + delta + count) % count : 0),
     [count]
+  );
+  const railStep = useCallback(
+    (from, delta) =>
+      railStopCount ? (from + delta + railStopCount) % railStopCount : 0,
+    [railStopCount]
   );
 
   const openDetail = useCallback((id) => {
@@ -113,9 +155,11 @@ export function useStoryRoomDetailsRailViewModel({
     gallery: {
       items: mediaItems,
       activeIndex: safeActiveIndex,
+      showEndCard,
+      catalogueHref,
       onSelect: (index) => setActiveIndex(Math.max(0, Math.min(index, count - 1))),
-      onPrevious: () => setActiveIndex((current) => step(current, -1)),
-      onNext: () => setActiveIndex((current) => step(current, 1)),
+      onPrevious: () => setActiveIndex((current) => railStep(current, -1)),
+      onNext: () => setActiveIndex((current) => railStep(current, 1)),
       viewerIndex: count && viewerIndex !== null ? Math.min(viewerIndex, count - 1) : null,
       onOpenViewer: (index) => setViewerIndex(Math.max(0, Math.min(index ?? safeActiveIndex, count - 1))),
       onCloseViewer: () => setViewerIndex(null),

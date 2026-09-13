@@ -1,9 +1,19 @@
-export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.1.0";
 
 /**
  * Stable portable UI boundary for the story chat page's right rail
  * (fe/chat-studio item 6, 12 Sep 2026), also the content of the right
  * sheet below md.
+ *
+ * 1.1.0, fe/chat-studio brief 3 item 4 (13 Sep 2026). ADDITIVE:
+ * `gallery.showEndCard` and `gallery.catalogueHref`. When the story
+ * resolves to a creation page, the next tap after the last image shows
+ * an end card on the asset detail popup's "Want to see more" recipe
+ * whose primary link, View catalogue, opens that page in a new tab
+ * (target _blank, rel noopener) so the chat stays open; previous and
+ * next page through the images and that one extra stop. With no media
+ * the gallery is a placeholder: the circular geometric Crestfall mark
+ * on a --surface-2 bed with --radius-md corners, inset by --space-3.
  *
  * Order: gallery (featured image, previous and next, thumbnail strip;
  * tap opens the full-screen viewer), title with the three-dot menu
@@ -26,7 +36,7 @@ export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} description Hidden until CR-068.
  * @property {boolean} descriptionExpanded
  * @property {() => void} onToggleDescription
- * @property {{items: StoryRoomMediaItem[], activeIndex: number, onSelect: (index: number) => void, onPrevious: () => void, onNext: () => void, viewerIndex: number|null, onOpenViewer: (index?: number) => void, onCloseViewer: () => void, onViewerPrevious: () => void, onViewerNext: () => void}} gallery
+ * @property {{items: StoryRoomMediaItem[], activeIndex: number, showEndCard: boolean, catalogueHref: string, onSelect: (index: number) => void, onPrevious: () => void, onNext: () => void, viewerIndex: number|null, onOpenViewer: (index?: number) => void, onCloseViewer: () => void, onViewerPrevious: () => void, onViewerNext: () => void}} gallery `showEndCard` shows the View catalogue end card in the featured slot; `catalogueHref` is the creation page it opens ("" when the story resolves to none, in which case no end card exists).
  * @property {{open: boolean, onToggle: () => void, onClose: () => void, items: Array<{id: string, label: string, tone: "default"|"danger", disabled: boolean, onSelect: () => void}>}} menu
  * @property {string} deleteError
  * @property {import("react").ReactNode} actionsSlot Export and Share, the state panel's live actions.

@@ -2,10 +2,10 @@
 
 import { Check, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
-import KitArtPlaceholder from "@/components/kit/KitArtPlaceholder";
 import { MENU_PANEL_RECIPE } from "@/components/kit/form-field/menuRecipe";
 
 import StoryRoomGalleryViewer from "./StoryRoomGalleryViewer";
+import StoryRoomMark from "./StoryRoomMark";
 
 const CIRCLE_BUTTON_CLASS =
   "flex h-[var(--control-md)] w-[var(--control-md)] shrink-0 touch-manipulation items-center justify-center rounded-[var(--radius-full)] transition-colors duration-[var(--dur-hover)]";
@@ -69,7 +69,7 @@ export default function StoryRoomDetailsRailView({
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <Gallery gallery={gallery} title={title} />
+        <Gallery gallery={gallery} />
 
         <div className="px-[var(--space-4)] pt-[var(--space-4)]">
           <div className="flex items-start gap-[var(--space-2)]">
@@ -148,15 +148,38 @@ export default function StoryRoomDetailsRailView({
   );
 }
 
-function Gallery({ gallery, title }) {
+// The gallery (brief 3 item 4). No media: a placeholder, the circular
+// geometric Crestfall mark (StoryRoomMark, icons-v7 symbol i-59, the
+// sidebar lockup's mark) on a --surface-2 bed with --radius-md corners,
+// inset by --space-3 on each side. With media: the featured image full
+// bleed, previous and next paging through the images and, when the
+// story resolves to a creation page, one extra stop after the last
+// image: an end card on the asset detail popup's "Want to see more"
+// recipe whose primary link opens the creation page in a new tab so the
+// chat stays open.
+function Gallery({ gallery }) {
   const items = Array.isArray(gallery?.items) ? gallery.items : [];
   const activeIndex = Math.min(gallery?.activeIndex || 0, Math.max(items.length - 1, 0));
   const active = items[activeIndex] || null;
+  const showEndCard = Boolean(gallery?.showEndCard && gallery?.catalogueHref && active);
+  const canPage = items.length > 1 || (items.length === 1 && Boolean(gallery?.catalogueHref));
+
+  if (!active) {
+    return (
+      <div className="p-[var(--space-3)]">
+        <div className="flex aspect-[4/5] w-full items-center justify-center rounded-[var(--radius-md)] bg-[var(--surface-2)]">
+          <StoryRoomMark className="h-[var(--space-16)] w-[var(--space-16)]" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--surface-2)]">
-        {active ? (
+        {showEndCard ? (
+          <GalleryEndCard backgroundSrc={active.url} href={gallery.catalogueHref} />
+        ) : (
           <button
             type="button"
             onClick={() => gallery?.onOpenViewer?.(activeIndex)}
@@ -166,11 +189,9 @@ function Gallery({ gallery, title }) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={active.url} alt={active.altText} className="h-full w-full object-cover" />
           </button>
-        ) : (
-          <KitArtPlaceholder size="lg" identityKey={title || null} />
         )}
 
-        {items.length > 1 ? (
+        {canPage ? (
           <>
             <button
               type="button"
@@ -200,9 +221,9 @@ function Gallery({ gallery, title }) {
               type="button"
               onClick={() => gallery?.onSelect?.(index)}
               aria-label={item.altText}
-              aria-current={index === activeIndex ? "true" : undefined}
+              aria-current={index === activeIndex && !showEndCard ? "true" : undefined}
               className={`h-14 w-14 shrink-0 overflow-hidden rounded-[var(--radius-sm)] bg-[var(--surface-2)] ${
-                index === activeIndex ? "ring-2 ring-[var(--gold-action)]" : ""
+                index === activeIndex && !showEndCard ? "ring-2 ring-[var(--gold-action)]" : ""
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -221,6 +242,41 @@ function Gallery({ gallery, title }) {
           onNext={gallery.onViewerNext}
         />
       ) : null}
+    </div>
+  );
+}
+
+// The end card (brief 3 item 4): the asset detail popup's "Want to see
+// more" recipe (components/kit/asset-detail-popup, CatalogueSlide): the
+// last image scrimmed under a glass card, the eyebrow, one line, and the
+// primary View catalogue, a link to the creation page in a new tab
+// (target _blank, rel noopener) so the chat stays open.
+function GalleryEndCard({ backgroundSrc = "", href = "" }) {
+  return (
+    <div className="absolute inset-0">
+      {backgroundSrc ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={backgroundSrc} alt="" className="absolute inset-0 h-full w-full object-cover object-[center_18%]" />
+      ) : null}
+      <div className="absolute inset-0 bg-[var(--scrim-strong)]" aria-hidden="true" />
+      <div className="relative z-[1] flex h-full items-center justify-center p-[var(--space-4)]">
+        <div className="max-w-xs rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--panel-glass)] p-[var(--space-6)] text-center backdrop-blur-[var(--blur-panel)]">
+          <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">
+            Want to see more?
+          </p>
+          <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--ink-dim)]">
+            The full catalogue holds this story&apos;s media library and details.
+          </p>
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener"
+            className="goldring cf-btn cf-btn--primary mt-[var(--space-4)]"
+          >
+            View catalogue
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

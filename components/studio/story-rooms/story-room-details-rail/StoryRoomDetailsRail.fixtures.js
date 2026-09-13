@@ -12,6 +12,8 @@ function makeGallery(overrides = {}) {
   return {
     items: baseMedia,
     activeIndex: 0,
+    showEndCard: false,
+    catalogueHref: "/studio/creations/11111111-1111-4111-8111-111111111111",
     onSelect: noop,
     onPrevious: noop,
     onNext: noop,
@@ -85,6 +87,10 @@ export const storyRoomDetailsRailDrillInFixture = makeFixture({
 
 export const storyRoomDetailsRailViewerFixture = makeFixture({
   gallery: makeGallery({ viewerIndex: 1 }),
+});
+
+export const storyRoomDetailsRailEndCardFixture = makeFixture({
+  gallery: makeGallery({ activeIndex: 2, showEndCard: true }),
 });
 
 export const storyRoomDetailsRailLongestFixture = makeFixture({
