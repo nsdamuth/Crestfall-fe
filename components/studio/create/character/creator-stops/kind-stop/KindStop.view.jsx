@@ -117,29 +117,6 @@ export default function KindStopView({
         Choose from 15 kinds or write your own.
       </p>
 
-      <div className="mt-6 space-y-[var(--space-3)]">
-        {SPECIES_CATEGORIES.map((category) => (
-          <div key={category.label}>
-            <SectionLabel>{category.label}</SectionLabel>
-            <TileGrid
-              options={category.options}
-              value={species}
-              onChange={onChangeSpecies}
-            />
-          </div>
-        ))}
-
-        {species === "CUSTOM" ? (
-          <CustomValueField
-            label="Custom Species"
-            value={customSpecies}
-            onChange={onChangeCustomSpecies}
-            placeholder="Describe the character's species or ancestry"
-            maxLength={KIND_STOP_CUSTOM_VALUE_MAX_LENGTH}
-          />
-        ) : null}
-      </div>
-
       <div className="mt-6" data-field-scope={fieldScope}>
         <FieldPair>
           <RoleArchetypeField value={shortConcept} onChange={onChangeShortConcept} />
@@ -162,6 +139,29 @@ export default function KindStopView({
             ) : null}
           </div>
         </FieldPair>
+      </div>
+
+      <div className="mt-6 space-y-[var(--space-3)]">
+        {SPECIES_CATEGORIES.map((category) => (
+          <div key={category.label}>
+            <SectionLabel>{category.label}</SectionLabel>
+            <TileGrid
+              options={category.options}
+              value={species}
+              onChange={onChangeSpecies}
+            />
+          </div>
+        ))}
+
+        {species === "CUSTOM" ? (
+          <CustomValueField
+            label="Custom Species"
+            value={customSpecies}
+            onChange={onChangeCustomSpecies}
+            placeholder="Describe the character's species or ancestry"
+            maxLength={KIND_STOP_CUSTOM_VALUE_MAX_LENGTH}
+          />
+        ) : null}
       </div>
 
     </>
