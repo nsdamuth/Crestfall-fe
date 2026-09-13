@@ -1,10 +1,17 @@
-// The one card renderer (fe/share-og brief 1, decisions 2A and 4A):
-// art left, words right, 1200 by 630. Written in the Satori subset
-// (flex only, inline styles, no CSS variables) for next/og. Every
-// color, size, and radius is asked for by token name through the
-// resolver the route builds from app/theme.css; nothing here names a
-// value. Type sizes are the app's own scale doubled for the 1200-wide
-// canvas.
+// The one card renderer (fe/share-og brief 1, decisions 2A and 4A;
+// spacing and the call to action re-cut in follow-up 1, item 3): art
+// left, words right, 1200 by 630. Written in the Satori subset (flex
+// only, inline styles, no CSS variables) for next/og. Every color,
+// size, and radius is asked for by theme name through the resolver the
+// route builds from app/theme.css; nothing here names a value. Type
+// sizes are the app's own scale doubled for the 1200-wide canvas.
+//
+// Vertical budget at the worst case (two-line title, byline, two-line
+// excerpt, the pill): the text column pads one step above the panel
+// step (space-10), the three text blocks sit one consistent step apart
+// (space-3), the excerpt is the ui size clamped to two lines, and the
+// pill is one control step smaller (control-sm high, label type). The
+// text block clips before it can ever reach the pill.
 
 const CANVAS = { width: 1200, height: 630 };
 const ART_WIDTH = 540;
@@ -28,9 +35,12 @@ export const SHARE_CARD_THEME_NAMES = Object.freeze([
   "text-title",
   "lh-body",
   "lh-title",
+  "space-3",
   "space-4",
   "space-6",
   "space-8",
+  "space-10",
+  "control-sm",
   "track-label",
 ]);
 
@@ -52,7 +62,7 @@ function toTracking(value, fontSize) {
 /**
  * @param {Object} props
  * @param {import("./shareCardModel.js").ShareCardModel} props.model
- * @param {(name: string) => string} props.resolve token name to value
+ * @param {(name: string) => string} props.resolve theme name to value
  * @param {{ display: string, sans: string }} props.fonts family names
  * @param {string} [props.imageSrc] a data URL the route prepared, or empty
  */
@@ -61,13 +71,12 @@ export default function ShareCardImage({ model = {}, resolve = () => "", fonts =
   const sans = fonts.sans || "sans-serif";
 
   const titleSize = toPx(resolve("text-title"), SCALE);
-  const bodySize = toPx(resolve("text-body"), SCALE);
   const uiSize = toPx(resolve("text-ui"), SCALE);
   const labelSize = toPx(resolve("text-label"), SCALE);
-  const gap4 = toPx(resolve("space-4"), SCALE);
-  const gap6 = toPx(resolve("space-6"), SCALE);
-  const gap8 = toPx(resolve("space-8"), SCALE);
-  const pad = toPx(resolve("space-8"), SCALE);
+  const step = toPx(resolve("space-3"), SCALE);
+  const pillPad = toPx(resolve("space-6"), SCALE);
+  const pillHeight = toPx(resolve("control-sm"), SCALE);
+  const pad = toPx(resolve("space-10"), SCALE);
   const radius = toPx(resolve("radius-md"), SCALE);
 
   return (
@@ -139,7 +148,18 @@ export default function ShareCardImage({ model = {}, resolve = () => "", fonts =
           padding: `${pad}px ${pad}px`,
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            flexGrow: 1,
+            flexShrink: 1,
+            minHeight: 0,
+            overflow: "hidden",
+            marginBottom: step,
+          }}
+        >
           <div
             style={{
               fontSize: labelSize,
@@ -153,7 +173,7 @@ export default function ShareCardImage({ model = {}, resolve = () => "", fonts =
           </div>
           <div
             style={{
-              marginTop: gap6,
+              marginTop: step,
               fontFamily: display,
               fontWeight: 600,
               fontSize: titleSize,
@@ -167,16 +187,16 @@ export default function ShareCardImage({ model = {}, resolve = () => "", fonts =
             {model.title || "Untitled"}
           </div>
           {model.byline ? (
-            <div style={{ marginTop: gap4, fontSize: uiSize, color: resolve("ink-dim") }}>{model.byline}</div>
+            <div style={{ marginTop: step, fontSize: uiSize, color: resolve("ink-dim") }}>{model.byline}</div>
           ) : null}
           {model.excerpt ? (
             <div
               style={{
-                marginTop: gap8,
-                fontSize: bodySize,
+                marginTop: step,
+                fontSize: uiSize,
                 lineHeight: 1.4,
                 color: resolve("ink"),
-                lineClamp: 3,
+                lineClamp: 2,
                 display: "block",
                 width: "100%",
               }}
@@ -186,16 +206,17 @@ export default function ShareCardImage({ model = {}, resolve = () => "", fonts =
           ) : null}
         </div>
 
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", justifyContent: "flex-start", flexShrink: 0 }}>
           <div
             style={{
               display: "flex",
               alignItems: "center",
+              height: pillHeight,
               backgroundColor: resolve("gold-action"),
               color: resolve("tag-fill-ink"),
-              fontSize: uiSize,
+              fontSize: labelSize,
               fontWeight: 500,
-              padding: `${gap4}px ${gap8}px`,
+              padding: `0 ${pillPad}px`,
               borderRadius: radius,
             }}
           >
