@@ -4,7 +4,6 @@ import { Check, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
 import { MENU_PANEL_RECIPE } from "@/components/kit/form-field/menuRecipe";
 
-import StoryRoomGalleryViewer from "./StoryRoomGalleryViewer";
 import StoryRoomMark from "./StoryRoomMark";
 
 const CIRCLE_BUTTON_CLASS =
@@ -27,6 +26,7 @@ export default function StoryRoomDetailsRailView({
   descriptionExpanded = false,
   onToggleDescription = null,
   gallery = null,
+  viewerSlot = null,
   menu = null,
   deleteError = "",
   actionsSlot = null,
@@ -69,7 +69,7 @@ export default function StoryRoomDetailsRailView({
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <Gallery gallery={gallery} />
+        <Gallery gallery={gallery} viewerSlot={viewerSlot} />
 
         <div className="px-[var(--space-4)] pt-[var(--space-4)]">
           <div className="flex items-start gap-[var(--space-2)]">
@@ -161,14 +161,19 @@ export default function StoryRoomDetailsRailView({
 // chip centered at the bottom on the tag-over-art recipe (--tag-bed-art
 // bed, 1px --line, --art-ink), and, when the story resolves to a
 // creation page, one extra stop after the last image: an end card on
-// the asset detail popup's "Want to see more" recipe whose primary link
-// opens that page in a new tab so the chat stays open.
-function Gallery({ gallery }) {
+// the asset detail popup's "Want to see more" recipe, its backdrop
+// blurred, whose primary link opens that page in a new tab so the chat
+// stays open. Review round 5 item 1: the first slide shows no previous
+// arrow and the end card shows only the back arrow (paging never
+// wraps); a tap on an image opens the community image viewer, which
+// the binding shell mounts through `viewerSlot`.
+function Gallery({ gallery, viewerSlot = null }) {
   const items = Array.isArray(gallery?.items) ? gallery.items : [];
   const activeIndex = Math.min(gallery?.activeIndex || 0, Math.max(items.length - 1, 0));
   const active = items[activeIndex] || null;
   const showEndCard = Boolean(gallery?.showEndCard && gallery?.catalogueHref && active);
-  const canPage = items.length > 1 || (items.length === 1 && Boolean(gallery?.catalogueHref));
+  const canGoPrevious = Boolean(active && gallery?.canGoPrevious);
+  const canGoNext = Boolean(active && gallery?.canGoNext);
 
   return (
     <div className="p-[var(--space-3)]">
@@ -191,25 +196,25 @@ function Gallery({ gallery }) {
           </button>
         )}
 
-        {active && canPage ? (
-          <>
-            <button
-              type="button"
-              onClick={() => gallery?.onPrevious?.()}
-              aria-label="Previous image"
-              className={`${CIRCLE_BUTTON_CLASS} absolute left-[var(--space-2)] top-1/2 -translate-y-1/2 bg-[var(--panel-glass)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:text-[var(--art-gold)]`}
-            >
-              <ChevronLeft size={20} aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={() => gallery?.onNext?.()}
-              aria-label="Next image"
-              className={`${CIRCLE_BUTTON_CLASS} absolute right-[var(--space-2)] top-1/2 -translate-y-1/2 bg-[var(--panel-glass)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:text-[var(--art-gold)]`}
-            >
-              <ChevronRight size={20} aria-hidden="true" />
-            </button>
-          </>
+        {canGoPrevious ? (
+          <button
+            type="button"
+            onClick={() => gallery?.onPrevious?.()}
+            aria-label={showEndCard ? "Back to the images" : "Previous image"}
+            className={`${CIRCLE_BUTTON_CLASS} absolute left-[var(--space-2)] top-1/2 -translate-y-1/2 bg-[var(--panel-glass)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:text-[var(--art-gold)]`}
+          >
+            <ChevronLeft size={20} aria-hidden="true" />
+          </button>
+        ) : null}
+        {canGoNext ? (
+          <button
+            type="button"
+            onClick={() => gallery?.onNext?.()}
+            aria-label="Next image"
+            className={`${CIRCLE_BUTTON_CLASS} absolute right-[var(--space-2)] top-1/2 -translate-y-1/2 bg-[var(--panel-glass)] text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)] hover:text-[var(--art-gold)]`}
+          >
+            <ChevronRight size={20} aria-hidden="true" />
+          </button>
         ) : null}
 
         {active && !showEndCard ? (
@@ -222,30 +227,30 @@ function Gallery({ gallery }) {
         ) : null}
       </div>
 
-      {gallery?.viewerIndex !== null && gallery?.viewerIndex !== undefined && items.length ? (
-        <StoryRoomGalleryViewer
-          items={items}
-          index={gallery.viewerIndex}
-          onClose={gallery.onCloseViewer}
-          onPrevious={gallery.onViewerPrevious}
-          onNext={gallery.onViewerNext}
-        />
-      ) : null}
+      {viewerSlot}
     </div>
   );
 }
 
-// The end card (brief 3 item 4): the asset detail popup's "Want to see
-// more" recipe (components/kit/asset-detail-popup, CatalogueSlide): the
-// last image scrimmed under a glass card, the eyebrow, one line, and the
-// primary View catalogue, a link to the creation page in a new tab
-// (target _blank, rel noopener) so the chat stays open.
+// The end card (brief 3 item 4, review round 5 item 1): the asset detail
+// popup's "Want to see more" recipe (components/kit/asset-detail-popup,
+// CatalogueSlide) with its backdrop blurred as Brian ruled: the last
+// image under --blur-panel (the veil blur, the one step legal over an
+// image backdrop; the stronger steps are chrome and tooltip scoped),
+// scaled a touch so the blur has no bright edge, then --scrim-strong, a
+// glass card, the eyebrow, one line, and the primary View catalogue, a
+// link to the creation page in a new tab (target _blank, rel noopener)
+// so the chat stays open.
 function GalleryEndCard({ backgroundSrc = "", href = "" }) {
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 overflow-hidden">
       {backgroundSrc ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={backgroundSrc} alt="" className="absolute inset-0 h-full w-full object-cover object-[center_18%]" />
+        <img
+          src={backgroundSrc}
+          alt=""
+          className="absolute inset-0 h-full w-full scale-105 object-cover object-[center_18%] blur-[var(--blur-panel)]"
+        />
       ) : null}
       <div className="absolute inset-0 bg-[var(--scrim-strong)]" aria-hidden="true" />
       <div className="relative z-[1] flex h-full items-center justify-center p-[var(--space-4)]">

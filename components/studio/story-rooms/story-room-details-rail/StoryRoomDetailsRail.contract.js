@@ -1,9 +1,22 @@
-export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.4.0";
+export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.5.0";
 
 /**
  * Stable portable UI boundary for the story chat page's right rail
  * (fe/chat-studio item 6, 12 Sep 2026), also the content of the right
  * sheet below md.
+ *
+ * 1.5.0, fe/chat-studio review round 5 (13 Sep 2026, Brian's browser
+ * review). Item 1, BREAKING on the gallery bag: `viewerIndex`,
+ * `onViewerPrevious`, and `onViewerNext` are removed with the lean
+ * StoryRoomGalleryViewer; `viewerItem` names the image a tap opened
+ * and the binding shell mounts the community image viewer
+ * (KitImageViewer: Edit, Remix, Share, Details) through the new
+ * `viewerSlot` prop. ADDITIVE: `canGoPrevious` and `canGoNext`; the
+ * first slide shows no previous arrow, the end card shows only the
+ * back arrow, paging never wraps; the end card's backdrop is blurred
+ * (--blur-panel). Item 2: `description` is populated for every story
+ * that resolves to a catalogue creation (the template's, else the
+ * Character's own), not only template launches.
  *
  * 1.4.0, fe/chat-studio review round 4 item 4 (13 Sep 2026, Brian's
  * browser review). No prop shape changed. The gallery bed is --canvas
@@ -66,7 +79,8 @@ export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.4.0";
  * @property {string} description Hidden until CR-068.
  * @property {boolean} descriptionExpanded
  * @property {() => void} onToggleDescription
- * @property {{items: StoryRoomMediaItem[], activeIndex: number, showEndCard: boolean, catalogueHref: string, onSelect: (index: number) => void, onPrevious: () => void, onNext: () => void, viewerIndex: number|null, onOpenViewer: (index?: number) => void, onCloseViewer: () => void, onViewerPrevious: () => void, onViewerNext: () => void}} gallery `showEndCard` shows the View catalogue end card in the featured slot; `catalogueHref` is the creation page it opens ("" when the story resolves to none, in which case no end card exists).
+ * @property {{items: StoryRoomMediaItem[], activeIndex: number, showEndCard: boolean, catalogueHref: string, canGoPrevious: boolean, canGoNext: boolean, onSelect: (index: number) => void, onPrevious: () => void, onNext: () => void, viewerItem: StoryRoomMediaItem|null, onOpenViewer: (index?: number) => void, onCloseViewer: () => void}} gallery `showEndCard` shows the View catalogue end card in the featured slot; `catalogueHref` is the creation page it opens ("" when the story resolves to none, in which case no end card exists); `canGoPrevious` and `canGoNext` show the arrows (never wrapping); `viewerItem` is the image the binding shell opens in the community image viewer.
+ * @property {import("react").ReactNode} viewerSlot The community image viewer (KitImageViewer), mounted by the binding shell while `gallery.viewerItem` is set; null otherwise.
  * @property {{open: boolean, onToggle: () => void, onClose: () => void, items: Array<{id: string, label: string, tone: "default"|"danger", disabled: boolean, onSelect: () => void}>}} menu
  * @property {string} deleteError
  * @property {import("react").ReactNode} actionsSlot Export and Share, the state panel's live actions.

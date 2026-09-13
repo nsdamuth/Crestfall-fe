@@ -17,11 +17,11 @@ function makeGallery(overrides = {}) {
     onSelect: noop,
     onPrevious: noop,
     onNext: noop,
-    viewerIndex: null,
+    canGoPrevious: false,
+    canGoNext: true,
+    viewerItem: null,
     onOpenViewer: noop,
     onCloseViewer: noop,
-    onViewerPrevious: noop,
-    onViewerNext: noop,
     ...overrides,
   };
 }
@@ -85,12 +85,15 @@ export const storyRoomDetailsRailDrillInFixture = makeFixture({
   detailPanels: { narrator: "The Archivist" },
 });
 
+// The viewer itself is the community image viewer, mounted by the
+// binding shell (review round 5 item 1); the portable fixture carries
+// the item the shell would open.
 export const storyRoomDetailsRailViewerFixture = makeFixture({
-  gallery: makeGallery({ viewerIndex: 1 }),
+  gallery: makeGallery({ viewerItem: baseMedia[1] }),
 });
 
 export const storyRoomDetailsRailEndCardFixture = makeFixture({
-  gallery: makeGallery({ activeIndex: 2, showEndCard: true }),
+  gallery: makeGallery({ activeIndex: 2, showEndCard: true, canGoPrevious: true, canGoNext: false }),
 });
 
 export const storyRoomDetailsRailLongestFixture = makeFixture({

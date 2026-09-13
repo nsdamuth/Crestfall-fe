@@ -176,14 +176,13 @@ export function useStoryRoomDetailsRailViewModel({
   deleteError = "",
   autoOpenViewer = false,
 } = {}) {
-  const sourceTemplateId = resolveStorySourceTemplateId(room);
   const catalogueCreationId = resolveStoryCatalogueCreationId({ room, cast });
   const cataloguePreview = useStoryCataloguePreview(catalogueCreationId);
-  // The description shows only when the story launched from a template
-  // (brief 4 item 2); a private character chat has no source template.
-  const description = sourceTemplateId
-    ? normalizeText(cataloguePreview?.creation?.description)
-    : "";
+  // The description under the title (brief 4 item 2, widened by review
+  // round 5 item 2): the catalogue creation's description, the template
+  // when the story launched from one, else the Character's own; hidden
+  // only when the story resolves to no creation.
+  const description = normalizeText(cataloguePreview?.creation?.description);
 
   // The gallery's images (review round 4 item 4): the room-derived set
   // first (CR-069 interim), else the catalogue creation's own featured
@@ -221,15 +220,16 @@ export function useStoryRoomDetailsRailViewModel({
   const showEndCard = endCardIndex !== null && safeRailIndex === endCardIndex;
   const safeActiveIndex = showEndCard ? count - 1 : safeRailIndex;
 
-  const step = useCallback(
-    (from, delta) => (count ? (from + delta + count) % count : 0),
-    [count]
-  );
+  // Paging never wraps (review round 5 item 1): the first slide has no
+  // previous and the last stop (the end card, or the last image when no
+  // end card exists) has no next; the View hides the missing arrow.
   const railStep = useCallback(
     (from, delta) =>
-      railStopCount ? (from + delta + railStopCount) % railStopCount : 0,
+      railStopCount ? Math.max(0, Math.min(from + delta, railStopCount - 1)) : 0,
     [railStopCount]
   );
+  const viewerItem =
+    count && viewerIndex !== null ? mediaItems[Math.min(viewerIndex, count - 1)] || null : null;
 
   const openDetail = useCallback((id) => {
     setActiveDetail(STORY_ROOM_DETAILS_ROWS.some((row) => row.id === id) ? id : null);
@@ -257,14 +257,17 @@ export function useStoryRoomDetailsRailViewModel({
       activeIndex: safeActiveIndex,
       showEndCard,
       catalogueHref,
+      canGoPrevious: safeRailIndex > 0,
+      canGoNext: railStopCount > 0 && safeRailIndex < railStopCount - 1,
       onSelect: (index) => setActiveIndex(Math.max(0, Math.min(index, count - 1))),
       onPrevious: () => setActiveIndex((current) => railStep(current, -1)),
       onNext: () => setActiveIndex((current) => railStep(current, 1)),
-      viewerIndex: count && viewerIndex !== null ? Math.min(viewerIndex, count - 1) : null,
+      // The viewer (review round 5 item 1) is the community image viewer
+      // (KitImageViewer), mounted by the binding shell from `viewerItem`;
+      // the gallery's own arrows are the way between images.
+      viewerItem,
       onOpenViewer: (index) => setViewerIndex(Math.max(0, Math.min(index ?? safeActiveIndex, count - 1))),
       onCloseViewer: () => setViewerIndex(null),
-      onViewerPrevious: () => setViewerIndex((current) => step(current ?? 0, -1)),
-      onViewerNext: () => setViewerIndex((current) => step(current ?? 0, 1)),
     },
     menu: {
       open: menuOpen,
