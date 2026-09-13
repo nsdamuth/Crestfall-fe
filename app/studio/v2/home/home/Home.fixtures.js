@@ -129,3 +129,32 @@ export const homeErrorFixture = {
   ...homeEmptyRailsFixture,
   errorMessage: "Home could not be loaded.",
 };
+
+// Asset detail popup open from a creator shortlist tile (fe/chat-studio
+// item 10, 12 Sep 2026): the same KitAssetDetailPopup prop bag the
+// creator profile page builds.
+export const homeAssetDetailFixture = {
+  ...homeFullPageFixture,
+  assetDetail: {
+    assetKind: "character",
+    title: "Mara Vale",
+    subtitle: "Keeper of the brass key",
+    creator: { handle: "@lantern.keeper", href: "/studio/v2/creators/lantern.keeper" },
+    media: [{ id: "mara-media-1", src: HOME_CREATORS_TO_FOLLOW_ITEMS[0]?.thumbnails?.[0]?.imageSrc || "" }],
+    badges: [],
+    creationType: "CHARACTER",
+    metrics: [],
+    stats: { plays: null, hearts: null, followers: null },
+    description:
+      "Mara carries the brass key her grandmother never explained and reads doors the way other people read faces.",
+    tags: [],
+    isLiked: false,
+    isSaved: false,
+    onLike: noop,
+    onPrimaryAction: noop,
+    onSave: noop,
+    onViewCatalogue: noop,
+    credits: [],
+    onClose: noop,
+  },
+};

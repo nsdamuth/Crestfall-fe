@@ -1,4 +1,4 @@
-export const HOME_VIEW_CONTRACT_VERSION = "5.0.0";
+export const HOME_VIEW_CONTRACT_VERSION = "5.1.0";
 
 /**
  * V2 Home is the signed-in guidepost/dashboard. It is distinct from `/studio`,
@@ -15,6 +15,11 @@ export const HOME_VIEW_CONTRACT_VERSION = "5.0.0";
  *    Adventures, Studio, Images, Vault, Community, Creators, Lore), each with
  *    its own Sort control; a rail with no items renders nothing
  * 3. Creation-oriented bottom banner routing to the next section (Stories)
+ *
+ * Added at 5.1.0 (12 Sep 2026, fe/chat-studio item 10): optional
+ * `assetDetail`, the KitAssetDetailPopup prop bag the ViewModel builds
+ * when a creator shortlist tile is tapped (the same popup and handler
+ * pattern the creator profile page uses); null renders nothing.
  *
  * Removed at 5.0.0 (12 Sep 2026, eight-fix package, FIX 1): welcomeName.
  * The hero's "Welcome back, <name>." overlay is retired with no
@@ -41,6 +46,7 @@ export const homeViewContract = Object.freeze({
     "warningMessage",
     "notice",
     "onCloseNotice",
+    "assetDetail",
   ]),
   sectionRail: Object.freeze({
     fields: Object.freeze(["id", "label", "viewAllLabel", "onViewAll", "items", "sortControl"]),

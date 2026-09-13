@@ -9,6 +9,7 @@ import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.
 import KitCreatorCardView from "@/components/kit/creator-card/KitCreatorCard.view";
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
+import KitAssetDetailPopup from "@/components/kit/KitAssetDetailPopup";
 import FixtureActionNotice from "@/app/studio/v2/FixtureActionNotice";
 import { isLegacyDefaultCreationImageSrc } from "@/lib/shared/creations/creationMedia";
 
@@ -108,6 +109,7 @@ export default function HomeView({
   warningMessage = null,
   notice = null,
   onCloseNotice = null,
+  assetDetail = null,
 }) {
   const coldStartBannerImage = topBanner?.imageSrc ?? null;
   const topBannerImageSrc = continueItem
@@ -195,6 +197,10 @@ export default function HomeView({
       </KitStudioPageView>
 
       <FixtureActionNotice notice={notice} onClose={onCloseNotice} />
+
+      {/* Creator shortlist tiles open the asset detail popup, the same
+          piece the creator profile page opens (fe/chat-studio item 10). */}
+      {assetDetail ? <KitAssetDetailPopup {...assetDetail} /> : null}
     </>
   );
 }
