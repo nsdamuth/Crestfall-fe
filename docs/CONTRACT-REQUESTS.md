@@ -1147,7 +1147,14 @@ snapshot, so this is a Chassis fix, not a frontend one: spread
 `buildCreationParticipantMediaMetadata(character, { contentRating })`
 into the private character chat participant the way the template path
 does (and reissue it on existing rooms, or serve `room.media[]` as this
-CR asks). Frontend interim unchanged: the placeholder mark.
+CR asks). Frontend interim (revised 13 Sep 2026, Brian's review round 4
+item 4): when the snapshot serves no media, the gallery reads the
+catalogue creation's own `creation.featuredMedia` from its preview
+(`fetchCreationPreview`, GET `/api/creations/{id}/preview`, the same
+served images the community story slider shows), at most four, then
+the end card; the placeholder mark shows only when that creation has no
+featured media either. Nothing is faked; the served list from this CR
+would replace the preview read.
 
 ### CR-070, Scene image generation
 

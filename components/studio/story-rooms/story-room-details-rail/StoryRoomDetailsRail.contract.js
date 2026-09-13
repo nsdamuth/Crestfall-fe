@@ -1,9 +1,21 @@
-export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.3.0";
+export const STORY_ROOM_DETAILS_RAIL_VIEW_CONTRACT_VERSION = "1.4.0";
 
 /**
  * Stable portable UI boundary for the story chat page's right rail
  * (fe/chat-studio item 6, 12 Sep 2026), also the content of the right
  * sheet below md.
+ *
+ * 1.4.0, fe/chat-studio review round 4 item 4 (13 Sep 2026, Brian's
+ * browser review). No prop shape changed. The gallery bed is --canvas
+ * (the darkest brown, the community story slider's art surface) so its
+ * --radius-md corners and --space-3 margin read against the rail; the
+ * counter reads "n/total". `gallery.items` now holds at most four
+ * images: the room-derived set when the snapshot serves one, else the
+ * catalogue creation's own featured media read from its preview
+ * (fetchCreationPreview, GET /api/creations/{id}/preview, the same
+ * served images the community slider shows), interim until CR-069;
+ * the end card follows the last one and opens that creation's page in
+ * a new tab.
  *
  * 1.3.0, fe/chat-studio brief 4 item 2 (13 Sep 2026). ADDITIVE in
  * meaning, no prop shape changed: `description` is now populated from

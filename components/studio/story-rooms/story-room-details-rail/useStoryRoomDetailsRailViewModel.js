@@ -3,6 +3,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { fetchCreationPreview } from "@/lib/client/studio/creations/creationClient";
+import { getCreationMediaDisplayUrl } from "@/lib/shared/creations/creationMedia";
+
+// The gallery shows at most four images (review round 4 item 4), the
+// same count as the community story slider (KitAssetDetailPopup caps
+// its media at four), then the end card.
+export const STORY_ROOM_GALLERY_MAX_IMAGES = 4;
 
 export const STORY_ROOM_DETAILS_ROWS = Object.freeze([
   { id: "cast", label: "Cast" },
@@ -62,11 +68,12 @@ export function buildStoryMediaItems({ room = {}, cast = [], messages = [] } = {
   return items;
 }
 
-// The story's creation page (brief 3 item 4, the end card's View
-// catalogue link): the room's source template when it started from one,
-// else the default Character's creation, else any Character's creation;
-// the same resolution the Stories page uses for a story's source.
-export function resolveStoryCatalogueHref({ room = {}, cast = [] } = {}) {
+// The story's catalogue creation (brief 3 item 4, the end card's View
+// catalogue link; review round 4 item 4, the gallery's fallback media):
+// the room's source template when it started from one, else the default
+// Character's creation, else any Character's creation; the same
+// resolution the Stories page uses for a story's source.
+export function resolveStoryCatalogueCreationId({ room = {}, cast = [] } = {}) {
   const rawRoom = room?.rawRoom || {};
   const source = rawRoom?.data?.source || {};
   const templateId = normalizeText(source.templateId || source.template_id);
@@ -80,12 +87,38 @@ export function resolveStoryCatalogueHref({ room = {}, cast = [] } = {}) {
   );
   const anyCharacter = members.find(isCharacter);
 
-  const creationId =
+  return (
     templateId ||
     normalizeText(defaultCharacter?.participant?.creationId) ||
-    normalizeText(anyCharacter?.participant?.creationId);
+    normalizeText(anyCharacter?.participant?.creationId)
+  );
+}
 
+export function resolveStoryCatalogueHref({ room = {}, cast = [] } = {}) {
+  const creationId = resolveStoryCatalogueCreationId({ room, cast });
   return creationId ? `/studio/creations/${encodeURIComponent(creationId)}` : "";
+}
+
+// The catalogue creation's own images (review round 4 item 4), read
+// from the preview's `creation.featuredMedia` through the same shared
+// url helper the community story slider uses, in served order.
+export function projectPreviewFeaturedMedia(preview = null, { altText = "" } = {}) {
+  const featured = Array.isArray(preview?.creation?.featuredMedia)
+    ? preview.creation.featuredMedia
+    : [];
+
+  return featured
+    .map((entry, index) => {
+      const url = normalizeText(getCreationMediaDisplayUrl(entry));
+      if (!url) return null;
+      return {
+        id: normalizeText(entry?.id) || `catalogue-media-${index + 1}`,
+        url,
+        altText: normalizeText(entry?.title) || normalizeText(altText) || "Story image",
+        sourceLabel: normalizeText(altText),
+      };
+    })
+    .filter(Boolean);
 }
 
 // The source creation behind a story (brief 4 item 2): the template the
@@ -96,32 +129,30 @@ export function resolveStorySourceTemplateId(room = {}) {
   return normalizeText(source.templateId || source.template_id);
 }
 
-// The description under the title (brief 4 item 2, interim until CR-068
-// serves it on the room snapshot): read from the source creation
-// through the existing preview client, fetchCreationPreview in
-// lib/client/studio/creations/creationClient.js (GET
-// /api/creations/{id}/preview, the Chassis GET /v1/creations/{id}/preview),
-// whose `creation.description` is the served text. Hidden when the story
-// has no source creation, and while the fetch is in flight or failed.
-export function useStorySourceDescription(templateId = "", { loadPreview = fetchCreationPreview } = {}) {
-  const [state, setState] = useState({ templateId: "", description: "" });
+// The catalogue creation's preview (brief 4 item 2 and review round 4
+// item 4): one fetch through the existing preview client,
+// fetchCreationPreview in lib/client/studio/creations/creationClient.js
+// (GET /api/creations/{id}/preview, the Chassis GET
+// /v1/creations/{id}/preview). It feeds the description under the title
+// (`creation.description`, interim until CR-068) and the gallery's
+// fallback images (`creation.featuredMedia`, interim until CR-069).
+// Null while the fetch is in flight, failed, or for another creation.
+export function useStoryCataloguePreview(creationId = "", { loadPreview = fetchCreationPreview } = {}) {
+  const [state, setState] = useState({ creationId: "", preview: null });
 
   useEffect(() => {
-    if (!templateId) return undefined;
+    if (!creationId) return undefined;
 
     let cancelled = false;
 
     async function load() {
       try {
-        const preview = await loadPreview(templateId);
+        const preview = await loadPreview(creationId);
         if (cancelled) return;
-        setState({
-          templateId,
-          description: normalizeText(preview?.creation?.description),
-        });
+        setState({ creationId, preview: preview || null });
       } catch {
         if (cancelled) return;
-        setState({ templateId, description: "" });
+        setState({ creationId, preview: null });
       }
     }
 
@@ -130,9 +161,9 @@ export function useStorySourceDescription(templateId = "", { loadPreview = fetch
     return () => {
       cancelled = true;
     };
-  }, [loadPreview, templateId]);
+  }, [creationId, loadPreview]);
 
-  return templateId && state.templateId === templateId ? state.description : "";
+  return creationId && state.creationId === creationId ? state.preview : null;
 }
 
 export function useStoryRoomDetailsRailViewModel({
@@ -145,12 +176,28 @@ export function useStoryRoomDetailsRailViewModel({
   deleteError = "",
   autoOpenViewer = false,
 } = {}) {
-  const mediaItems = useMemo(
-    () => buildStoryMediaItems({ room, cast, messages }),
-    [room, cast, messages]
-  );
   const sourceTemplateId = resolveStorySourceTemplateId(room);
-  const description = useStorySourceDescription(sourceTemplateId);
+  const catalogueCreationId = resolveStoryCatalogueCreationId({ room, cast });
+  const cataloguePreview = useStoryCataloguePreview(catalogueCreationId);
+  // The description shows only when the story launched from a template
+  // (brief 4 item 2); a private character chat has no source template.
+  const description = sourceTemplateId
+    ? normalizeText(cataloguePreview?.creation?.description)
+    : "";
+
+  // The gallery's images (review round 4 item 4): the room-derived set
+  // first (CR-069 interim), else the catalogue creation's own featured
+  // media from its preview, the same served images the community story
+  // slider shows; at most four, then the end card.
+  const mediaItems = useMemo(() => {
+    const roomItems = buildStoryMediaItems({ room, cast, messages });
+    const items = roomItems.length
+      ? roomItems
+      : projectPreviewFeaturedMedia(cataloguePreview, {
+          altText: normalizeText(cataloguePreview?.creation?.title) || normalizeText(room?.title),
+        });
+    return items.slice(0, STORY_ROOM_GALLERY_MAX_IMAGES);
+  }, [room, cast, messages, cataloguePreview]);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [viewerIndex, setViewerIndex] = useState(() =>

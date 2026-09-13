@@ -148,19 +148,21 @@ export default function StoryRoomDetailsRailView({
   );
 }
 
-// The gallery (brief 3 item 4, replaced by brief 4 item 1). One bed at
-// every state: --surface-2 with --radius-md corners, --space-3 margin
-// each side, 4:5. No media: the circular geometric Crestfall mark
-// (StoryRoomMark, icons-v7 symbol i-59, the sidebar lockup's mark)
-// centered on the bed. With media: the image fills the bed edge to edge
-// inside the rounding, previous and next as 44px circles over the art,
-// an "n / total" counter chip centered at the bottom on the
-// tag-over-art recipe (--tag-bed-art bed, 1px --line, --art-ink), and,
-// when the story resolves to a creation page, one extra stop after the
-// last image: an end card on the asset detail popup's "Want to see
-// more" recipe whose primary link opens the creation page in a new tab
-// so the chat stays open. The brief 3 thumbnail strip is retired; the
-// counter chip carries the position.
+// The gallery (brief 3 item 4, brief 4 item 1, review round 4 item 4).
+// One bed at every state: --canvas, the darkest brown and the surface
+// the community story slider paints behind its art (it reads as a bed
+// against the --surface-2 rail; the brief 4 --surface-2 bed vanished
+// into the rail, which is why its corners and margin never showed),
+// --radius-md corners, --space-3 margin each side, 4:5. No media: the
+// circular geometric Crestfall mark (StoryRoomMark, icons-v7 symbol
+// i-59, the sidebar lockup's mark) centered on the bed. With media (at
+// most four): the image fills the bed edge to edge inside the rounding,
+// previous and next as 44px circles over the art, an "n/total" counter
+// chip centered at the bottom on the tag-over-art recipe (--tag-bed-art
+// bed, 1px --line, --art-ink), and, when the story resolves to a
+// creation page, one extra stop after the last image: an end card on
+// the asset detail popup's "Want to see more" recipe whose primary link
+// opens that page in a new tab so the chat stays open.
 function Gallery({ gallery }) {
   const items = Array.isArray(gallery?.items) ? gallery.items : [];
   const activeIndex = Math.min(gallery?.activeIndex || 0, Math.max(items.length - 1, 0));
@@ -170,7 +172,7 @@ function Gallery({ gallery }) {
 
   return (
     <div className="p-[var(--space-3)]">
-      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius-md)] bg-[var(--surface-2)]">
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[var(--radius-md)] bg-[var(--canvas)]">
         {!active ? (
           <div className="flex h-full w-full items-center justify-center">
             <StoryRoomMark className="h-[var(--space-16)] w-[var(--space-16)]" />
@@ -215,7 +217,7 @@ function Gallery({ gallery }) {
             aria-live="polite"
             className="absolute bottom-[var(--space-2)] left-1/2 -translate-x-1/2 rounded-[var(--radius-full)] border border-[var(--line)] bg-[var(--tag-bed-art)] px-[var(--space-2)] py-px text-[length:var(--text-label)] leading-[var(--lh-label)] tabular-nums text-[var(--art-ink)] backdrop-blur-[var(--blur-panel)]"
           >
-            {activeIndex + 1} / {items.length}
+            {activeIndex + 1}/{items.length}
           </span>
         ) : null}
       </div>
