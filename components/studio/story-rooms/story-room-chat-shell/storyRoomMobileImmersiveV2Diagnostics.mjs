@@ -32,7 +32,8 @@ test("Story chat runs flush and full height through the shell flush mode, not ne
   const studioShell = read("components/studio/StudioShell.jsx");
   const studioShellView = read("components/studio/studio-shell/StudioShell.view.jsx");
 
-  assert.match(view, /flex h-\[100dvh\] md:h-\[calc\(100dvh-var\(--topbar-h\)\)\] min-h-0 flex-col overflow-hidden/);
+  // Review round 5 (mobile): the section is also capped at the viewport width.
+  assert.match(view, /flex h-\[100dvh\] md:h-\[calc\(100dvh-var\(--topbar-h\)\)\] min-h-0 w-full max-w-full min-w-0 flex-col overflow-hidden/);
   assert.doesNotMatch(view, /-mx-\[var\(--space-5\)\]/);
   assert.doesNotMatch(view, /-mt-\[var\(--topbar-h\)\]/);
   assert.doesNotMatch(view, /sm:-mx-\[var\(--space-8\)\]/);

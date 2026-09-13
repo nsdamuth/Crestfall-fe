@@ -51,7 +51,8 @@ assert.match(shellView, /<div className="min-w-0">\n\s+<ComposerComponent/);
 assert.match(composerView, /relative z-50 shrink-0 bg-transparent/);
 assert.doesNotMatch(composerView, /fixed bottom-0 left-0 right-0 z-50/);
 assert.doesNotMatch(transcriptView, /pb-\[4rem\]/);
-assert.match(transcriptView, /min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 scroll-smooth/);
+// Review round 5 (mobile): the scroll region also clips horizontally.
+assert.match(transcriptView, /min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain p-5 scroll-smooth/);
 assert.doesNotMatch(hostView + hostViewModel, /Crimson Sphinx|Iron Rank|Valentina|Crownfall/i);
 
 console.log(

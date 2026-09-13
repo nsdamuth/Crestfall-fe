@@ -55,7 +55,11 @@ test("speaker ink derives from the character palette anchor through the locked c
   const vm = read("components/studio/story-rooms/story-room-message/useStoryRoomMessageViewModel.js");
   assert.doesNotMatch(view, /paletteColors|DEFAULT_PALETTE_COLORS|#[0-9A-Fa-f]{6}/);
   assert.match(view, /"--chat-speaker": speakerAnchor\.trim\(\)/);
-  assert.match(view, /text-\[var\(--chat-speaker-name\)\]/);
+  // Brief 4 item 10 and review rounds 4 and 5 (RULED): the speaker name
+  // reads --ink in the display font at the lead step; the anchor still
+  // tints the bubble and the avatar tile, never the name.
+  assert.match(view, /font-display text-\[length:var\(--text-lead\)\] leading-\[var\(--lh-lead\)\] font-\[var\(--weight-medium\)\] text-\[var\(--ink\)\]/);
+  assert.doesNotMatch(view, /text-\[var\(--chat-speaker-name\)\]/);
   assert.match(view, /bg-\[var\(--chat-bubble-fill\)\]/);
   assert.match(view, /bg-\[var\(--chat-avatar-fill\)\]/);
   assert.match(view, /rounded-\[var\(--radius-bubble\)\]/);

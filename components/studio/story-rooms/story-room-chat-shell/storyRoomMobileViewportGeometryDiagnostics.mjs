@@ -22,7 +22,8 @@ test("mobile Story chat claims the full dynamic viewport under its own bar and n
   const view = read("components/studio/story-rooms/story-room-chat-shell/StoryRoomChatShell.view.jsx");
   const designSystem = read("app/design-system.css");
 
-  assert.match(view, /flex h-\[100dvh\] md:h-\[calc\(100dvh-var\(--topbar-h\)\)\] min-h-0 flex-col overflow-hidden/);
+  // Review round 5 (mobile): the section is also capped at the viewport width.
+  assert.match(view, /flex h-\[100dvh\] md:h-\[calc\(100dvh-var\(--topbar-h\)\)\] min-h-0 w-full max-w-full min-w-0 flex-col overflow-hidden/);
   assert.doesNotMatch(view, /h-\[calc\(100dvh-var\(--space-20\)\)\]/);
   assert.doesNotMatch(view, /lg:h-\[calc\(100dvh-5rem\)\]/);
   assert.doesNotMatch(view, /xl:h-\[calc\(100vh-7rem\)\]/);
