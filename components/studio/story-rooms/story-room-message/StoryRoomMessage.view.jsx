@@ -290,9 +290,11 @@ function getArticleClassName(surfaceTone) {
   return `${base} max-w-[86%] min-[700px]:max-w-[70%] bg-[var(--surface-1)]`;
 }
 
-// Transcript body type (brief 2 item 8, decision C2 replaces C1): the
-// message body reads at --text-body and --lh-body; the speaker name,
-// the opening label, the mode pill, and the delivery lines stay at
+// Transcript body type (brief 3 item 6, RULED by Brian, replacing brief
+// 2 item 8's body step): the message body reads at --text-chat and
+// --lh-chat (14 over 22), the transcript body tier minted in
+// app/theme.css and legal only in this package; the speaker name, the
+// opening label, the mode pill, and the delivery lines stay at
 // --text-label. System notices are meta, not body, and stay at the ui
 // step (the brief named the body only).
 function getBodyClassName(surfaceTone, hasSemanticPresentation) {
@@ -304,10 +306,10 @@ function getBodyClassName(surfaceTone, hasSemanticPresentation) {
     surfaceTone === STORY_ROOM_MESSAGE_SURFACE_TONES.NARRATOR &&
     !hasSemanticPresentation
   ) {
-    return "font-display text-[length:var(--text-body)] leading-[var(--lh-body)] italic text-[var(--ink-dim)]";
+    return "font-display text-[length:var(--text-chat)] leading-[var(--lh-chat)] italic text-[var(--ink-dim)]";
   }
 
-  return "text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink)]";
+  return "text-[length:var(--text-chat)] leading-[var(--lh-chat)] text-[var(--ink)]";
 }
 
 export default function StoryRoomMessageView({

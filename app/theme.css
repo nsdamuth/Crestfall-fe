@@ -588,6 +588,16 @@
      Gate 2 token law rows 1-2. */
   --text-input:    0.875rem;  /* 14 */
   --lh-input:      1.375rem;  /* 22 */
+
+  /* --- TRANSCRIPT BODY, story chat -------------------------------
+     RULED by Brian 13 Sep 2026 (fe/chat-studio brief 3 item 6): the
+     story transcript's message body reads at 14 over 22. Legal only
+     in components/studio/story-rooms/story-room-message; speaker name
+     and meta stay at --text-label. Minted as its own pair rather than
+     aliasing --text-input so the field bed and the transcript can
+     move apart without touching each other. */
+  --text-chat:     0.875rem;  /* 14 */
+  --lh-chat:       1.375rem;  /* 22 */
   --ink-typed:     #d9d3c6;   /* Inter 300, field values only */
 
   /* --- GHOST FILL ----------------------------------------------

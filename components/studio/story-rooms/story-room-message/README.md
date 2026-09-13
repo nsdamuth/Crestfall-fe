@@ -29,10 +29,11 @@ message record, including:
 `StoryRoomMessage.view.jsx` owns only message-bubble presentation:
 
 - surface styling for each display tone;
-- the type steps (brief 2 item 8, decision C2): the body at
-  `--text-body` and `--lh-body`, the speaker name, opening label, mode
-  pill, and delivery lines at `--text-label`; system notices stay at the
-  ui step;
+- the type steps (brief 3 item 6, RULED by Brian, replacing brief 2
+  item 8's body step): the body at `--text-chat` and `--lh-chat`, the
+  transcript body tier (14 over 22) minted in `app/theme.css` and legal
+  only in this package; the speaker name, opening label, mode pill, and
+  delivery lines at `--text-label`; system notices stay at the ui step;
 - speaker identity, mode pill, and opening-scene label;
 - legacy inline bold/action/quote rendering;
 - display-ready semantic segments and status blocks;

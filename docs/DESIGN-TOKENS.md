@@ -320,6 +320,7 @@ Scale (all locked; ratio 1.2 from 16px, leadings on the 4px grid):
 | `--text-eyebrow` / `--lh-eyebrow` / `--track-eyebrow` | 13 / 20 / .16em | Eyebrows (aliases of the ui step) |
 | `--text-cta` / `--lh-cta` | 16 / 24 | Button text (aliases of the body step) |
 | `--text-hero` / `--lh-hero` | fluid | Hero only, never product UI |
+| `--text-chat` / `--lh-chat` | 14 / 22 | Transcript body tier, RULED by Brian 13 Sep 2026 (fe/chat-studio brief 3 item 6): the story transcript's message body ONLY. Legal only in `components/studio/story-rooms/story-room-message`; speaker name and meta stay at `--text-label`; never a field bed (that is `--text-input`), never any other surface. Check: `grep -rn 'text-chat\|lh-chat' app/ components/ docs/` returns only `app/theme.css`, this file, and that package |
 
 Weights `--weight-regular/medium/bold` (400/500/700; 800 and 900 are
 banned), joined 22 Aug 2026 by `--weight-light` (300, A1, Fable law
