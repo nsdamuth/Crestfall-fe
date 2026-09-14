@@ -287,6 +287,9 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.5.0";
  * @property {boolean} showSceneryOnlyHelper true for location-only requests
  * @property {boolean} sceneryOnlyHelperEnabled whether scenery optimization is active
  * @property {((enabled: boolean) => void)|null} onChangeSceneryOnlyHelper
+ * @property {((text: string) => {ok: boolean, message?: string})|null} onImportSettings
+ *   validates a `crestfall.imageSettings.v1` clipboard payload and applies it
+ *   to the existing Image settings controls without starting generation
  * @property {(() => void)|null} onGenerate fires the real job pipeline
  * @property {KitImageCreatorOptionField[]} videoOptionFields Duration,
  *   Video Aspect, Motion Style (the 2.2.0 video block, rendered only

@@ -769,6 +769,7 @@ export function useImagesV2LiveViewModel({
       sceneryOnlyHelperEnabled: workbench.composerProps.sceneryOnlyHelperEnabled,
       onChangeSceneryOnlyHelper:
         workbench.composerProps.setSceneryOnlyHelperEnabled,
+      onImportSettings: workbench.composerProps.onImportImageSettings,
       onGenerate: composer.onGenerateImage,
       videoOptionFields,
       onChangeVideoOption: changeVideoOption,

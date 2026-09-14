@@ -21,6 +21,9 @@ import {
   getWorkflowTuningPayload,
   normalizeImageWorkflowTuning,
 } from "../imageWorkflowTuning.js";
+import {
+  parseImageSettingsPresetText,
+} from "../imageSettingsPreset.js";
 
 import { createCreationDraft } from "@/lib/client/studio/creations/creationClient";
 import { useImageGenerationHistory } from "@/components/studio/image-studio/hooks/useImageGenerationHistory";
@@ -522,6 +525,7 @@ export function buildImageGenerationPayload({
     },
     prompt: {
       userPrompt: resolvedUserPrompt,
+      customPrompt: String(prompt || ""),
       negativePrompt,
       promptMode: getPromptMode(renderStyle),
     },
@@ -542,6 +546,8 @@ export function buildImageGenerationPayload({
       outputCount: clampImageStudioOutputCount(imageCount),
       quality: "standard",
       seed: null,
+      sceneryOnlyHelperEnabled: Boolean(sceneryOnlyHelperEnabled),
+      sceneryOnlyHelperApplied: Boolean(useLocationOnlySceneryHelper),
       ...(resolvedWorkflowTuning
         ? { workflowTuning: resolvedWorkflowTuning }
         : {}),
@@ -665,6 +671,26 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   function resetWorkflowTuning() {
     setWorkflowTuning(getDefaultImageWorkflowTuning(renderStyle));
     setWorkflowTuningTouched(false);
+  }
+
+  function importImageSettingsPreset(text) {
+    try {
+      const preset = parseImageSettingsPresetText(text);
+      setRenderStyle(preset.renderStyle);
+      setWorkflowTuning(preset.workflowTuning);
+      setWorkflowTuningTouched(true);
+      setCameraPreset(preset.cameraFraming);
+      setWardrobeTheme(preset.wardrobeTheme);
+      setAspectRatio(preset.aspectRatio);
+      setSceneryOnlyHelperEnabled(preset.sceneryOnlyHelperEnabled);
+      setNegativePrompt(preset.negativePrompt);
+      return { ok: true, message: "Image settings imported." };
+    } catch (error) {
+      return {
+        ok: false,
+        message: error?.message || "Image settings could not be imported.",
+      };
+    }
   }
 
   function switchWorkflowFromTuningBoundary() {
@@ -938,6 +964,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       showSceneryOnlyHelper: isLocationOnlyImageComposition(selectedIngredients),
       sceneryOnlyHelperEnabled,
       setSceneryOnlyHelperEnabled,
+      onImportImageSettings: importImageSettingsPreset,
       renderStyle,
       setRenderStyle: handleRenderStyleChange,
       workflowTuning,
