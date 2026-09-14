@@ -189,8 +189,15 @@ export default function CreationProfilePageView({
           </div>
 
           {/* Chat, Generate, Share anchor to the bottom right of the
-              header at lg and up (RULED 12 Sep 2026, browser review). */}
-          <div className="flex flex-wrap gap-3 lg:flex-col lg:items-end lg:self-end">
+              header at lg and up (RULED 12 Sep 2026, browser review).
+              One equal width (fe/updates follow-up 1, FIX 4, 13 Sep
+              2026): the column is the header grid's auto column at lg,
+              so it takes the widest label's width, and every direct
+              child fills it through the one *:w-full rule; below lg the
+              column is the full single column, so each button is full
+              width. Recipes unchanged: primary gold on Chat, secondary
+              on Generate and Share. */}
+          <div className="flex flex-col gap-3 *:w-full lg:self-end">
             {creation.supportsChat ? (
               <button
                 type="button"
