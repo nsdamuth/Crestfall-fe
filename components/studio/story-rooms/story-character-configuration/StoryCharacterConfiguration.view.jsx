@@ -2,6 +2,25 @@
 
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 
+function ConfigurationLoadError({ message = "", onRetry = null } = {}) {
+  if (!message) return null;
+
+  return (
+    <div className="mt-3 rounded-xl border border-red-500/25 bg-red-500/10 p-4">
+      <p className="text-sm leading-6 text-red-200">{message}</p>
+      {onRetry ? (
+        <button
+          type="button"
+          onClick={() => onRetry()}
+          className="mt-3 rounded-lg border border-red-300/25 bg-red-300/5 px-3 py-2 text-xs text-red-100 transition hover:bg-red-300/10"
+        >
+          Retry Character Configuration
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
 function StatsPoolsConfiguration({ statsConfiguration }) {
   if (!statsConfiguration) return null;
   const profiles = Array.isArray(statsConfiguration.profiles)
@@ -13,7 +32,12 @@ function StatsPoolsConfiguration({ statsConfiguration }) {
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         Stats & Pools
       </p>
-      {!profiles.length ? (
+      {statsConfiguration.loadError ? (
+        <ConfigurationLoadError
+          message={statsConfiguration.loadError}
+          onRetry={statsConfiguration.onRetry}
+        />
+      ) : !profiles.length ? (
         <p className="mt-3 text-sm leading-6 text-amber-100">
           This Story requires Stats & Pools, but no usable Stats & Pools profile is available.
         </p>
@@ -111,7 +135,12 @@ function SkillsConfiguration({ skillsConfiguration }) {
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         Skills
       </p>
-      {!profiles.length ? (
+      {skillsConfiguration.loadError ? (
+        <ConfigurationLoadError
+          message={skillsConfiguration.loadError}
+          onRetry={skillsConfiguration.onRetry}
+        />
+      ) : !profiles.length ? (
         <p className="mt-3 text-sm leading-6 text-amber-100">
           This Story requires Skills, but no usable Skills profile is available.
         </p>
@@ -610,7 +639,12 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
       <p className="text-xs uppercase tracking-[0.16em] text-[var(--muted-gold)]">
         Abilities & Magic
       </p>
-      {!profiles.length ? (
+      {abilitySpellConfiguration.loadError ? (
+        <ConfigurationLoadError
+          message={abilitySpellConfiguration.loadError}
+          onRetry={abilitySpellConfiguration.onRetry}
+        />
+      ) : !profiles.length ? (
         <p className="mt-3 text-sm leading-6 text-amber-100">
           This Story requires Ability/Spell configuration, but no usable Ability & Spell profile is available.
         </p>
@@ -756,6 +790,7 @@ function AbilitySpellConfiguration({ abilitySpellConfiguration }) {
 export default function StoryCharacterConfigurationView({
   loading = false,
   error = "",
+  operationError = "",
   saveMessage = "",
   roomTitle = "Story",
   hasPlayerActor = false,
@@ -858,6 +893,12 @@ export default function StoryCharacterConfigurationView({
           <SkillsConfiguration skillsConfiguration={skillsConfiguration} />
 
           <AbilitySpellConfiguration abilitySpellConfiguration={abilitySpellConfiguration} />
+
+          {operationError ? (
+            <div className="rounded-xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm leading-6 text-red-200">
+              {operationError}
+            </div>
+          ) : null}
 
           {saveMessage ? (
             <div className="rounded-xl border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm leading-6 text-emerald-100">
