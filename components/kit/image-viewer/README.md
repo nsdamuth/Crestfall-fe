@@ -6,10 +6,13 @@
 
 The image viewer that opens from a library item on the live Media
 Studio page (FE/MEDIA-STUDIO session 3, Brian's notes 6 and 6a, RULED
-10 Sep 2026). It replaces the legacy `MediaLightbox` on
-`/studio/v2/images` only; the legacy Images page and the creation
-image library keep the lightbox. Ruled at the plan gate, option A of
-three: a new Kit viewer on the existing frame, the page keeping every
+10 Sep 2026). It replaced the legacy `MediaLightbox` on
+`/studio/v2/images` first, and on the creation page
+`/studio/creations/[id]` on 13 Sep 2026 (fe/updates, package
+CREATION-VIEWER, approach A of three, pre-carried) through that
+page's own adapter; the legacy Images page and the my-creations image
+library keep the lightbox. Ruled at the plan gate, option A of three:
+a new Kit viewer on the existing frame, the page keeping every
 operation's handler.
 
 ## Boundary
@@ -28,6 +31,13 @@ KitImageViewer.jsx
      -> InfoTip and MenuRow (components/kit/form-field, shared with
         the composer)
 ```
+
+Second call site: `components/studio/creations/CreationProfileImageViewer.jsx`,
+the creation page's adapter, mounted through `CreationProfilePage`'s
+`lightboxSlot`. It keeps this page's own lightbox handlers (share is
+the copy-link handler, save is the bookmark reaction, assign is the
+reassign call, delete never existed there) and takes the two workbench
+cost constants through `viewerCoinCosts` from the shell.
 
 Live call site: `app/studio/v2/images/images-live/ImagesV2ImageViewer.jsx`,
 the page adapter, injected through `MediaHistoryGridSkin`'s

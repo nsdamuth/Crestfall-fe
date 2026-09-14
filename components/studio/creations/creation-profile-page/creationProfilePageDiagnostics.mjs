@@ -21,7 +21,7 @@ test("Creation Profile Page shell stays thin and owns application adapters", () 
     "CreationStatsRow",
     "CreationShareButton",
     "MediaTileQuickActions",
-    "MediaLightbox",
+    "CreationProfileImageViewer",
     "KitCredits",
     "LorePublicCreationPage",
     "StandardCreationProfilePage",

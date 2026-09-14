@@ -532,6 +532,27 @@ the legacy Images page and the creation image library keep
 `MediaLightbox` and their rows are unchanged. Backend gaps 8 to 12
 live in `docs/handoffs/MEDIA-STUDIO-BACKEND.md`.
 
+## Creation page image viewer rows (fe/updates, CREATION-VIEWER, 13 Sep 2026)
+
+The one `/studio/creations/[id]` "Media lightbox" row is replaced by
+an image viewer block on the same page (Report, Details, Download size
+menu with the Extra Large row stubbed, Save toggle, Upscale stubbed,
+Edit stubbed, Assign, Share, Close) plus three "removed" rows that
+record the legacy actions with no viewer slot: Generate Variant (the
+lightbox's link to the creation's Image Studio), Like (the heart), and
+the item strip (select another item). The viewer is the same
+`components/kit/image-viewer` package, mounted by the page adapter
+`components/studio/creations/CreationProfileImageViewer.jsx` through
+`CreationProfilePage`'s `lightboxSlot`, which keeps calling
+`useMediaLightboxViewModel` so report, details, share (this page's
+copy-link handler), save (the bookmark reaction), and assign report to
+the same handlers. Delete never existed on this page, so the viewer
+hides it. Assign renders Soon for every item because the catalogue
+never marks a media item reassignable (gap 16 in
+`docs/handoffs/MEDIA-STUDIO-BACKEND.md`). The my-creations image
+library (`/studio/my-creations/[id]/image-library`) keeps
+`MediaLightbox`.
+
 ## Media Studio Remix rows (FE/MEDIA-STUDIO session 4, 10 Sep 2026)
 
 The `/studio/v2/images` stage tabs row moves from stubbed to working

@@ -20,9 +20,12 @@ The ViewModel owns raw Creation/media aliases, description truncation, media
 filtering with source-order media, 12-item pagination, reaction loading/mutations, and Story
 Room creation. The Binding Shell owns Next.js links/navigation and existing
 application components (`CreationStatusBadges`, `CreationStatsRow`,
-`CreationShareButton`, `MediaTileQuickActions`, and
-`MediaLightbox`). The portable View receives only display-ready models,
-semantic callbacks, and rendered slots.
+`CreationShareButton`, `MediaTileQuickActions`, and the image viewer
+adapter `CreationProfileImageViewer`, which mounts the Kit image viewer
+over the lightbox ViewModel since 13 Sep 2026, fe/updates package
+CREATION-VIEWER; `MediaLightbox` itself is no longer imported here).
+The portable View receives only display-ready models, semantic
+callbacks, and rendered slots.
 
 ## Preserved behavior
 - `LORE` creations continue to delegate to `LorePublicCreationPage`; the standard LOOM catalogue is used for every other creation type.
@@ -32,7 +35,7 @@ semantic callbacks, and rendered slots.
 - Like/bookmark optimistic updates with rollback on persistence failure
 - Creation header, attribution, statistics, tags, four-line description clamp with Show more
 - Chat-capable Creation Story Room start
-- Generate, Share, and public Media Lightbox actions
+- Generate, Share, and the public image viewer's actions (Report, Details, Download, Save, Share, Assign through the lightbox ViewModel; Upscale and Edit ship Soon). Generate Variant, Like, and the item strip left with the lightbox and are logged in `docs/APP-FUNCTION-MAP.csv`.
 - Load-error, no-creation, no-media, and missing-preview fallbacks
 
 Preview: `/dev/ui-preview/creation-profile-page`
