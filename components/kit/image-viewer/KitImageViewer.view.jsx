@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 
 import KitImageEditor from "../KitImageEditor";
-import { ImageDetailsPanel } from "../../studio/media/media-lightbox/MediaLightbox.view";
+import { ImageDetailsPanel, ReassignDialog } from "../../studio/media/media-lightbox/MediaLightbox.view";
 import { ImageFrame } from "../image-overlay/ImageFrame";
 import { InfoTip } from "../form-field/InfoTip";
 import { MENU_PANEL_RECIPE, MenuRow } from "../form-field/menuRecipe";
@@ -253,6 +253,7 @@ function ViewerBottomBar({
   onEnterEdit,
   bottomBarAction,
   assignState,
+  assignActive = false,
   onAssign,
   remixState,
   onRemix,
@@ -274,12 +275,18 @@ function ViewerBottomBar({
         />
       ) : (
         <ViewerBarAction
-          label="Assign"
+          label={assignActive ? "Back to image" : "Assign"}
           icon={<Link2 size={16} aria-hidden="true" />}
           onClick={onAssign}
           disabled={middleSoon}
           soon={middleSoon}
-          title={middleSoon ? NOT_AVAILABLE_LABEL : "Assign this image to one of your assets"}
+          title={
+            middleSoon
+              ? NOT_AVAILABLE_LABEL
+              : assignActive
+                ? "Return to the image"
+                : "Assign this image to one of your assets"
+          }
         />
       )}
       <ViewerBarAction label="Share" icon={<Share2 size={16} aria-hidden="true" />} onClick={onShare} />
@@ -312,6 +319,8 @@ export default function KitImageViewerView({
   overlayReplacesBody = false,
   detailsOpen = false,
   detailsPanel = null,
+  assignOpen = false,
+  assignPanel = null,
   onImageLoad = null,
   onSave = null,
   onDelete = null,
@@ -323,12 +332,17 @@ export default function KitImageViewerView({
   onUpscale = null,
   onSubmitEdit = null,
   onCloseDetails = null,
+  onCloseAssign = null,
+  onAssignDestinationChange = null,
+  onSubmitAssign = null,
   onToggleDownloadMenu = null,
   onCloseDownloadMenu = null,
   onEnterEdit = null,
   onExitEdit = null,
   onFocusUpscale = null,
 }) {
+  const backFaceOpen = Boolean(detailsOpen || assignOpen);
+
   if (overlayReplacesBody) {
     return (
       <div className="pointer-events-none flex h-full w-full items-center justify-center px-[var(--space-4)]">
@@ -406,15 +420,15 @@ export default function KitImageViewerView({
                 data-viewer-flip-surface
                 className="relative h-full w-full transition-transform duration-300 ease-out [transform-style:preserve-3d] motion-reduce:transition-none"
                 style={{
-                  transform: detailsOpen ? "rotateY(180deg)" : "rotateY(0deg)",
+                  transform: backFaceOpen ? "rotateY(180deg)" : "rotateY(0deg)",
                   willChange: "transform",
                 }}
               >
                 <div
-                  aria-hidden={detailsOpen}
-                  inert={detailsOpen ? true : undefined}
+                  aria-hidden={backFaceOpen}
+                  inert={backFaceOpen ? true : undefined}
                   className={`absolute inset-0 flex items-center justify-center [backface-visibility:hidden] ${
-                    detailsOpen ? "pointer-events-none" : "pointer-events-auto"
+                    backFaceOpen ? "pointer-events-none" : "pointer-events-auto"
                   }`}
                 >
                   <ImageFrame
@@ -427,13 +441,23 @@ export default function KitImageViewerView({
                 </div>
 
                 <div
-                  aria-hidden={!detailsOpen}
-                  inert={!detailsOpen ? true : undefined}
+                  aria-hidden={!backFaceOpen}
+                  inert={!backFaceOpen ? true : undefined}
                   className={`absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] ${
-                    detailsOpen ? "pointer-events-auto" : "pointer-events-none"
+                    backFaceOpen ? "pointer-events-auto" : "pointer-events-none"
                   }`}
                 >
-                  <ImageDetailsPanel embedded {...detailsPanel} onClose={onCloseDetails} />
+                  {assignOpen ? (
+                    <ReassignDialog
+                      embedded
+                      {...assignPanel}
+                      onDestinationChange={onAssignDestinationChange}
+                      onSubmit={onSubmitAssign}
+                      onClose={onCloseAssign}
+                    />
+                  ) : (
+                    <ImageDetailsPanel embedded {...detailsPanel} onClose={onCloseDetails} />
+                  )}
                 </div>
               </div>
             </div>
@@ -443,6 +467,7 @@ export default function KitImageViewerView({
             onEnterEdit={onEnterEdit}
             bottomBarAction={bottomBarAction}
             assignState={assignState}
+            assignActive={assignOpen}
             onAssign={onAssign}
             remixState={remixState}
             onRemix={onRemix}

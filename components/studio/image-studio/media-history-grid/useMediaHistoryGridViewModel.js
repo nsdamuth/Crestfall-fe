@@ -331,7 +331,6 @@ export function useMediaHistoryGridViewModel({
   imageStudioHref = "/studio/image-studio",
   initialActivePreviewId = null,
   onActivePreviewChange = null,
-  onCoinBalanceChange,
   onImageReassigned,
   onImageRenamed,
   // Passed straight through to the viewer (FE/MEDIA-STUDIO session
@@ -768,10 +767,6 @@ export function useMediaHistoryGridViewModel({
           });
         },
         onReassignItem: async (item, result) => {
-          if (result?.coinBalance !== undefined) {
-            onCoinBalanceChange?.(result.coinBalance);
-          }
-
           onImageReassigned?.({
             imageOutputId:
               result?.imageOutputId || getMediaHistoryImageOutputId(item),

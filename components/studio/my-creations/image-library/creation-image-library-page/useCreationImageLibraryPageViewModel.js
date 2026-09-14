@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { useCreationImageLibraryViewModel } from "@/components/studio/my-creations/image-library/hooks/useCreationImageLibraryViewModel";
 import {
   fetchMediaReactions,
@@ -143,7 +142,6 @@ export function normalizeCreationLibraryImage(image, index = 0) {
 }
 
 export function useCreationImageLibraryPageViewModel({ creationId, showBackLink = true }) {
-  const { setCoinBalanceFromServer } = useStudioAccount();
   const libraryState = useCreationImageLibraryViewModel({ creationId });
   const {
     creation,
@@ -558,13 +556,10 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
           await reload?.();
         },
         onReassignItem: async (_item, result) => {
-          if (result?.coinBalance !== undefined) {
-            setCoinBalanceFromServer?.(result.coinBalance);
-          }
           setReassignmentMessage(
             result?.destinationTitle
-              ? `Image reassigned to ${result.destinationTitle}. 1 Coin used.`
-              : "Image reassigned. 1 Coin used."
+              ? `Image reassigned to ${result.destinationTitle}.`
+              : "Image reassigned."
           );
           setActivePreviewId(null);
           await handleRefresh();

@@ -1,6 +1,11 @@
-export const KIT_IMAGE_VIEWER_VIEW_CONTRACT_VERSION = "2.1.0";
+export const KIT_IMAGE_VIEWER_VIEW_CONTRACT_VERSION = "2.2.0";
 
 /**
+ * 2.2.0, RULED 13 Sep 2026: additive Assign face contract. Assign can
+ * use the same fitted reverse face as Details through `assignOpen`,
+ * `assignPanel`, and the assignment callbacks. Details and Assign are
+ * mutually exclusive; both preserve the mounted image/zoom state.
+ *
  * 2.1.0, RULED 13 Sep 2026: additive Details face contract. Details can
  * be driven as an in-view flip surface with `detailsOpen`, `detailsPanel`,
  * and `onCloseDetails`; the reverse face uses the exact fitted image box,
@@ -74,6 +79,11 @@ export const KIT_IMAGE_VIEWER_VIEW_CONTRACT_VERSION = "2.1.0";
  * @property {boolean} [detailsOpen] when true the fitted image box shows its Details reverse face
  * @property {Object|null} [detailsPanel] display-ready payload for the embedded ImageDetailsPanel
  * @property {() => void} [onCloseDetails] returns the fitted surface to the image face
+ * @property {boolean} [assignOpen] when true the fitted image box shows the Assign reverse face
+ * @property {Object|null} [assignPanel] display-ready payload for the embedded reassignment panel
+ * @property {() => void} [onCloseAssign] returns the fitted surface to the image face
+ * @property {(destinationCreationId:string) => void} [onAssignDestinationChange] changes the selected destination
+ * @property {(event?:Object) => void} [onSubmitAssign] submits the reassignment
  * @property {() => void} onShare
  * @property {string} shareMessage the chip under the header after Share (copied link, etc.)
  * @property {KitImageViewerDownloadOption[]} downloadOptions empty hides the Download control

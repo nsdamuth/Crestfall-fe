@@ -17,7 +17,6 @@ import { useKitShareController } from "@/components/kit/share/useKitShareControl
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import {
   DeleteConfirmPanel,
-  ReassignDialog,
   ReportDialog,
 } from "@/components/studio/media/media-lightbox/MediaLightbox.view";
 import { useMediaLightboxViewModel } from "@/components/studio/media/media-lightbox/useMediaLightboxViewModel";
@@ -91,15 +90,6 @@ export default function ImagesV2ImageViewer({ viewerCoinCosts = null, ...lightbo
           onConfirmDelete={() => lightbox.onConfirmDelete?.()}
         />
       ) : null}
-      {lightbox.reassignDialog.open ? (
-        <ReassignDialog
-          eyebrow="Assign"
-          {...lightbox.reassignDialog}
-          onDestinationChange={lightbox.onReassignDestinationChange}
-          onSubmit={lightbox.onSubmitReassign}
-          onClose={lightbox.onCloseReassign}
-        />
-      ) : null}
       {lightbox.reportDialog.open ? (
         <ReportDialog
           {...lightbox.reportDialog}
@@ -127,6 +117,11 @@ export default function ImagesV2ImageViewer({ viewerCoinCosts = null, ...lightbo
         detailsPanel={lightbox.detailsDialog}
         onDetails={lightbox.detailsDialog.open ? lightbox.onCloseDetails : lightbox.onOpenDetails}
         onCloseDetails={lightbox.onCloseDetails}
+        assignOpen={Boolean(lightbox.reassignDialog.open)}
+        assignPanel={{ ...lightbox.reassignDialog, eyebrow: "Assign" }}
+        onCloseAssign={lightbox.onCloseReassign}
+        onAssignDestinationChange={lightbox.onReassignDestinationChange}
+        onSubmitAssign={lightbox.onSubmitReassign}
         onShare={media.imageOutputId ? handleShare : null}
         shareMessage=""
         downloadOptions={
@@ -135,7 +130,11 @@ export default function ImagesV2ImageViewer({ viewerCoinCosts = null, ...lightbo
             : []
         }
         assignState={lightbox.showReassignAction ? "ready" : "soon"}
-        onAssign={lightbox.onOpenReassign}
+        onAssign={
+          lightbox.reassignDialog.open
+            ? lightbox.onCloseReassign
+            : lightbox.onOpenReassign
+        }
         upscaleCoinCost={viewerCoinCosts?.upscale}
         upscaleState="soon"
         onUpscale={null}

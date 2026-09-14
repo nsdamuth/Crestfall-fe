@@ -42,7 +42,7 @@ test("generation history exposes authoritative assignment identity and applies r
   assert.match(history, /primary_subject_creation_id: destinationCreationId/);
 });
 
-test("Image Studio workbench refreshes both assignment state and account coin balance", () => {
+test("Image Studio workbench refreshes assignment state without coin reconciliation", () => {
   const workbench = read(
     "components/studio/image-studio/image-studio-workbench/useImageStudioWorkbenchViewModel.js"
   );
@@ -51,18 +51,17 @@ test("Image Studio workbench refreshes both assignment state and account coin ba
   );
 
   assert.match(workbench, /applyImageReassignment/);
-  assert.match(workbench, /onCoinBalanceChange: setCoinBalanceFromServer/);
   assert.match(workbench, /onImageReassigned: applyImageReassignment/);
   assert.match(historyGrid, /onReassignItem/);
   assert.match(historyGrid, /imageStudioHref = "\/studio\/image-studio"/);
-  assert.match(historyGrid, /result\?\.coinBalance/);
+  assert.doesNotMatch(historyGrid, /result\?\.coinBalance/);
   assert.match(historyGrid, /onImageReassigned\?\./);
 
   const v2View = read("app/studio/v2/images/ImagesV2Live.jsx");
-  assert.match(v2View, /imageStudioHref="\/studio\/v2\/images"/);
+  assert.match(v2View, /imageStudioHref: "\/studio\/v2\/images"/);
 });
 
-test("V2 MediaLightbox owns reassignment presentation while ViewModel owns application calls", () => {
+test("V2 MediaLightbox owns free reassignment presentation while ViewModel owns application calls", () => {
   const viewModel = read(
     "components/studio/media/media-lightbox/useMediaLightboxViewModel.js"
   );
@@ -75,7 +74,8 @@ test("V2 MediaLightbox owns reassignment presentation while ViewModel owns appli
   assert.match(viewModel, /showReassignAction/);
   assert.match(viewModel, /onSubmitReassign/);
   assert.match(view, /ReassignDialog/);
-  assert.match(view, /Reassign for/);
+  assert.match(view, /Reassign image/);
+  assert.doesNotMatch(view, /Reassign for|Reassignment costs|Coin used/);
   assert.match(view, /disabled=\{!showReassignAction\}/);
   assert.doesNotMatch(view, /imageOutputClient|fetch\(|crestfallApiRequest|supabase|postgraphile/i);
 });
