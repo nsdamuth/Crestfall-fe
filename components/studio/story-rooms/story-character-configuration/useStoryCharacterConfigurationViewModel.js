@@ -27,6 +27,27 @@ function normalizeNumber(value, fallback = 0) {
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
+async function loadConfigurationLane(loader, fallbackMessage) {
+  try {
+    return {
+      data: await loader(),
+      error: "",
+    };
+  } catch (loadError) {
+    if (loadError?.code === "PLAYER_ACTOR_CONFIGURATION_NOT_ACTIVE") {
+      return {
+        data: null,
+        error: "",
+      };
+    }
+
+    return {
+      data: null,
+      error: loadError?.message || fallbackMessage,
+    };
+  }
+}
+
 function resolveChoiceInputMode(mode, options = []) {
   const normalized = String(mode || "").trim().toUpperCase();
   if (normalized && normalized !== "AUTO") return normalized;
@@ -452,6 +473,12 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
   const [savingSkills, setSavingSkills] = useState(false);
   const [savingAbilitySpell, setSavingAbilitySpell] = useState(false);
   const [error, setError] = useState("");
+  const [operationError, setOperationError] = useState("");
+  const [configurationLoadErrors, setConfigurationLoadErrors] = useState({
+    stats: "",
+    skills: "",
+    abilitySpell: "",
+  });
   const [saveMessage, setSaveMessage] = useState("");
   const [playerCharacterPickerOpen, setPlayerCharacterPickerOpen] = useState(false);
   const [settingPlayerCharacter, setSettingPlayerCharacter] = useState(false);
@@ -460,26 +487,41 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
   async function load() {
     setLoading(true);
     setError("");
+    setOperationError("");
+    setConfigurationLoadErrors({
+      stats: "",
+      skills: "",
+      abilitySpell: "",
+    });
     try {
-      const [roomData, statsData, skillsData, abilitySpellData] = await Promise.all([
+      const [roomData, statsResult, skillsResult, abilitySpellResult] = await Promise.all([
         fetchStoryRoom(roomId),
-        fetchStoryStatsPoolsCharacterConfiguration(roomId).catch((loadError) => {
-          if (loadError?.code === "PLAYER_ACTOR_CONFIGURATION_NOT_ACTIVE") return null;
-          throw loadError;
-        }),
-        fetchStorySkillsCharacterConfiguration(roomId).catch((loadError) => {
-          if (loadError?.code === "PLAYER_ACTOR_CONFIGURATION_NOT_ACTIVE") return null;
-          throw loadError;
-        }),
-        fetchStoryAbilitySpellCharacterConfiguration(roomId).catch((loadError) => {
-          if (loadError?.code === "PLAYER_ACTOR_CONFIGURATION_NOT_ACTIVE") return null;
-          throw loadError;
-        }),
+        loadConfigurationLane(
+          () => fetchStoryStatsPoolsCharacterConfiguration(roomId),
+          "Stats & Pools Character Configuration could not be loaded."
+        ),
+        loadConfigurationLane(
+          () => fetchStorySkillsCharacterConfiguration(roomId),
+          "Skills Character Configuration could not be loaded."
+        ),
+        loadConfigurationLane(
+          () => fetchStoryAbilitySpellCharacterConfiguration(roomId),
+          "Ability/Spell Character Configuration could not be loaded."
+        ),
       ]);
+      const statsData = statsResult.data;
+      const skillsData = skillsResult.data;
+      const abilitySpellData = abilitySpellResult.data;
+
       setSnapshot(roomData || null);
       setStatsConfiguration(statsData || null);
       setSkillsConfiguration(skillsData || null);
       setAbilitySpellConfiguration(abilitySpellData || null);
+      setConfigurationLoadErrors({
+        stats: statsResult.error,
+        skills: skillsResult.error,
+        abilitySpell: abilitySpellResult.error,
+      });
       setAllocationDraft(buildAllocationDraft(statsData));
       setSkillSelectionDraft(buildSkillSelectionDraft(skillsData));
       setAbilitySpellSelectionDraft(buildAbilitySpellSelectionDraft(abilitySpellData));
@@ -526,7 +568,7 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
 
     setSettingPlayerCharacter(true);
     setSetPlayerCharacterError("");
-    setError("");
+    setOperationError("");
     setSaveMessage("");
     try {
       await setStoryRoomPlayerCharacter(roomId, playerCharacterId);
@@ -544,7 +586,7 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
   async function saveStats() {
     if (savingStats || !roomId) return;
     setSavingStats(true);
-    setError("");
+    setOperationError("");
     setSaveMessage("");
     try {
       const allocations = statsProfiles.map((profile) => ({
@@ -564,7 +606,9 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
       );
       await load();
     } catch (saveError) {
-      setError(saveError?.message || "Stats & Pools Character Configuration could not be saved.");
+      setOperationError(
+        saveError?.message || "Stats & Pools Character Configuration could not be saved."
+      );
     } finally {
       setSavingStats(false);
     }
@@ -573,7 +617,7 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
   async function saveSkills() {
     if (savingSkills || !roomId) return;
     setSavingSkills(true);
-    setError("");
+    setOperationError("");
     setSaveMessage("");
     try {
       const selections = skillsProfiles.map((profile) => ({
@@ -592,7 +636,9 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
       );
       await load();
     } catch (saveError) {
-      setError(saveError?.message || "Skills Character Configuration could not be saved.");
+      setOperationError(
+        saveError?.message || "Skills Character Configuration could not be saved."
+      );
     } finally {
       setSavingSkills(false);
     }
@@ -601,7 +647,7 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
   async function saveAbilitySpell() {
     if (savingAbilitySpell || !roomId) return;
     setSavingAbilitySpell(true);
-    setError("");
+    setOperationError("");
     setSaveMessage("");
     try {
       const selections = abilitySpellProfiles.map((profile) => ({
@@ -631,7 +677,7 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
       );
       await load();
     } catch (saveError) {
-      setError(
+      setOperationError(
         saveError?.message ||
           "Ability/Spell Character Configuration could not be saved."
       );
@@ -663,6 +709,7 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
     return {
       loading,
       error,
+      operationError,
       saveMessage,
       savingStats,
       savingSkills,
@@ -701,8 +748,14 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
         ? {
             required: true,
             status: statsConfiguration?.status || "UNAVAILABLE",
+            loadError: configurationLoadErrors.stats,
             profiles: statsProfiles,
-            canSave: Boolean(statsProfiles.length) && statsReady && !savingStats,
+            canSave:
+              !configurationLoadErrors.stats &&
+              Boolean(statsProfiles.length) &&
+              statsReady &&
+              !savingStats,
+            onRetry: load,
             onChangeStat: (bindingId, definitionId, value) => {
               setAllocationDraft((current) => ({
                 ...current,
@@ -720,8 +773,14 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
         ? {
             required: true,
             status: skillsConfiguration?.status || "UNAVAILABLE",
+            loadError: configurationLoadErrors.skills,
             profiles: skillsProfiles,
-            canSave: Boolean(skillsProfiles.length) && skillsReady && !savingSkills,
+            canSave:
+              !configurationLoadErrors.skills &&
+              Boolean(skillsProfiles.length) &&
+              skillsReady &&
+              !savingSkills,
+            onRetry: load,
             onSelectSkill: (bindingId, slotId, skillId) => {
               setSkillSelectionDraft((current) => ({
                 ...current,
@@ -739,11 +798,14 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
         ? {
             required: true,
             status: abilitySpellConfiguration?.status || "UNAVAILABLE",
+            loadError: configurationLoadErrors.abilitySpell,
             profiles: abilitySpellProfiles,
             canSave:
+              !configurationLoadErrors.abilitySpell &&
               Boolean(abilitySpellProfiles.length) &&
               abilitySpellReady &&
               !savingAbilitySpell,
+            onRetry: load,
             onToggleDefinition: (profileId, groupId, definitionId, checked) => {
               setAbilitySpellSelectionDraft((current) => {
                 const selected = normalizeArray(current?.[profileId]?.[groupId]);
@@ -831,8 +893,10 @@ export function useStoryCharacterConfigurationViewModel({ roomId } = {}) {
     abilitySpellProfiles,
     abilitySpellSelectionDraft,
     allocationDraft,
+    configurationLoadErrors,
     error,
     loading,
+    operationError,
     roomId,
     saveMessage,
     playerCharacterPickerOpen,
