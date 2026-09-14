@@ -53,6 +53,7 @@ export const IMAGE_STUDIO_COMPOSER_VIEW_CONTRACT_VERSION = "1.0.0";
  * @property {string} generationError
  * @property {ImageStudioComposerSelectField[]} imageOptionFields
  * @property {Object|null} advancedTuningProps Curated workflow-specific tuning presentation.
+ * @property {Object|null} locationViewControl Optional Interior/Exterior Location image-guidance selector projected by the caller.
  * @property {string} coinBalanceLabel
  * @property {string} coinCostLabel
  * @property {boolean} showInsufficientCoins

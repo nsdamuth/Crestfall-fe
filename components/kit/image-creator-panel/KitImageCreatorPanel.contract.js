@@ -228,6 +228,7 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.5.0";
  * @property {KitImageCreatorVideoProps|null} [video] the Video mode
  *   body and footer values (2.3.0); null keeps the 2.2.0 video block
  * @property {Object<KitImageCreatorSlotId, KitImageCreatorSlotState>} slots
+ * @property {Object|null} locationViewControl Optional caller-projected Interior/Exterior Location guidance selector.
  *   keyed by the five fixed slot ids; an id absent from the map renders
  *   as an empty, non-custom slot
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onSlotActivate
@@ -287,6 +288,9 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.5.0";
  * @property {boolean} showSceneryOnlyHelper true for location-only requests
  * @property {boolean} sceneryOnlyHelperEnabled whether scenery optimization is active
  * @property {((enabled: boolean) => void)|null} onChangeSceneryOnlyHelper
+ * @property {((text: string) => {ok: boolean, message?: string})|null} onImportSettings
+ *   validates a `crestfall.imageSettings.v1` clipboard payload and applies it
+ *   to the existing Image settings controls without starting generation
  * @property {(() => void)|null} onGenerate fires the real job pipeline
  * @property {KitImageCreatorOptionField[]} videoOptionFields Duration,
  *   Video Aspect, Motion Style (the 2.2.0 video block, rendered only

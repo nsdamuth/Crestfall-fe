@@ -45,6 +45,9 @@ export function getImageStudioComposerViewProps({
   mode = "IMAGE",
   setMode = null,
   selectedIngredients = {},
+  locationViewMode = "AUTO",
+  locationViewControl = null,
+  setLocationViewMode = null,
   onOpenIngredient = null,
   onClearIngredient = null,
   customIngredientPrompts = {},
@@ -92,7 +95,7 @@ export function getImageStudioComposerViewProps({
       ? selectedIngredients
       : {};
   const inheritedNegativePromptItems =
-    getInheritedAssetNegativePromptItems(ingredientValues);
+    getInheritedAssetNegativePromptItems(ingredientValues, { locationViewMode });
   const promptValues =
     customIngredientPrompts && typeof customIngredientPrompts === "object"
       ? customIngredientPrompts
@@ -194,6 +197,13 @@ export function getImageStudioComposerViewProps({
       normalizedMode === "VIDEO" ? "Build a Video" : "Build an Image",
     ingredientSlotItems,
     customEditorItems,
+    locationViewControl:
+      locationViewControl && typeof locationViewControl === "object"
+        ? {
+            ...locationViewControl,
+            onChange: (nextValue) => setLocationViewMode?.(nextValue),
+          }
+        : null,
     videoToolsProps:
       normalizedMode === "VIDEO"
         ? getVideoToolsPanelViewProps({

@@ -739,6 +739,7 @@ export function useImagesV2LiveViewModel({
       remix,
       video,
       slots,
+      locationViewControl: composer.locationViewControl,
       onSlotActivate: activateSlot,
       onSlotClear: workbench.composerProps.onClearIngredient,
       onCustomChangeText: workbench.composerProps.onUpdateCustomIngredientPrompt,
@@ -769,6 +770,7 @@ export function useImagesV2LiveViewModel({
       sceneryOnlyHelperEnabled: workbench.composerProps.sceneryOnlyHelperEnabled,
       onChangeSceneryOnlyHelper:
         workbench.composerProps.setSceneryOnlyHelperEnabled,
+      onImportSettings: workbench.composerProps.onImportImageSettings,
       onGenerate: composer.onGenerateImage,
       videoOptionFields,
       onChangeVideoOption: changeVideoOption,

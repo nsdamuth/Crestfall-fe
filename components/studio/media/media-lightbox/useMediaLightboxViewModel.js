@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { fetchImageOutputDetails } from "@/lib/client/studio/media/imageDetailsClient";
+import { serializeImageSettingsPreset } from "@/components/studio/image-studio/imageSettingsPreset";
 import {
   fetchImageReassignmentContext,
   reassignImageOutput,
@@ -223,6 +224,7 @@ export function useMediaLightboxViewModel({
   const [detailsStatus, setDetailsStatus] = useState("idle");
   const [detailsMessage, setDetailsMessage] = useState("");
   const [imageDetails, setImageDetails] = useState(null);
+  const [detailsCopyMessage, setDetailsCopyMessage] = useState("");
   const [reportOpen, setReportOpen] = useState(false);
   const [reportReasonKey, setReportReasonKey] = useState("sexual_content");
   const [reportReasonText, setReportReasonText] = useState("");
@@ -277,6 +279,7 @@ export function useMediaLightboxViewModel({
     setDetailsStatus("idle");
     setDetailsMessage("");
     setImageDetails(null);
+    setDetailsCopyMessage("");
     setReportOpen(false);
     setReportStatus("idle");
     setReportMessage("");
@@ -434,6 +437,7 @@ export function useMediaLightboxViewModel({
     setReassignOpen(false);
     setDetailsOpen(true);
     setDetailsMessage("");
+    setDetailsCopyMessage("");
 
     if (!activeMedia?.imageOutputId) {
       setDetailsStatus("error");
@@ -451,6 +455,21 @@ export function useMediaLightboxViewModel({
       setDetailsStatus("error");
       setDetailsMessage(error?.message || "Image details could not be loaded.");
       setImageDetails(null);
+    }
+  }
+
+  async function handleCopyImageSettings() {
+    const preset = imageDetails?.generationRecipe?.settingsPreset;
+    if (!preset) {
+      setDetailsCopyMessage("No reusable settings were found for this image.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(serializeImageSettingsPreset(preset));
+      setDetailsCopyMessage("Settings copied");
+    } catch {
+      setDetailsCopyMessage("Copy unavailable.");
     }
   }
 
@@ -619,6 +638,9 @@ export function useMediaLightboxViewModel({
       privateRows: imageDetails?.privateRows || [],
       canViewPrivate:
         imageDetails?.permissions?.canViewPrivateGenerationDetails === true,
+      generationRecipe: imageDetails?.generationRecipe || null,
+      copySettingsMessage: detailsCopyMessage,
+      onCopySettings: handleCopyImageSettings,
     },
     reportDialog: {
       open: reportOpen,

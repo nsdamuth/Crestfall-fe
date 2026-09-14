@@ -11,12 +11,24 @@ const DEFAULT_COPY = Object.freeze({
   promptGuidanceLabel: "Prompt Guidance",
   promptGuidancePlaceholder:
     "Reusable image-generation wording for this location.",
-  imagePromptLabel: "Standalone Image Prompt",
+  imagePromptLabel: "General Image Prompt",
   imagePromptPlaceholder:
-    "Optional standalone prompt for generating environment, catalogue, or reference images of this location as its own visual asset. Max 2,000 characters.",
-  negativePromptLabel: "Negative Prompt",
+    "Optional fallback image prompt used when no Interior or Exterior prompt is available. Max 2,000 characters.",
+  negativePromptLabel: "General Negative Prompt",
   negativePromptPlaceholder:
-    "Optional negatives this location should contribute when selected in image generation. Example: no modern electronics, no empty white room, no outdoor scene. Max 300 characters.",
+    "Optional fallback negatives used when no matching Interior or Exterior negative prompt is available. Max 300 characters.",
+  interiorPromptLabel: "Interior Prompt",
+  interiorPromptPlaceholder:
+    "Optional guidance for images rendered from inside this location. Max 2,000 characters.",
+  interiorNegativePromptLabel: "Interior Negative Prompt",
+  interiorNegativePromptPlaceholder:
+    "Optional negatives specific to interior views. Max 300 characters.",
+  exteriorPromptLabel: "Exterior Prompt",
+  exteriorPromptPlaceholder:
+    "Optional guidance for images rendered from outside or approaching this location. Max 2,000 characters.",
+  exteriorNegativePromptLabel: "Exterior Negative Prompt",
+  exteriorNegativePromptPlaceholder:
+    "Optional negatives specific to exterior views. Max 300 characters.",
   usageNotesLabel: "Usage Notes",
   usageNotesPlaceholder:
     "When should this location be used? What scenes, characters, moods, or image presets does it support?",
@@ -54,6 +66,22 @@ export function normalizeLocationPromptGuidanceData(data = {}) {
       source.negative_prompt,
       LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
     ),
+    interiorPrompt: limitLocationPromptValue(
+      source.interior_image_prompt || source.interiorImagePrompt,
+      LOCATION_IMAGE_PROMPT_MAX_LENGTH
+    ),
+    interiorNegativePrompt: limitLocationPromptValue(
+      source.interior_negative_prompt || source.interiorNegativePrompt,
+      LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+    ),
+    exteriorPrompt: limitLocationPromptValue(
+      source.exterior_image_prompt || source.exteriorImagePrompt,
+      LOCATION_IMAGE_PROMPT_MAX_LENGTH
+    ),
+    exteriorNegativePrompt: limitLocationPromptValue(
+      source.exterior_negative_prompt || source.exteriorNegativePrompt,
+      LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+    ),
     usageNotes: normalizeText(source.usage_notes),
     compatibilityNotes: normalizeText(source.compatibility_notes),
     registryNotes: normalizeText(source.registry_notes),
@@ -73,6 +101,14 @@ export function useLocationPromptGuidanceSectionViewModel({
     imagePromptMaxLength: LOCATION_IMAGE_PROMPT_MAX_LENGTH,
     negativePromptValue: values.negativePrompt,
     negativePromptMaxLength: LOCATION_NEGATIVE_PROMPT_MAX_LENGTH,
+    interiorPromptValue: values.interiorPrompt,
+    interiorPromptMaxLength: LOCATION_IMAGE_PROMPT_MAX_LENGTH,
+    interiorNegativePromptValue: values.interiorNegativePrompt,
+    interiorNegativePromptMaxLength: LOCATION_NEGATIVE_PROMPT_MAX_LENGTH,
+    exteriorPromptValue: values.exteriorPrompt,
+    exteriorPromptMaxLength: LOCATION_IMAGE_PROMPT_MAX_LENGTH,
+    exteriorNegativePromptValue: values.exteriorNegativePrompt,
+    exteriorNegativePromptMaxLength: LOCATION_NEGATIVE_PROMPT_MAX_LENGTH,
     usageNotesValue: values.usageNotes,
     compatibilityNotesValue: values.compatibilityNotes,
     registryNotesValue: values.registryNotes,
@@ -86,6 +122,26 @@ export function useLocationPromptGuidanceSectionViewModel({
     onChangeNegativePrompt: (value) =>
       updateDataField?.(
         "negative_prompt",
+        limitLocationPromptValue(value, LOCATION_NEGATIVE_PROMPT_MAX_LENGTH)
+      ),
+    onChangeInteriorPrompt: (value) =>
+      updateDataField?.(
+        "interior_image_prompt",
+        limitLocationPromptValue(value, LOCATION_IMAGE_PROMPT_MAX_LENGTH)
+      ),
+    onChangeInteriorNegativePrompt: (value) =>
+      updateDataField?.(
+        "interior_negative_prompt",
+        limitLocationPromptValue(value, LOCATION_NEGATIVE_PROMPT_MAX_LENGTH)
+      ),
+    onChangeExteriorPrompt: (value) =>
+      updateDataField?.(
+        "exterior_image_prompt",
+        limitLocationPromptValue(value, LOCATION_IMAGE_PROMPT_MAX_LENGTH)
+      ),
+    onChangeExteriorNegativePrompt: (value) =>
+      updateDataField?.(
+        "exterior_negative_prompt",
         limitLocationPromptValue(value, LOCATION_NEGATIVE_PROMPT_MAX_LENGTH)
       ),
     onChangeUsageNotes: (value) => updateDataField?.("usage_notes", value),

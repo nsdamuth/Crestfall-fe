@@ -1,5 +1,6 @@
 import {
   Bookmark,
+  Copy,
   Download,
   Flag,
   Heart,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
+import { getImageSettingsPresetPresentation } from "@/components/studio/image-studio/imageSettingsPreset";
 
 // B7 viewer final (22 Aug 2026, Fable law review, ED1F propagation
 // plan group G3), superseding the prior sidebar-plus-actions-panel
@@ -672,6 +674,9 @@ export function ImageDetailsPanel({
   publicRows = [],
   privateRows = [],
   canViewPrivate = false,
+  generationRecipe = null,
+  copySettingsMessage = "",
+  onCopySettings = null,
   onClose,
   embedded = false,
 }) {
@@ -726,30 +731,145 @@ export function ImageDetailsPanel({
 
       {status === "success" ? (
         <div className="mt-[var(--space-5)] space-y-[var(--space-5)]">
-          <DetailRows rows={publicRows} />
-
-          {canViewPrivate ? (
-            <div>
-              <p className="mb-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
-                Private generation data
-              </p>
-              {privateRows.length ? (
-                <DetailRows rows={privateRows} />
+          {canViewPrivate && generationRecipe ? (
+            <GenerationRecipeDetails
+              recipe={generationRecipe}
+              copySettingsMessage={copySettingsMessage}
+              onCopySettings={onCopySettings}
+            />
+          ) : (
+            <>
+              <DetailRows rows={publicRows} />
+              {canViewPrivate ? (
+                privateRows.length ? (
+                  <DetailRows rows={privateRows} />
+                ) : (
+                  <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
+                    No prompt/settings metadata was found for this image.
+                  </p>
+                )
               ) : (
-                <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
-                  No prompt/settings metadata was found for this image.
+                <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] leading-6 text-[var(--ink-dim)]">
+                  Prompt and generation settings are visible only to the image creator or the owner of the linked creation.
                 </p>
               )}
-            </div>
-          ) : (
-            <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] leading-6 text-[var(--ink-dim)]">
-              Prompt and generation settings are visible only to the image
-              creator or the owner of the linked creation.
-            </p>
+            </>
           )}
         </div>
       ) : null}
     </section>
+  );
+}
+
+function RecipeSectionTitle({ children }) {
+  return (
+    <p className="mb-[var(--space-3)] text-[length:var(--text-label)] uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+      {children}
+    </p>
+  );
+}
+
+function RecipeFact({ label, value }) {
+  if (!value) return null;
+  return (
+    <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)]">
+      <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">{label}</p>
+      <p className="mt-[var(--space-1)] whitespace-pre-wrap break-words text-[length:var(--text-ui)] leading-6 text-[var(--ink)]">{value}</p>
+    </div>
+  );
+}
+
+function GenerationRecipeDetails({ recipe, copySettingsMessage, onCopySettings }) {
+  const presetPresentation = recipe?.settingsPreset
+    ? getImageSettingsPresetPresentation(recipe.settingsPreset)
+    : null;
+  const reproduction = recipe?.reproduction || {};
+  const assets = Array.isArray(recipe?.assetsUsed) ? recipe.assetsUsed : [];
+  const headerId = recipe?.jobId ? ` [${recipe.jobId}]` : "";
+
+  return (
+    <>
+      <p className="break-all font-display text-[length:var(--text-subtitle)] text-[var(--ink)]">
+        {recipe?.displayTitle || "Generated Image"}{headerId}
+      </p>
+
+      <div className="grid gap-[var(--space-3)] sm:grid-cols-2">
+        <RecipeFact label="Character" value={recipe?.characterTitle} />
+        <RecipeFact label="Resolution" value={recipe?.resolution} />
+        <RecipeFact label="Aspect Ratio" value={recipe?.aspectRatio} />
+        <RecipeFact label="Created" value={recipe?.createdAt} />
+        <RecipeFact label="Content Rating" value={recipe?.contentRating} />
+        <RecipeFact label="Moderation" value={recipe?.moderation} />
+      </div>
+
+      <div>
+        <div className="mb-[var(--space-3)] flex flex-wrap items-center justify-between gap-[var(--space-3)]">
+          <RecipeSectionTitle>Reproduction settings</RecipeSectionTitle>
+          {recipe?.settingsPreset && onCopySettings ? (
+            <button type="button" onClick={onCopySettings} className="cf-btn cf-btn--secondary cf-btn--sm">
+              <Copy size={14} aria-hidden="true" />
+              Copy settings
+            </button>
+          ) : null}
+        </div>
+        <div className="grid gap-[var(--space-3)]">
+          <RecipeFact label="Render Style" value={presetPresentation?.renderStyleLabel || reproduction.renderStyleLabel} />
+          <RecipeFact label="Camera Framing" value={presetPresentation?.cameraFramingLabel || reproduction.cameraFramingLabel} />
+          <RecipeFact label="Image Settings" value={presetPresentation?.tuningSummary} />
+          {reproduction.sceneryOnlyHelperEnabled !== null && reproduction.sceneryOnlyHelperEnabled !== undefined ? (
+            <RecipeFact label="Scenery Optimization" value={reproduction.sceneryOnlyHelperEnabled ? "On" : "Off"} />
+          ) : null}
+        </div>
+        {copySettingsMessage ? (
+          <p className="mt-[var(--space-2)] text-[length:var(--text-label)] text-[var(--gold-ornament)]">{copySettingsMessage}</p>
+        ) : null}
+      </div>
+
+      {assets.length ? (
+        <div>
+          <RecipeSectionTitle>Assets used</RecipeSectionTitle>
+          <div className="grid gap-[var(--space-3)]">
+            {assets.map((asset) => (
+              <div key={`${asset.slot}:${asset.id}`} className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)]">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">{asset.label}</p>
+                <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] text-[var(--ink)]">{asset.title}</p>
+                {asset.viewModeLabel ? (
+                  <p className="mt-1 text-[length:var(--text-label)] text-[var(--ink-dim)]">
+                    View · {asset.viewModeLabel}
+                  </p>
+                ) : null}
+                {asset.creator?.href && asset.creator?.handle ? (
+                  <a href={asset.creator.href} className="mt-1 inline-block text-[length:var(--text-label)] text-[var(--gold-ornament)] underline decoration-[var(--gold-ornament)]/35 underline-offset-4">
+                    by {asset.creator.handle}
+                  </a>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {recipe?.customPrompt ? (
+        <div>
+          <RecipeSectionTitle>Custom prompt</RecipeSectionTitle>
+          <RecipeFact label="Custom Prompt" value={recipe.customPrompt} />
+        </div>
+      ) : null}
+
+      {recipe?.negativePrompt ? (
+        <div>
+          <RecipeSectionTitle>Negative prompt</RecipeSectionTitle>
+          <RecipeFact label="Negative Prompt" value={recipe.negativePrompt} />
+        </div>
+      ) : null}
+
+      {recipe?.technical?.engineProfile ? (
+        <div>
+          <RecipeSectionTitle>Technical</RecipeSectionTitle>
+          <RecipeFact label="Engine Profile" value={recipe.technical.engineProfile} />
+        </div>
+      ) : null}
+    </>
   );
 }
 
