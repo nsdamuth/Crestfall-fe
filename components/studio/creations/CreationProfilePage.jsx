@@ -7,16 +7,28 @@ import { Camera } from "lucide-react";
 import CreationStatsRow from "@/components/studio/creations/CreationStatsRow";
 import CreationStatusBadges from "@/components/studio/creations/CreationStatusBadges";
 import CreationShareButton from "@/components/studio/creations/CreationShareButton";
+import CreationProfileImageViewer from "@/components/studio/creations/CreationProfileImageViewer";
 import KitCredits from "@/components/kit/KitCredits";
 import LorePublicCreationPage from "@/components/studio/creations/lore/LorePublicCreationPage";
-import MediaLightbox from "@/components/studio/media/MediaLightbox";
 import MediaTileQuickActions from "@/components/studio/media/MediaTileQuickActions";
 import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
 import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
+import {
+  EDIT_RUN_COIN_COST,
+  UPSCALE_COIN_COST,
+} from "@/components/studio/image-studio/image-studio-workbench/useImageStudioWorkbenchViewModel";
 
 import CreationProfilePageView from "./creation-profile-page/CreationProfilePage.view";
 import { useCreationProfilePageViewModel } from "./creation-profile-page/useCreationProfilePageViewModel";
+
+// The viewer's costs come from the two workbench constants, the one
+// place each is defined (docs/handoffs/MEDIA-STUDIO-BACKEND.md, COSTS),
+// the way the Media Studio page reads them through viewerCoinCosts.
+const VIEWER_COIN_COSTS = {
+  upscale: UPSCALE_COIN_COST,
+  editRun: EDIT_RUN_COIN_COST,
+};
 
 function StandardCreationProfilePage(props) {
   const router = useRouter();
@@ -103,7 +115,8 @@ function StandardCreationProfilePage(props) {
       mediaActionSlots={mediaActionSlots}
       lightboxSlot={
         viewModel.activePreviewItem && creation ? (
-          <MediaLightbox
+          <CreationProfileImageViewer
+            viewerCoinCosts={VIEWER_COIN_COSTS}
             items={viewModel.filteredMedia}
             activeItemId={viewModel.activePreviewItem.id}
             onSelectItem={viewModel.onSelectPreviewItem}

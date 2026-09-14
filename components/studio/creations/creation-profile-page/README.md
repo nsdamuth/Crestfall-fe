@@ -20,9 +20,12 @@ The ViewModel owns raw Creation/media aliases, description truncation, media
 filtering with source-order media, 12-item pagination, reaction loading/mutations, and Story
 Room creation. The Binding Shell owns Next.js links/navigation and existing
 application components (`CreationStatusBadges`, `CreationStatsRow`,
-`CreationShareButton`, `MediaTileQuickActions`, and
-`MediaLightbox`). The portable View receives only display-ready models,
-semantic callbacks, and rendered slots.
+`CreationShareButton`, `MediaTileQuickActions`, and the image viewer
+adapter `CreationProfileImageViewer`, which mounts the Kit image viewer
+over the lightbox ViewModel since 13 Sep 2026, fe/updates package
+CREATION-VIEWER; `MediaLightbox` itself is no longer imported here).
+The portable View receives only display-ready models, semantic
+callbacks, and rendered slots.
 
 ## Preserved behavior
 - `LORE` creations continue to delegate to `LorePublicCreationPage`; the standard LOOM catalogue is used for every other creation type.
@@ -30,9 +33,9 @@ semantic callbacks, and rendered slots.
 - One media Filter dropdown in the standard sticky search and filter bar (All resting, Images, Videos, Liked, Saved; Credits when attribution exists), RULED 12 Sep 2026 in Brian's browser review of the eight-fix package, replacing the tab row and the inline search field. The same review anchored Chat, Generate, and Share to the bottom right of the header and moved the Unlock CTA to the right of the Library Pass panel.
 - Search, four eager images, 12-item pagination, and Load More
 - Like/bookmark optimistic updates with rollback on persistence failure
-- Creation header, attribution, statistics, tags, four-line description clamp with Show more
+- Creation header, attribution, statistics, tags, two-line description clamp with Show more inline on the second line
 - Chat-capable Creation Story Room start
-- Generate, Share, and public Media Lightbox actions
+- Generate, Share, and the public image viewer's actions (Report, Details, Download, Save, Share, Assign through the lightbox ViewModel; Upscale and Edit ship Soon). Generate Variant, Like, and the item strip left with the lightbox and are logged in `docs/APP-FUNCTION-MAP.csv`.
 - Load-error, no-creation, no-media, and missing-preview fallbacks
 
 Preview: `/dev/ui-preview/creation-profile-page`
@@ -58,13 +61,19 @@ Library Pass tiles, RULED 12 Sep 2026 (FIX 7): tapping any locked tile
 opens that same dialog; the whole tile is the tap target, and unlocked
 tiles behave as before.
 
-Description clamp, RULED 12 Sep 2026 (FIX 8): the description shows at
-most four rendered lines at rest with a gold "Show more" link that
-expands it in place; expanded, the link reads "Show less". The clamp is
-by line count (a ResizeObserver in the view model measures the
-paragraph against four line heights), never by character count, so a
-description of four lines or fewer shows no link. The 420-character
-preview limit is retired.
+Description clamp, RULED 12 Sep 2026 (FIX 8), tightened 13 Sep 2026
+(fe/updates follow-up 1, FIX 3): the description shows at most two
+rendered lines at rest; the second line ends with an ellipsis and the
+gold "Show more" link inline on that same line (a one-line float at
+the right end of the second line, the copy wrapping around it and
+stopping on a whole word); expanded, the full text runs free with the
+gold "Show less" link inline after the last word. The clamp is by line
+count (a ResizeObserver in the view model measures the block against
+`CREATION_PROFILE_DESCRIPTION_CLAMP_LINES` line heights), never by
+character count, so a description of two lines or fewer shows no link;
+no character limit exists. The link keeps the line's height in the
+flow and extends its hit area to 44px through a pseudo-element, the
+same at 390 and 1440.
 
 ## Conditional Credits tab, 24 Aug 2026
 

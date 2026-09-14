@@ -198,6 +198,9 @@ export default function CreatorsV2Mockup({
   live = false,
   creators = [],
   loadError = null,
+  // The viewer's Upscale and edit run costs, passed by the live
+  // composition from the workbench constants; never a literal here.
+  viewerCoinCosts = null,
 } = {}) {
   const router = useRouter();
   const [fixtureMode, setFixtureMode] = useState("default");
@@ -570,10 +573,10 @@ export default function CreatorsV2Mockup({
           onRemix={null}
           assignState="soon"
           onAssign={null}
-          upscaleCoinCost={0}
+          upscaleCoinCost={viewerCoinCosts?.upscale}
           upscaleState="soon"
           onUpscale={null}
-          editRunCoinCost={0}
+          editRunCoinCost={viewerCoinCosts?.editRun}
           editState="soon"
           onSubmitEdit={null}
           overlaySlot={null}

@@ -20,7 +20,7 @@ test("Creation Image Library shell stays thin and owns application slots", () =>
   assert.match(shell, /CreationImageLibraryPageView/);
   assert.match(shell, /BackLinkComponent=\{Link\}/);
   assert.match(shell, /MediaTileQuickActions/);
-  assert.match(shell, /MediaLightbox/);
+  assert.match(shell, /CreationImageLibraryImageViewer/);
   assert.doesNotMatch(shell, /fetchMediaReactions|deleteImageOutput/);
   assert.doesNotMatch(shell, /useState|useEffect|window\.confirm/);
 });
@@ -111,7 +111,7 @@ test("documentation and diagnostics command remain discoverable", () => {
 
   assert.match(readme, /Portable Skin/);
   assert.match(readme, /MediaTileQuickActions/);
-  assert.match(readme, /MediaLightbox/);
+  assert.match(readme, /CreationImageLibraryImageViewer/);
   assert.match(readme, /Mechanics Module field decomposition remains deferred/);
   assert.match(readme, /\/dev\/ui-preview\/creation-image-library-page/);
   assert.match(packageJson, /diagnostics:loom:creation-image-library-page/);

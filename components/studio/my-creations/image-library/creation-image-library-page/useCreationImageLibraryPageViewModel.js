@@ -182,8 +182,9 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
   // section 2.5): the grid delete controls now route through this
   // modal confirm step instead of window.confirm. The lightbox's own
   // delete action keeps its separate, already-B5 confirm flow
-  // (MediaLightbox owns "deletion confirmation" for itself); this
-  // state is scoped to the card grid only.
+  // (the lightbox ViewModel owns "deletion confirmation" for itself,
+  // now rendered through the Kit viewer's overlaySlot); this state is
+  // scoped to the card grid only.
   const [deleteConfirmImageId, setDeleteConfirmImageId] = useState("");
   const libraryPassOwner = useCreationLibraryPassOwnerViewModel({
     creationId,
