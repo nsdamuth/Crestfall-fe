@@ -117,8 +117,12 @@ test("legacy catalogue behavior and fallback states remain present", () => {
   assert.match(view, /Search this creation's media/);
   assert.match(view, /Load more/i);
   assert.match(view, /Starting\.\.\./);
-  assert.match(vm, /CREATION_PROFILE_DESCRIPTION_CLAMP_LINES = 4/);
-  assert.match(view, /line-clamp-4/);
+  // Two-line clamp with the inline Show more float (fe/updates
+  // follow-up 1, FIX 3, 13 Sep 2026).
+  assert.match(vm, /CREATION_PROFILE_DESCRIPTION_CLAMP_LINES = 2/);
+  assert.match(view, /max-h-\[calc\(var\(--lh-body\)\*2\)\] overflow-hidden before:float-right/);
+  assert.match(view, /float-right clear-right/);
+  assert.doesNotMatch(view, /line-clamp-4/);
   assert.match(vm, /No description has been added yet\./);
   assert.match(vm, /Like could not be saved\./);
   assert.match(vm, /Bookmark could not be saved\./);

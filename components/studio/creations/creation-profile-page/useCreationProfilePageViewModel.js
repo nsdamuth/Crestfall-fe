@@ -26,11 +26,12 @@ import {
 export const CREATION_PROFILE_INITIAL_VISIBLE_MEDIA = 12;
 export const CREATION_PROFILE_VISIBLE_MEDIA_INCREMENT = 12;
 export const CREATION_PROFILE_EAGER_MEDIA_COUNT = 4;
-// Description clamp, RULED 12 Sep 2026 (eight-fix package FIX 8): the
+// Description clamp, RULED 12 Sep 2026 (eight-fix package FIX 8) and
+// tightened 13 Sep 2026 (fe/updates follow-up 1, FIX 3): the
 // description shows at most this many rendered lines at rest, measured
-// by line count, never by character count. The former 420-character
-// preview limit is retired.
-export const CREATION_PROFILE_DESCRIPTION_CLAMP_LINES = 4;
+// by line count, never by character count (the former character limit
+// stays retired).
+export const CREATION_PROFILE_DESCRIPTION_CLAMP_LINES = 2;
 
 
 // Media filter options, RULED 12 Sep 2026 (Brian's browser review of
@@ -250,7 +251,7 @@ export function filterCreationProfileMedia({
 
 // `overflows` is the measured fact that the text runs past the clamp
 // (see the measure ref in the hook); the toggle renders only then, so
-// a description of four lines or fewer shows no link.
+// a description of two lines or fewer shows no link.
 export function getCreationProfileDescription(
   description,
   expanded = false,
@@ -355,10 +356,11 @@ export function useCreationProfilePageViewModel({
   const [reactionMessage, setReactionMessage] = useState("");
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   // Line-count clamp measurement (FIX 8, 12 Sep 2026): the View hands
-  // its description paragraph to this callback ref; a ResizeObserver
-  // compares the paragraph's full content height with four line
-  // heights on mount and on every resize, so the Show more link
-  // appears only when the text really overflows the clamp.
+  // its description block to this callback ref; a ResizeObserver
+  // compares the block's full content height with the clamp's line
+  // heights (CREATION_PROFILE_DESCRIPTION_CLAMP_LINES) on mount and on
+  // every resize, so the Show more link appears only when the text
+  // really overflows the clamp.
   const [descriptionOverflows, setDescriptionOverflows] = useState(false);
   const descriptionObserverRef = useRef(null);
   const descriptionMeasureRef = useCallback((node) => {
