@@ -40,7 +40,9 @@ test("ViewModel owns details, reporting, sharing, and deletion orchestration", (
 
   assert.match(viewModel, /fetchImageOutputDetails/);
   assert.match(viewModel, /createMediaReport/);
-  assert.match(viewModel, /navigator\?\.share/);
+  // Copy link only since fe/share-og follow-up 2 (no native share
+  // anywhere); this expectation lagged that change.
+  assert.doesNotMatch(viewModel, /navigator\?\.share/);
   assert.match(viewModel, /navigator\.clipboard\.writeText/);
   assert.match(viewModel, /confirmed: true/);
   // B5 danger-confirm recipe (ED1F propagation plan group G3):
@@ -64,18 +66,35 @@ test("portable View owns presentation without importing Crestfall clients", () =
 });
 
 test("shared consumer contract remains connected", () => {
+  // The creation page (fe/updates, CREATION-VIEWER, 13 Sep 2026) mounts
+  // the Kit viewer through its own adapter, which stays a consumer of
+  // this ViewModel and of the lightbox's dialogs (contract law).
   const creationProfile = read("components/studio/creations/CreationProfilePage.jsx");
-  const mediaHistory = read("components/studio/image-studio/MediaHistoryGrid.jsx");
+  const creationProfileViewer = read(
+    "components/studio/creations/CreationProfileImageViewer.jsx"
+  );
+  // The grid's injected lightbox moved to MediaHistoryGridSkin.jsx on
+  // 6 Sep 2026 (FE/FILTERS); this expectation lagged that split.
+  const mediaHistory = read("components/studio/image-studio/MediaHistoryGridSkin.jsx");
   const mediaHistoryViewModel = read(
     "components/studio/image-studio/media-history-grid/useMediaHistoryGridViewModel.js"
   );
+  // The my-creations image library took the same shape on 13 Sep 2026
+  // (fe/updates follow-up 1, FIX 2).
   const imageLibrary = read(
     "components/studio/my-creations/image-library/CreationImageLibraryPage.jsx"
   );
+  const imageLibraryViewer = read(
+    "components/studio/my-creations/image-library/CreationImageLibraryImageViewer.jsx"
+  );
 
-  assert.match(creationProfile, /MediaLightbox/);
+  assert.match(creationProfile, /CreationProfileImageViewer/);
+  assert.match(creationProfileViewer, /useMediaLightboxViewModel/);
+  assert.match(creationProfileViewer, /ReassignDialog|ReportDialog/);
   assert.match(mediaHistory, /MediaLightbox/);
-  assert.match(imageLibrary, /MediaLightbox/);
+  assert.match(imageLibrary, /CreationImageLibraryImageViewer/);
+  assert.match(imageLibraryViewer, /useMediaLightboxViewModel/);
+  assert.match(imageLibraryViewer, /DeleteConfirmPanel/);
   assert.match(mediaHistoryViewModel, /onDeleteItem: handleDeleteMedia/);
 });
 

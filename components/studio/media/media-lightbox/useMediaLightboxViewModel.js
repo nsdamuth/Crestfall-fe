@@ -431,6 +431,7 @@ export function useMediaLightboxViewModel({
   }
 
   async function handleOpenDetails() {
+    setReassignOpen(false);
     setDetailsOpen(true);
     setDetailsMessage("");
 
@@ -488,6 +489,8 @@ export function useMediaLightboxViewModel({
 
   async function handleOpenReassign() {
     if (!activeMedia?.canReassign || !activeMedia?.imageOutputId) return;
+
+    setDetailsOpen(false);
 
     const sourceCreationId = reassignSourceOverride || activeMedia.sourceCreationId;
 
@@ -552,8 +555,8 @@ export function useMediaLightboxViewModel({
       setReassignStatus("success");
       setReassignMessage(
         result?.destinationTitle
-          ? `Image reassigned to ${result.destinationTitle}. 1 Coin used.`
-          : "Image reassigned. 1 Coin used."
+          ? `Image reassigned to ${result.destinationTitle}.`
+          : "Image reassigned."
       );
       setDetailsOpen(false);
       setImageDetails(null);
@@ -603,7 +606,6 @@ export function useMediaLightboxViewModel({
       open: reassignOpen,
       status: reassignStatus,
       message: reassignMessage,
-      coinCost: reassignContext?.coinCost || 1,
       sourceCreation: reassignContext?.sourceCreation || null,
       targets: reassignContext?.targets || [],
       destinationCreationId: reassignDestinationId,

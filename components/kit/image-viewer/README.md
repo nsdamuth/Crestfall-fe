@@ -1,15 +1,20 @@
 # Kit Image Viewer LOOM package
 
-**Contract:** `KitImageViewer.contract.js` (`2.1.0`)
+**Contract:** `KitImageViewer.contract.js` (`2.2.0`)
 
 ## Purpose
 
 The image viewer that opens from a library item on the live Media
 Studio page (FE/MEDIA-STUDIO session 3, Brian's notes 6 and 6a, RULED
-10 Sep 2026). It replaces the legacy `MediaLightbox` on
-`/studio/v2/images` only; the legacy Images page and the creation
-image library keep the lightbox. Ruled at the plan gate, option A of
-three: a new Kit viewer on the existing frame, the page keeping every
+10 Sep 2026). It replaced the legacy `MediaLightbox` on
+`/studio/v2/images` first, and on the creation page
+`/studio/creations/[id]` on 13 Sep 2026 (fe/updates, package
+CREATION-VIEWER, approach A of three, pre-carried) through that
+page's own adapter, and on the my-creations image library
+`/studio/my-creations/[id]/image-library` the same day (follow-up 1,
+FIX 2) through `components/studio/my-creations/image-library/CreationImageLibraryImageViewer.jsx`;
+the legacy Images page keeps the lightbox. Ruled at the plan gate, option A of three:
+a new Kit viewer on the existing frame, the page keeping every
 operation's handler.
 
 ## Boundary
@@ -28,6 +33,13 @@ KitImageViewer.jsx
      -> InfoTip and MenuRow (components/kit/form-field, shared with
         the composer)
 ```
+
+Second call site: `components/studio/creations/CreationProfileImageViewer.jsx`,
+the creation page's adapter, mounted through `CreationProfilePage`'s
+`lightboxSlot`. It keeps this page's own lightbox handlers (share is
+the copy-link handler, save is the bookmark reaction, assign is the
+reassign call, delete never existed there) and takes the two workbench
+cost constants through `viewerCoinCosts` from the shell.
 
 Live call site: `app/studio/v2/images/images-live/ImagesV2ImageViewer.jsx`,
 the page adapter, injected through `MediaHistoryGridSkin`'s
@@ -60,6 +72,13 @@ to the application is unchanged (contract law).
   so zoom/pan cannot intercept scrolling. The face change uses a restrained
   Y-axis flip and `prefers-reduced-motion` removes the transition. Keeping
   the front mounted preserves the user's zoom/pan state on return.
+- **Assign face** (2.2.0, RULED 13 Sep 2026): Assign uses the same
+  exact fitted reverse face instead of opening a modal over the image. The
+  destination selector and move confirmation scroll inside that image-sized
+  surface. Details and Assign are mutually exclusive, the hidden image face
+  cannot capture pointer input, and the mounted image keeps its zoom/pan state.
+  Reassignment is free; the viewer carries no Coin cost or balance update for
+  moving an existing image between owned assets.
 - **Bottom bar** (gold ink): Edit (no cost on it), then Assign or
   Remix, then Share. Assign is live when the page says the image can
   be reassigned; otherwise it renders disabled with the Soon chip (an

@@ -132,29 +132,47 @@ export default function CreationProfilePageView({
             </div>
 
             {/* Description clamp, RULED 12 Sep 2026 (eight-fix package
-                FIX 8): at rest at most four rendered lines (a line
-                clamp, never a character count). The gold Show more link
-                expands in place and reads Show less when open; it
-                renders only when the text overflows four lines, which
-                the view model measures through measureRef. */}
-            <p
+                FIX 8) and tightened to two lines 13 Sep 2026 (fe/updates
+                follow-up 1, FIX 3): a line clamp, never a character
+                count, measured by the view model through measureRef.
+                Collapsed, the block is capped at two body lines and a
+                one-line float pushes the gold Show more control to the
+                right end of the second line, so the copy wraps around
+                it, stops on a whole word, and the control carries the
+                ellipsis; expanded, the block runs free and Show less
+                follows the last word. The control keeps the line's
+                height in the flow and extends its hit area above and
+                below through a pseudo-element to --control-md (44px). */}
+            <div
               ref={description?.measureRef}
-              className={`mt-5 max-w-4xl whitespace-pre-line break-words leading-7 text-[var(--ink-dim)] ${
-                description?.isExpanded ? "" : "line-clamp-4"
+              className={`relative mt-5 max-w-4xl whitespace-pre-line break-words text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)] ${
+                description?.isExpanded
+                  ? ""
+                  : "max-h-[calc(var(--lh-body)*2)] overflow-hidden before:float-right before:h-[var(--lh-body)] before:w-0 before:content-['']"
               }`}
             >
-              {description?.text}
-            </p>
-            {description?.showToggle ? (
-              <button
-                type="button"
-                onClick={() => onToggleDescription?.()}
-                aria-expanded={Boolean(description?.isExpanded)}
-                className="cf-btn cf-btn--tertiary mt-[var(--space-2)] inline-flex min-h-[var(--control-sm)] [@media(pointer:coarse)]:min-h-[var(--control-md)]"
-              >
-                {description.toggleLabel}
-              </button>
-            ) : null}
+              {description?.showToggle && !description?.isExpanded ? (
+                <button
+                  type="button"
+                  onClick={() => onToggleDescription?.()}
+                  aria-expanded={false}
+                  className="relative float-right clear-right touch-manipulation pl-[var(--space-1)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--gold-action)] after:absolute after:inset-x-0 after:-inset-y-[calc((var(--control-md)-var(--lh-body))/2)] after:content-['']"
+                >
+                  {`… ${description.toggleLabel}`}
+                </button>
+              ) : null}
+              <span>{description?.text}</span>
+              {description?.showToggle && description?.isExpanded ? (
+                <button
+                  type="button"
+                  onClick={() => onToggleDescription?.()}
+                  aria-expanded
+                  className="relative ml-[var(--space-1)] touch-manipulation text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--gold-action)] after:absolute after:inset-x-0 after:-inset-y-[calc((var(--control-md)-var(--lh-body))/2)] after:content-['']"
+                >
+                  {description.toggleLabel}
+                </button>
+              ) : null}
+            </div>
 
             {creation.tags.length ? (
               <div className="mt-5 flex flex-wrap gap-2">
@@ -171,8 +189,15 @@ export default function CreationProfilePageView({
           </div>
 
           {/* Chat, Generate, Share anchor to the bottom right of the
-              header at lg and up (RULED 12 Sep 2026, browser review). */}
-          <div className="flex flex-wrap gap-3 lg:flex-col lg:items-end lg:self-end">
+              header at lg and up (RULED 12 Sep 2026, browser review).
+              One equal width (fe/updates follow-up 1, FIX 4, 13 Sep
+              2026): the column is the header grid's auto column at lg,
+              so it takes the widest label's width, and every direct
+              child fills it through the one *:w-full rule; below lg the
+              column is the full single column, so each button is full
+              width. Recipes unchanged: primary gold on Chat, secondary
+              on Generate and Share. */}
+          <div className="flex flex-col gap-3 *:w-full lg:self-end">
             {creation.supportsChat ? (
               <button
                 type="button"

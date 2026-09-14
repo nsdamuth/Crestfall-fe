@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
 import { useCreationImageLibraryViewModel } from "@/components/studio/my-creations/image-library/hooks/useCreationImageLibraryViewModel";
 import {
   fetchMediaReactions,
@@ -143,7 +142,6 @@ export function normalizeCreationLibraryImage(image, index = 0) {
 }
 
 export function useCreationImageLibraryPageViewModel({ creationId, showBackLink = true }) {
-  const { setCoinBalanceFromServer } = useStudioAccount();
   const libraryState = useCreationImageLibraryViewModel({ creationId });
   const {
     creation,
@@ -182,8 +180,9 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
   // section 2.5): the grid delete controls now route through this
   // modal confirm step instead of window.confirm. The lightbox's own
   // delete action keeps its separate, already-B5 confirm flow
-  // (MediaLightbox owns "deletion confirmation" for itself); this
-  // state is scoped to the card grid only.
+  // (the lightbox ViewModel owns "deletion confirmation" for itself,
+  // now rendered through the Kit viewer's overlaySlot); this state is
+  // scoped to the card grid only.
   const [deleteConfirmImageId, setDeleteConfirmImageId] = useState("");
   const libraryPassOwner = useCreationLibraryPassOwnerViewModel({
     creationId,
@@ -557,13 +556,10 @@ export function useCreationImageLibraryPageViewModel({ creationId, showBackLink 
           await reload?.();
         },
         onReassignItem: async (_item, result) => {
-          if (result?.coinBalance !== undefined) {
-            setCoinBalanceFromServer?.(result.coinBalance);
-          }
           setReassignmentMessage(
             result?.destinationTitle
-              ? `Image reassigned to ${result.destinationTitle}. 1 Coin used.`
-              : "Image reassigned. 1 Coin used."
+              ? `Image reassigned to ${result.destinationTitle}.`
+              : "Image reassigned."
           );
           setActivePreviewId(null);
           await handleRefresh();

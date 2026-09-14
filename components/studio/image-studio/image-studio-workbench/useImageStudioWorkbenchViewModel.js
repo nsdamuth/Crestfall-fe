@@ -915,7 +915,6 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       hasMoreHistory,
       isLoadingMoreHistory,
       onLoadMoreHistory: loadMoreImageGenerationHistory,
-      onCoinBalanceChange: setCoinBalanceFromServer,
       onImageReassigned: applyImageReassignment,
       onImageRenamed: applyImageRename,
       viewerCoinCosts: {
