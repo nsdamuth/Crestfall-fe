@@ -549,9 +549,30 @@ copy-link handler), save (the bookmark reaction), and assign report to
 the same handlers. Delete never existed on this page, so the viewer
 hides it. Assign renders Soon for every item because the catalogue
 never marks a media item reassignable (gap 16 in
-`docs/handoffs/MEDIA-STUDIO-BACKEND.md`). The my-creations image
-library (`/studio/my-creations/[id]/image-library`) keeps
-`MediaLightbox`.
+`docs/handoffs/MEDIA-STUDIO-BACKEND.md`).
+
+## My-creations image library viewer rows (fe/updates follow-up 1, FIX 2, 13 Sep 2026)
+
+The nine `/studio/my-creations/[id]/image-library` "lightbox (modal)"
+rows are replaced by an image viewer block (Delete, Report, Details,
+Download size menu with the Extra Large row stubbed, Save toggle,
+Upscale stubbed, Edit stubbed, Assign, Share, Close), the two report
+dialog rows carried over under the viewer block, and four "removed"
+rows for the legacy actions with no viewer slot: Generate Variant (the
+lightbox's link to the Media Studio), Like (the heart), Rename (the
+pencil), and the item strip. The stale "Remix Soon / Use as Reference
+Soon / More Soon" row described a toolbar the B7 lightbox no longer
+had and is folded into the removed rows. The viewer is the same
+`components/kit/image-viewer` package, mounted by the page adapter
+`components/studio/my-creations/image-library/CreationImageLibraryImageViewer.jsx`
+through the shell's `renderLightbox`, which keeps calling
+`useMediaLightboxViewModel` so delete, details, report, share (the
+copy-link handler), save, and assign report to the same handlers.
+Assign is live when the image sits on this creation and the viewer
+owns it (the page's canReassign), the same gate the lightbox's
+Reassign Asset had. The v2 editor's image library
+(`/studio/v2/editor/[id]/image-library`) composes this shell and takes
+the viewer with it; the legacy Images page keeps `MediaLightbox`.
 
 ## Media Studio Remix rows (FE/MEDIA-STUDIO session 4, 10 Sep 2026)
 

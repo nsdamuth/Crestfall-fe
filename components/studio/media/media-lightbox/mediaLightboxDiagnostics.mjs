@@ -79,15 +79,22 @@ test("shared consumer contract remains connected", () => {
   const mediaHistoryViewModel = read(
     "components/studio/image-studio/media-history-grid/useMediaHistoryGridViewModel.js"
   );
+  // The my-creations image library took the same shape on 13 Sep 2026
+  // (fe/updates follow-up 1, FIX 2).
   const imageLibrary = read(
     "components/studio/my-creations/image-library/CreationImageLibraryPage.jsx"
+  );
+  const imageLibraryViewer = read(
+    "components/studio/my-creations/image-library/CreationImageLibraryImageViewer.jsx"
   );
 
   assert.match(creationProfile, /CreationProfileImageViewer/);
   assert.match(creationProfileViewer, /useMediaLightboxViewModel/);
   assert.match(creationProfileViewer, /ReassignDialog|ReportDialog/);
   assert.match(mediaHistory, /MediaLightbox/);
-  assert.match(imageLibrary, /MediaLightbox/);
+  assert.match(imageLibrary, /CreationImageLibraryImageViewer/);
+  assert.match(imageLibraryViewer, /useMediaLightboxViewModel/);
+  assert.match(imageLibraryViewer, /DeleteConfirmPanel/);
   assert.match(mediaHistoryViewModel, /onDeleteItem: handleDeleteMedia/);
 });
 

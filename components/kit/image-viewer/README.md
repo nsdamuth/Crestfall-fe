@@ -10,8 +10,10 @@ Studio page (FE/MEDIA-STUDIO session 3, Brian's notes 6 and 6a, RULED
 `/studio/v2/images` first, and on the creation page
 `/studio/creations/[id]` on 13 Sep 2026 (fe/updates, package
 CREATION-VIEWER, approach A of three, pre-carried) through that
-page's own adapter; the legacy Images page and the my-creations image
-library keep the lightbox. Ruled at the plan gate, option A of three:
+page's own adapter, and on the my-creations image library
+`/studio/my-creations/[id]/image-library` the same day (follow-up 1,
+FIX 2) through `components/studio/my-creations/image-library/CreationImageLibraryImageViewer.jsx`;
+the legacy Images page keeps the lightbox. Ruled at the plan gate, option A of three:
 a new Kit viewer on the existing frame, the page keeping every
 operation's handler.
 
