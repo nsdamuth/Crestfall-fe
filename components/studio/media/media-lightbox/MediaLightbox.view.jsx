@@ -803,7 +803,7 @@ function GenerationRecipeDetails({ recipe, copySettingsMessage, onCopySettings }
       </div>
 
       <div>
-        <div className="flex flex-wrap items-center justify-between gap-[var(--space-3)]">
+        <div className="mb-[var(--space-3)] flex flex-wrap items-center justify-between gap-[var(--space-3)]">
           <RecipeSectionTitle>Reproduction settings</RecipeSectionTitle>
           {recipe?.settingsPreset && onCopySettings ? (
             <button type="button" onClick={onCopySettings} className="cf-btn cf-btn--secondary cf-btn--sm">
