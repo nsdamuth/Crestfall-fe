@@ -1,6 +1,6 @@
 # Kit Image Viewer LOOM package
 
-**Contract:** `KitImageViewer.contract.js` (`2.1.0`)
+**Contract:** `KitImageViewer.contract.js` (`2.2.0`)
 
 ## Purpose
 
@@ -72,6 +72,13 @@ to the application is unchanged (contract law).
   so zoom/pan cannot intercept scrolling. The face change uses a restrained
   Y-axis flip and `prefers-reduced-motion` removes the transition. Keeping
   the front mounted preserves the user's zoom/pan state on return.
+- **Assign face** (2.2.0, RULED 13 Sep 2026): Assign uses the same
+  exact fitted reverse face instead of opening a modal over the image. The
+  destination selector and move confirmation scroll inside that image-sized
+  surface. Details and Assign are mutually exclusive, the hidden image face
+  cannot capture pointer input, and the mounted image keeps its zoom/pan state.
+  Reassignment is free; the viewer carries no Coin cost or balance update for
+  moving an existing image between owned assets.
 - **Bottom bar** (gold ink): Edit (no cost on it), then Assign or
   Remix, then Share. Assign is live when the page says the image can
   be reassigned; otherwise it renders disabled with the Soon chip (an

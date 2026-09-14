@@ -543,113 +543,125 @@ function RenameDialog({
 }
 
 export function ReassignDialog({
-  eyebrow = "Reassign Asset",
+  eyebrow = "Assign",
   status = "idle",
   message = "",
-  coinCost = 1,
   sourceCreation = null,
   targets = [],
   destinationCreationId = "",
   onDestinationChange,
   onSubmit,
   onClose,
+  embedded = false,
 }) {
   const isBusy = status === "loading" || status === "submitting";
   const isSuccess = status === "success";
 
+  const panel = (
+    <section
+      className={
+        embedded
+          ? "h-full w-full overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-panel)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          : "w-full max-w-xl rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-modal)]"
+      }
+    >
+      <div className="flex items-start justify-between gap-[var(--space-4)]">
+        <div>
+          <p className="text-[length:var(--text-label)] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
+            {eyebrow}
+          </p>
+          <h3 className="mt-[var(--space-1)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
+            Move this image
+          </h3>
+          <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-6 text-[var(--ink-dim)]">
+            Only images you created can be moved, and both the current and destination assets must belong to you.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={embedded ? "Back to image" : "Close reassignment dialog"}
+          className="flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)]"
+        >
+          <X size={17} aria-hidden="true" />
+        </button>
+      </div>
+
+      <form onSubmit={onSubmit} className="mt-[var(--space-5)] space-y-[var(--space-4)]">
+        {sourceCreation?.title ? (
+          <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)]">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">Current asset</p>
+            <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] text-[var(--ink)]">{sourceCreation.title}</p>
+          </div>
+        ) : null}
+
+        {status === "loading" ? (
+          <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
+            <Loader2 className="mr-[var(--space-2)] inline animate-spin" size={16} aria-hidden="true" />
+            Loading eligible destinations...
+          </p>
+        ) : null}
+
+        {status !== "loading" && !isSuccess ? (
+          <label className="block">
+            <span className="text-[length:var(--text-label)] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+              Destination asset
+            </span>
+            <div className="mt-[var(--space-2)] w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
+              <KitDropdownView
+                options={
+                  !targets.length
+                    ? [{ value: "", label: "No eligible destinations" }]
+                    : targets.map((target) => ({
+                        value: target.id,
+                        label: target.title || target.name || "Untitled asset",
+                      }))
+                }
+                selectedValues={destinationCreationId ? [destinationCreationId] : []}
+                isMultiSelect={false}
+                isDisabled={isBusy || !targets.length}
+                onToggleOption={(nextValue) => onDestinationChange?.(nextValue)}
+              />
+            </div>
+          </label>
+        ) : null}
+
+        {status !== "loading" && !isSuccess ? (
+          <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+            Reassignment moves the same image; it does not duplicate the file. If this image is featured or selected as a visual reference on the current asset, those source references are cleared automatically.
+          </p>
+        ) : null}
+
+        {message ? (
+          <p className={`rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] ${
+            isSuccess
+              ? "border-[var(--gold-ornament)] bg-[var(--fill)] text-[var(--gold-ornament)]"
+              : "border-[var(--status-danger)] bg-[var(--status-danger-fill)] text-[var(--status-danger)]"
+          }`}>
+            {message}
+          </p>
+        ) : null}
+
+        <div className="flex flex-wrap justify-end gap-[var(--space-2)]">
+          <button type="button" onClick={onClose} className="cf-btn cf-btn--secondary">
+            {embedded ? "Back to image" : isSuccess ? "Close" : "Cancel"}
+          </button>
+          {!isSuccess ? (
+            <button type="submit" disabled={isBusy || !destinationCreationId} className="cf-btn cf-btn--primary">
+              {status === "submitting" ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <RefreshCw size={14} aria-hidden="true" />}
+              {status === "submitting" ? "Reassigning..." : "Reassign image"}
+            </button>
+          ) : null}
+        </div>
+      </form>
+    </section>
+  );
+
+  if (embedded) return panel;
+
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center bg-[var(--scrim-strong)] p-[var(--space-4)] backdrop-blur-[var(--blur-panel)]">
-      <section className="w-full max-w-xl rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[image:var(--grad-panel-lift)] p-[var(--space-5)] shadow-[var(--shadow-modal)]">
-        <div className="flex items-start justify-between gap-[var(--space-4)]">
-          <div>
-            <p className="text-[length:var(--text-label)] uppercase tracking-[0.22em] text-[var(--gold-ornament)]">
-              {eyebrow}
-            </p>
-            <h3 className="mt-[var(--space-1)] font-display text-[length:var(--text-title)] leading-[var(--lh-title)] text-[var(--ink)]">
-              Move this image
-            </h3>
-            <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] leading-6 text-[var(--ink-dim)]">
-              Only images you created can be moved, and both the current and destination assets must belong to you. Reassignment costs {coinCost} Coin{Number(coinCost) === 1 ? "" : "s"}.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close reassignment dialog"
-            className="flex h-[var(--control-sm)] w-[var(--control-sm)] items-center justify-center rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] text-[var(--ink-dim)] transition-colors hover:text-[var(--ink)]"
-          >
-            <X size={17} aria-hidden="true" />
-          </button>
-        </div>
-
-        <form onSubmit={onSubmit} className="mt-[var(--space-5)] space-y-[var(--space-4)]">
-          {sourceCreation?.title ? (
-            <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)]">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">Current asset</p>
-              <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] text-[var(--ink)]">{sourceCreation.title}</p>
-            </div>
-          ) : null}
-
-          {status === "loading" ? (
-            <p className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] text-[var(--ink-dim)]">
-              <Loader2 className="mr-[var(--space-2)] inline animate-spin" size={16} aria-hidden="true" />
-              Loading eligible destinations...
-            </p>
-          ) : null}
-
-          {status !== "loading" && !isSuccess ? (
-            <label className="block">
-              <span className="text-[length:var(--text-label)] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-                Destination asset
-              </span>
-              <div className="mt-[var(--space-2)] w-full [&>div]:w-full [&>div>button]:w-full [&_svg]:ml-auto">
-                <KitDropdownView
-                  options={
-                    !targets.length
-                      ? [{ value: "", label: "No eligible destinations" }]
-                      : targets.map((target) => ({
-                          value: target.id,
-                          label: target.title || target.name || "Untitled asset",
-                        }))
-                  }
-                  selectedValues={destinationCreationId ? [destinationCreationId] : []}
-                  isMultiSelect={false}
-                  isDisabled={isBusy || !targets.length}
-                  onToggleOption={(nextValue) => onDestinationChange?.(nextValue)}
-                />
-              </div>
-            </label>
-          ) : null}
-
-          {status !== "loading" && !isSuccess ? (
-            <p className="text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-              Reassignment moves the same image; it does not duplicate the file. If this image is featured or selected as a visual reference on the current asset, those source references are cleared automatically.
-            </p>
-          ) : null}
-
-          {message ? (
-            <p className={`rounded-[var(--radius-md)] border px-[var(--space-4)] py-[var(--space-3)] text-[length:var(--text-ui)] ${
-              isSuccess
-                ? "border-[var(--gold-ornament)] bg-[var(--fill)] text-[var(--gold-ornament)]"
-                : "border-[var(--status-danger)] bg-[var(--status-danger-fill)] text-[var(--status-danger)]"
-            }`}>
-              {message}
-            </p>
-          ) : null}
-
-          <div className="flex justify-end gap-[var(--space-2)]">
-            <button type="button" onClick={onClose} className="cf-btn cf-btn--secondary">
-              {isSuccess ? "Close" : "Cancel"}
-            </button>
-            {!isSuccess ? (
-              <button type="submit" disabled={isBusy || !destinationCreationId} className="cf-btn cf-btn--primary">
-                {status === "submitting" ? <Loader2 size={14} className="animate-spin" aria-hidden="true" /> : <RefreshCw size={14} aria-hidden="true" />}
-                {status === "submitting" ? "Reassigning..." : `Reassign for ${coinCost} ${Number(coinCost) === 1 ? "Coin" : "Coins"}`}
-              </button>
-            ) : null}
-          </div>
-        </form>
-      </section>
+      {panel}
     </div>
   );
 }

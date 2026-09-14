@@ -81,7 +81,7 @@ test("V2 image details flips inside the exact fitted image box and scrolls indep
   );
   assert.match(
     view,
-    /transform: detailsOpen \? "rotateY\(180deg\)" : "rotateY\(0deg\)"/,
+    /transform: backFaceOpen \? "rotateY\(180deg\)" : "rotateY\(0deg\)"/,
     "Details must flip the same surface rather than replacing it with a new-sized body"
   );
   assert.match(
@@ -91,22 +91,22 @@ test("V2 image details flips inside the exact fitted image box and scrolls indep
   );
   assert.match(
     view,
-    /detailsOpen \? "pointer-events-none" : "pointer-events-auto"/,
+    /backFaceOpen \? "pointer-events-none" : "pointer-events-auto"/,
     "the hidden image face must stop receiving zoom/pan pointer input"
   );
   assert.match(
     view,
-    /detailsOpen \? "pointer-events-auto" : "pointer-events-none"/,
+    /backFaceOpen \? "pointer-events-auto" : "pointer-events-none"/,
     "only the visible details face may receive scrolling/pointer input"
   );
   assert.match(
     view,
-    /inert=\{detailsOpen \? true : undefined\}/,
+    /inert=\{backFaceOpen \? true : undefined\}/,
     "the hidden image face must also be removed from interaction semantics"
   );
   assert.match(
     view,
-    /inert=\{!detailsOpen \? true : undefined\}/,
+    /inert=\{!backFaceOpen \? true : undefined\}/,
     "the hidden details face must not retain a tabbable Back control"
   );
   assert.match(
