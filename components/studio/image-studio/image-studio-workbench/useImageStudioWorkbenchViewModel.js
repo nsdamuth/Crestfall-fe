@@ -24,6 +24,11 @@ import {
 import {
   parseImageSettingsPresetText,
 } from "../imageSettingsPreset.js";
+import {
+  buildLocationViewControl,
+  getDefaultLocationViewMode,
+  normalizeLocationViewModeForItem,
+} from "../locationViewMode.js";
 
 import { createCreationDraft } from "@/lib/client/studio/creations/creationClient";
 import { useImageGenerationHistory } from "@/components/studio/image-studio/hooks/useImageGenerationHistory";
@@ -267,6 +272,10 @@ export function buildPresetDraftPayload({
             factionRegistryIds: [],
             organizationRegistryIds: [],
           },
+          interior_image_prompt: "",
+          interior_negative_prompt: "",
+          exterior_image_prompt: "",
+          exterior_negative_prompt: "",
           boundRegistryLinks: {
             eventRegistries: [],
             questRegistries: [],
@@ -472,6 +481,7 @@ export function buildImageGenerationPayload({
   workflowTuning = {},
   workflowTuningTouched = false,
   sceneryOnlyHelperEnabled = true,
+  locationViewMode = "AUTO",
 }) {
   const useLocationOnlySceneryHelper =
     sceneryOnlyHelperEnabled &&
@@ -548,6 +558,7 @@ export function buildImageGenerationPayload({
       seed: null,
       sceneryOnlyHelperEnabled: Boolean(sceneryOnlyHelperEnabled),
       sceneryOnlyHelperApplied: Boolean(useLocationOnlySceneryHelper),
+      locationViewMode: String(locationViewMode || "AUTO").toUpperCase(),
       ...(resolvedWorkflowTuning
         ? { workflowTuning: resolvedWorkflowTuning }
         : {}),
@@ -568,6 +579,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   const [prompt, setPrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
   const [sceneryOnlyHelperEnabled, setSceneryOnlyHelperEnabled] = useState(true);
+  const [locationViewMode, setLocationViewMode] = useState("AUTO");
 
   const [renderStyle, setRenderStyle] = useState("auto");
   const [workflowTuning, setWorkflowTuning] = useState({});
@@ -683,6 +695,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       setWardrobeTheme(preset.wardrobeTheme);
       setAspectRatio(preset.aspectRatio);
       setSceneryOnlyHelperEnabled(preset.sceneryOnlyHelperEnabled);
+      setLocationViewMode(preset.locationViewMode || "AUTO");
       setNegativePrompt(preset.negativePrompt);
       return { ok: true, message: "Image settings imported." };
     } catch (error) {
@@ -723,6 +736,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       workflowTuning,
       workflowTuningTouched,
       sceneryOnlyHelperEnabled,
+      locationViewMode,
     });
 
     const pendingGroupId = prependPendingGeneration({
@@ -786,6 +800,10 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       return next;
     });
 
+    if (slotId === "location") {
+      setLocationViewMode(getDefaultLocationViewMode(item));
+    }
+
     if (slotId === "character" || slotId === "playerCharacter") {
       const alternateSlotId =
         slotId === "character" ? "playerCharacter" : "character";
@@ -805,6 +823,10 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   }
 
   function clearIngredient(slotId) {
+    if (slotId === "location") {
+      setLocationViewMode("AUTO");
+    }
+
     setSelectedIngredients((current) => {
       const next = { ...current };
       delete next[slotId];
@@ -820,6 +842,9 @@ export function useImageStudioWorkbenchViewModel({ account }) {
 
   function startCustomIngredient(slot) {
     const customIngredient = makeCustomIngredient(slot);
+    if (slot.id === "location") {
+      setLocationViewMode("AUTO");
+    }
     const isVisualSubjectSlot =
       slot.id === "character" || slot.id === "playerCharacter";
     const alternateSlotId =
@@ -918,6 +943,10 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       [slot.id]: savedIngredient,
     }));
 
+    if (slot.id === "location") {
+      setLocationViewMode(getDefaultLocationViewMode(savedIngredient));
+    }
+
     setCustomIngredientPrompts((current) => {
       const next = { ...current };
       delete next[slot.id];
@@ -926,6 +955,12 @@ export function useImageStudioWorkbenchViewModel({ account }) {
 
     return creation;
   }
+
+  const selectedLocation = selectedIngredients.location || null;
+  const locationViewControl = buildLocationViewControl(
+    selectedLocation,
+    locationViewMode
+  );
 
   return {
     mode,
@@ -963,6 +998,12 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       setPrompt,
       showSceneryOnlyHelper: isLocationOnlyImageComposition(selectedIngredients),
       sceneryOnlyHelperEnabled,
+      locationViewMode: normalizeLocationViewModeForItem(
+        selectedLocation,
+        locationViewMode
+      ),
+      setLocationViewMode,
+      locationViewControl,
       setSceneryOnlyHelperEnabled,
       onImportImageSettings: importImageSettingsPreset,
       renderStyle,

@@ -228,6 +228,7 @@ export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.5.0";
  * @property {KitImageCreatorVideoProps|null} [video] the Video mode
  *   body and footer values (2.3.0); null keeps the 2.2.0 video block
  * @property {Object<KitImageCreatorSlotId, KitImageCreatorSlotState>} slots
+ * @property {Object|null} locationViewControl Optional caller-projected Interior/Exterior Location guidance selector.
  *   keyed by the five fixed slot ids; an id absent from the map renders
  *   as an empty, non-custom slot
  * @property {((slotId: KitImageCreatorSlotId) => void)|null} onSlotActivate

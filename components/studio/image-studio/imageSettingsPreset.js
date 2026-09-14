@@ -56,6 +56,10 @@ export function normalizeImageSettingsPreset(value) {
       typeof source.sceneryOnlyHelperEnabled === "boolean"
         ? source.sceneryOnlyHelperEnabled
         : true,
+    locationViewMode:
+      ["INTERIOR", "EXTERIOR"].includes(String(source.locationViewMode || "").toUpperCase())
+        ? String(source.locationViewMode).toUpperCase()
+        : "AUTO",
     negativePrompt: typeof source.negativePrompt === "string" ? source.negativePrompt : "",
   };
 }
@@ -83,6 +87,7 @@ export function serializeImageSettingsPreset(value) {
       wardrobeTheme: normalized.wardrobeTheme,
       workflowTuning: normalized.workflowTuning,
       sceneryOnlyHelperEnabled: normalized.sceneryOnlyHelperEnabled,
+      locationViewMode: normalized.locationViewMode,
       negativePrompt: normalized.negativePrompt,
     },
     null,

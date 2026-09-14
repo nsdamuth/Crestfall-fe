@@ -20,6 +20,22 @@ export default function LocationPromptGuidanceSectionView({
   negativePromptValue = "",
   negativePromptPlaceholder = "",
   negativePromptMaxLength = 300,
+  interiorPromptLabel = "Interior Prompt",
+  interiorPromptValue = "",
+  interiorPromptPlaceholder = "",
+  interiorPromptMaxLength = DEEP_LONGFORM_MAX_LENGTH,
+  interiorNegativePromptLabel = "Interior Negative Prompt",
+  interiorNegativePromptValue = "",
+  interiorNegativePromptPlaceholder = "",
+  interiorNegativePromptMaxLength = 300,
+  exteriorPromptLabel = "Exterior Prompt",
+  exteriorPromptValue = "",
+  exteriorPromptPlaceholder = "",
+  exteriorPromptMaxLength = DEEP_LONGFORM_MAX_LENGTH,
+  exteriorNegativePromptLabel = "Exterior Negative Prompt",
+  exteriorNegativePromptValue = "",
+  exteriorNegativePromptPlaceholder = "",
+  exteriorNegativePromptMaxLength = 300,
   usageNotesLabel = "Usage Notes",
   usageNotesValue = "",
   usageNotesPlaceholder = "",
@@ -32,6 +48,10 @@ export default function LocationPromptGuidanceSectionView({
   onChangePromptGuidance = null,
   onChangeImagePrompt = null,
   onChangeNegativePrompt = null,
+  onChangeInteriorPrompt = null,
+  onChangeInteriorNegativePrompt = null,
+  onChangeExteriorPrompt = null,
+  onChangeExteriorNegativePrompt = null,
   onChangeUsageNotes = null,
   onChangeCompatibilityNotes = null,
   onChangeRegistryNotes = null,
@@ -69,6 +89,46 @@ export default function LocationPromptGuidanceSectionView({
           maxLength={negativePromptMaxLength}
           helperText="Persistent image-generation guidance. Added automatically whenever this location is selected. Max 300 characters."
         />
+
+        <div className="grid gap-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            Interior
+          </p>
+          <TextAreaField
+            label={interiorPromptLabel}
+            value={interiorPromptValue}
+            onChange={(value) => onChangeInteriorPrompt?.(value)}
+            placeholder={interiorPromptPlaceholder}
+            maxLength={interiorPromptMaxLength}
+          />
+          <TextAreaField
+            label={interiorNegativePromptLabel}
+            value={interiorNegativePromptValue}
+            onChange={(value) => onChangeInteriorNegativePrompt?.(value)}
+            placeholder={interiorNegativePromptPlaceholder}
+            maxLength={interiorNegativePromptMaxLength}
+          />
+        </div>
+
+        <div className="grid gap-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            Exterior
+          </p>
+          <TextAreaField
+            label={exteriorPromptLabel}
+            value={exteriorPromptValue}
+            onChange={(value) => onChangeExteriorPrompt?.(value)}
+            placeholder={exteriorPromptPlaceholder}
+            maxLength={exteriorPromptMaxLength}
+          />
+          <TextAreaField
+            label={exteriorNegativePromptLabel}
+            value={exteriorNegativePromptValue}
+            onChange={(value) => onChangeExteriorNegativePrompt?.(value)}
+            placeholder={exteriorNegativePromptPlaceholder}
+            maxLength={exteriorNegativePromptMaxLength}
+          />
+        </div>
 
         <TextAreaField
           label={usageNotesLabel}

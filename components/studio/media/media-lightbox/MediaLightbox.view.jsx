@@ -833,6 +833,11 @@ function GenerationRecipeDetails({ recipe, copySettingsMessage, onCopySettings }
               <div key={`${asset.slot}:${asset.id}`} className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-2)] px-[var(--space-4)] py-[var(--space-3)]">
                 <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--ink-dim)]">{asset.label}</p>
                 <p className="mt-[var(--space-1)] text-[length:var(--text-ui)] text-[var(--ink)]">{asset.title}</p>
+                {asset.viewModeLabel ? (
+                  <p className="mt-1 text-[length:var(--text-label)] text-[var(--ink-dim)]">
+                    View · {asset.viewModeLabel}
+                  </p>
+                ) : null}
                 {asset.creator?.href && asset.creator?.handle ? (
                   <a href={asset.creator.href} className="mt-1 inline-block text-[length:var(--text-label)] text-[var(--gold-ornament)] underline decoration-[var(--gold-ornament)]/35 underline-offset-4">
                     by {asset.creator.handle}

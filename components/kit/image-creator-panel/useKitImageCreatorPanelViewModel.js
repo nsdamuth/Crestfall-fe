@@ -23,6 +23,7 @@ export function useKitImageCreatorPanelViewModel({
   remix = null,
   video = null,
   slots = {},
+  locationViewControl = null,
   onSlotActivate = null,
   onSlotClear = null,
   onCustomChangeText = null,
@@ -68,6 +69,10 @@ export function useKitImageCreatorPanelViewModel({
     remix: remix && typeof remix === "object" ? remix : null,
     video: video && typeof video === "object" ? video : null,
     slots: slots && typeof slots === "object" ? slots : {},
+    locationViewControl:
+      locationViewControl && typeof locationViewControl === "object"
+        ? locationViewControl
+        : null,
     onSlotActivate,
     onSlotClear,
     onCustomChangeText,
