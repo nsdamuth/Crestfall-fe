@@ -20,6 +20,10 @@ export const LOCATION_BUILDER_INITIAL_FORM = Object.freeze({
   prompt: "",
   image_prompt: "",
   negative_prompt: "",
+  interior_image_prompt: "",
+  interior_negative_prompt: "",
+  exterior_image_prompt: "",
+  exterior_negative_prompt: "",
   tags: "",
   visibility: "PRIVATE",
   content_rating: "SFW",
@@ -171,6 +175,22 @@ export function buildLocationCreationPayload({
         normalizedForm.negative_prompt,
         LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
       ),
+      interior_image_prompt: limitLocationPromptValue(
+        normalizedForm.interior_image_prompt,
+        LOCATION_IMAGE_PROMPT_MAX_LENGTH
+      ),
+      interior_negative_prompt: limitLocationPromptValue(
+        normalizedForm.interior_negative_prompt,
+        LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+      ),
+      exterior_image_prompt: limitLocationPromptValue(
+        normalizedForm.exterior_image_prompt,
+        LOCATION_IMAGE_PROMPT_MAX_LENGTH
+      ),
+      exterior_negative_prompt: limitLocationPromptValue(
+        normalizedForm.exterior_negative_prompt,
+        LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+      ),
       selected_cover: selectedCover,
 
       playable: false,
@@ -257,9 +277,9 @@ export function useLocationBuilderViewModel({
 
   function updateField(field, value) {
     const nextValue =
-      field === "image_prompt"
+      ["image_prompt", "interior_image_prompt", "exterior_image_prompt"].includes(field)
         ? limitLocationPromptValue(value, LOCATION_IMAGE_PROMPT_MAX_LENGTH)
-        : field === "negative_prompt"
+        : ["negative_prompt", "interior_negative_prompt", "exterior_negative_prompt"].includes(field)
           ? limitLocationPromptValue(value, LOCATION_NEGATIVE_PROMPT_MAX_LENGTH)
           : value;
 

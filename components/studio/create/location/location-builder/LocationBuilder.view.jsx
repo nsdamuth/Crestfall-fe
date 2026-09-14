@@ -208,28 +208,68 @@ export default function LocationBuilderView({
             />
 
             <TextAreaField
-              label="Standalone Image Prompt"
+              label="General Image Prompt"
               value={form.image_prompt}
               onChange={(value) =>
                 onUpdateField?.("image_prompt", value)
               }
-              placeholder="Optional standalone prompt for generating catalogue, preview, or reference images of this location."
+              placeholder="Optional fallback prompt used when no Interior or Exterior prompt is available."
               rows={5}
               maxLength={LOCATION_IMAGE_PROMPT_MAX_LENGTH}
-              helperText="Optional. Used later for standalone location image generation. Max 2,000 characters."
+              helperText="Optional fallback for legacy/simple locations. Max 2,000 characters."
             />
 
             <TextAreaField
-              label="Negative Prompt"
+              label="General Negative Prompt"
               value={form.negative_prompt}
               onChange={(value) =>
                 onUpdateField?.("negative_prompt", value)
               }
-              placeholder="Optional negatives this location should contribute when used in image generation."
+              placeholder="Optional fallback negatives used when no matching Interior or Exterior negative prompt is available."
               rows={5}
               maxLength={LOCATION_NEGATIVE_PROMPT_MAX_LENGTH}
-              helperText="Optional. Compiled into the negative prompt when this location is selected. Max 300 characters."
+              helperText="Optional fallback negative guidance. Max 300 characters."
             />
+
+            <div className="grid gap-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Interior</p>
+              <TextAreaField
+                label="Interior Prompt"
+                value={form.interior_image_prompt}
+                onChange={(value) => onUpdateField?.("interior_image_prompt", value)}
+                placeholder="Optional guidance for images rendered from inside this location."
+                rows={5}
+                maxLength={LOCATION_IMAGE_PROMPT_MAX_LENGTH}
+              />
+              <TextAreaField
+                label="Interior Negative Prompt"
+                value={form.interior_negative_prompt}
+                onChange={(value) => onUpdateField?.("interior_negative_prompt", value)}
+                placeholder="Optional negatives specific to interior views."
+                rows={4}
+                maxLength={LOCATION_NEGATIVE_PROMPT_MAX_LENGTH}
+              />
+            </div>
+
+            <div className="grid gap-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Exterior</p>
+              <TextAreaField
+                label="Exterior Prompt"
+                value={form.exterior_image_prompt}
+                onChange={(value) => onUpdateField?.("exterior_image_prompt", value)}
+                placeholder="Optional guidance for images rendered from outside or approaching this location."
+                rows={5}
+                maxLength={LOCATION_IMAGE_PROMPT_MAX_LENGTH}
+              />
+              <TextAreaField
+                label="Exterior Negative Prompt"
+                value={form.exterior_negative_prompt}
+                onChange={(value) => onUpdateField?.("exterior_negative_prompt", value)}
+                placeholder="Optional negatives specific to exterior views."
+                rows={4}
+                maxLength={LOCATION_NEGATIVE_PROMPT_MAX_LENGTH}
+              />
+            </div>
           </div>
         </EditorCard>
 

@@ -733,9 +733,14 @@ function ImageSettings({
   showSceneryOnlyHelper,
   sceneryOnlyHelperEnabled,
   onChangeSceneryOnlyHelper,
+  onImportSettings,
   idPrefix,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importValue, setImportValue] = useState("");
+  const [importMessage, setImportMessage] = useState("");
+  const [importTone, setImportTone] = useState("quiet");
   const bodyId = `${idPrefix}-image-settings`;
 
   return (
@@ -760,6 +765,56 @@ function ImageSettings({
 
       {isOpen ? (
         <div id={bodyId} className="flex flex-col gap-[var(--space-5)] border-t border-[var(--line-whisper)] px-[var(--space-4)] pb-[var(--space-5)] pt-[var(--space-4)]">
+          {onImportSettings ? (
+            <div className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] p-[var(--space-3)]">
+              <div className="flex items-center justify-between gap-[var(--space-3)]">
+                <div>
+                  <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--gold-ornament)]">Recreate</p>
+                  <p className="mt-1 text-[length:var(--text-label)] text-[var(--ink-dim)]">Paste settings copied from Image Details.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => { setImportOpen((current) => !current); setImportMessage(""); }}
+                  className="cf-btn cf-btn--secondary cf-btn--sm"
+                >
+                  Import settings
+                </button>
+              </div>
+              {importOpen ? (
+                <div className="mt-[var(--space-3)] space-y-[var(--space-3)]">
+                  <textarea
+                    value={importValue}
+                    onChange={(event) => setImportValue(event.target.value)}
+                    placeholder="Paste Crestfall image settings JSON..."
+                    rows={5}
+                    className={FIELD_RECIPE}
+                  />
+                  {importMessage ? (
+                    <p className={`text-[length:var(--text-label)] ${importTone === "error" ? "text-[var(--status-danger)]" : "text-[var(--gold-ornament)]"}`}>{importMessage}</p>
+                  ) : null}
+                  <div className="flex justify-end gap-[var(--space-2)]">
+                    <button type="button" onClick={() => { setImportOpen(false); setImportMessage(""); }} className="cf-btn cf-btn--secondary cf-btn--sm">Cancel</button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const result = onImportSettings?.(importValue) || { ok: false, message: "Image settings could not be imported." };
+                        setImportTone(result.ok ? "success" : "error");
+                        setImportMessage(result.message || (result.ok ? "Image settings imported." : "Image settings could not be imported."));
+                        if (result.ok) {
+                          setImportValue("");
+                          setImportOpen(false);
+                        }
+                      }}
+                      className="cf-btn cf-btn--primary cf-btn--sm"
+                    >
+                      Apply settings
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
           <RenderStyleRail rail={renderStyleRailProps} idPrefix={idPrefix} />
 
           {/* Call site 1 of the shared SettingSelect: opens the camera
@@ -1700,6 +1755,7 @@ export default function KitImageCreatorPanelView({
   remix = null,
   video = null,
   slots = {},
+  locationViewControl = null,
   onSlotActivate = null,
   onSlotClear = null,
   onCustomChangeText = null,
@@ -1728,6 +1784,7 @@ export default function KitImageCreatorPanelView({
   showSceneryOnlyHelper = false,
   sceneryOnlyHelperEnabled = true,
   onChangeSceneryOnlyHelper = null,
+  onImportSettings = null,
   onGenerate = null,
   videoOptionFields = [],
   onChangeVideoOption = null,
@@ -1795,6 +1852,42 @@ export default function KitImageCreatorPanelView({
             </div>
           )}
 
+          {!videoActive && !isVideoMode && !isRemixStage && locationViewControl ? (
+            <section className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] p-[var(--space-3)]">
+              <ControlTitle>{locationViewControl.label || "Location View"}</ControlTitle>
+              {locationViewControl.showToggle ? (
+                <div className="mt-[var(--space-2)] grid grid-cols-2 gap-[var(--space-2)]">
+                  {locationViewControl.options.map((option) => {
+                    const active = locationViewControl.value === option.value;
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => locationViewControl.onChange?.(option.value)}
+                        className={`min-h-[var(--control-md)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
+                          active
+                            ? "border-[var(--gold-ornament)]/55 bg-[var(--fill)] text-[var(--gold-bright)]"
+                            : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] text-[var(--ink)]">
+                  {locationViewControl.options.find((option) => option.value === locationViewControl.value)?.label || locationViewControl.value}
+                </p>
+              )}
+              {locationViewControl.helperText ? (
+                <p className="mt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+                  {locationViewControl.helperText}
+                </p>
+              ) : null}
+            </section>
+          ) : null}
+
           {videoActive ? null : isVideoMode ? (
             <VideoBlock
               videoOptionFields={videoOptionFields}
@@ -1836,6 +1929,7 @@ export default function KitImageCreatorPanelView({
                 showSceneryOnlyHelper={showSceneryOnlyHelper}
                 sceneryOnlyHelperEnabled={sceneryOnlyHelperEnabled}
                 onChangeSceneryOnlyHelper={onChangeSceneryOnlyHelper}
+                onImportSettings={onImportSettings}
                 idPrefix={idPrefix}
               />
             </>
