@@ -419,8 +419,10 @@ export default function KitFoldersPanelView(props) {
           }}
         >
           {/* The frame's sheet caps at 92dvh; the list scrolls inside
-              a bounded column so the footer line stays in view. */}
-          <div className="flex max-h-[70dvh] min-h-0 w-full max-w-full flex-col overflow-hidden">
+              a bounded column so the footer line stays in view. The
+              space-4 above keeps the New folder control off the
+              sheet header's separator line (AF5 follow-up 2, item 2). */}
+          <div className="flex max-h-[70dvh] min-h-0 w-full max-w-full flex-col overflow-hidden pt-[var(--space-4)]">
             <PanelBody {...props} showTitle={false} />
           </div>
         </KitModalFrame>
