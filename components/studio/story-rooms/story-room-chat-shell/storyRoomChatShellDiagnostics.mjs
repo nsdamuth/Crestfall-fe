@@ -101,11 +101,15 @@ test("portable View owns responsive layout and uses injected children only", () 
   );
   assert.match(view, /RailEdgeToggle/);
   // The glyph and bare recipe live in RailPanelGlyph.jsx (item 11),
-  // shared with the composer's story list button.
+  // shared with the composer's story list button. Lifted 14 Sep 2026
+  // (ASSET-FOLDERS AF2) into the Kit as KitPanelToggle 1.0.0; this
+  // path is now a re-export of that View, so the import line the
+  // shell writes is unchanged and the shim points at the one live
+  // source of the drawing.
   assert.match(view, /import RailPanelGlyph, \{ BARE_ICON_BUTTON_CLASS \} from "\.\/RailPanelGlyph"/);
   assert.match(
     read("components/studio/story-rooms/story-room-chat-shell/RailPanelGlyph.jsx"),
-    /<rect x="3" y="4" width="18" height="16" rx="2" \/>/
+    /export \{ default, BARE_ICON_BUTTON_CLASS \} from "@\/components\/kit\/panel-toggle\/KitPanelToggle\.view"/
   );
   assert.match(view, /side === "left" \? "justify-end" : "justify-start"/);
   assert.doesNotMatch(view, /PanelLeftOpen|PanelRightOpen|bg-\[var\(--step-above\)\] text-\[var\(--ink-dim\)\] transition-colors duration-\[var\(--dur-hover\)\] hover:text-\[var\(--ink\)\]"\n      >\n        <Icon/);

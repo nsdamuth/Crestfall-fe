@@ -130,6 +130,7 @@ export default function KitStudioFilterBarView({
   defaultSort = "",
   onSortChange = null,
   isLoadingCounts = false,
+  controlsSlot = null,
   viewModeSlot = null,
   quickTabs = [],
   selectedQuickTab = "",
@@ -215,6 +216,15 @@ export default function KitStudioFilterBarView({
             />
           )}
         </div>
+
+        {/* controlsSlot (2.4.0, ASSET-FOLDERS AF2): a caller's own
+            controls, riding the same scroller as Filter and Sort,
+            after Sort and before the view toggle. The bar applies no
+            sizing here; a slotted control still meets the touch
+            floor on its own. */}
+        {controlsSlot && (
+          <div className="flex flex-none items-center gap-[var(--space-2)]">{controlsSlot}</div>
+        )}
 
         {/* Right edge at every width (browser review 9 Sep 2026,
             item 10): under 700px the row is a horizontal scroller, so
