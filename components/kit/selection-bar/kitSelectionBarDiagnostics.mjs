@@ -28,8 +28,8 @@ function mountViewModel(props) {
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const read = (relativePath) => fs.readFileSync(path.join(currentDir, relativePath), "utf8");
 
-test("contract 1.1.0 and the four named fixtures", () => {
-  assert.equal(KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION, "1.1.0");
+test("contract 1.2.0 and the four named fixtures", () => {
+  assert.equal(KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION, "1.2.0");
   assert.deepEqual(kitSelectionBarFixtures.map((entry) => entry.id), ["none", "one", "many", "soon"]);
   const byId = Object.fromEntries(kitSelectionBarFixtures.map((entry) => [entry.id, entry.props]));
   assert.equal(byId.none.selectedCount, 0);
@@ -85,6 +85,34 @@ test("the ViewModel mounts with every handler supplied and with every handler ab
   assert.equal(empty.selectedCount, 0);
 });
 
+// AF5 follow-up 3, item 1: with a folder chosen the second control
+// reads Remove from folder and fires onRemoveFromFolder; with All
+// chosen it is Add to folder.
+test("the second control is Remove from folder while a folder is chosen, Add to folder at All", () => {
+  const fired = [];
+  const chosen = mountViewModel({
+    selectedCount: 2,
+    removeFromFolderName: "Cast",
+    onRemoveFromFolder: () => fired.push("remove"),
+    onAddToFolder: () => fired.push("add"),
+  });
+  assert.equal(chosen.removeFromFolderName, "Cast");
+  chosen.onRemoveFromFolder();
+  assert.deepEqual(fired, ["remove"]);
+
+  const root = mountViewModel({ selectedCount: 2, onAddToFolder: () => fired.push("add") });
+  assert.equal(root.removeFromFolderName, "");
+  assert.equal(root.onRemoveFromFolder, null);
+  root.onPickFolder("f1");
+  assert.deepEqual(fired, ["remove", "add"]);
+
+  const view = read("KitSelectionBar.view.jsx");
+  const second = view.slice(view.indexOf("{removeFromFolderName ? ("), view.indexOf("label={copy.download}"));
+  assert.match(second, /label=\{copy\.removeFromFolder\} Icon=\{FolderMinus\} onClick=\{onRemoveFromFolder\}[^>]*hideLabelOnPhone/);
+  assert.match(second, /label=\{copy\.addToFolder\} Icon=\{FolderPlus\} onClick=\{onOpenPicker\}[^>]*hideLabelOnPhone/);
+  assert.equal(SELECTION_BAR_COPY.removeFromFolder, "Remove from folder");
+});
+
 test("the copy: N selected, the five controls, and the count in the delete copy", () => {
   assert.equal(SELECTION_BAR_COPY.selected(3), "3 selected");
   assert.deepEqual(
@@ -137,7 +165,7 @@ test("Delete keeps its word at every width; Add to folder and Download drop to g
     (needle) => view.indexOf(needle)
   );
   assert.ok(marks.every((index) => index >= 0) && marks[0] < marks[1] && marks[1] < marks[2] && marks[2] < marks[3], "Delete, Add to folder, Download, Done");
-  const deleteButton = view.slice(marks[0], marks[1]);
+  const deleteButton = view.slice(marks[0], view.indexOf("label={copy.removeFromFolder}"));
   assert.doesNotMatch(deleteButton, /hideLabelOnPhone/);
   assert.match(deleteButton, /danger/);
   const folderButton = view.slice(marks[1], marks[2]);

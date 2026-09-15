@@ -2,7 +2,7 @@
 
 The one selection bar for Media and Vault (ASSET-FOLDERS plan,
 package AF4, RULED 14 Sep 2026, option 3A: one Kit bar, selection
-state staying in each page). Contract 1.1.0. Five items exactly (R6),
+state staying in each page). Contract 1.2.0. Five items exactly (R6),
 in this order (AF5 follow-up 2): "N selected", Delete, Add to folder,
 Download, Done. Select all visible and Clear are not on it (M2).
 
@@ -53,6 +53,8 @@ blur, no shadow utility.
 | `isBusy` | boolean | false | actions disable, Delete reads "Deleting..." |
 | `deleteBody` | string | "This cannot be undone." | the confirmation's body line |
 | `dockInsets` | `{ left, right }` or null | null | 1.1.0: the page column's px distances from the viewport edges, centering the fixed bar at md and up |
+| `removeFromFolderName` | string | `""` | 1.2.0: while set, the second control reads "Remove from folder" (folder-minus glyph) and fires `onRemoveFromFolder` |
+| `onRemoveFromFolder` | `() => void` | | 1.2.0: unfiles the page's selection (the store's set item folder write with a null folder) |
 
 ## Handlers, by name, for AF5 and AF6
 

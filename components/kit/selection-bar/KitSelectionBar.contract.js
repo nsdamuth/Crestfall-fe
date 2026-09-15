@@ -1,4 +1,17 @@
-export const KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION = "1.1.0";
+export const KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION = "1.2.0";
+
+/**
+ * 1.2.0 (14 Sep 2026, AF5 follow-up 3 item 1, RULED by Brian), additive:
+ * - removeFromFolderName (string, default ""): while the page has a
+ *   folder other than All chosen, the second control reads "Remove
+ *   from folder" with the folder-minus glyph and calls
+ *   onRemoveFromFolder() on tap; the page unfiles its selection
+ *   through the store (a null folder) and shows its note. Empty, the
+ *   control is Add to folder as before. Below 700 the label drops to
+ *   the glyph with the words as the accessible name, the bar's
+ *   existing phone treatment.
+ * - onRemoveFromFolder (() => void, default null).
+ */
 
 /**
  * 1.1.0 (14 Sep 2026, AF5 follow-up 2 item 1, RULED by Brian), additive:

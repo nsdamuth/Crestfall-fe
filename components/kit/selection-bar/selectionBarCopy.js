@@ -5,6 +5,7 @@
 export const SELECTION_BAR_COPY = Object.freeze({
   selected: (count) => `${count} selected`,
   addToFolder: "Add to folder",
+  removeFromFolder: "Remove from folder",
   download: "Download",
   delete: "Delete",
   deleting: "Deleting...",

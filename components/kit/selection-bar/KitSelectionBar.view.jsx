@@ -17,7 +17,7 @@
 // utility. Every control is 44px. Below 700 the Add to folder and
 // Download labels drop to their glyphs (aria-label keeps the word);
 // Delete and Done keep their words at every width.
-import { Download, FolderPlus, Loader2, Trash2 } from "lucide-react";
+import { Download, FolderMinus, FolderPlus, Loader2, Trash2 } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
 import { SoonChip } from "../form-field/SoonChip";
@@ -159,6 +159,8 @@ export default function KitSelectionBarView({
   onClosePicker = null,
   onPickFolder = null,
   onDownload = null,
+  removeFromFolderName = "",
+  onRemoveFromFolder = null,
   onOpenDeleteConfirm = null,
   onCloseDeleteConfirm = null,
   onConfirmDelete = null,
@@ -186,7 +188,15 @@ export default function KitSelectionBarView({
         >
           {isBusy ? <Loader2 size={14} aria-hidden="true" className="animate-spin" /> : null}
         </BarButton>
-        <BarButton label={copy.addToFolder} Icon={FolderPlus} onClick={onOpenPicker} disabled={isBusy} hideLabelOnPhone />
+        {/* The second control (AF5 follow-up 3, item 1): with a folder
+            other than All chosen it reads Remove from folder and
+            unfiles the selection; at the root it opens the picker.
+            Both drop to the glyph below 700. */}
+        {removeFromFolderName ? (
+          <BarButton label={copy.removeFromFolder} Icon={FolderMinus} onClick={onRemoveFromFolder} disabled={isBusy} hideLabelOnPhone />
+        ) : (
+          <BarButton label={copy.addToFolder} Icon={FolderPlus} onClick={onOpenPicker} disabled={isBusy} hideLabelOnPhone />
+        )}
         <BarButton
           label={copy.download}
           Icon={Download}

@@ -24,7 +24,7 @@ import { useIngredientPickerViewModel } from "@/components/studio/image-studio/i
 import { useSaveIngredientPresetViewModel } from "@/components/studio/image-studio/save-ingredient-preset/useSaveIngredientPresetViewModel";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 import { useStudioChrome } from "@/components/studio/StudioChromeProvider";
-import { getDescendantIds } from "@/lib/client/studio/folders/folderRules";
+import { folderNotes, getDescendantIds } from "@/lib/client/studio/folders/folderRules";
 import { useFolderStore } from "@/lib/client/studio/folders/useFolderStore";
 
 import ImagesV2CameraPresetPicker from "./images-live/ImagesV2CameraPresetPicker";
@@ -385,6 +385,28 @@ export default function ImagesV2Live() {
     else if (lastNote) showNote(lastNote);
   }
 
+  // Remove from folder (follow-up 3, item 1): while a folder other
+  // than All is chosen, the bar's second control unfiles the whole
+  // selection through the store (a null folder, so the items sit only
+  // in All); one note names the count and the folder. The items leave
+  // the folder's view, so the selection clears through the grid's
+  // existing onClearSelection rather than pointing at hidden items.
+  function handleRemoveFromFolder() {
+    if (!activeFolder) return;
+    const items = selectedMediaItems();
+    let refusalNote = "";
+    for (const item of items) {
+      const result = folderStore.setItemFolder({ itemId: item.imageOutputId, folderId: null });
+      if (!result.ok && !refusalNote) refusalNote = result.note;
+    }
+    if (refusalNote) {
+      showNote(refusalNote, "danger");
+      return;
+    }
+    showNote(folderNotes.unfiledMany(items.length, activeFolder.name));
+    grid.onClearSelection?.();
+  }
+
   // Download runs the viewer's own per-item download (the Large row,
   // the original through the file proxy) on each selected item.
   function handleDownloadSelected() {
@@ -612,6 +634,8 @@ export default function ImagesV2Live() {
                   itemNoun={MEDIA_ITEM_NOUN}
                   folders={folderStore.folders}
                   onAddToFolder={handleAddToFolder}
+                  removeFromFolderName={activeFolder?.name || ""}
+                  onRemoveFromFolder={handleRemoveFromFolder}
                   onDownload={handleDownloadSelected}
                   onDelete={handleDeleteSelected}
                   onDone={grid.onToggleSelectionMode}

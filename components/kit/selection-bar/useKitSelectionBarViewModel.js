@@ -47,6 +47,10 @@ export function useKitSelectionBarViewModel(props = {}) {
 
   const onAddToFolder = callback(props.onAddToFolder);
   const onDelete = callback(props.onDelete);
+  // removeFromFolderName (1.2.0): while the page has a folder other
+  // than All chosen, the second control reads Remove from folder and
+  // unfiles the selection through onRemoveFromFolder instead.
+  const removeFromFolderName = text(props.removeFromFolderName);
 
   return {
     isVisible: selectedCount > 0,
@@ -69,6 +73,8 @@ export function useKitSelectionBarViewModel(props = {}) {
       onAddToFolder?.(folderId);
     },
     onDownload: callback(props.onDownload),
+    removeFromFolderName,
+    onRemoveFromFolder: callback(props.onRemoveFromFolder),
     onOpenDeleteConfirm: () => setConfirmOpen(true),
     onCloseDeleteConfirm: () => setConfirmOpen(false),
     onConfirmDelete: () => {
