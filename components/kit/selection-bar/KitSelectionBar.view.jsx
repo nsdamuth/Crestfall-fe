@@ -173,16 +173,8 @@ export default function KitSelectionBarView({
         <p className="min-w-0 flex-1 truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]">
           {countLabel}
         </p>
-        <BarButton label={copy.addToFolder} Icon={FolderPlus} onClick={onOpenPicker} disabled={isBusy} hideLabelOnPhone />
-        <BarButton
-          label={copy.download}
-          Icon={Download}
-          onClick={onDownload}
-          disabled={isBusy}
-          soon={isDownloadSoon}
-          title={copy.notAvailable}
-          hideLabelOnPhone
-        />
+        {/* Order after the count (AF5 follow-up 2, item 7): Delete,
+            Add to folder, Download, Done. */}
         <BarButton
           label={isBusy ? copy.deleting : copy.delete}
           Icon={Trash2}
@@ -194,6 +186,16 @@ export default function KitSelectionBarView({
         >
           {isBusy ? <Loader2 size={14} aria-hidden="true" className="animate-spin" /> : null}
         </BarButton>
+        <BarButton label={copy.addToFolder} Icon={FolderPlus} onClick={onOpenPicker} disabled={isBusy} hideLabelOnPhone />
+        <BarButton
+          label={copy.download}
+          Icon={Download}
+          onClick={onDownload}
+          disabled={isBusy}
+          soon={isDownloadSoon}
+          title={copy.notAvailable}
+          hideLabelOnPhone
+        />
         <BarButton label={copy.done} Icon={null} onClick={onDone}>
           <span className="sr-only">{copy.done}</span>
         </BarButton>

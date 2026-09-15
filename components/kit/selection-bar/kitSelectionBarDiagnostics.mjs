@@ -131,9 +131,16 @@ test("the ruled bar carries exactly the five items and none of the retired ones"
 
 test("Delete keeps its word at every width; Add to folder and Download drop to glyphs below 700", () => {
   const view = read("KitSelectionBar.view.jsx");
-  const deleteButton = view.slice(view.indexOf("label={isBusy ? copy.deleting : copy.delete}"), view.indexOf("label={copy.done}"));
+  // Order after the count (follow-up 2, item 7): Delete, Add to
+  // folder, Download, Done.
+  const marks = ["label={isBusy ? copy.deleting : copy.delete}", "label={copy.addToFolder}", "label={copy.download}", "label={copy.done}"].map(
+    (needle) => view.indexOf(needle)
+  );
+  assert.ok(marks.every((index) => index >= 0) && marks[0] < marks[1] && marks[1] < marks[2] && marks[2] < marks[3], "Delete, Add to folder, Download, Done");
+  const deleteButton = view.slice(marks[0], marks[1]);
   assert.doesNotMatch(deleteButton, /hideLabelOnPhone/);
-  const folderButton = view.slice(view.indexOf("label={copy.addToFolder}"), view.indexOf("label={copy.download}"));
+  assert.match(deleteButton, /danger/);
+  const folderButton = view.slice(marks[1], marks[2]);
   assert.match(folderButton, /hideLabelOnPhone/);
   assert.match(view, /hidden min-\[700px\]:inline/);
 });

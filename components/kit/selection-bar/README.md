@@ -2,9 +2,9 @@
 
 The one selection bar for Media and Vault (ASSET-FOLDERS plan,
 package AF4, RULED 14 Sep 2026, option 3A: one Kit bar, selection
-state staying in each page). Contract 1.0.0. Five items exactly (R6):
-"N selected", Add to folder, Download, Delete, Done. Select all
-visible and Clear are not on it (M2).
+state staying in each page). Contract 1.1.0. Five items exactly (R6),
+in this order (AF5 follow-up 2): "N selected", Delete, Add to folder,
+Download, Done. Select all visible and Clear are not on it (M2).
 
 ## What it shows
 

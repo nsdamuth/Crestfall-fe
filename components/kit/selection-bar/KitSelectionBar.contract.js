@@ -14,7 +14,8 @@ export const KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION = "1.1.0";
  * Stable portable UI boundary for the shared selection bar kit piece
  * (ASSET-FOLDERS plan, package AF4, RULED 14 Sep 2026, option 3A: one
  * Kit bar for Media and Vault, selection state staying in each page).
- * One bar: "N selected", Add to folder, Download, Delete, Done (R6).
+ * One bar, in this order: "N selected", Delete, Add to folder,
+ * Download, Done (R6; the order ruled at AF5 follow-up 2, item 7).
  * Select all visible and Clear are not on the bar (M2 ruled). The bar
  * holds no selection state and no item ids; every action reports to
  * a handler the page supplies, and the page reads its own selection
