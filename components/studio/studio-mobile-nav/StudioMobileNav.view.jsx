@@ -425,7 +425,8 @@ function MobileAccountSummary({
 function MobileDivider({ tightTop = false }) {
   return (
     <div
-      className={`${tightTop ? "mt-[var(--space-1)] mb-[var(--space-4)]" : "my-4"} border-t border-[var(--gold-ornament)]/15`}
+      aria-hidden="true"
+      className={`${tightTop ? "mt-[var(--space-1)] mb-[var(--space-4)]" : "my-4"} h-px cf-hairline-fade`}
     />
   );
 }

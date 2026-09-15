@@ -38,7 +38,7 @@ export default function StudioPageHeaderView({
   // and opens on its hero.
   return (
     <header
-      className={`flex flex-col border-b border-[var(--gold-ornament)]/15 pt-[var(--space-6)] lg:flex-row lg:items-center lg:justify-between ${
+      className={`cf-hairline-fade flex flex-col pt-[var(--space-6)] lg:flex-row lg:items-center lg:justify-between ${
         compactMobile ? "gap-3 pb-4 sm:gap-6 sm:pb-8" : "gap-6 pb-8"
       }`}
     >
