@@ -1,6 +1,6 @@
 # Kit Creation Card LOOM Package
 
-**Contract:** `KitCreationCard.contract.js` (v3.4.0)
+**Contract:** `KitCreationCard.contract.js` (v3.9.0)
 
 ## Kebab menu, RULED 22 Aug 2026 (Fable law review, Final Ruling Render close, ED1F propagation plan NEW LAW A)
 
@@ -20,6 +20,19 @@ also widens this pass: `assetKind: "character"` cards with an `onPlay`
 handler now render "Start Chat" too, alongside the existing story and
 adventure branches. Image keeps "Generate"; every other card, or any
 card with no handler for its kind, keeps the "Expand" fallback.
+
+## Select mode and the folder row, v3.9.0 (ASSET-FOLDERS AF4, 14 Sep 2026)
+
+Additive, four optional props, absent on every existing consumer:
+`isSelectable` renders a 44px check control in the art corner
+(top-left in grid before the badges, the row's left edge in list);
+`isSelected` reads it in the gold recipe; `onToggleSelect` fires from
+the check only (the open tap and the three face actions are
+unchanged; the card holds no selection state, the page does, option
+3A); `onAddToFolder` adds the kebab row "Add to folder" after Share,
+only when supplied. Fixtures selectable, selected, selected-list,
+add-to-folder; `kitCreationCardSelectableDiagnostics.mjs` asserts
+every earlier fixture omits all four.
 
 ## Purpose
 

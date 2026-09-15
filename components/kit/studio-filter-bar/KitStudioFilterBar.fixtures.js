@@ -50,6 +50,8 @@ export const kitStudioFilterBarDefaultFixture = {
   onSortChange: noop,
   isLoadingCounts: false,
   viewModeSlot: null,
+  leadingSlot: null,
+  controlsSlot: null,
 };
 
 export const kitStudioFilterBarEmptyGroupsFixture = {
@@ -135,4 +137,13 @@ export const kitStudioFilterBarPanelActiveFixture = {
 export const kitStudioFilterBarDropdownsPresentationFixture = {
   ...kitStudioFilterBarDefaultFixture,
   filterPresentation: "dropdowns",
+};
+
+// 2.4.0 fixture (ASSET-FOLDERS AF2, 14 Sep 2026): a caller's own
+// control riding the bar's existing scroller, after Sort and before
+// the view toggle. A plain placeholder button here; the real Folders
+// trigger is AF5 and AF6's, not this package's.
+export const kitStudioFilterBarControlsSlotFixture = {
+  ...kitStudioFilterBarDefaultFixture,
+  controlsSlot: "controlsSlot placeholder: a caller-supplied control node",
 };

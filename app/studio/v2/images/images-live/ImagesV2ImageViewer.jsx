@@ -27,8 +27,10 @@ const SOON_LABEL = "Soon";
 
 // Download sizes ride the file proxy's variants: thumbnail (Small),
 // card (Medium), the original (Large). Extra Large is the upscaled
-// file, which no job produces yet (gap 9).
-function buildDownloadOptions({ imageOutputId, imageUrl }) {
+// file, which no job produces yet (gap 9). Exported (AF5, 14 Sep
+// 2026) so the page's selection bar runs this same per-item download
+// on each selected item; nothing else about the viewer changes.
+export function buildDownloadOptions({ imageOutputId, imageUrl }) {
   const base = imageOutputId
     ? `/api/studio/image-generation/outputs/${encodeURIComponent(imageOutputId)}/file`
     : imageUrl || "";

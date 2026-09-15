@@ -144,10 +144,12 @@ test("V2 Images live adapter passes the Remix stage to the panel on the rail and
   assert.match(adapter, /panelProps: \{[\s\S]*?\n\s+remix,\n/);
   assert.doesNotMatch(adapter, /historyError|historyStatus/);
 
-  // Rail path: the desktop aside hands the panel the projected remix.
+  // Rail path: the desktop aside hands the panel the projected remix
+  // (since AF5 follow-up 2 item 6 the same mount also carries the
+  // column toggle through modeRowLeadingSlot).
   assert.match(
     live,
-    /<KitImageCreatorPanel \{\.\.\.live\.panelProps\} remix=\{live\.panelProps\.remix\} \/>/
+    /<KitImageCreatorPanel\s+\{\.\.\.live\.panelProps\}\s+remix=\{live\.panelProps\.remix\}[\s\S]*?\/>/
   );
   // Sheet path: the page hands the sheet the same remix, and the sheet
   // hands it to the panel.

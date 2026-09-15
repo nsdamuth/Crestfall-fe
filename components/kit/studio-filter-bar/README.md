@@ -1,6 +1,6 @@
 # Kit Studio Filter Bar LOOM Package
 
-**Contract:** `KitStudioFilterBar.contract.js` (v2.1.0)
+**Contract:** `KitStudioFilterBar.contract.js` (v2.5.0)
 
 ## Purpose
 
@@ -25,9 +25,12 @@ prop.
 KitStudioFilterBar.jsx
   -> useKitStudioFilterBarViewModel.js
   -> KitStudioFilterBar.view.jsx
+       -> leadingSlot (caller-supplied, additive 2.5.0)
        -> KitFilterPanel.view (all filter groups)      [default]
        -> KitDropdown.view (one per group)             [fallback]
        -> KitDropdown.view (Sort)
+       -> controlsSlot (caller-supplied, additive 2.4.0)
+       -> viewModeSlot (caller-supplied)
 ```
 
 - The bar itself is REST-only chrome; every control inside carries
@@ -39,6 +42,22 @@ KitStudioFilterBar.jsx
 - An empty `filterGroups` hides the Filter button (Creators,
   Adventures); an empty `sortOptions` hides Sort (Lore, Images).
 - The view-mode toggle slots in through `viewModeSlot` unchanged.
+- `controlsSlot` (2.4.0, ASSET-FOLDERS package AF2, additive): an
+  optional node rendered after Sort and before `viewModeSlot`,
+  inside the bar's own sideways scroller (390) or flex-wrap row
+  (700 and up). Absent (every existing consumer), the bar renders
+  byte-identical to 2.3.1. The bar applies no sizing to what it
+  holds; a caller's control still meets the touch floor on its
+  own. The Folders trigger (AF5, AF6) is the first real consumer.
+- `leadingSlot` (2.5.0, ASSET-FOLDERS package AF6, additive): an
+  optional node rendered before the Filter button. While present the
+  bar lays every control out on one row (the leading controls, then
+  Filter, Sort, `controlsSlot`, `viewModeSlot`): the row fills the
+  search field's width with equal gaps on phones and sits at the
+  row's right with one equal `--space-3` gap at 700 and up, the Media
+  row ruled at AF5 follow-up 2. Absent, the bar renders
+  byte-identical to 2.4.0. Media and Vault put Select and Folders in
+  it so the bar owns Filter and Sort on both pages.
 - The caller owns what a filter value means, how the list is queried,
   how selection persists, and the section order (see
   `orderFilterGroups` in `app/studio/v2/catalog/creationCatalogFilterTaxonomy.js`).
@@ -62,6 +81,7 @@ the per-element ring. Ruled 9 Aug 2026.
 - `KitStudioFilterBar.contract.js`
 - `KitStudioFilterBar.fixtures.js`
 - `useKitStudioFilterBarViewModel.js`
+- `kitStudioFilterBarDiagnostics.mjs` (`npm run diagnostics:loom:studio-filter-bar`)
 - `/dev/ui-preview/kit-studio-filter-bar` (harness only; review on
   the live `/studio/v2/*` pages)
 

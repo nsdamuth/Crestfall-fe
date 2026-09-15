@@ -8,7 +8,7 @@
 // Presentation-only local state; viewport width is layout, not data.
 import { useEffect, useState } from "react";
 
-import { PHONE_WIDTH_QUERY } from "../dropdown/useAnchoredPanel";
+import { PHONE_WIDTH_QUERY } from "../dropdown/useAnchoredPanel.js";
 
 export function usePhoneWidth() {
   const [isPhoneWidth, setIsPhoneWidth] = useState(

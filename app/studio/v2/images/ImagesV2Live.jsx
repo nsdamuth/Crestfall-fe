@@ -1,25 +1,36 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ImagePlus } from "lucide-react";
+import { Folder, ImagePlus } from "lucide-react";
 
+import KitFoldersPanel from "@/components/kit/KitFoldersPanel";
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
 import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
+import KitNotice from "@/components/kit/KitNotice";
+import KitPanelToggle from "@/components/kit/KitPanelToggle";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
+import KitSelectionBar from "@/components/kit/KitSelectionBar";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
+import { useKitNoticeAutoClear } from "@/components/kit/notice/useKitNoticeViewModel";
+import { BARE_ICON_BUTTON_CLASS } from "@/components/kit/panel-toggle/KitPanelToggle.view";
 import MediaHistoryGridSkin from "@/components/studio/image-studio/MediaHistoryGridSkin";
 import { useMediaHistoryGridViewModel } from "@/components/studio/image-studio/media-history-grid/useMediaHistoryGridViewModel";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import { useIngredientPickerViewModel } from "@/components/studio/image-studio/ingredient-picker/useIngredientPickerViewModel";
 import { useSaveIngredientPresetViewModel } from "@/components/studio/image-studio/save-ingredient-preset/useSaveIngredientPresetViewModel";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
+import { useStudioChrome } from "@/components/studio/StudioChromeProvider";
+import { folderNotes, getDescendantIds } from "@/lib/client/studio/folders/folderRules";
+import { useFolderStore } from "@/lib/client/studio/folders/useFolderStore";
 
 import ImagesV2CameraPresetPicker from "./images-live/ImagesV2CameraPresetPicker";
 import ImagesV2ComposerSheet from "./images-live/ImagesV2ComposerSheet";
-import ImagesV2ImageViewer from "./images-live/ImagesV2ImageViewer";
+import ImagesV2ImageViewer, { buildDownloadOptions } from "./images-live/ImagesV2ImageViewer";
+import { useColumnDockInsets } from "./images-live/useColumnDockInsets";
+import { useFoldersPanelHost } from "./images-live/useFoldersPanelHost";
 import { useImagesV2LiveViewModel } from "./images-live/useImagesV2LiveViewModel";
 
 // Library filter, RULED 10 Sep 2026 (browser review round 4, item 5),
@@ -48,6 +59,55 @@ function countLibrary(items, value) {
   if (value === "VIDEOS") return items.filter((item) => item.type === "VIDEO").length;
   return items.length;
 }
+
+// Folders (ASSET-FOLDERS plan, package AF5, 14 Sep 2026): surface
+// MEDIA of the browser-local folder store (option 2A ruled). The
+// button sits in the bar's leadingSlot between Select and Filter and
+// reads "Folders" at the root, the folder's name once one is chosen;
+// it alone opens and closes the panel (follow-up 1, item 3: the glyph
+// left the bar) and reads selected while the panel is open. The panel
+// is the column left of
+// the grid at 1100 and up (option 1A ruled, closed by default) and
+// the Kit sheet below, where choosing a folder closes it. Membership
+// filters the visible media after the Library filter through the grid
+// ViewModel's folderItemIds input; a folder shows its own items plus
+// its sub-folders', the same reading as the panel's row count.
+const FOLDERS_ROOT_LABEL = "Folders";
+const MEDIA_ITEM_NOUN = "image";
+// Select (AF5 follow-up 1, item 2): the grid header's Select / Done
+// toggle moved into the shared bar, first control after the search
+// field, on the unchanged onToggleSelectionMode. Bar order, ruled:
+// Select, Folders, Filter, then the density toggle at the right edge.
+// Select and Folders ride the bar's leadingSlot (KitStudioFilterBar
+// 2.5.0, AF6 item 1), so the bar owns the Library dropdown again and
+// the page no longer renders Filter itself (the round-1 workaround,
+// retired); the bar's one row keeps the ruled order and spacing.
+const SELECT_LABEL = "Select";
+const SELECT_DONE_LABEL = "Done";
+// The composer column's open and close control (follow-up 1, item 5):
+// the same KitPanelToggle the story chat mounts on its rails, turning
+// with the column's state (a right-edge panel, so open is the turned
+// orientation). Open, it sits on the mode toggle's row at its left
+// through the panel's modeRowLeadingSlot (follow-up 2, item 6), so
+// the column has no blank row above; closed, the column collapses to
+// a rail holding only the toggle and the grid takes the width. Page
+// state, default open; below 1100 the composer is already the sheet
+// and this column is hidden.
+const COMPOSER_OPEN_LABEL = "Open composer";
+const COMPOSER_CLOSE_LABEL = "Close composer";
+
+function pluralNoun(count) {
+  return count === 1 ? MEDIA_ITEM_NOUN : `${MEDIA_ITEM_NOUN}s`;
+}
+
+// The Filter trigger's own recipe (KitDropdown.view), so Select and
+// Folders read as the controls beside it; gold while marked, the way
+// the Filter trigger turns gold on a non-resting pick.
+const FOLDERS_TRIGGER_CLASS =
+  "inline-flex min-w-0 max-w-[10rem] min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--step-above)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:min-h-[var(--control-md)]";
+const FOLDERS_TRIGGER_REST_CLASS =
+  "text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]";
+const FOLDERS_TRIGGER_MARKED_CLASS = "text-[var(--gold-bright)]";
 
 // The one filter that exists on an asset picker today: the creator's
 // own assets or the public catalog (session 2, note 3; "Mine" reworded
@@ -216,6 +276,34 @@ export default function ImagesV2Live() {
   // its Generate stays Soon until the Chassis carries a video job
   // (docs/handoffs/MEDIA-STUDIO-BACKEND.md gap 15).
   const [composerMode, setComposerMode] = useState("IMAGE");
+  const [isComposerOpen, setIsComposerOpen] = useState(true);
+  // Folders panel: closed by default (1A), one toggle for both bar
+  // controls, the chosen folder page-local (null is the root row All).
+  const [foldersOpen, setFoldersOpen] = useState(false);
+  const [selectedFolderId, setSelectedFolderId] = useState(null);
+  const [noticeTone, setNoticeTone] = useState("neutral");
+  const notice = useKitNoticeAutoClear();
+  const foldersHost = useFoldersPanelHost();
+  const folderStore = useFolderStore("MEDIA");
+  // The grid column's viewport insets, handed to the fixed selection
+  // bar so it centers on the column (follow-up 2, item 1).
+  const [gridColumnRef, dockInsets] = useColumnDockInsets();
+  // The primary sidebar's collapse control is the studio chrome's left
+  // edge (StudioChromeProvider, decision J1): the sidebar reads
+  // leftOwner "page" as collapsed, so opening the Folders column
+  // collapses the sidebar to its rail through claimLeft("page"), the
+  // same handler the story chat's story list calls (follow-up 1, item
+  // 4). Closing the panel hands nothing back, so the sidebar stays on
+  // its rail until the user expands it; expanding it (leftOwner "nav")
+  // closes the column, one left panel at a time. Leaving the route
+  // releases the edge, as the chat page does.
+  const { leftOwner, claimLeft, releaseLeft } = useStudioChrome();
+  const onToggleFolders = useCallback(() => {
+    if (!foldersOpen && foldersHost === "column") claimLeft?.("page");
+    setFoldersOpen(!foldersOpen);
+  }, [claimLeft, foldersHost, foldersOpen]);
+  if (foldersOpen && foldersHost === "column" && leftOwner === "nav") setFoldersOpen(false);
+  useEffect(() => () => releaseLeft?.(), [releaseLeft]);
   const openCameraPresetPicker = useCallback(() => setCameraPickerOpen(true), []);
   const closeCameraPresetPicker = useCallback(() => setCameraPickerOpen(false), []);
   const sharedImageOutputId = String(searchParams?.get("image") || "").trim();
@@ -244,6 +332,20 @@ export default function ImagesV2Live() {
     mode: composerMode,
     onChangeMode: setComposerMode,
   });
+  // The chosen folder, or null once it is gone from the store (a
+  // delete lifts the selection to the parent through the panel; a
+  // cleared browser store reads as the root).
+  const activeFolder = useMemo(
+    () => (selectedFolderId ? folderStore.folders.find((folder) => folder.id === selectedFolderId) || null : null),
+    [folderStore.folders, selectedFolderId]
+  );
+  const folderItemIds = useMemo(() => {
+    if (!activeFolder) return null;
+    const state = { surface: "MEDIA", folders: folderStore.folders, itemsByFolder: folderStore.itemsByFolder };
+    return [activeFolder.id, ...getDescendantIds(state, activeFolder.id)].flatMap(
+      (folderId) => folderStore.itemsByFolder[folderId] || []
+    );
+  }, [activeFolder, folderStore.folders, folderStore.itemsByFolder]);
   // The page owns the shared filter bar (RULED 6 Sep 2026), so it calls
   // the grid ViewModel itself and renders the grid skin with the
   // header's own filter controls off.
@@ -252,7 +354,103 @@ export default function ImagesV2Live() {
     imageStudioHref: "/studio/v2/images",
     initialActivePreviewId: sharedImageOutputId || null,
     onActivePreviewChange: syncLightboxShareLink,
+    folderItemIds,
   });
+
+  // Every folder write and every bar action reports through the one
+  // KitNotice: the store's note string, delete in the danger tone.
+  function showNote(note, tone = "neutral") {
+    setNoticeTone(tone === "danger" ? "danger" : "neutral");
+    notice.show(note);
+  }
+
+  function handleSelectFolder(folderId) {
+    setSelectedFolderId(folderId ?? null);
+    if (foldersHost === "sheet") setFoldersOpen(false);
+  }
+
+  function selectedMediaItems() {
+    return grid.mediaItems.filter((item) => item.selected);
+  }
+
+  // Add to folder files the whole selection through the store, one
+  // folder per item (M1): the last successful note shows, a refusal
+  // shows instead in the danger tone.
+  function handleAddToFolder(folderId) {
+    let lastNote = "";
+    let refusalNote = "";
+    for (const item of selectedMediaItems()) {
+      const result = folderStore.setItemFolder({ itemId: item.imageOutputId, folderId });
+      if (result.ok) lastNote = result.note;
+      else if (!refusalNote) refusalNote = result.note;
+    }
+    if (refusalNote) showNote(refusalNote, "danger");
+    else if (lastNote) showNote(lastNote);
+  }
+
+  // Remove from folder (follow-up 3, item 1): while a folder other
+  // than All is chosen, the bar's second control unfiles the whole
+  // selection through the store (a null folder, so the items sit only
+  // in All); one note names the count and the folder. The items leave
+  // the folder's view, so the selection clears through the grid's
+  // existing onClearSelection rather than pointing at hidden items.
+  function handleRemoveFromFolder() {
+    if (!activeFolder) return;
+    const items = selectedMediaItems();
+    let refusalNote = "";
+    for (const item of items) {
+      const result = folderStore.setItemFolder({ itemId: item.imageOutputId, folderId: null });
+      if (!result.ok && !refusalNote) refusalNote = result.note;
+    }
+    if (refusalNote) {
+      showNote(refusalNote, "danger");
+      return;
+    }
+    showNote(folderNotes.unfiledMany(items.length, activeFolder.name));
+    grid.onClearSelection?.();
+  }
+
+  // Download runs the viewer's own per-item download (the Large row,
+  // the original through the file proxy) on each selected item.
+  function handleDownloadSelected() {
+    const items = selectedMediaItems();
+    for (const item of items) {
+      const large = buildDownloadOptions({ imageOutputId: item.imageOutputId, imageUrl: item.imageUrl }).find(
+        (option) => option.id === "large"
+      );
+      if (!large?.href) continue;
+      const anchor = document.createElement("a");
+      anchor.href = large.href;
+      anchor.download = "";
+      anchor.rel = "noopener";
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+    }
+    showNote(`Downloading ${items.length} ${pluralNoun(items.length)}.`);
+  }
+
+  // Delete keeps the existing bulk delete: the bar's confirm primary
+  // runs the grid ViewModel's onConfirmBulkDelete by name, and the
+  // grid's own outcome line still reports what was deleted.
+  function handleDeleteSelected() {
+    showNote(`Deleting ${grid.selectedCount} ${pluralNoun(grid.selectedCount)}.`, "danger");
+    grid.onConfirmBulkDelete?.();
+  }
+
+  const foldersPanelProps = {
+    surface: "MEDIA",
+    folders: folderStore.folders,
+    itemsByFolder: folderStore.itemsByFolder,
+    allCount: grid.mediaItems.length,
+    selectedFolderId: activeFolder?.id ?? null,
+    onSelectFolder: handleSelectFolder,
+    onCreateFolder: folderStore.createFolder,
+    onRenameFolder: folderStore.renameFolder,
+    onMoveFolder: folderStore.moveFolder,
+    onDeleteFolder: folderStore.deleteFolder,
+    onNotice: showNote,
+  };
   const filterGroups = useMemo(
     () => [
       {
@@ -281,6 +479,18 @@ export default function ImagesV2Live() {
     [isSavedOn, hasMediaPick, grid.mediaFilter]
   );
   const nestedBackLabel = mobileCreatorOpen ? "Back to the composer" : null;
+  const composerToggle = (
+    <button
+      type="button"
+      onClick={() => setIsComposerOpen((current) => !current)}
+      title={isComposerOpen ? COMPOSER_CLOSE_LABEL : COMPOSER_OPEN_LABEL}
+      aria-label={isComposerOpen ? COMPOSER_CLOSE_LABEL : COMPOSER_OPEN_LABEL}
+      aria-expanded={isComposerOpen}
+      className={BARE_ICON_BUTTON_CLASS}
+    >
+      <KitPanelToggle side="right" open={isComposerOpen} />
+    </button>
+  );
 
   return (
     <>
@@ -300,6 +510,36 @@ export default function ImagesV2Live() {
               searchValue={grid.searchQuery}
               searchPlaceholder="Search your media..."
               onSearchChange={grid.onChangeSearchQuery}
+              // Select and Folders in the bar's leadingSlot (2.5.0):
+              // the bar lays its one row out as the ruled Media row
+              // (follow-up 2, items 3 and 5), spread with equal gaps on
+              // phones and at the row's right side at 700 and up, and
+              // renders the Library dropdown itself on the same grid
+              // handlers through onFilterToggle.
+              leadingSlot={
+                <>
+                  <button
+                    type="button"
+                    onClick={grid.onToggleSelectionMode}
+                    aria-pressed={grid.selectionMode}
+                    disabled={!grid.hasSelectableMedia || grid.isBulkDeleting}
+                    className={`${FOLDERS_TRIGGER_CLASS} ${grid.selectionMode ? FOLDERS_TRIGGER_MARKED_CLASS : FOLDERS_TRIGGER_REST_CLASS}`}
+                  >
+                    <span className="min-w-0 truncate">{grid.selectionMode ? SELECT_DONE_LABEL : SELECT_LABEL}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onToggleFolders}
+                    aria-pressed={foldersOpen}
+                    aria-expanded={foldersOpen}
+                    aria-label={activeFolder ? `${FOLDERS_ROOT_LABEL}: ${activeFolder.name}` : FOLDERS_ROOT_LABEL}
+                    className={`${FOLDERS_TRIGGER_CLASS} ${foldersOpen || activeFolder ? FOLDERS_TRIGGER_MARKED_CLASS : FOLDERS_TRIGGER_REST_CLASS}`}
+                  >
+                    <Folder size={14} aria-hidden="true" className="flex-none" />
+                    <span className="min-w-0 truncate">{activeFolder ? activeFolder.name : FOLDERS_ROOT_LABEL}</span>
+                  </button>
+                </>
+              }
               filterPresentation="dropdowns"
               filterGroups={filterGroups}
               selectedValues={selectedFilterValues}
@@ -314,12 +554,11 @@ export default function ImagesV2Live() {
                 }
                 grid.onSetMediaFilter?.(grid.mediaFilter === value ? "ALL" : value);
               }}
-              onClearFilters={grid.onClearFilters}
               sortOptions={[]}
               viewModeSlot={
-                // Density, RULED 6 Sep 2026: the shared toggle slot
-                // carries the Large/Grid density flip through the
-                // unchanged onToggleMobileGrid (grid = compact).
+                // Density, RULED 6 Sep 2026: the Large/Grid density
+                // flip through the unchanged onToggleMobileGrid
+                // (grid = compact), last in the row at its right edge.
                 <ViewModeToggleView
                   value={grid.compactMobileGrid ? "grid" : "list"}
                   label="Library density"
@@ -348,17 +587,52 @@ export default function ImagesV2Live() {
           }
         >
           <div className="flex items-start gap-[var(--space-6)]">
-            <div className="min-w-0 flex-1">
+            {/* Folders column (1A): left of the grid at 1100 and up,
+                only while open; below 1100 the sheet renders instead,
+                outside this row. */}
+            {foldersOpen && foldersHost === "column" ? (
+              <KitFoldersPanel host="column" {...foldersPanelProps} />
+            ) : null}
+
+            <div ref={gridColumnRef} className="min-w-0 flex-1">
+              {notice.message ? (
+                <div className="mb-[var(--space-4)]">
+                  <KitNotice message={notice.message} tone={noticeTone} onDismiss={notice.clear} />
+                </div>
+              ) : null}
+
               <MediaHistoryGridSkin
                 {...grid}
                 showFilterControls={false}
-                mobilePrimaryActionLabel="Compose"
-                onMobilePrimaryAction={() => setMobileCreatorOpen(true)}
+                showSelectionToggle={false}
                 // The image viewer (session 3, notes 6 and 6a): the
                 // Kit viewer with the brush editor inside it, the
                 // page's own adapter keeping every lightbox handler.
                 renderLightbox={(lightboxProps) => <ImagesV2ImageViewer {...lightboxProps} />}
               />
+
+              {/* The one selection bar (AF4, option 3A): the grid's
+                  bulk section is gone; the bar runs the grid
+                  ViewModel's existing handlers by name. Fixed at the
+                  viewport's bottom at md and up, centered on this
+                  column through its dock insets; fixed above the
+                  mobile dock below. */}
+              {grid.selectionMode ? (
+                <KitSelectionBar
+                  selectedCount={grid.selectedCount}
+                  itemNoun={MEDIA_ITEM_NOUN}
+                  folders={folderStore.folders}
+                  onAddToFolder={handleAddToFolder}
+                  removeFromFolderName={activeFolder?.name || ""}
+                  onRemoveFromFolder={handleRemoveFromFolder}
+                  onDownload={handleDownloadSelected}
+                  onDelete={handleDeleteSelected}
+                  onDone={grid.onToggleSelectionMode}
+                  isBusy={grid.isBulkDeleting}
+                  dockInsets={dockInsets}
+                  deleteBody={`This removes ${grid.selectedCount} selected ${pluralNoun(grid.selectedCount)} from Media Studio, connected creation libraries, and featured image slots. This cannot be undone.`}
+                />
+              ) : null}
             </div>
 
             {/* The composer owns its scrolling: its scroll region and
@@ -367,7 +641,9 @@ export default function ImagesV2Live() {
                 9 Sep 2026, items 6 and 7). No padding here; the
                 composer pads its own regions. */}
             <aside
-              className="sticky hidden w-[24rem] flex-none flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] min-[1100px]:flex"
+              className={`sticky hidden flex-none flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] min-[1100px]:flex ${
+                isComposerOpen ? "w-[24rem]" : "w-auto"
+              }`}
               style={{
                 top: "calc(var(--topbar-h) + var(--space-4))",
                 maxHeight: "calc(100dvh - var(--topbar-h) - var(--space-8))",
@@ -375,28 +651,55 @@ export default function ImagesV2Live() {
             >
               {/* remix is already inside panelProps; it is named here
                   so the Remix wiring on this surface is greppable and
-                  guarded by imagesV2LiveAdapterDiagnostics.mjs. */}
-              <KitImageCreatorPanel {...live.panelProps} remix={live.panelProps.remix} />
+                  guarded by imagesV2LiveAdapterDiagnostics.mjs. The
+                  toggle rides the mode toggle's row while open and is
+                  the rail's only content while closed. */}
+              {isComposerOpen ? (
+                <KitImageCreatorPanel
+                  {...live.panelProps}
+                  remix={live.panelProps.remix}
+                  modeRowLeadingSlot={composerToggle}
+                />
+              ) : (
+                <div className="flex shrink-0 items-center justify-start px-[var(--space-2)] py-[var(--space-2)]">{composerToggle}</div>
+              )}
             </aside>
           </div>
         </KitStudioPageView>
       </div>
 
-      <div className="fixed inset-x-0 bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-40 px-[var(--space-4)] min-[1100px]:hidden">
-        <div className="mx-auto flex max-w-xl items-center gap-[var(--space-3)] rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/35 bg-[color-mix(in_srgb,var(--canvas)_92%,transparent)] p-[var(--space-2)] shadow-[var(--shadow-modal)] backdrop-blur-[var(--blur-chrome)]">
-          {/* Compose opens the composer sheet (browser review 9 Sep
-              2026, item 9); Generate lives inside the sheet's fixed
-              footer, never on this bar. */}
-          <button
-            type="button"
-            onClick={() => setMobileCreatorOpen(true)}
-            className="cf-btn cf-btn--primary flex min-h-[var(--control-lg)] flex-1 items-center justify-center gap-[var(--space-2)]"
-          >
-            <ImagePlus size={17} aria-hidden="true" />
-            <span>Compose</span>
-          </button>
+      {/* The sticky bottom bar is the one path to the composer sheet
+          on phones (follow-up 2, item 4: the in-page button above the
+          grid is gone). Edge to edge, glass on the ratified themed
+          panel glass token with its paired blur, no border; one
+          whisper hairline sits above the bottom nav, and the bar sits
+          flush on the nav through the dock's own height token
+          (follow-up 3, item 4). It hides while
+          select mode is on (AF5): the selection bar takes its place. */}
+      {grid.selectionMode ? null : (
+        <div className="fixed inset-x-0 bottom-[calc(var(--dock-h)+env(safe-area-inset-bottom))] z-40 min-[1100px]:hidden">
+          <div className="flex items-center bg-[var(--panel-ui-glass)] px-[var(--space-5)] py-[var(--space-2)] backdrop-blur-[var(--blur-panel)]">
+            {/* Opens the composer sheet (browser review 9 Sep 2026,
+                item 9); Generate lives inside the sheet's fixed
+                footer, never on this bar. */}
+            <button
+              type="button"
+              onClick={() => setMobileCreatorOpen(true)}
+              className="cf-btn cf-btn--primary flex min-h-[var(--control-lg)] flex-1 items-center justify-center gap-[var(--space-2)]"
+            >
+              <ImagePlus size={17} aria-hidden="true" />
+              <span>Compose</span>
+            </button>
+          </div>
+          <div aria-hidden="true" className="h-px bg-[var(--line-whisper)]" />
         </div>
-      </div>
+      )}
+
+      {/* Folders sheet (1A, below 1100): the Kit frame's sheet with
+          the grabber; choosing a folder closes it. */}
+      {foldersOpen && foldersHost === "sheet" ? (
+        <KitFoldersPanel host="sheet" {...foldersPanelProps} onClose={() => setFoldersOpen(false)} />
+      ) : null}
 
       {mobileCreatorOpen ? (
         <ImagesV2ComposerSheet
