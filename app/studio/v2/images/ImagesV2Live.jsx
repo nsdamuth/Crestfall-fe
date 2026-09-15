@@ -8,7 +8,6 @@ import KitFoldersPanel from "@/components/kit/KitFoldersPanel";
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
 import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
 import KitNotice from "@/components/kit/KitNotice";
-import KitPanelToggle from "@/components/kit/KitPanelToggle";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
 import KitSelectionBar from "@/components/kit/KitSelectionBar";
@@ -16,7 +15,6 @@ import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudio
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import { useKitNoticeAutoClear } from "@/components/kit/notice/useKitNoticeViewModel";
-import { BARE_ICON_BUTTON_CLASS } from "@/components/kit/panel-toggle/KitPanelToggle.view";
 import MediaHistoryGridSkin from "@/components/studio/image-studio/MediaHistoryGridSkin";
 import { useMediaHistoryGridViewModel } from "@/components/studio/image-studio/media-history-grid/useMediaHistoryGridViewModel";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
@@ -61,17 +59,17 @@ function countLibrary(items, value) {
 
 // Folders (ASSET-FOLDERS plan, package AF5, 14 Sep 2026): surface
 // MEDIA of the browser-local folder store (option 2A ruled). The
-// trigger sits in the bar's controlsSlot beside Filter and reads
-// "Folders" at the root, the folder's name once one is chosen; the
-// KitPanelToggle glyph sits at the bar's right end before the density
-// toggle; both call the one toggle. The panel is the column left of
+// button sits in the bar's controlsSlot between Select and Filter and
+// reads "Folders" at the root, the folder's name once one is chosen;
+// it alone opens and closes the panel (follow-up 1, item 3: the glyph
+// left the bar) and reads selected while the panel is open. The panel
+// is the column left of
 // the grid at 1100 and up (option 1A ruled, closed by default) and
 // the Kit sheet below, where choosing a folder closes it. Membership
 // filters the visible media after the Library filter through the grid
 // ViewModel's folderItemIds input; a folder shows its own items plus
 // its sub-folders', the same reading as the panel's row count.
 const FOLDERS_ROOT_LABEL = "Folders";
-const FOLDERS_PANEL_LABEL = "Folders panel";
 const MEDIA_ITEM_NOUN = "image";
 // Select (AF5 follow-up 1, item 2): the grid header's Select / Done
 // toggle moved into the shared bar, first control after the search
@@ -463,9 +461,10 @@ export default function ImagesV2Live() {
                   <button
                     type="button"
                     onClick={onToggleFolders}
+                    aria-pressed={foldersOpen}
                     aria-expanded={foldersOpen}
                     aria-label={activeFolder ? `${FOLDERS_ROOT_LABEL}: ${activeFolder.name}` : FOLDERS_ROOT_LABEL}
-                    className={`${FOLDERS_TRIGGER_CLASS} ${activeFolder ? FOLDERS_TRIGGER_MARKED_CLASS : FOLDERS_TRIGGER_REST_CLASS}`}
+                    className={`${FOLDERS_TRIGGER_CLASS} ${foldersOpen || activeFolder ? FOLDERS_TRIGGER_MARKED_CLASS : FOLDERS_TRIGGER_REST_CLASS}`}
                   >
                     <Folder size={14} aria-hidden="true" className="flex-none" />
                     <span className="min-w-0 truncate">{activeFolder ? activeFolder.name : FOLDERS_ROOT_LABEL}</span>
@@ -498,27 +497,14 @@ export default function ImagesV2Live() {
               viewModeSlot={
                 // Density, RULED 6 Sep 2026: the shared toggle slot
                 // carries the Large/Grid density flip through the
-                // unchanged onToggleMobileGrid (grid = compact). The
-                // panel toggle glyph (AF5) sits before it, at the
-                // bar's right end, on the same handler as the trigger.
-                <>
-                  <button
-                    type="button"
-                    onClick={onToggleFolders}
-                    aria-expanded={foldersOpen}
-                    aria-label={FOLDERS_PANEL_LABEL}
-                    className={BARE_ICON_BUTTON_CLASS}
-                  >
-                    <KitPanelToggle side="left" open={foldersOpen} />
-                  </button>
-                  <ViewModeToggleView
-                    value={grid.compactMobileGrid ? "grid" : "list"}
-                    label="Library density"
-                    onChange={(next) => {
-                      if ((next === "grid") !== grid.compactMobileGrid) grid.onToggleMobileGrid?.();
-                    }}
-                  />
-                </>
+                // unchanged onToggleMobileGrid (grid = compact).
+                <ViewModeToggleView
+                  value={grid.compactMobileGrid ? "grid" : "list"}
+                  label="Library density"
+                  onChange={(next) => {
+                    if ((next === "grid") !== grid.compactMobileGrid) grid.onToggleMobileGrid?.();
+                  }}
+                />
               }
             />
           }
