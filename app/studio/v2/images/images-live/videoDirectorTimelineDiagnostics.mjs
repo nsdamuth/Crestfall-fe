@@ -121,7 +121,9 @@ test("Live adapter and portable View keep Director timing separate from billing"
   assert.match(panel, /Set precise cue ranges\. Gaps are allowed\./);
   assert.doesNotMatch(panel, /\{row\.fromSecond\} to \{row\.toSecond\}s/);
 
-  assert.match(contract, /VIEW_CONTRACT_VERSION = "2\.5\.0"/);
+  // 2.5.0 carried the Director timing law; 2.6.0 (AF5 follow-up 2,
+  // item 6) added modeRowLeadingSlot on top of it.
+  assert.match(contract, /VIEW_CONTRACT_VERSION = "2\.6\.0"/);
   assert.match(contract, /0\.1-second precision/);
   assert.match(contract, /adding\/removing cues never/);
   assert.match(contract, /jsonEditor/);

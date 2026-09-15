@@ -21,6 +21,9 @@ export function useKitImageCreatorPanelViewModel({
   stage = "GENERATE",
   onChangeStage = null,
   remix = null,
+  // modeRowLeadingSlot (2.6.0): a node the View places at the left of
+  // the mode toggle; passes through untouched.
+  modeRowLeadingSlot = null,
   video = null,
   slots = {},
   locationViewControl = null,
@@ -67,6 +70,7 @@ export function useKitImageCreatorPanelViewModel({
     stage: stage === "REMIX" ? "REMIX" : "GENERATE",
     onChangeStage,
     remix: remix && typeof remix === "object" ? remix : null,
+    modeRowLeadingSlot,
     video: video && typeof video === "object" ? video : null,
     slots: slots && typeof slots === "object" ? slots : {},
     locationViewControl:
