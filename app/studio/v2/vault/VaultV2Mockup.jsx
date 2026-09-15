@@ -72,12 +72,19 @@ import { canArchiveVaultItem, canDeleteVaultItem } from "@/lib/shared/presentati
 import { folderNotes, getDescendantIds } from "@/lib/client/studio/folders/folderRules";
 import { useFolderStore } from "@/lib/client/studio/folders/useFolderStore";
 import { buildDomainFilterGroups, orderFilterGroups } from "../catalog/creationCatalogFilterTaxonomy.js";
-// The two layout hooks the Media composition minted (AF5): which host
-// the Folders panel takes on this page (the column at 1100 and up,
-// the sheet below), read from the same query, and the grid column's
-// viewport insets that center the fixed selection bar on the column.
-import { useColumnDockInsets } from "../images/images-live/useColumnDockInsets";
-import { useFoldersPanelHost } from "../images/images-live/useFoldersPanelHost";
+// The two layout hooks (ASSET-FOLDERS AF5/AF7): which host the Folders
+// panel takes on this page (the column at 1100 and up, the sheet
+// below), read from the same query, and the grid column's viewport
+// insets that center the fixed selection bar on the column. Shared
+// with Media from components/studio/folders/hooks (AF7 item 1).
+import { useColumnDockInsets } from "@/components/studio/folders/hooks/useColumnDockInsets";
+import { useFoldersPanelHost } from "@/components/studio/folders/hooks/useFoldersPanelHost";
+import {
+  FOLDERS_ROOT_LABEL,
+  FOLDERS_TRIGGER_CLASS,
+  FOLDERS_TRIGGER_MARKED_CLASS,
+  FOLDERS_TRIGGER_REST_CLASS,
+} from "@/components/studio/folders/foldersTriggerRecipe";
 import { useVaultSelection } from "./useVaultSelection";
 import { VISIBILITY_LABELS, filterVaultItems } from "./vaultVisibility.js";
 
@@ -89,17 +96,6 @@ function creatorArt(name) {
   return encodeURI(`/tmp-mockup-images/alpha-test-creator-images/${name}.png`);
 }
 
-// The Folders trigger: the Filter trigger's own recipe (KitDropdown.
-// view), the same three class strings the Media composition carries,
-// so the control reads as the one beside Filter on both pages; gold
-// while marked, the way the Filter trigger turns gold on a non-resting
-// pick. One shared definition for the two pages is a follow-up.
-const FOLDERS_ROOT_LABEL = "Folders";
-const FOLDERS_TRIGGER_CLASS =
-  "inline-flex min-w-0 max-w-[10rem] min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--step-above)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:min-h-[var(--control-md)]";
-const FOLDERS_TRIGGER_REST_CLASS =
-  "text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]";
-const FOLDERS_TRIGGER_MARKED_CLASS = "text-[var(--gold-bright)]";
 // Select, first after the search field (the Media ruling carried):
 // reads Done and selected while select mode is on.
 const SELECT_LABEL = "Select";

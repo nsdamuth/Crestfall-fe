@@ -20,14 +20,14 @@
 import { ChevronRight, Ellipsis, Folder, FolderPlus } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
-import { MENU_PANEL_RECIPE, MenuRow } from "../form-field/menuRecipe";
+import { menuPanelRecipe, MenuRow } from "../form-field/menuRecipe";
 
 const COLUMN_STICKY_TOP =
   "calc(var(--topbar-h) - 1px + var(--control-filter) + var(--space-3) * 2 + var(--space-4))";
 
 // Same surface, radius, padding, and hover as every other menu, in
 // flow rather than floating (see the placement note above).
-const INLINE_MENU_RECIPE = MENU_PANEL_RECIPE.replace("absolute z-50 ", "");
+const INLINE_MENU_RECIPE = menuPanelRecipe("inline");
 
 const ROW_RECIPE =
   "flex min-h-[var(--control-md)] w-full min-w-0 items-center gap-[var(--space-2)] rounded-[var(--radius-md)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)]";

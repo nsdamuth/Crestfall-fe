@@ -715,3 +715,32 @@ the Select and Folders rows (1061, 1055) name the `leadingSlot`. Under
 `/studio/v2/vault` the Filter row (902) and the view toggle row (905)
 name their placement on the bar's one row; the Sort row (904) parses
 with the wrong column count at tip and is untouched.
+
+## Folders and selection bar close (ASSET-FOLDERS AF7, 14 Sep 2026)
+
+Folders and Select mode now stand on three routes. `/studio/v2/images`
+(AF5, and the follow-ups above) and `/studio/v2/vault` (AF6, above)
+each carry the full composition: a Folders panel bound to the
+browser-local store's MEDIA or VAULT surface, a Select mode with
+per-card checks, and one KitSelectionBar. `/studio/image-studio`, the
+pre-parity legacy route, gains five new rows at the end of the ledger:
+the same KitSelectionBar now mounts there too (item 2), run through
+`MediaHistoryGrid.jsx`'s additive `selectionBarSlot`, against the same
+`useMediaHistoryGridViewModel` instance the grid skin already reads;
+Select mode has Delete back, at last (its earlier row, and the Delete
+Selected (N) row AF5 retired, are both updated to say so). This route
+has no Folders panel and no folder store, so Add to folder and Remove
+from folder carry no folder tree and no write, and Download stays
+Soon, matching the no-bulk-download reading applied on Vault (M3);
+Add to folder still renders (`status: stubbed`), since hiding it would
+be a Kit change outside this item's authorized scope.
+
+The two layout hooks Vault read from Media's `images-live` folder
+(`useFoldersPanelHost`, `useColumnDockInsets`) and the Folders and
+Select trigger recipe duplicated in both pages move to
+`components/studio/folders/hooks` and
+`components/studio/folders/foldersTriggerRecipe.js` (item 1), the
+convention `components/studio/engagement/hooks` already set for hooks
+shared by more than one page composition. No function map row names a
+hook's file path, so this move touches no row's content, only its
+`viewmodel_or_hook` column's already-accurate hook name.

@@ -12,10 +12,27 @@
 // right-hand note (the measured pixel size on the Large row).
 // Session 4: `imageSrc` renders a small square thumbnail before the
 // label (the @ mention list inside the composer's second-stage prompt).
+//
+// menuPanelRecipe (ASSET-FOLDERS AF7, item 3, additive): the same
+// surface, radius, padding, and hover state at either of two
+// placements. "floating" (the default, MENU_PANEL_RECIPE unchanged)
+// positions and stacks itself for a menu opened over other content.
+// "inline" drops the floating position and stacking so the menu
+// renders in flow under its own row, for a menu inside a scroller
+// that would clip a floating one, or that must stay inside the
+// viewport by construction (KitFoldersPanel's row menu). Every
+// consumer that reads MENU_PANEL_RECIPE directly is unchanged; this
+// is the one place that used to build the inline variant by string
+// replace in the consumer.
 import { Check } from "lucide-react";
 
 export const MENU_PANEL_RECIPE =
   "absolute z-50 max-h-[19rem] overflow-y-auto rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--panel-ui-glass)] p-[var(--space-2)] backdrop-blur-[var(--blur-panel)]";
+
+export function menuPanelRecipe(placement = "floating") {
+  if (placement === "inline") return MENU_PANEL_RECIPE.replace("absolute z-50 ", "");
+  return MENU_PANEL_RECIPE;
+}
 
 const ROW_RECIPE =
   "flex min-h-[var(--control-sm)] w-full items-center justify-between gap-[var(--space-3)] rounded-[var(--radius-sm)] px-[var(--space-3)] py-[var(--space-1)] text-left text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors [@media(pointer:coarse)]:min-h-[var(--control-md)]";

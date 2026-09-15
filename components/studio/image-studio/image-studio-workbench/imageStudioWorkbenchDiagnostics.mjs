@@ -157,6 +157,31 @@ test("contract, fixtures, and protected preview cover workbench states", () => {
   assert.match(preview, /PreviewComposer/);
 });
 
+// ASSET-FOLDERS AF7, item 2: Select mode on the legacy page has
+// actions again through the grid shell's additive selectionBarSlot.
+test("KitSelectionBar mounts once in the legacy shell, wired to the grid's existing selection handlers, with no folders", () => {
+  const shell = read("components/studio/image-studio/ImageStudioWorkbench.jsx");
+  const gridShell = read("components/studio/image-studio/MediaHistoryGrid.jsx");
+
+  assert.equal((shell.match(/<KitSelectionBar\b/g) || []).length, 1);
+  assert.match(shell, /import KitSelectionBar from "@\/components\/kit\/KitSelectionBar";/);
+  assert.match(shell, /onDelete=\{grid\.onConfirmBulkDelete\}/);
+  assert.match(shell, /onDone=\{grid\.onToggleSelectionMode\}/);
+  assert.match(shell, /isBusy=\{grid\.isBulkDeleting\}/);
+  // No folders on this page: the handler and the tree are both empty,
+  // not a Kit change (R6 keeps all five bar items rendered).
+  assert.match(shell, /folders=\{\[\]\}/);
+  assert.match(shell, /onAddToFolder=\{null\}/);
+  assert.doesNotMatch(shell, /removeFromFolderName=/);
+  // The bar rides the grid shell's own ViewModel output; the shell
+  // gained one additive prop, default null, and calls it as a sibling
+  // of the skin rather than lifting the hook or touching the
+  // Kit-contracted grid View.
+  assert.match(gridShell, /selectionBarSlot = null/);
+  assert.match(gridShell, /\{selectionBarSlot \? selectionBarSlot\(viewProps\) : null\}/);
+  assert.doesNotMatch(gridShell, /useState|useEffect/);
+});
+
 test("documentation and package script preserve scope and Mechanics deferral", () => {
   const readme = read(
     "components/studio/image-studio/image-studio-workbench/README.md"
