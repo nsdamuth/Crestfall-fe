@@ -580,8 +580,6 @@ export default function ImagesV2Live() {
                 {...grid}
                 showFilterControls={false}
                 showSelectionToggle={false}
-                mobilePrimaryActionLabel="Compose"
-                onMobilePrimaryAction={() => setMobileCreatorOpen(true)}
                 // The image viewer (session 3, notes 6 and 6a): the
                 // Kit viewer with the brush editor inside it, the
                 // page's own adapter keeping every lightbox handler.
@@ -647,13 +645,17 @@ export default function ImagesV2Live() {
         </KitStudioPageView>
       </div>
 
-      {/* The Compose bar hides while select mode is on (AF5): the
-          selection bar takes its place above the mobile dock. */}
+      {/* The sticky bottom bar is the one path to the composer sheet
+          on phones (follow-up 2, item 4: the in-page button above the
+          grid is gone). Edge to edge, glass on the ratified themed
+          panel glass token with its paired blur, no border; one
+          whisper hairline sits above the bottom nav. It hides while
+          select mode is on (AF5): the selection bar takes its place. */}
       {grid.selectionMode ? null : (
-        <div className="fixed inset-x-0 bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-40 px-[var(--space-4)] min-[1100px]:hidden">
-          <div className="mx-auto flex max-w-xl items-center gap-[var(--space-3)] rounded-[var(--radius-lg)] border border-[var(--gold-ornament)]/35 bg-[color-mix(in_srgb,var(--canvas)_92%,transparent)] p-[var(--space-2)] shadow-[var(--shadow-modal)] backdrop-blur-[var(--blur-chrome)]">
-            {/* Compose opens the composer sheet (browser review 9 Sep
-                2026, item 9); Generate lives inside the sheet's fixed
+        <div className="fixed inset-x-0 bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-40 min-[1100px]:hidden">
+          <div className="flex items-center bg-[var(--panel-ui-glass)] px-[var(--space-5)] py-[var(--space-2)] backdrop-blur-[var(--blur-panel)]">
+            {/* Opens the composer sheet (browser review 9 Sep 2026,
+                item 9); Generate lives inside the sheet's fixed
                 footer, never on this bar. */}
             <button
               type="button"
@@ -664,6 +666,7 @@ export default function ImagesV2Live() {
               <span>Compose</span>
             </button>
           </div>
+          <div aria-hidden="true" className="h-px bg-[var(--line-whisper)]" />
         </div>
       )}
 
