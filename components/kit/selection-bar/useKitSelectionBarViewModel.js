@@ -25,6 +25,16 @@ function text(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 
+// dockInsets (1.1.0): the page column's left and right distances from
+// the viewport edges in px, both finite numbers, or null.
+function insets(value) {
+  if (!value || typeof value !== "object") return null;
+  const left = Number(value.left);
+  const right = Number(value.right);
+  if (!Number.isFinite(left) || !Number.isFinite(right)) return null;
+  return { left: Math.max(0, left), right: Math.max(0, right) };
+}
+
 export function useKitSelectionBarViewModel(props = {}) {
   const selectedCount = Number.isInteger(props.selectedCount) && props.selectedCount > 0 ? props.selectedCount : 0;
   const noun = pluralize(selectedCount, props.itemNoun);
@@ -66,5 +76,6 @@ export function useKitSelectionBarViewModel(props = {}) {
       onDelete?.();
     },
     onDone: callback(props.onDone),
+    dockInsets: insets(props.dockInsets),
   };
 }

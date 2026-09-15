@@ -30,6 +30,7 @@ import { useFolderStore } from "@/lib/client/studio/folders/useFolderStore";
 import ImagesV2CameraPresetPicker from "./images-live/ImagesV2CameraPresetPicker";
 import ImagesV2ComposerSheet from "./images-live/ImagesV2ComposerSheet";
 import ImagesV2ImageViewer, { buildDownloadOptions } from "./images-live/ImagesV2ImageViewer";
+import { useColumnDockInsets } from "./images-live/useColumnDockInsets";
 import { useFoldersPanelHost } from "./images-live/useFoldersPanelHost";
 import { useImagesV2LiveViewModel } from "./images-live/useImagesV2LiveViewModel";
 
@@ -279,6 +280,9 @@ export default function ImagesV2Live() {
   const notice = useKitNoticeAutoClear();
   const foldersHost = useFoldersPanelHost();
   const folderStore = useFolderStore("MEDIA");
+  // The grid column's viewport insets, handed to the fixed selection
+  // bar so it centers on the column (follow-up 2, item 1).
+  const [gridColumnRef, dockInsets] = useColumnDockInsets();
   // The primary sidebar's collapse control is the studio chrome's left
   // edge (StudioChromeProvider, decision J1): the sidebar reads
   // leftOwner "page" as collapsed, so opening the Folders column
@@ -561,7 +565,7 @@ export default function ImagesV2Live() {
               <KitFoldersPanel host="column" {...foldersPanelProps} />
             ) : null}
 
-            <div className="min-w-0 flex-1">
+            <div ref={gridColumnRef} className="min-w-0 flex-1">
               {notice.message ? (
                 <div className="mb-[var(--space-4)]">
                   <KitNotice message={notice.message} tone={noticeTone} onDismiss={notice.clear} />
@@ -582,8 +586,9 @@ export default function ImagesV2Live() {
 
               {/* The one selection bar (AF4, option 3A): the grid's
                   bulk section is gone; the bar runs the grid
-                  ViewModel's existing handlers by name. Sticky at the
-                  column's bottom edge at md and up, fixed above the
+                  ViewModel's existing handlers by name. Fixed at the
+                  viewport's bottom at md and up, centered on this
+                  column through its dock insets; fixed above the
                   mobile dock below. */}
               {grid.selectionMode ? (
                 <KitSelectionBar
@@ -595,6 +600,7 @@ export default function ImagesV2Live() {
                   onDelete={handleDeleteSelected}
                   onDone={grid.onToggleSelectionMode}
                   isBusy={grid.isBulkDeleting}
+                  dockInsets={dockInsets}
                   deleteBody={`This removes ${grid.selectedCount} selected ${pluralNoun(grid.selectedCount)} from Media Studio, connected creation libraries, and featured image slots. This cannot be undone.`}
                 />
               ) : null}

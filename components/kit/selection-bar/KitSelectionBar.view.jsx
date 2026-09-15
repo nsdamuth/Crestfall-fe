@@ -7,8 +7,13 @@
 // Placement: below md the bar is fixed above the mobile dock at the
 // create-page action bar's own offset (control-md plus space-4 plus
 // the safe area, inset by the space-5 gutter); at md and up it is
-// sticky at the bottom edge of the page column, centered at a fixed
-// max width. Surface-3 with a whisper line, no blur, no shadow
+// fixed to the bottom of the viewport with a space-5 margin from the
+// bottom edge, never in flow under the grid (AF5 follow-up 2, item
+// 1), centered between two dock insets the page may supply
+// (dockInsets, 1.1.0: the page column's left and right distances
+// from the viewport edges, so the bar centers on the column rather
+// than the viewport; absent, the space-5 gutter on both sides), at a
+// fixed max width. Surface-3 with a whisper line, no blur, no shadow
 // utility. Every control is 44px. Below 700 the Add to folder and
 // Download labels drop to their glyphs (aria-label keeps the word);
 // Delete and Done keep their words at every width.
@@ -19,7 +24,17 @@ import { SoonChip } from "../form-field/SoonChip";
 import { MENU_PANEL_RECIPE, MenuRow } from "../form-field/menuRecipe";
 
 const BAR_RECIPE =
-  "z-40 flex w-full min-w-0 items-center gap-[var(--space-2)] rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-3)] px-[var(--space-3)] py-[var(--space-2)] max-md:fixed max-md:inset-x-[var(--space-5)] max-md:bottom-[calc(var(--control-md)+var(--space-4)+env(safe-area-inset-bottom))] max-md:w-auto md:sticky md:bottom-[var(--space-4)] md:mx-auto md:max-w-[40rem]";
+  "z-40 flex w-full min-w-0 items-center gap-[var(--space-2)] rounded-[var(--radius-lg)] border border-[var(--line-whisper)] bg-[var(--surface-3)] px-[var(--space-3)] py-[var(--space-2)] max-md:fixed max-md:inset-x-[var(--space-5)] max-md:bottom-[calc(var(--control-md)+var(--space-4)+env(safe-area-inset-bottom))] max-md:w-auto md:fixed md:bottom-[var(--space-5)] md:left-[var(--selection-dock-left,var(--space-5))] md:right-[var(--selection-dock-right,var(--space-5))] md:mx-auto md:w-auto md:max-w-[40rem]";
+
+// The two dock insets become the custom properties the md recipe
+// reads; without them the recipe's own gutter fallback applies.
+function dockStyle(dockInsets) {
+  if (!dockInsets) return undefined;
+  return {
+    "--selection-dock-left": `${dockInsets.left}px`,
+    "--selection-dock-right": `${dockInsets.right}px`,
+  };
+}
 
 // The ruled small button plus the touch floor, and the label that
 // hides below 700 while the glyph stays.
@@ -148,12 +163,13 @@ export default function KitSelectionBarView({
   onCloseDeleteConfirm = null,
   onConfirmDelete = null,
   onDone = null,
+  dockInsets = null,
 }) {
   if (!isVisible) return null;
 
   return (
     <>
-      <div role="toolbar" aria-label={countLabel} className={BAR_RECIPE}>
+      <div role="toolbar" aria-label={countLabel} className={BAR_RECIPE} style={dockStyle(dockInsets)}>
         <p className="min-w-0 flex-1 truncate text-[length:var(--text-ui)] leading-[var(--lh-ui)] text-[var(--gold-ornament)]">
           {countLabel}
         </p>

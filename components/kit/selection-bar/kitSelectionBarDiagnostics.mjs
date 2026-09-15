@@ -28,8 +28,8 @@ function mountViewModel(props) {
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const read = (relativePath) => fs.readFileSync(path.join(currentDir, relativePath), "utf8");
 
-test("contract 1.0.0 and the four named fixtures", () => {
-  assert.equal(KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION, "1.0.0");
+test("contract 1.1.0 and the four named fixtures", () => {
+  assert.equal(KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION, "1.1.0");
   assert.deepEqual(kitSelectionBarFixtures.map((entry) => entry.id), ["none", "one", "many", "soon"]);
   const byId = Object.fromEntries(kitSelectionBarFixtures.map((entry) => [entry.id, entry.props]));
   assert.equal(byId.none.selectedCount, 0);
@@ -53,8 +53,10 @@ test("the ViewModel mounts with every handler supplied and with every handler ab
     onDelete: () => fired.push("delete"),
     onDone: () => fired.push("done"),
     deleteBody: "  Named body.  ",
+    dockInsets: { left: 224.4, right: "40" },
   });
   assert.equal(supplied.isVisible, true);
+  assert.deepEqual(supplied.dockInsets, { left: 224.4, right: 40 });
   assert.equal(supplied.countLabel, "2 selected");
   assert.equal(supplied.noun, "images");
   assert.equal(supplied.deleteBody, "Named body.");
@@ -67,6 +69,8 @@ test("the ViewModel mounts with every handler supplied and with every handler ab
 
   const absent = mountViewModel({ selectedCount: 1 });
   assert.equal(absent.isVisible, true);
+  assert.equal(absent.dockInsets, null);
+  assert.equal(mountViewModel({ selectedCount: 1, dockInsets: { left: "x" } }).dockInsets, null);
   assert.equal(absent.noun, "item");
   assert.equal(absent.deleteBody, SELECTION_BAR_COPY.deleteBody);
   assert.equal(absent.onDownload, null);
@@ -99,6 +103,23 @@ test("the View holds no state, carries the touch floor, the fixed max width, the
     assert.ok(view.includes(needle), `view carries ${needle}`);
   }
   assert.doesNotMatch(view, /#[0-9a-fA-F]{3,6}|rgba?\(|text-xs|shadow-2xl|backdrop-blur/);
+});
+
+// AF5 follow-up 2, item 1: fixed at md and up, a space-5 margin from
+// the bottom edge, centered between the dock insets; never sticky.
+test("the bar is fixed at md and up between the page's dock insets", () => {
+  const view = read("KitSelectionBar.view.jsx");
+  for (const needle of [
+    "md:fixed",
+    "md:bottom-[var(--space-5)]",
+    "md:left-[var(--selection-dock-left,var(--space-5))]",
+    "md:right-[var(--selection-dock-right,var(--space-5))]",
+    "max-md:fixed",
+  ]) {
+    assert.ok(view.includes(needle), `view carries ${needle}`);
+  }
+  assert.doesNotMatch(view, /md:sticky/);
+  assert.match(view, /style=\{dockStyle\(dockInsets\)\}/);
 });
 
 // M2: Select all visible and Clear are not on the bar.

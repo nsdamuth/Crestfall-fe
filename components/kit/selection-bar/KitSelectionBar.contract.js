@@ -1,4 +1,14 @@
-export const KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION = "1.1.0";
+
+/**
+ * 1.1.0 (14 Sep 2026, AF5 follow-up 2 item 1, RULED by Brian), additive:
+ * - at md and up the bar is fixed to the bottom of the viewport with a
+ *   space-5 margin from the bottom edge, never in flow under the grid.
+ * - dockInsets ({ left, right } in px, default null): the page
+ *   column's distances from the viewport's left and right edges, so
+ *   the fixed bar centers on the page column; absent, the space-5
+ *   gutter on both sides. Below md the bar is unchanged.
+ */
 
 /**
  * Stable portable UI boundary for the shared selection bar kit piece
@@ -21,8 +31,8 @@ export const KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION = "1.0.0";
  *
  * Placement: below md the bar docks full width above the mobile
  * dock (fixed, the create-page action bar's own offset); at md and
- * up it sits at the bottom edge of the page column, centered at a
- * fixed max width. Every control is 44px. Below 700 the Add to
+ * up it is fixed at the bottom of the viewport (1.1.0), centered on
+ * the page column through dockInsets at a fixed max width. Every control is 44px. Below 700 the Add to
  * folder and Download labels drop to their glyphs (the accessible
  * name keeps the word); Delete keeps its word at every width
  * (destructive law) and so does Done.

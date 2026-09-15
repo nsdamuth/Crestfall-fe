@@ -28,9 +28,14 @@ visible and Clear are not on it (M2).
 
 Below md the bar is fixed above the mobile dock, full width inside
 the page gutter, at the create-page action bar's own offset. At md
-and up it is sticky at the bottom edge of the page column, centered
-at a fixed 40rem max width. Surface-3 with a whisper line; no blur,
-no shadow utility.
+and up it is fixed to the bottom of the viewport with a `--space-5`
+margin from the bottom edge, never in flow under the grid (1.1.0,
+AF5 follow-up 2), centered at a fixed 40rem max width between two
+dock insets: `dockInsets` (`{ left, right }` in px) is the page
+column's distance from the viewport's left and right edges, so the
+bar centers on the column rather than the viewport; absent, the
+`--space-5` gutter on both sides. Surface-3 with a whisper line; no
+blur, no shadow utility.
 
 ## Contract (1.0.0)
 
@@ -47,6 +52,7 @@ no shadow utility.
 | `isDeleteSoon` | boolean | false | Soon chip, disabled |
 | `isBusy` | boolean | false | actions disable, Delete reads "Deleting..." |
 | `deleteBody` | string | "This cannot be undone." | the confirmation's body line |
+| `dockInsets` | `{ left, right }` or null | null | 1.1.0: the page column's px distances from the viewport edges, centering the fixed bar at md and up |
 
 ## Handlers, by name, for AF5 and AF6
 
