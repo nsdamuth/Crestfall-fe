@@ -1,4 +1,13 @@
-export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.5.0";
+export const MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1.6.0";
+
+/**
+ * 1.6.0 (14 Sep 2026, AF5 follow-up 1 item 2, RULED by Brian), additive:
+ * - showSelectionToggle (default true): false hides the header's own
+ *   Select / Done toggle so a page can place Select in the shared
+ *   filter bar (the v2 Media page, beside Folders and Filter). The
+ *   toggle still fires the unchanged onToggleSelectionMode wherever it
+ *   renders; the legacy page keeps it.
+ */
 
 /**
  * 1.5.0 (14 Sep 2026, ASSET-FOLDERS plan package AF5, RULED by Brian):

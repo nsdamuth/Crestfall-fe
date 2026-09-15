@@ -14,6 +14,7 @@ import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
 import KitSelectionBar from "@/components/kit/KitSelectionBar";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
+import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import { useKitNoticeAutoClear } from "@/components/kit/notice/useKitNoticeViewModel";
 import { BARE_ICON_BUTTON_CLASS } from "@/components/kit/panel-toggle/KitPanelToggle.view";
 import MediaHistoryGridSkin from "@/components/studio/image-studio/MediaHistoryGridSkin";
@@ -72,14 +73,20 @@ function countLibrary(items, value) {
 const FOLDERS_ROOT_LABEL = "Folders";
 const FOLDERS_PANEL_LABEL = "Folders panel";
 const MEDIA_ITEM_NOUN = "image";
+// Select (AF5 follow-up 1, item 2): the grid header's Select / Done
+// toggle moved into the shared bar, first control after the search
+// field, on the unchanged onToggleSelectionMode. Bar order, ruled:
+// Select, Folders, Filter, then the density toggle at the right edge.
+const SELECT_LABEL = "Select";
+const SELECT_DONE_LABEL = "Done";
 
 function pluralNoun(count) {
   return count === 1 ? MEDIA_ITEM_NOUN : `${MEDIA_ITEM_NOUN}s`;
 }
 
-// The Filter trigger's own recipe (KitDropdown.view), so Folders reads
-// as the control beside it; gold once a folder is chosen, the way the
-// Filter trigger turns gold on a non-resting pick.
+// The Filter trigger's own recipe (KitDropdown.view), so Select and
+// Folders read as the controls beside it; gold while marked, the way
+// the Filter trigger turns gold on a non-resting pick.
 const FOLDERS_TRIGGER_CLASS =
   "inline-flex min-w-0 max-w-[10rem] min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--step-above)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:min-h-[var(--control-md)]";
 const FOLDERS_TRIGGER_REST_CLASS =
@@ -434,35 +441,59 @@ export default function ImagesV2Live() {
               searchValue={grid.searchQuery}
               searchPlaceholder="Search your media..."
               onSearchChange={grid.onChangeSearchQuery}
+              // The bar's own filter groups are empty on this page
+              // (follow-up 1, item 2): the ruled order puts the Library
+              // dropdown after Select and Folders, so all three ride
+              // the controlsSlot below; same KitDropdown, same grid
+              // handlers, no Kit change.
               filterPresentation="dropdowns"
-              filterGroups={filterGroups}
-              selectedValues={selectedFilterValues}
-              onFilterToggle={(groupId, value) => {
-                if (value === "ALL") {
-                  grid.onClearFilters?.();
-                  return;
-                }
-                if (value === "BOOKMARKED") {
-                  grid.onToggleActivityFilter?.("BOOKMARKED");
-                  return;
-                }
-                grid.onSetMediaFilter?.(grid.mediaFilter === value ? "ALL" : value);
-              }}
-              onClearFilters={grid.onClearFilters}
+              filterGroups={[]}
               sortOptions={[]}
               controlsSlot={
-                // Folders trigger, beside Filter (AF5): the root reads
-                // "Folders", a chosen folder reads its name, truncating.
-                <button
-                  type="button"
-                  onClick={onToggleFolders}
-                  aria-expanded={foldersOpen}
-                  aria-label={activeFolder ? `${FOLDERS_ROOT_LABEL}: ${activeFolder.name}` : FOLDERS_ROOT_LABEL}
-                  className={`${FOLDERS_TRIGGER_CLASS} ${activeFolder ? FOLDERS_TRIGGER_MARKED_CLASS : FOLDERS_TRIGGER_REST_CLASS}`}
-                >
-                  <Folder size={14} aria-hidden="true" className="flex-none" />
-                  <span className="min-w-0 truncate">{activeFolder ? activeFolder.name : FOLDERS_ROOT_LABEL}</span>
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={grid.onToggleSelectionMode}
+                    aria-pressed={grid.selectionMode}
+                    disabled={!grid.hasSelectableMedia || grid.isBulkDeleting}
+                    className={`${FOLDERS_TRIGGER_CLASS} ${grid.selectionMode ? FOLDERS_TRIGGER_MARKED_CLASS : FOLDERS_TRIGGER_REST_CLASS}`}
+                  >
+                    <span className="min-w-0 truncate">{grid.selectionMode ? SELECT_DONE_LABEL : SELECT_LABEL}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onToggleFolders}
+                    aria-expanded={foldersOpen}
+                    aria-label={activeFolder ? `${FOLDERS_ROOT_LABEL}: ${activeFolder.name}` : FOLDERS_ROOT_LABEL}
+                    className={`${FOLDERS_TRIGGER_CLASS} ${activeFolder ? FOLDERS_TRIGGER_MARKED_CLASS : FOLDERS_TRIGGER_REST_CLASS}`}
+                  >
+                    <Folder size={14} aria-hidden="true" className="flex-none" />
+                    <span className="min-w-0 truncate">{activeFolder ? activeFolder.name : FOLDERS_ROOT_LABEL}</span>
+                  </button>
+                  {filterGroups.map((group) => (
+                    <KitDropdownView
+                      key={group.id}
+                      label={group.label}
+                      ariaLabel={group.label}
+                      labelMode="replace"
+                      options={group.options}
+                      selectedValues={selectedFilterValues[group.id] || []}
+                      isMultiSelect={group.isMultiSelect !== false}
+                      restingValue={group.restingValue ?? null}
+                      onToggleOption={(value) => {
+                        if (value === "ALL") {
+                          grid.onClearFilters?.();
+                          return;
+                        }
+                        if (value === "BOOKMARKED") {
+                          grid.onToggleActivityFilter?.("BOOKMARKED");
+                          return;
+                        }
+                        grid.onSetMediaFilter?.(grid.mediaFilter === value ? "ALL" : value);
+                      }}
+                    />
+                  ))}
+                </>
               }
               viewModeSlot={
                 // Density, RULED 6 Sep 2026: the shared toggle slot
@@ -526,6 +557,7 @@ export default function ImagesV2Live() {
               <MediaHistoryGridSkin
                 {...grid}
                 showFilterControls={false}
+                showSelectionToggle={false}
                 mobilePrimaryActionLabel="Compose"
                 onMobilePrimaryAction={() => setMobileCreatorOpen(true)}
                 // The image viewer (session 3, notes 6 and 6a): the

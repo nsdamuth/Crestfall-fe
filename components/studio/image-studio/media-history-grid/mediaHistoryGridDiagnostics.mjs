@@ -104,6 +104,14 @@ test("the bulk section left the View and the ViewModel keeps its handlers by nam
   assert.match(page, /grid\.onConfirmBulkDelete\?\.\(\)/);
   assert.match(page, /onDone=\{grid\.onToggleSelectionMode\}/);
   assert.match(page, /\{grid\.selectionMode \? null : \(/);
+  // Follow-up 1 item 2: Select sits in the shared bar's controlsSlot
+  // on this page, before Folders and Filter; the View's own toggle is
+  // off here through showSelectionToggle and stays on the legacy page.
+  assert.match(page, /showSelectionToggle=\{false\}/);
+  assert.match(view, /hasSelectableMedia && showSelectionToggle/);
+  const slot = page.slice(page.indexOf("controlsSlot={"), page.indexOf("viewModeSlot={"));
+  const order = ["onToggleSelectionMode", "onToggleFolders", "KitDropdownView"].map((needle) => slot.indexOf(needle));
+  assert.ok(order.every((index) => index >= 0) && order[0] < order[1] && order[1] < order[2], "Select, Folders, Filter in that order");
 });
 
 // AF5 item 2: folder membership filters after the Library filter and
@@ -205,7 +213,7 @@ test("V2 Image Library owns asset search, opaque filters, and working Grid/Large
   assert.match(view, /\{compactMobileGrid \? "Large" : "Grid"\}/);
   assert.match(view, /className=\{`grid \$\{mobileGridClass\}`\}/);
 
-  assert.match(contract, /MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1\.5\.0"/);
+  assert.match(contract, /MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1\.6\.0"/);
   assert.match(contract, /onChangeSearchQuery/);
   assert.match(contract, /onClearFilters/);
 });

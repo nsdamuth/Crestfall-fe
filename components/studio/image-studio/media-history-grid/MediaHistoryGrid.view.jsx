@@ -231,6 +231,10 @@ export default function MediaHistoryGridView({
   // KitStudioFilterBar and panel); the header then keeps only the
   // eyebrow, summary, mobile primary action, and Select/Done.
   showFilterControls = true,
+  // showSelectionToggle (1.6.0, 14 Sep 2026, AF5 follow-up 1): false
+  // when a page places its own Select control (the v2 Media page
+  // puts it in the shared filter bar); the legacy page keeps it.
+  showSelectionToggle = true,
   mobilePrimaryActionLabel = "",
   onMobilePrimaryAction,
   onToggleSelectionMode,
@@ -264,7 +268,7 @@ export default function MediaHistoryGridView({
           empty-state block says the rest, so the grid starts level with
           the top of the composer rail. The action row renders only when
           it has a control to show (Select, the mobile Compose, filters). */}
-      {(mobilePrimaryActionLabel && onMobilePrimaryAction) || hasSelectableMedia || showFilterControls ? (
+      {(mobilePrimaryActionLabel && onMobilePrimaryAction) || (hasSelectableMedia && showSelectionToggle) || showFilterControls ? (
       <section className="relative flex flex-wrap items-center justify-end gap-3">
         <div className="flex flex-wrap items-center gap-2">
           {mobilePrimaryActionLabel && onMobilePrimaryAction ? (
@@ -278,7 +282,7 @@ export default function MediaHistoryGridView({
             </button>
           ) : null}
 
-          {hasSelectableMedia ? (
+          {hasSelectableMedia && showSelectionToggle ? (
             <button
               type="button"
               onClick={onToggleSelectionMode}
