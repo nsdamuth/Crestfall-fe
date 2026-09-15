@@ -1,6 +1,6 @@
 # Kit Studio Filter Bar LOOM Package
 
-**Contract:** `KitStudioFilterBar.contract.js` (v2.4.0)
+**Contract:** `KitStudioFilterBar.contract.js` (v2.5.0)
 
 ## Purpose
 
@@ -25,6 +25,7 @@ prop.
 KitStudioFilterBar.jsx
   -> useKitStudioFilterBarViewModel.js
   -> KitStudioFilterBar.view.jsx
+       -> leadingSlot (caller-supplied, additive 2.5.0)
        -> KitFilterPanel.view (all filter groups)      [default]
        -> KitDropdown.view (one per group)             [fallback]
        -> KitDropdown.view (Sort)
@@ -48,6 +49,15 @@ KitStudioFilterBar.jsx
   byte-identical to 2.3.1. The bar applies no sizing to what it
   holds; a caller's control still meets the touch floor on its
   own. The Folders trigger (AF5, AF6) is the first real consumer.
+- `leadingSlot` (2.5.0, ASSET-FOLDERS package AF6, additive): an
+  optional node rendered before the Filter button. While present the
+  bar lays every control out on one row (the leading controls, then
+  Filter, Sort, `controlsSlot`, `viewModeSlot`): the row fills the
+  search field's width with equal gaps on phones and sits at the
+  row's right with one equal `--space-3` gap at 700 and up, the Media
+  row ruled at AF5 follow-up 2. Absent, the bar renders
+  byte-identical to 2.4.0. Media and Vault put Select and Folders in
+  it so the bar owns Filter and Sort on both pages.
 - The caller owns what a filter value means, how the list is queried,
   how selection persists, and the section order (see
   `orderFilterGroups` in `app/studio/v2/catalog/creationCatalogFilterTaxonomy.js`).

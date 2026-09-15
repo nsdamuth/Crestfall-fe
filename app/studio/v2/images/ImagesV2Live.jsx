@@ -14,7 +14,6 @@ import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
 import KitSelectionBar from "@/components/kit/KitSelectionBar";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
-import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import { useKitNoticeAutoClear } from "@/components/kit/notice/useKitNoticeViewModel";
 import { BARE_ICON_BUTTON_CLASS } from "@/components/kit/panel-toggle/KitPanelToggle.view";
 import MediaHistoryGridSkin from "@/components/studio/image-studio/MediaHistoryGridSkin";
@@ -63,7 +62,7 @@ function countLibrary(items, value) {
 
 // Folders (ASSET-FOLDERS plan, package AF5, 14 Sep 2026): surface
 // MEDIA of the browser-local folder store (option 2A ruled). The
-// button sits in the bar's controlsSlot between Select and Filter and
+// button sits in the bar's leadingSlot between Select and Filter and
 // reads "Folders" at the root, the folder's name once one is chosen;
 // it alone opens and closes the panel (follow-up 1, item 3: the glyph
 // left the bar) and reads selected while the panel is open. The panel
@@ -79,6 +78,10 @@ const MEDIA_ITEM_NOUN = "image";
 // toggle moved into the shared bar, first control after the search
 // field, on the unchanged onToggleSelectionMode. Bar order, ruled:
 // Select, Folders, Filter, then the density toggle at the right edge.
+// Select and Folders ride the bar's leadingSlot (KitStudioFilterBar
+// 2.5.0, AF6 item 1), so the bar owns the Library dropdown again and
+// the page no longer renders Filter itself (the round-1 workaround,
+// retired); the bar's one row keeps the ruled order and spacing.
 const SELECT_LABEL = "Select";
 const SELECT_DONE_LABEL = "Done";
 // The composer column's open and close control (follow-up 1, item 5):
@@ -507,20 +510,14 @@ export default function ImagesV2Live() {
               searchValue={grid.searchQuery}
               searchPlaceholder="Search your media..."
               onSearchChange={grid.onChangeSearchQuery}
-              // The bar's own filter groups are empty on this page
-              // (follow-up 1, item 2): the ruled order puts the Library
-              // dropdown after Select and Folders, so all three ride
-              // the controlsSlot below; same KitDropdown, same grid
-              // handlers, no Kit change.
-              filterPresentation="dropdowns"
-              filterGroups={[]}
-              sortOptions={[]}
-              controlsSlot={
-                // The four controls in one row (follow-up 2, items 3
-                // and 5): on phones they spread across the row with
-                // equal gaps between; at 700 and up they sit at the
-                // row's right side with one equal gap.
-                <div className="flex w-full min-w-0 items-center justify-between gap-[var(--space-2)] min-[700px]:w-auto min-[700px]:justify-end min-[700px]:gap-[var(--space-3)]">
+              // Select and Folders in the bar's leadingSlot (2.5.0):
+              // the bar lays its one row out as the ruled Media row
+              // (follow-up 2, items 3 and 5), spread with equal gaps on
+              // phones and at the row's right side at 700 and up, and
+              // renders the Library dropdown itself on the same grid
+              // handlers through onFilterToggle.
+              leadingSlot={
+                <>
                   <button
                     type="button"
                     onClick={grid.onToggleSelectionMode}
@@ -541,42 +538,34 @@ export default function ImagesV2Live() {
                     <Folder size={14} aria-hidden="true" className="flex-none" />
                     <span className="min-w-0 truncate">{activeFolder ? activeFolder.name : FOLDERS_ROOT_LABEL}</span>
                   </button>
-                  {filterGroups.map((group) => (
-                    <KitDropdownView
-                      key={group.id}
-                      label={group.label}
-                      ariaLabel={group.label}
-                      labelMode="replace"
-                      options={group.options}
-                      selectedValues={selectedFilterValues[group.id] || []}
-                      isMultiSelect={group.isMultiSelect !== false}
-                      restingValue={group.restingValue ?? null}
-                      onToggleOption={(value) => {
-                        if (value === "ALL") {
-                          grid.onClearFilters?.();
-                          return;
-                        }
-                        if (value === "BOOKMARKED") {
-                          grid.onToggleActivityFilter?.("BOOKMARKED");
-                          return;
-                        }
-                        grid.onSetMediaFilter?.(grid.mediaFilter === value ? "ALL" : value);
-                      }}
-                    />
-                  ))}
-                  {/* Density, RULED 6 Sep 2026: the Large/Grid density
-                      flip through the unchanged onToggleMobileGrid
-                      (grid = compact), last in the row at its right
-                      edge (it left the bar's own toggle slot so the
-                      four controls share one row's gaps). */}
-                  <ViewModeToggleView
-                    value={grid.compactMobileGrid ? "grid" : "list"}
-                    label="Library density"
-                    onChange={(next) => {
-                      if ((next === "grid") !== grid.compactMobileGrid) grid.onToggleMobileGrid?.();
-                    }}
-                  />
-                </div>
+                </>
+              }
+              filterPresentation="dropdowns"
+              filterGroups={filterGroups}
+              selectedValues={selectedFilterValues}
+              onFilterToggle={(groupId, value) => {
+                if (value === "ALL") {
+                  grid.onClearFilters?.();
+                  return;
+                }
+                if (value === "BOOKMARKED") {
+                  grid.onToggleActivityFilter?.("BOOKMARKED");
+                  return;
+                }
+                grid.onSetMediaFilter?.(grid.mediaFilter === value ? "ALL" : value);
+              }}
+              sortOptions={[]}
+              viewModeSlot={
+                // Density, RULED 6 Sep 2026: the Large/Grid density
+                // flip through the unchanged onToggleMobileGrid
+                // (grid = compact), last in the row at its right edge.
+                <ViewModeToggleView
+                  value={grid.compactMobileGrid ? "grid" : "list"}
+                  label="Library density"
+                  onChange={(next) => {
+                    if ((next === "grid") !== grid.compactMobileGrid) grid.onToggleMobileGrid?.();
+                  }}
+                />
               }
             />
           }

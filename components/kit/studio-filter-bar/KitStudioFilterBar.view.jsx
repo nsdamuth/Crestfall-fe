@@ -130,6 +130,7 @@ export default function KitStudioFilterBarView({
   defaultSort = "",
   onSortChange = null,
   isLoadingCounts = false,
+  leadingSlot = null,
   controlsSlot = null,
   viewModeSlot = null,
   quickTabs = [],
@@ -141,6 +142,26 @@ export default function KitStudioFilterBarView({
 }) {
   const hasGroups = filterGroups.length > 0;
   const usePanel = filterPresentation !== "dropdowns";
+  const groupControls = (
+    <FilterAndSortControls
+      quickTabs={quickTabs}
+      selectedQuickTab={selectedQuickTab}
+      onQuickTabChange={onQuickTabChange}
+      searchPlaceholder={searchPlaceholder}
+      hasGroups={hasGroups}
+      usePanel={usePanel}
+      filterGroups={filterGroups}
+      selectedValues={selectedValues}
+      onFilterToggle={onFilterToggle}
+      onClearFilters={onClearFilters}
+      isLoadingCounts={isLoadingCounts}
+      filterButtonLabel={filterButtonLabel}
+      sortOptions={sortOptions}
+      selectedSort={selectedSort}
+      defaultSort={defaultSort}
+      onSortChange={onSortChange}
+    />
+  );
 
   return (
     // Tucked one border width under the top bar, RULED 6 Sep 2026
@@ -162,85 +183,134 @@ export default function KitStudioFilterBarView({
       />
 
       <div className="scrollbar-none flex items-center gap-[var(--space-4)] overflow-x-auto min-[700px]:ml-auto min-[700px]:flex-none min-[700px]:flex-wrap min-[700px]:overflow-visible">
-        {/* The bar's own group renders only with content (AF5
-            follow-up 3, item 5): an empty group added a gap at the
-            row's left edge, so a caller's controls could not sit
-            flush with the search field. */}
-        {(quickTabs.length > 0 || hasGroups || sortOptions.length > 0) && (
-        <div className="flex items-center gap-[var(--space-2)] min-[700px]:flex-wrap">
-          <QuickTabs
-            tabs={quickTabs}
-            selected={selectedQuickTab}
-            onChange={onQuickTabChange}
-            ariaLabel={searchPlaceholder}
-          />
+        {leadingSlot ? (
+          // leadingSlot (2.5.0, ASSET-FOLDERS AF6): with a leading
+          // slot the bar's controls become one row, the Media row
+          // ruled at AF5 follow-up 2 (items 3 and 5): the leading
+          // controls, then Filter, Sort, controlsSlot, and the view
+          // toggle, filling the search field's width with equal gaps
+          // on phones and sitting at the row's right with one equal
+          // gap at 700 and up. The wrapper and the row are the same
+          // two nodes Media composed in controlsSlot before this
+          // slot existed, so its layout is byte for byte the same.
+          <div className="flex min-w-0 flex-1 items-center gap-[var(--space-2)]">
+            <div className="flex w-full min-w-0 items-center justify-between gap-[var(--space-2)] min-[700px]:w-auto min-[700px]:justify-end min-[700px]:gap-[var(--space-3)]">
+              {leadingSlot}
+              {groupControls}
+              {controlsSlot}
+              {viewModeSlot}
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* The bar's own group renders only with content (AF5
+                follow-up 3, item 5): an empty group added a gap at the
+                row's left edge, so a caller's controls could not sit
+                flush with the search field. */}
+            {(quickTabs.length > 0 || hasGroups || sortOptions.length > 0) && (
+              <div className="flex items-center gap-[var(--space-2)] min-[700px]:flex-wrap">{groupControls}</div>
+            )}
 
-          {hasGroups && usePanel && (
-            <KitFilterPanelView
-              sections={filterGroups}
-              selectedValues={selectedValues}
-              onToggleOption={onFilterToggle}
-              onClearAll={onClearFilters}
-              isLoadingCounts={isLoadingCounts}
-              triggerLabel={filterButtonLabel}
-            />
-          )}
+            {/* controlsSlot (2.4.0, ASSET-FOLDERS AF2): a caller's own
+                controls, riding the same scroller as Filter and Sort,
+                after Sort and before the view toggle. The bar applies no
+                sizing to what the slot holds; a slotted control still
+                meets the touch floor on its own. The wrapper grows to
+                the row (AF5 follow-up 2, item 3) so a caller can spread
+                its controls across the row on phones; the two wrappers
+                render only with content, so an empty slot adds no gap. */}
+            {controlsSlot && (
+              <div className="flex min-w-0 flex-1 items-center gap-[var(--space-2)]">{controlsSlot}</div>
+            )}
 
-          {hasGroups &&
-            !usePanel &&
-            filterGroups.map((group) => (
-              <KitDropdownView
-                key={group.id}
-                label="Filter"
-                ariaLabel={group.label}
-                labelMode="replace"
-                options={(group.options || []).map((option) => ({
-                  ...option,
-                  count: isLoadingCounts ? null : option.count,
-                }))}
-                selectedValues={selectedValues?.[group.id] || []}
-                isMultiSelect={group.isMultiSelect !== false}
-                restingValue={group.restingValue ?? null}
-                onToggleOption={(value) => onFilterToggle?.(group.id, value)}
-              />
-            ))}
-
-          {sortOptions.length > 0 && (
-            // Sort trigger (fe/chat-studio item 9, 12 Sep 2026): reads
-            // "Sort" at rest and the chosen option's label after a
-            // non-default pick; the filter triggers keep "Filter".
-            <KitDropdownView
-              label="Sort"
-              ariaLabel="Sort"
-              labelMode="replace"
-              options={sortOptions}
-              selectedValues={selectedSort ? [selectedSort] : []}
-              isMultiSelect={false}
-              restingValue={defaultSort || null}
-              onToggleOption={(value) => onSortChange?.(value)}
-            />
-          )}
-        </div>
+            {/* Right edge at every width (browser review 9 Sep 2026,
+                item 10): under 700px the row is a horizontal scroller, so
+                ml-auto pushes the toggle to the far edge and balances the
+                bar; at 700 and up the parent already sits at the right. */}
+            {viewModeSlot && <div className="ml-auto flex flex-none items-center">{viewModeSlot}</div>}
+          </>
         )}
-
-        {/* controlsSlot (2.4.0, ASSET-FOLDERS AF2): a caller's own
-            controls, riding the same scroller as Filter and Sort,
-            after Sort and before the view toggle. The bar applies no
-            sizing to what the slot holds; a slotted control still
-            meets the touch floor on its own. The wrapper grows to
-            the row (AF5 follow-up 2, item 3) so a caller can spread
-            its controls across the row on phones; the two wrappers
-            render only with content, so an empty slot adds no gap. */}
-        {controlsSlot && (
-          <div className="flex min-w-0 flex-1 items-center gap-[var(--space-2)]">{controlsSlot}</div>
-        )}
-
-        {/* Right edge at every width (browser review 9 Sep 2026,
-            item 10): under 700px the row is a horizontal scroller, so
-            ml-auto pushes the toggle to the far edge and balances the
-            bar; at 700 and up the parent already sits at the right. */}
-        {viewModeSlot && <div className="ml-auto flex flex-none items-center">{viewModeSlot}</div>}
       </div>
     </div>
+  );
+}
+
+// The bar's own controls, one definition for both rows above: the
+// quick tabs, the Filter button (the panel, or one dropdown per group
+// in the dropdowns presentation), and Sort. A fragment, so the parent
+// row's gap is the only spacing between them.
+function FilterAndSortControls({
+  quickTabs,
+  selectedQuickTab,
+  onQuickTabChange,
+  searchPlaceholder,
+  hasGroups,
+  usePanel,
+  filterGroups,
+  selectedValues,
+  onFilterToggle,
+  onClearFilters,
+  isLoadingCounts,
+  filterButtonLabel,
+  sortOptions,
+  selectedSort,
+  defaultSort,
+  onSortChange,
+}) {
+  return (
+    <>
+      <QuickTabs
+        tabs={quickTabs}
+        selected={selectedQuickTab}
+        onChange={onQuickTabChange}
+        ariaLabel={searchPlaceholder}
+      />
+
+      {hasGroups && usePanel && (
+        <KitFilterPanelView
+          sections={filterGroups}
+          selectedValues={selectedValues}
+          onToggleOption={onFilterToggle}
+          onClearAll={onClearFilters}
+          isLoadingCounts={isLoadingCounts}
+          triggerLabel={filterButtonLabel}
+        />
+      )}
+
+      {hasGroups &&
+        !usePanel &&
+        filterGroups.map((group) => (
+          <KitDropdownView
+            key={group.id}
+            label="Filter"
+            ariaLabel={group.label}
+            labelMode="replace"
+            options={(group.options || []).map((option) => ({
+              ...option,
+              count: isLoadingCounts ? null : option.count,
+            }))}
+            selectedValues={selectedValues?.[group.id] || []}
+            isMultiSelect={group.isMultiSelect !== false}
+            restingValue={group.restingValue ?? null}
+            onToggleOption={(value) => onFilterToggle?.(group.id, value)}
+          />
+        ))}
+
+      {sortOptions.length > 0 && (
+        // Sort trigger (fe/chat-studio item 9, 12 Sep 2026): reads
+        // "Sort" at rest and the chosen option's label after a
+        // non-default pick; the filter triggers keep "Filter".
+        <KitDropdownView
+          label="Sort"
+          ariaLabel="Sort"
+          labelMode="replace"
+          options={sortOptions}
+          selectedValues={selectedSort ? [selectedSort] : []}
+          isMultiSelect={false}
+          restingValue={defaultSort || null}
+          onToggleOption={(value) => onSortChange?.(value)}
+        />
+      )}
+    </>
   );
 }

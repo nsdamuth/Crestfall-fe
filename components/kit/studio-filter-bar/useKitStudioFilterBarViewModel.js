@@ -77,6 +77,7 @@ export function useKitStudioFilterBarViewModel(props) {
     onSortChange: toCallback(props?.onSortChange),
     isLoadingCounts: Boolean(props?.isLoadingCounts),
     viewModeSlot: props?.viewModeSlot ?? null,
+    leadingSlot: props?.leadingSlot ?? null,
     controlsSlot: props?.controlsSlot ?? null,
     quickTabs: toQuickTabs(props?.quickTabs),
     selectedQuickTab: typeof props?.selectedQuickTab === "string" ? props.selectedQuickTab : "",

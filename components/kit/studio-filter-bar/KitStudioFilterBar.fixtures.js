@@ -50,6 +50,7 @@ export const kitStudioFilterBarDefaultFixture = {
   onSortChange: noop,
   isLoadingCounts: false,
   viewModeSlot: null,
+  leadingSlot: null,
   controlsSlot: null,
 };
 

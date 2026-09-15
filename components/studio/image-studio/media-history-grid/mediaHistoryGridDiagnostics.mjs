@@ -104,18 +104,19 @@ test("the bulk section left the View and the ViewModel keeps its handlers by nam
   assert.match(page, /grid\.onConfirmBulkDelete\?\.\(\)/);
   assert.match(page, /onDone=\{grid\.onToggleSelectionMode\}/);
   assert.match(page, /\{grid\.selectionMode \? null : \(/);
-  // Follow-up 1 item 2: Select sits in the shared bar's controlsSlot
-  // on this page, before Folders and Filter; the View's own toggle is
-  // off here through showSelectionToggle and stays on the legacy page.
+  // Follow-up 1 item 2: Select sits in the shared bar on this page,
+  // before Folders and Filter; the View's own toggle is off here
+  // through showSelectionToggle and stays on the legacy page.
   assert.match(page, /showSelectionToggle=\{false\}/);
   assert.match(view, /hasSelectableMedia && showSelectionToggle/);
-  // Follow-up 2 items 3 and 5: the density toggle rides the same row,
-  // last, so the four controls share one row's gaps.
-  const slot = page.slice(page.indexOf("controlsSlot={"), page.indexOf("bannerSlot={"));
-  const order = ["onToggleSelectionMode", "onToggleFolders", "KitDropdownView", "ViewModeToggleView"].map((needle) => slot.indexOf(needle));
+  // AF6 item 1: Select and Folders ride the bar's leadingSlot (2.5.0),
+  // the bar renders the Library dropdown itself on the grid handlers
+  // through onFilterToggle, and the density toggle is its viewModeSlot,
+  // last on the bar's one row (follow-up 2 items 3 and 5).
+  const slot = page.slice(page.indexOf("leadingSlot={"), page.indexOf("bannerSlot={"));
+  const order = ["onToggleSelectionMode", "onToggleFolders", "onFilterToggle=", "viewModeSlot="].map((needle) => slot.indexOf(needle));
   assert.ok(order.every((index) => index >= 0) && order[0] < order[1] && order[1] < order[2] && order[2] < order[3], "Select, Folders, Filter, density in that order");
-  assert.doesNotMatch(slot, /viewModeSlot=/);
-  assert.match(slot, /justify-between/);
+  assert.doesNotMatch(slot, /controlsSlot=|KitDropdownView/);
 });
 
 // AF5 item 2: folder membership filters after the Library filter and
