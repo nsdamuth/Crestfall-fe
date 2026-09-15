@@ -8,6 +8,7 @@ import KitFoldersPanel from "@/components/kit/KitFoldersPanel";
 import KitImageCreatorPanel from "@/components/kit/KitImageCreatorPanel";
 import KitIngredientPicker from "@/components/kit/KitIngredientPicker";
 import KitNotice from "@/components/kit/KitNotice";
+import KitPanelToggle from "@/components/kit/KitPanelToggle";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitSaveIngredientPreset from "@/components/kit/KitSaveIngredientPreset";
 import KitSelectionBar from "@/components/kit/KitSelectionBar";
@@ -15,6 +16,7 @@ import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudio
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import KitDropdownView from "@/components/kit/dropdown/KitDropdown.view";
 import { useKitNoticeAutoClear } from "@/components/kit/notice/useKitNoticeViewModel";
+import { BARE_ICON_BUTTON_CLASS } from "@/components/kit/panel-toggle/KitPanelToggle.view";
 import MediaHistoryGridSkin from "@/components/studio/image-studio/MediaHistoryGridSkin";
 import { useMediaHistoryGridViewModel } from "@/components/studio/image-studio/media-history-grid/useMediaHistoryGridViewModel";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
@@ -78,6 +80,15 @@ const MEDIA_ITEM_NOUN = "image";
 // Select, Folders, Filter, then the density toggle at the right edge.
 const SELECT_LABEL = "Select";
 const SELECT_DONE_LABEL = "Done";
+// The composer column's open and close control (follow-up 1, item 5):
+// the same KitPanelToggle the story chat mounts on its rails, at the
+// column's grid-facing edge, turning with the column's state (a
+// right-edge panel, so open is the turned orientation). Closed, the
+// column collapses to a rail holding only the toggle and the grid
+// takes the width. Page state, default open; below 1100 the composer
+// is already the sheet and this column is hidden.
+const COMPOSER_OPEN_LABEL = "Open composer";
+const COMPOSER_CLOSE_LABEL = "Close composer";
 
 function pluralNoun(count) {
   return count === 1 ? MEDIA_ITEM_NOUN : `${MEDIA_ITEM_NOUN}s`;
@@ -259,6 +270,7 @@ export default function ImagesV2Live() {
   // its Generate stays Soon until the Chassis carries a video job
   // (docs/handoffs/MEDIA-STUDIO-BACKEND.md gap 15).
   const [composerMode, setComposerMode] = useState("IMAGE");
+  const [isComposerOpen, setIsComposerOpen] = useState(true);
   // Folders panel: closed by default (1A), one toggle for both bar
   // controls, the chosen folder page-local (null is the root row All).
   const [foldersOpen, setFoldersOpen] = useState(false);
@@ -594,16 +606,32 @@ export default function ImagesV2Live() {
                 9 Sep 2026, items 6 and 7). No padding here; the
                 composer pads its own regions. */}
             <aside
-              className="sticky hidden w-[24rem] flex-none flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] min-[1100px]:flex"
+              className={`sticky hidden flex-none flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-2)] min-[1100px]:flex ${
+                isComposerOpen ? "w-[24rem]" : "w-auto"
+              }`}
               style={{
                 top: "calc(var(--topbar-h) + var(--space-4))",
                 maxHeight: "calc(100dvh - var(--topbar-h) - var(--space-8))",
               }}
             >
+              <div className="flex shrink-0 items-center justify-start px-[var(--space-2)] py-[var(--space-2)]">
+                <button
+                  type="button"
+                  onClick={() => setIsComposerOpen((current) => !current)}
+                  title={isComposerOpen ? COMPOSER_CLOSE_LABEL : COMPOSER_OPEN_LABEL}
+                  aria-label={isComposerOpen ? COMPOSER_CLOSE_LABEL : COMPOSER_OPEN_LABEL}
+                  aria-expanded={isComposerOpen}
+                  className={BARE_ICON_BUTTON_CLASS}
+                >
+                  <KitPanelToggle side="right" open={isComposerOpen} />
+                </button>
+              </div>
               {/* remix is already inside panelProps; it is named here
                   so the Remix wiring on this surface is greppable and
                   guarded by imagesV2LiveAdapterDiagnostics.mjs. */}
-              <KitImageCreatorPanel {...live.panelProps} remix={live.panelProps.remix} />
+              {isComposerOpen ? (
+                <KitImageCreatorPanel {...live.panelProps} remix={live.panelProps.remix} />
+              ) : null}
             </aside>
           </div>
         </KitStudioPageView>
