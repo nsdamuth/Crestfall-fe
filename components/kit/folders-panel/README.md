@@ -19,7 +19,8 @@ writes. Contract 1.0.0. Folder glyph only: no emoji, no color (R4).
   on the Kit frame listing All and every folder with space under the
   cap), Delete (a confirmation on the Kit frame naming what moves up
   to the parent).
-- Footer line: "Kept on this device until folders sync." (option 2A).
+- Footer line: "Folders are saved in this browser for now." (option 2A,
+  copy ruled at AF5 follow-up 1).
 - Empty state: "No folders yet" with one line of guidance.
 
 ## Hosts

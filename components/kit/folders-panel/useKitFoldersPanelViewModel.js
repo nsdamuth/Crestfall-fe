@@ -50,7 +50,7 @@ export const FOLDERS_PANEL_COPY = Object.freeze({
   },
   emptyTitle: "No folders yet",
   emptyBody: "Create a folder to start organizing.",
-  footerNote: "Kept on this device until folders sync.",
+  footerNote: "Folders are saved in this browser for now.",
   menuLabel: (name) => `Options for ${name}`,
   rowLabel: (name, count) => `${name}, ${count} item${count === 1 ? "" : "s"}`,
 });

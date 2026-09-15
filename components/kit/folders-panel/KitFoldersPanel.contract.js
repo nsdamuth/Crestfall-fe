@@ -53,9 +53,9 @@ export const KIT_FOLDERS_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  *   the page's KitNotice
  * @property {(() => void)|null} [onClose] the sheet host's dismiss;
  *   ignored by the column host
- * @property {string} [footerNote] default "Kept on this device until
- *   folders sync." (option 2A: the panel states where the folders
- *   live until the route lands)
+ * @property {string} [footerNote] default "Folders are saved in this
+ *   browser for now." (option 2A: the panel states where the folders
+ *   live until the route lands; copy ruled at AF5 follow-up 1, item 6)
  * @property {number} [maxDepth] default 3, display only; the rules
  *   module enforces the cap
  */
