@@ -484,7 +484,7 @@ export default function ImagesV2Live() {
                 // and 5): on phones they spread across the row with
                 // equal gaps between; at 700 and up they sit at the
                 // row's right side with one equal gap.
-                <div className="flex w-full min-w-0 items-center justify-between gap-[var(--space-2)]">
+                <div className="flex w-full min-w-0 items-center justify-between gap-[var(--space-2)] min-[700px]:w-auto min-[700px]:justify-end min-[700px]:gap-[var(--space-3)]">
                   <button
                     type="button"
                     onClick={grid.onToggleSelectionMode}
