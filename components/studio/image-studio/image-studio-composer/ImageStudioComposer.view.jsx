@@ -10,7 +10,6 @@ import {
   Wand2,
 } from "lucide-react";
 
-import CrestfallSelect from "@/components/ui/CrestfallSelect";
 import CustomIngredientEditorView from "@/components/studio/image-studio/custom-ingredient-editor/CustomIngredientEditor.view";
 import IngredientSlotView from "@/components/studio/image-studio/ingredient-slot/IngredientSlot.view";
 import VideoToolsPanelView from "@/components/studio/image-studio/video-tools-panel/VideoToolsPanel.view";
@@ -299,26 +298,28 @@ export default function ImageStudioComposerView({
                               </span>
                             </div>
 
-                            <input
-                              type="range"
-                              min={control.min}
-                              max={control.max}
-                              step={control.step}
-                              value={control.value}
-                              onChange={(event) =>
-                                control.onChange?.(Number(event.target.value))
-                              }
-                              className="mt-3 w-full cursor-pointer"
-                              style={{ accentColor: "var(--gold-action)" }}
-                            />
+                            <>
+                              <input
+                                type="range"
+                                min={control.min}
+                                max={control.max}
+                                step={control.step}
+                                value={control.value}
+                                onChange={(event) =>
+                                  control.onChange?.(Number(event.target.value))
+                                }
+                                className="mt-3 w-full cursor-pointer"
+                                style={{ accentColor: "var(--gold-action)" }}
+                              />
 
-                            <div className="mt-1 flex justify-between gap-3 text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
-                              <span>{control.leftLabel}</span>
-                              <span className="text-center">
-                                Default {control.defaultValue}%
-                              </span>
-                              <span className="text-right">{control.rightLabel}</span>
-                            </div>
+                              <div className="mt-1 flex justify-between gap-3 text-[10px] uppercase tracking-[0.12em] text-[var(--ink-dim)]">
+                                <span>{control.leftLabel}</span>
+                                <span className="text-center">
+                                  Default {control.defaultValueLabel}
+                                </span>
+                                <span className="text-right">{control.rightLabel}</span>
+                              </div>
+                            </>
                           </label>
                         ))}
                       </div>

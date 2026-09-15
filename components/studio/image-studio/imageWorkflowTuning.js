@@ -1,31 +1,82 @@
 const SEMANTIC_MIN = 0;
 const SEMANTIC_MAX = 100;
 
-function control({
+function rangeControl({
   id,
   label,
   description,
   leftLabel,
   rightLabel,
   defaultValue,
-  step = 5,
+  min,
+  max,
+  step = 1,
+  formatValue = (value) => String(value),
+  toDisplayValue = null,
+  fromDisplayValue = null,
 }) {
   return Object.freeze({
+    kind: "range",
     id,
     label,
     description,
     leftLabel,
     rightLabel,
-    min: SEMANTIC_MIN,
-    max: SEMANTIC_MAX,
+    min,
+    max,
     step,
     defaultValue,
+    formatValue,
+    toDisplayValue,
+    fromDisplayValue,
   });
 }
 
-// `definition` is the one-line tooltip on each diagonal step of the
-// Media Studio render style rail (Brian's note 2, 9 Sep 2026). Copy
-// drafted at the plan gate, open for fine-tuning.
+function discreteRangeControl({
+  id,
+  label,
+  description,
+  defaultValue,
+  options,
+  leftLabel,
+  rightLabel,
+}) {
+  return Object.freeze({
+    kind: "discrete-range",
+    id,
+    label,
+    description,
+    defaultValue,
+    options,
+    min: 0,
+    max: Math.max((options?.length || 1) - 1, 0),
+    step: 1,
+    leftLabel,
+    rightLabel,
+  });
+}
+
+function scaleKey(value) {
+  return Number(value)
+    .toFixed(2)
+    .replace(/\.00$/, "")
+    .replace(/0$/, "");
+}
+
+function makeStepEnvelope(min, max, defaultValue) {
+  return Object.freeze({ min, max, defaultValue, step: 1, kind: "integer" });
+}
+
+function makeDenoiseEnvelope(min, max, defaultValue) {
+  return Object.freeze({
+    min,
+    max,
+    defaultValue,
+    step: 0.01,
+    kind: "float",
+  });
+}
+
 export const RENDER_STYLE_RAIL_STOPS = Object.freeze([
   Object.freeze({
     value: "crestfall_fantasy",
@@ -67,233 +118,165 @@ export const RENDER_STYLE_RAIL_STOPS = Object.freeze([
 
 const DEFAULT_PROFILE_KEY = RENDER_STYLE_RAIL_STOPS[0].value;
 
-export const IMAGE_WORKFLOW_TUNING_DEFINITIONS = Object.freeze({
-  crestfall_fantasy: Object.freeze({
+const DETAIL_PRESET_LABELS = Object.freeze({
+  1: "Standard",
+  1.25: "Enhanced",
+  1.5: "High",
+  1.75: "Ultra",
+  2: "Maximum",
+});
+
+const SCALES = Object.freeze({
+  fantasy: Object.freeze({
+    1: [25, 25, 25, 25, 25, 25, 0.15, 0.15, 0.15],
+    1.25: [30, 44, 30, 30, 48, 30, 0.2, 0.32, 0.2],
+    1.5: [35, 46, 35, 35, 52, 35, 0.25, 0.36, 0.25],
+    1.75: [45, 50, 45, 40, 58, 40, 0.4, 0.5, 0.4],
+    2: [45, 55, 45, 65, 75, 65, 0.6, 0.7, 0.6],
+  }),
+  realistic: Object.freeze({
+    1: [25, 45, 25, 35, 45, 35, 0.15, 0.35, 0.15],
+    1.25: [45, 50, 45, 40, 50, 40, 0.6, 0.7, 0.6],
+  }),
+  hybrid: Object.freeze({
+    1: [25, 35, 25, 25, 35, 25, 0.2, 0.3, 0.2],
+    1.25: [25, 37, 25, 25, 37, 25, 0.2, 0.31, 0.2],
+    1.5: [25, 40, 25, 25, 40, 25, 0.2, 0.32, 0.2],
+    1.75: [25, 42, 25, 25, 42, 25, 0.2, 0.33, 0.2],
+    2: [25, 45, 25, 25, 45, 25, 0.2, 0.35, 0.2],
+  }),
+  cinematic: Object.freeze({
+    1: [25, 35, 25, 35, 45, 35, 0.4, 0.45, 0.4],
+    1.25: [25, 36, 25, 35, 45, 35, 0.4, 0.46, 0.4],
+    1.5: [25, 38, 25, 35, 46, 35, 0.4, 0.47, 0.4],
+    1.75: [25, 39, 25, 35, 48, 35, 0.4, 0.48, 0.4],
+    2: [25, 40, 25, 35, 50, 35, 0.4, 0.5, 0.4],
+  }),
+});
+
+function toEnvelope(tuple) {
+  return Object.freeze({
+    foundationSteps: makeStepEnvelope(tuple[0], tuple[1], tuple[2]),
+    polishSteps: makeStepEnvelope(tuple[3], tuple[4], tuple[5]),
+    polishDenoise: makeDenoiseEnvelope(tuple[6], tuple[7], tuple[8]),
+  });
+}
+
+function profile({
+  key,
+  label,
+  description,
+  safetyNote,
+  defaultScale,
+  detailScaleOptions,
+  scaleSet,
+  supportsReferenceInfluence = false,
+}) {
+  return Object.freeze({
+    key,
+    label,
+    description,
+    safetyNote,
+    defaultScale,
+    detailScaleOptions: Object.freeze(detailScaleOptions),
+    supportsReferenceInfluence,
+    scales: Object.freeze(
+      Object.fromEntries(
+        Object.entries(scaleSet).map(([nextKey, tuple]) => [scaleKey(nextKey), toEnvelope(tuple)])
+      )
+    ),
+  });
+}
+
+const PROFILE_DEFINITIONS = Object.freeze({
+  crestfall_fantasy: profile({
     key: "crestfall_fantasy",
     label: "Fantasy",
     description:
-      "Tune the fantasy workflow inside its validated detail envelope without exposing raw workflow internals.",
-    controls: Object.freeze([
-      control({
-        id: "detailLevel",
-        label: "Fantasy Detail",
-        description:
-          "Adjust the bounded sampling detail budget while leaving CFG, sampler, scheduler, and model selection locked.",
-        leftLabel: "Lighter",
-        rightLabel: "Richer",
-        defaultValue: 70,
-      }),
-    ]),
+      "Tune the fantasy lane with lane-safe detail presets and bounded finishing controls.",
+    safetyNote:
+      "Detail presets stay inside the certified fantasy envelope. Foundation, Refinement, and Variation narrow automatically as detail increases.",
+    defaultScale: 1,
+    detailScaleOptions: [1, 1.25, 1.5, 1.75, 2],
+    scaleSet: SCALES.fantasy,
   }),
-
-  crestfall_anime_anime: Object.freeze({
+  crestfall_anime_anime: profile({
     key: "crestfall_anime_anime",
     label: "Anime",
     description:
-      "Tune the two-pass anime workflow inside its validated foundation and polish detail envelopes.",
-    controls: Object.freeze([
-      control({
-        id: "foundationDetail",
-        label: "Anime Foundation Detail",
-        description: "Adjust the bounded first-pass detail budget.",
-        leftLabel: "Lighter",
-        rightLabel: "Richer",
-        defaultValue: 70,
-      }),
-      control({
-        id: "polishDetail",
-        label: "Anime Polish Detail",
-        description: "Adjust the bounded second-pass anime polish detail budget.",
-        leftLabel: "Lighter",
-        rightLabel: "Richer",
-        defaultValue: 70,
-      }),
-    ]),
+      "Tune the anime lane with lane-safe detail presets and bounded finishing controls.",
+    safetyNote:
+      "Anime shares the fantasy detail family. Higher detail presets tighten the editable range automatically.",
+    defaultScale: 1,
+    detailScaleOptions: [1, 1.25, 1.5, 1.75, 2],
+    scaleSet: SCALES.fantasy,
+    supportsReferenceInfluence: true,
   }),
-
-  crestfall_fantasy_realistic: Object.freeze({
-    key: "crestfall_fantasy_realistic",
-    label: "Illustrative",
-    description:
-      "Tune the tested Fantasy → Realistic envelope without exposing sampler, CFG, or model internals.",
-    controls: Object.freeze([
-      control({
-        id: "referenceInfluence",
-        label: "Reference Influence",
-        description:
-          "How strongly a compatible Character reference image anchors identity and composition.",
-        leftLabel: "Looser",
-        rightLabel: "Stronger",
-        defaultValue: 50,
-      }),
-      control({
-        id: "styleBalance",
-        label: "Realism Balance",
-        description:
-          "How strongly the realism polish is allowed to reshape the fantasy foundation.",
-        leftLabel: "More Fantasy",
-        rightLabel: "Max Realism",
-        defaultValue: 100,
-      }),
-      control({
-        id: "foundationDetail",
-        label: "Fantasy Foundation Detail",
-        description: "How much of the validated first-pass detail budget is used.",
-        leftLabel: "Lighter",
-        rightLabel: "Full Detail",
-        defaultValue: 100,
-      }),
-      control({
-        id: "polishDetail",
-        label: "Realism Polish Detail",
-        description: "How much of the validated realism-polish detail budget is used.",
-        leftLabel: "Lighter",
-        rightLabel: "Full Detail",
-        defaultValue: 100,
-      }),
-    ]),
-    handoff: Object.freeze({
-      boundaryControlId: "styleBalance",
-      boundaryValue: 100,
-      targetProfileKey: "crestfall_fantasy_realism",
-      targetProfileLabel: "Heroic",
-      message:
-        "This is the validated realism ceiling for Illustrative. Move the workflow rail right for the balanced Heroic lane.",
-      targetStartingTuning: Object.freeze({ styleBalance: 35 }),
-    }),
-  }),
-
-  crestfall_fantasy_realism: Object.freeze({
-    key: "crestfall_fantasy_realism",
-    label: "Heroic",
-    description:
-      "Tune the balanced fantasy-realism lane that bridges Fantasy → Realistic and Realistic → Fantasy without exposing sampler, CFG, or model internals.",
-    controls: Object.freeze([
-      control({
-        id: "referenceInfluence",
-        label: "Reference Influence",
-        description:
-          "How strongly the Character's Realistic Reference anchors identity and composition when one is available.",
-        leftLabel: "Looser",
-        rightLabel: "Stronger",
-        defaultValue: 50,
-      }),
-      control({
-        id: "styleBalance",
-        label: "Fantasy Influence",
-        description:
-          "How strongly the fantasy polish may reshape the realism-first foundation while staying in the balanced middle lane.",
-        leftLabel: "Mostly Realistic",
-        rightLabel: "Stronger Fantasy",
-        defaultValue: 35,
-      }),
-      control({
-        id: "foundationDetail",
-        label: "Realistic Foundation Detail",
-        description: "How much of the bounded realism-foundation detail budget is used.",
-        leftLabel: "Lighter",
-        rightLabel: "Richer",
-        defaultValue: 55,
-      }),
-      control({
-        id: "polishDetail",
-        label: "Fantasy Polish Detail",
-        description: "How much of the bounded fantasy-polish detail budget is used.",
-        leftLabel: "Lighter",
-        rightLabel: "Richer",
-        defaultValue: 40,
-      }),
-    ]),
-    handoff: Object.freeze({
-      boundaryControlId: "styleBalance",
-      boundaryValue: 100,
-      targetProfileKey: "crestfall_realistic_fantasy",
-      targetProfileLabel: "Cinematic",
-      message:
-        "This is the validated fantasy ceiling for Heroic. Move the workflow rail right for the stronger Cinematic lane.",
-      targetStartingTuning: Object.freeze({ styleBalance: 50 }),
-    }),
-  }),
-
-  crestfall_realistic_fantasy: Object.freeze({
-    key: "crestfall_realistic_fantasy",
-    label: "Cinematic",
-    description:
-      "Tune the V3 realism-first foundation and restrained fantasy polish without exposing sampler, CFG, or model internals.",
-    controls: Object.freeze([
-      control({
-        id: "referenceInfluence",
-        label: "Reference Influence",
-        description:
-          "How strongly the Character's Realistic Reference anchors identity and composition when one is available.",
-        leftLabel: "Looser",
-        rightLabel: "Stronger",
-        defaultValue: 50,
-      }),
-      control({
-        id: "styleBalance",
-        label: "Fantasy Influence",
-        description:
-          "How strongly the restrained fantasy polish may reshape the realism-first foundation.",
-        leftLabel: "Mostly Realistic",
-        rightLabel: "Stronger Fantasy",
-        defaultValue: 50,
-      }),
-      control({
-        id: "foundationDetail",
-        label: "Realistic Foundation Detail",
-        description: "How much of the bounded RealVis foundation detail budget is used.",
-        leftLabel: "Lighter",
-        rightLabel: "Richer",
-        defaultValue: 65,
-      }),
-      control({
-        id: "polishDetail",
-        label: "Fantasy Polish Detail",
-        description: "How much of the bounded fantasy-polish detail budget is used.",
-        leftLabel: "Lighter",
-        rightLabel: "Richer",
-        defaultValue: 50,
-      }),
-    ]),
-    handoff: Object.freeze({
-      boundaryControlId: "styleBalance",
-      boundaryValue: 100,
-      targetProfileKey: "crestfall_fantasy_realistic",
-      targetProfileLabel: "Illustrative",
-      message:
-        "This is the validated fantasy ceiling for Cinematic. Move the workflow rail left for the more illustrative fantasy-first lane.",
-      targetStartingTuning: Object.freeze({ styleBalance: 0 }),
-    }),
-  }),
-
-  crestfall_realistic: Object.freeze({
+  crestfall_realistic: profile({
     key: "crestfall_realistic",
     label: "Realistic",
     description:
-      "Tune the V3 photoreal workflow and optional Realistic Reference influence without exposing raw workflow internals.",
-    controls: Object.freeze([
-      control({
-        id: "referenceInfluence",
-        label: "Reference Influence",
-        description:
-          "How strongly the Character's Realistic Reference anchors identity and composition when one is available.",
-        leftLabel: "Looser",
-        rightLabel: "Stronger",
-        defaultValue: 50,
-      }),
-      control({
-        id: "detailLevel",
-        label: "Realism Detail",
-        description:
-          "Adjust the bounded RealVis sampling detail budget while leaving CFG, sampler, scheduler, and model selection locked.",
-        leftLabel: "Lighter",
-        rightLabel: "Richer",
-        defaultValue: 50,
-      }),
-    ]),
+      "Tune the realistic lane with conservative detail presets and bounded finishing controls.",
+    safetyNote:
+      "Realistic is intentionally limited to the certified Standard and Enhanced detail presets while this lane remains under evaluation.",
+    defaultScale: 1,
+    detailScaleOptions: [1, 1.25],
+    scaleSet: SCALES.realistic,
+    supportsReferenceInfluence: true,
+  }),
+  crestfall_fantasy_realistic: profile({
+    key: "crestfall_fantasy_realistic",
+    label: "Illustrative",
+    description:
+      "Tune the illustrative lane with detail presets, reference influence, and bounded finishing controls.",
+    safetyNote:
+      "Illustrative keeps conservative defaults while higher detail presets expand the available finishing headroom.",
+    defaultScale: 1,
+    detailScaleOptions: [1, 1.25, 1.5, 1.75, 2],
+    scaleSet: SCALES.hybrid,
+    supportsReferenceInfluence: true,
+  }),
+  crestfall_fantasy_realism: profile({
+    key: "crestfall_fantasy_realism",
+    label: "Heroic",
+    description:
+      "Tune the heroic lane with detail presets, reference influence, and bounded finishing controls.",
+    safetyNote:
+      "Heroic keeps balanced defaults while higher detail presets expand the available finishing headroom.",
+    defaultScale: 1,
+    detailScaleOptions: [1, 1.25, 1.5, 1.75, 2],
+    scaleSet: SCALES.hybrid,
+    supportsReferenceInfluence: true,
+  }),
+  crestfall_realistic_fantasy: profile({
+    key: "crestfall_realistic_fantasy",
+    label: "Cinematic",
+    description:
+      "Tune the cinematic lane with detail presets, reference influence, and bounded finishing controls.",
+    safetyNote:
+      "Cinematic keeps a stronger finishing pass than the other hybrid lanes while higher detail presets expand the available finishing headroom.",
+    defaultScale: 1,
+    detailScaleOptions: [1, 1.25, 1.5, 1.75, 2],
+    scaleSet: SCALES.cinematic,
+    supportsReferenceInfluence: true,
   }),
 });
+
+function clampRangeValue(value, envelope) {
+  const parsed = Number(value);
+
+  if (!Number.isFinite(parsed)) {
+    return envelope.defaultValue;
+  }
+
+  const bounded = Math.min(Math.max(parsed, envelope.min), envelope.max);
+
+  if (envelope.kind === "integer") {
+    return Math.round(bounded);
+  }
+
+  return Math.round(bounded * 100) / 100;
+}
 
 function clampSemanticValue(value, fallback) {
   const parsed = Number(value);
@@ -302,7 +285,240 @@ function clampSemanticValue(value, fallback) {
     return fallback;
   }
 
-  return Math.min(Math.max(parsed, SEMANTIC_MIN), SEMANTIC_MAX);
+  return Math.min(Math.max(Math.round(parsed), SEMANTIC_MIN), SEMANTIC_MAX);
+}
+
+function projectRangeValueToSemantic(value, envelope, semanticMin = SEMANTIC_MIN) {
+  if (!envelope) return semanticMin;
+
+  const clamped = clampRangeValue(value, envelope);
+  const rawSpan = envelope.max - envelope.min;
+  const semanticSpan = SEMANTIC_MAX - semanticMin;
+
+  if (!(rawSpan > 0) || !(semanticSpan > 0)) {
+    return semanticMin;
+  }
+
+  const semantic =
+    semanticMin + ((clamped - envelope.min) / rawSpan) * semanticSpan;
+  return Math.min(
+    Math.max(Math.round(semantic), semanticMin),
+    SEMANTIC_MAX
+  );
+}
+
+function projectSemanticToRangeValue(value, envelope, semanticMin = SEMANTIC_MIN) {
+  if (!envelope) return value;
+
+  const parsed = Number(value);
+  const semantic = Number.isFinite(parsed)
+    ? Math.min(Math.max(parsed, semanticMin), SEMANTIC_MAX)
+    : semanticMin;
+  const rawSpan = envelope.max - envelope.min;
+  const semanticSpan = SEMANTIC_MAX - semanticMin;
+
+  if (!(rawSpan > 0) || !(semanticSpan > 0)) {
+    return clampRangeValue(envelope.min, envelope);
+  }
+
+  const projected =
+    envelope.min + ((semantic - semanticMin) / semanticSpan) * rawSpan;
+  return clampRangeValue(projected, envelope);
+}
+
+function getProfileDefinition(profileKey) {
+  return PROFILE_DEFINITIONS[String(profileKey || "").trim()] || null;
+}
+
+function resolveDetailScale(profile, requestedScale) {
+  const options = profile?.detailScaleOptions || [1];
+  const fallback = options[0] || 1;
+  const parsed = Number(requestedScale);
+
+  if (!Number.isFinite(parsed)) {
+    return fallback;
+  }
+
+  let best = fallback;
+  let bestDistance = Math.abs(parsed - fallback);
+
+  for (const option of options) {
+    const distance = Math.abs(parsed - option);
+    if (distance < bestDistance) {
+      best = option;
+      bestDistance = distance;
+    }
+  }
+
+  return best;
+}
+
+function getScaleEnvelope(profile, detailScale) {
+  if (!profile) return null;
+
+  return (
+    profile.scales[scaleKey(detailScale)] ||
+    profile.scales[scaleKey(profile.defaultScale)] ||
+    Object.values(profile.scales)[0] ||
+    null
+  );
+}
+
+function buildScaleOptions(profile) {
+  return (profile?.detailScaleOptions || []).map((value, index, allValues) => ({
+    index,
+    value,
+    label: DETAIL_PRESET_LABELS[value] || `Preset ${index + 1}`,
+    semanticLabel: DETAIL_PRESET_LABELS[value] || `Preset ${index + 1}`,
+    leftEdge: index === 0,
+    rightEdge: index === allValues.length - 1,
+  }));
+}
+
+function formatDefaultValue(control, value) {
+  if (control.kind === "discrete-range") {
+    const option = (control.options || []).find(
+      (entry) => Number(entry.value) === Number(value)
+    );
+    return option?.label || String(value);
+  }
+
+  return control.formatValue ? control.formatValue(value) : String(value);
+}
+
+function buildControls(profile, normalizedTuning) {
+  const scaleEnvelope = getScaleEnvelope(profile, normalizedTuning.detailScale);
+
+  if (!scaleEnvelope) return [];
+
+  const controls = [];
+
+  if (profile.supportsReferenceInfluence) {
+    controls.push(
+      rangeControl({
+        id: "referenceInfluence",
+        label: "Reference Influence",
+        description:
+          "How strongly a compatible Realistic Reference image is allowed to anchor identity and composition.",
+        leftLabel: "Looser",
+        rightLabel: "Stronger",
+        min: SEMANTIC_MIN,
+        max: SEMANTIC_MAX,
+        step: 1,
+        defaultValue: 50,
+        formatValue: (value) => `${Math.round(value)}%`,
+      })
+    );
+  }
+
+  const detailOptions = buildScaleOptions(profile);
+  const foundationSemanticMin =
+    Number(normalizedTuning.detailScale) === 1.75 &&
+    ["crestfall_fantasy", "crestfall_anime_anime"].includes(profile.key)
+      ? 10
+      : SEMANTIC_MIN;
+
+  controls.push(
+    discreteRangeControl({
+      id: "detailScale",
+      label: "Detail",
+      description:
+        "Choose the certified detail preset for this render lane. Higher presets add more finishing room while tightening the safe tuning envelope.",
+      defaultValue: profile.defaultScale,
+      options: detailOptions,
+      leftLabel: detailOptions[0]?.label || "Standard",
+      rightLabel: detailOptions[detailOptions.length - 1]?.label || "Maximum",
+    }),
+    rangeControl({
+      id: "foundationSteps",
+      label: "Foundation",
+      description:
+        "How strongly the image foundation is established before finishing passes begin.",
+      leftLabel: "Lighter",
+      rightLabel: "Stronger",
+      min: foundationSemanticMin,
+      max: SEMANTIC_MAX,
+      step: 1,
+      defaultValue: projectRangeValueToSemantic(
+        scaleEnvelope.foundationSteps.defaultValue,
+        scaleEnvelope.foundationSteps,
+        foundationSemanticMin
+      ),
+      formatValue: (value) => `${Math.round(value)}%`,
+      toDisplayValue: (value) =>
+        projectRangeValueToSemantic(
+          value,
+          scaleEnvelope.foundationSteps,
+          foundationSemanticMin
+        ),
+      fromDisplayValue: (value) =>
+        projectSemanticToRangeValue(
+          value,
+          scaleEnvelope.foundationSteps,
+          foundationSemanticMin
+        ),
+    }),
+    rangeControl({
+      id: "polishSteps",
+      label: "Refinement",
+      description:
+        "How much finishing detail and cleanup the later pass adds on top of the foundation.",
+      leftLabel: "Lighter",
+      rightLabel: "Richer",
+      min: SEMANTIC_MIN,
+      max: SEMANTIC_MAX,
+      step: 1,
+      defaultValue: projectRangeValueToSemantic(
+        scaleEnvelope.polishSteps.defaultValue,
+        scaleEnvelope.polishSteps
+      ),
+      formatValue: (value) => `${Math.round(value)}%`,
+      toDisplayValue: (value) =>
+        projectRangeValueToSemantic(value, scaleEnvelope.polishSteps),
+      fromDisplayValue: (value) =>
+        projectSemanticToRangeValue(value, scaleEnvelope.polishSteps),
+    }),
+    rangeControl({
+      id: "polishDenoise",
+      label: "Variation",
+      description:
+        "How freely the finishing pass is allowed to reinterpret the established foundation.",
+      leftLabel: "Gentler",
+      rightLabel: "Freer",
+      min: SEMANTIC_MIN,
+      max: SEMANTIC_MAX,
+      step: 1,
+      defaultValue: projectRangeValueToSemantic(
+        scaleEnvelope.polishDenoise.defaultValue,
+        scaleEnvelope.polishDenoise
+      ),
+      formatValue: (value) => `${Math.round(value)}%`,
+      toDisplayValue: (value) =>
+        projectRangeValueToSemantic(value, scaleEnvelope.polishDenoise),
+      fromDisplayValue: (value) =>
+        projectSemanticToRangeValue(value, scaleEnvelope.polishDenoise),
+    })
+  );
+
+  return controls.map((control) => ({
+    ...control,
+    defaultValueLabel: formatDefaultValue(control, control.defaultValue),
+  }));
+}
+
+export function getWorkflowTuningPresentationValue(profileKey, controlId, rawValue, tuning = {}) {
+  const definition = getImageWorkflowTuningDefinition(profileKey, tuning);
+  const control = definition?.controls?.find((entry) => entry.id === controlId) || null;
+
+  if (!control) {
+    return rawValue;
+  }
+
+  if (control.kind === "discrete-range") {
+    return rawValue;
+  }
+
+  return control.toDisplayValue ? control.toDisplayValue(rawValue) : rawValue;
 }
 
 export function normalizeRenderStyleRailSelection(profileKey) {
@@ -321,41 +537,63 @@ export function getRenderStyleRailStop(profileKey) {
   );
 }
 
-export function getImageWorkflowTuningDefinition(profileKey) {
-  return IMAGE_WORKFLOW_TUNING_DEFINITIONS[String(profileKey || "").trim()] || null;
+export function normalizeImageWorkflowTuning(profileKey, tuning = {}) {
+  const profile = getProfileDefinition(profileKey);
+
+  if (!profile) return {};
+
+  const source = tuning && typeof tuning === "object" ? tuning : {};
+  const detailScale = resolveDetailScale(
+    profile,
+    source.detailScale ?? profile.defaultScale
+  );
+  const scaleEnvelope = getScaleEnvelope(profile, detailScale);
+
+  return {
+    ...(profile.supportsReferenceInfluence
+      ? { referenceInfluence: clampSemanticValue(source.referenceInfluence, 50) }
+      : {}),
+    detailScale,
+    foundationSteps: clampRangeValue(
+      source.foundationSteps,
+      scaleEnvelope.foundationSteps
+    ),
+    polishSteps: clampRangeValue(source.polishSteps, scaleEnvelope.polishSteps),
+    polishDenoise: clampRangeValue(
+      source.polishDenoise,
+      scaleEnvelope.polishDenoise
+    ),
+  };
+}
+
+export function getImageWorkflowTuningDefinition(profileKey, tuning = {}) {
+  const profile = getProfileDefinition(profileKey);
+
+  if (!profile) return null;
+
+  const normalizedTuning = normalizeImageWorkflowTuning(profileKey, tuning);
+
+  return {
+    key: profile.key,
+    label: profile.label,
+    description: profile.description,
+    safetyNote: profile.safetyNote,
+    controls: buildControls(profile, normalizedTuning),
+    handoff: null,
+  };
 }
 
 export function getDefaultImageWorkflowTuning(profileKey) {
-  const definition = getImageWorkflowTuningDefinition(profileKey);
-
-  if (!definition) return {};
-
-  return Object.fromEntries(
-    definition.controls.map((entry) => [entry.id, entry.defaultValue])
-  );
+  return normalizeImageWorkflowTuning(profileKey, {});
 }
 
-export function normalizeImageWorkflowTuning(profileKey, tuning = {}) {
-  const definition = getImageWorkflowTuningDefinition(profileKey);
-
-  if (!definition) return {};
-
-  const source = tuning && typeof tuning === "object" ? tuning : {};
-
-  return Object.fromEntries(
-    definition.controls.map((entry) => [
-      entry.id,
-      clampSemanticValue(source[entry.id], entry.defaultValue),
-    ])
-  );
-}
-
-export function getWorkflowTuningPayload({ profileKey, tuning, touched }) {
-  if (!touched) return null;
-
-  const definition = getImageWorkflowTuningDefinition(profileKey);
+export function getWorkflowTuningPayload({ profileKey, tuning, touched: _touched }) {
+  const definition = getImageWorkflowTuningDefinition(profileKey, tuning);
   if (!definition) return null;
 
+  // Always send the exact normalized raw recipe. `touched` is only a UI
+  // presentation flag (defaults vs custom); it must never decide whether the
+  // generation recipe is recorded or reproducible.
   return normalizeImageWorkflowTuning(profileKey, tuning);
 }
 

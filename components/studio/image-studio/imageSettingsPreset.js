@@ -7,6 +7,7 @@ import {
 import {
   getImageWorkflowTuningDefinition,
   getRenderStyleRailStop,
+  getWorkflowTuningPresentationValue,
   normalizeImageWorkflowTuning,
   normalizeRenderStyleRailSelection,
 } from "./imageWorkflowTuning.js";
@@ -99,18 +100,43 @@ export function getImageSettingsPresetPresentation(value) {
   const normalized = normalizeImageSettingsPreset(value);
   const renderStyle = getRenderStyleRailStop(normalized.renderStyle);
   const camera = getCameraPresetDefinition(normalized.cameraFraming);
-  const definition = getImageWorkflowTuningDefinition(normalized.renderStyle);
+  const definition = getImageWorkflowTuningDefinition(
+    normalized.renderStyle,
+    normalized.workflowTuning
+  );
   const tuningParts = [];
 
   for (const control of definition?.controls || []) {
-    const labels = {
-      referenceInfluence: "Ref",
-      styleBalance: control.label.includes("Fantasy") ? "Fantasy" : "Balance",
-      foundationDetail: "Foundation",
-      polishDetail: "Polish",
-      detailLevel: "Detail",
-    };
-    tuningParts.push(`${labels[control.id] || control.label} ${Math.round(normalized.workflowTuning[control.id])}%`);
+    if (control.id === "referenceInfluence") {
+      continue;
+    }
+
+    if (control.kind === "discrete-range") {
+      tuningParts.push(
+        `${control.label} ${control.formatValue ? control.formatValue(control.defaultValue) : control.defaultValue}`
+      );
+      continue;
+    }
+
+    const presentedValue = getWorkflowTuningPresentationValue(
+      normalized.renderStyle,
+      control.id,
+      normalized.workflowTuning[control.id],
+      normalized.workflowTuning
+    );
+    tuningParts.push(
+      `${control.label} ${control.formatValue ? control.formatValue(presentedValue) : String(presentedValue)}`
+    );
+  }
+
+  const detailControl = definition?.controls?.find((control) => control.id === "detailScale");
+  if (detailControl?.kind === "discrete-range") {
+    const option = detailControl.options?.find(
+      (entry) => Number(entry.value) === Number(normalized.workflowTuning.detailScale)
+    );
+    if (option?.label) {
+      tuningParts[0] = `Detail ${option.label}`;
+    }
   }
 
   return {

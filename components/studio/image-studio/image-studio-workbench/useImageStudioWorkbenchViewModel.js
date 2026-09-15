@@ -581,7 +581,7 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   const [sceneryOnlyHelperEnabled, setSceneryOnlyHelperEnabled] = useState(true);
   const [locationViewMode, setLocationViewMode] = useState("AUTO");
 
-  const [renderStyle, setRenderStyle] = useState("auto");
+  const [renderStyle, setRenderStyle] = useState("crestfall_fantasy");
   const [workflowTuning, setWorkflowTuning] = useState({});
   const [workflowTuningTouched, setWorkflowTuningTouched] = useState(false);
   const [cameraPreset, setCameraPreset] = useState("AUTO");
@@ -688,8 +688,13 @@ export function useImageStudioWorkbenchViewModel({ account }) {
   function importImageSettingsPreset(text) {
     try {
       const preset = parseImageSettingsPresetText(text);
-      setRenderStyle(preset.renderStyle);
-      setWorkflowTuning(preset.workflowTuning);
+
+      // Use the same render-style transition path as a manual rail change,
+      // then restore the exact copied raw workflow values. This keeps the
+      // lane-owned defaults/reset behavior consistent without allowing the
+      // style transition to overwrite the imported tuning recipe.
+      handleRenderStyleChange(preset.renderStyle);
+      setWorkflowTuning(() => ({ ...preset.workflowTuning }));
       setWorkflowTuningTouched(true);
       setCameraPreset(preset.cameraFraming);
       setWardrobeTheme(preset.wardrobeTheme);
@@ -697,7 +702,15 @@ export function useImageStudioWorkbenchViewModel({ account }) {
       setSceneryOnlyHelperEnabled(preset.sceneryOnlyHelperEnabled);
       setLocationViewMode(preset.locationViewMode || "AUTO");
       setNegativePrompt(preset.negativePrompt);
-      return { ok: true, message: "Image settings imported." };
+      return {
+        ok: true,
+        message: "Image settings imported.",
+        imported: {
+          renderStyle: preset.renderStyle,
+          workflowTuning: { ...preset.workflowTuning },
+          locationViewMode: preset.locationViewMode || "AUTO",
+        },
+      };
     } catch (error) {
       return {
         ok: false,
