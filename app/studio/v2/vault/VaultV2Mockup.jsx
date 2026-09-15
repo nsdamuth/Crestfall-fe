@@ -11,8 +11,10 @@
 // single edit path, own-work items only. Opening a saved asset from
 // the popup goes straight to /studio/v2/editor/[id]. No fork, no
 // choice dialog. No other edit, delete, or bulk affordance appears
-// anywhere on this page; the rest of the prior hold stands. No live
-// data, no API calls otherwise, no other real navigation.
+// anywhere on this page; the rest of the prior hold stands, with one
+// addition since AF6 (14 Sep 2026): the selection bar's bulk Delete,
+// which loops the same deleteCreation the kebab's Delete calls. No
+// live data, no API calls otherwise, no other real navigation.
 //
 // Folders (ASSET-FOLDERS plan, package AF6, 14 Sep 2026): surface
 // VAULT of the browser-local folder store (option 2A ruled). The
@@ -29,6 +31,15 @@
 // the danger tone. Opening the column collapses the primary sidebar
 // to its rail through the studio chrome's claimLeft("page"), the same
 // call Media makes.
+//
+// Select mode (AF6, option 3A ruled): Select sits first in the bar's
+// leadingSlot and enters it, Done leaves it; the cards take
+// KitCreationCard 3.9.0's isSelectable, isSelected, and onToggleSelect
+// through the small page hook useVaultSelection (no Vault ViewModel
+// this package). The one KitSelectionBar, fixed bottom center at md
+// and up and docked above the nav below md, reads Delete, Add to
+// folder (Remove from folder while a folder is chosen), Download
+// (Soon on this page, M3), Done. The kebab gains Add to folder.
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Folder } from "lucide-react";
@@ -39,6 +50,7 @@ import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudio
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
 import KitFoldersPanel from "@/components/kit/KitFoldersPanel";
 import KitNotice from "@/components/kit/KitNotice";
+import KitSelectionBar from "@/components/kit/KitSelectionBar";
 import { useKitNoticeAutoClear } from "@/components/kit/notice/useKitNoticeViewModel";
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
@@ -57,13 +69,16 @@ import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/
 import { archiveCreation, deleteCreation } from "@/lib/client/studio/creations/creationClient";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
 import { canArchiveVaultItem, canDeleteVaultItem } from "@/lib/shared/presentation/vaultPresentation";
-import { getDescendantIds } from "@/lib/client/studio/folders/folderRules";
+import { folderNotes, getDescendantIds } from "@/lib/client/studio/folders/folderRules";
 import { useFolderStore } from "@/lib/client/studio/folders/useFolderStore";
 import { buildDomainFilterGroups, orderFilterGroups } from "../catalog/creationCatalogFilterTaxonomy.js";
 // The two layout hooks the Media composition minted (AF5): which host
 // the Folders panel takes on this page (the column at 1100 and up,
-// the sheet below), read from the same query.
+// the sheet below), read from the same query, and the grid column's
+// viewport insets that center the fixed selection bar on the column.
+import { useColumnDockInsets } from "../images/images-live/useColumnDockInsets";
 import { useFoldersPanelHost } from "../images/images-live/useFoldersPanelHost";
+import { useVaultSelection } from "./useVaultSelection";
 import { VISIBILITY_LABELS, filterVaultItems } from "./vaultVisibility.js";
 
 function canonArt(name) {
@@ -85,6 +100,15 @@ const FOLDERS_TRIGGER_CLASS =
 const FOLDERS_TRIGGER_REST_CLASS =
   "text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]";
 const FOLDERS_TRIGGER_MARKED_CLASS = "text-[var(--gold-bright)]";
+// Select, first after the search field (the Media ruling carried):
+// reads Done and selected while select mode is on.
+const SELECT_LABEL = "Select";
+const SELECT_DONE_LABEL = "Done";
+const VAULT_ITEM_NOUN = "creation";
+
+function pluralNoun(count) {
+  return count === 1 ? VAULT_ITEM_NOUN : `${VAULT_ITEM_NOUN}s`;
+}
 
 // Fixture items are owner-created work only. The Vault is an ownership
 // surface, not a bookmark collection; saving Community work never imports it here.
@@ -219,6 +243,9 @@ export default function VaultV2Mockup({
   const notice = useKitNoticeAutoClear();
   const foldersHost = useFoldersPanelHost();
   const folderStore = useFolderStore("VAULT");
+  const selection = useVaultSelection();
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const [gridColumnRef, dockInsets] = useColumnDockInsets();
   // The primary sidebar's collapse control is the studio chrome's left
   // edge (StudioChromeProvider, decision J1), the same handler Media
   // calls: opening the Folders column collapses the sidebar to its rail
@@ -339,6 +366,88 @@ export default function VaultV2Mockup({
     onDeleteFolder: folderStore.deleteFolder,
     onNotice: showNote,
   };
+
+  function selectedItems() {
+    return sourceItems.filter((item) => selection.isSelected(item.id));
+  }
+
+  // Add to folder files the whole selection through the store, one
+  // folder per item (M1): the last successful note shows, a refusal
+  // shows instead in the danger tone. Select mode stays on.
+  function handleAddToFolder(folderId) {
+    let lastNote = "";
+    let refusalNote = "";
+    for (const item of selectedItems()) {
+      const result = folderStore.setItemFolder({ itemId: item.id, folderId });
+      if (result.ok) lastNote = result.note;
+      else if (!refusalNote) refusalNote = result.note;
+    }
+    if (refusalNote) showNote(refusalNote, "danger");
+    else if (lastNote) showNote(lastNote);
+  }
+
+  // Remove from folder (the Media ruling carried): while a folder other
+  // than All is chosen the bar's second control unfiles the whole
+  // selection (a null folder, so the items sit only in All); one note
+  // names the count and the folder; the items leave the folder's view,
+  // so the selection clears.
+  function handleRemoveFromFolder() {
+    if (!activeFolder) return;
+    const items = selectedItems();
+    let refusalNote = "";
+    for (const item of items) {
+      const result = folderStore.setItemFolder({ itemId: item.id, folderId: null });
+      if (!result.ok && !refusalNote) refusalNote = result.note;
+    }
+    if (refusalNote) {
+      showNote(refusalNote, "danger");
+      return;
+    }
+    showNote(folderNotes.unfiledMany(items.length, activeFolder.name));
+    selection.clearSelection();
+  }
+
+  // Bulk Delete: the bar's Kit-frame confirmation (the count in its
+  // copy) runs this from its primary alone; it loops the page's
+  // existing deleteCreation over every selected creation the delete
+  // rule allows (canDeleteVaultItem, the kebab's own gate), then one
+  // danger-tone note names what was deleted and what was not.
+  async function handleDeleteSelected() {
+    const items = selectedItems();
+    if (!live) {
+      setActionNotice({
+        label: "Delete",
+        message: `Deleting ${items.length} selected ${pluralNoun(items.length)} is wired when the page goes live. Nothing was deleted in this preview.`,
+      });
+      return;
+    }
+
+    setIsBulkDeleting(true);
+    let deleted = 0;
+    let failed = 0;
+    for (const item of items) {
+      if (!canDeleteVaultItem(item)) {
+        failed += 1;
+        continue;
+      }
+      try {
+        await deleteCreation(item.id);
+        deleted += 1;
+      } catch {
+        failed += 1;
+      }
+    }
+    setIsBulkDeleting(false);
+    setAssetDetailId(null);
+    showNote(
+      failed
+        ? `Deleted ${deleted} ${pluralNoun(deleted)}. ${failed} could not be deleted.`
+        : `Deleted ${deleted} ${pluralNoun(deleted)}.`,
+      "danger"
+    );
+    selection.clearSelection();
+    router.refresh();
+  }
 
   function toggleId(setter) {
     return (id) =>
@@ -489,6 +598,9 @@ export default function VaultV2Mockup({
 
   return (
     <>
+    {/* Bottom room for the fixed selection bar while select mode is
+        on, so the last row of cards scrolls clear of it. */}
+    <div className={selection.isSelectionMode ? "pb-24" : undefined}>
     <KitStudioPageView
       harnessSlot={
         live ? null : (
@@ -539,6 +651,16 @@ export default function VaultV2Mockup({
           // field's width with equal gaps on phones, at the row's
           // right at md and up.
           leadingSlot={
+            <>
+              <button
+                type="button"
+                onClick={selection.toggleSelectionMode}
+                aria-pressed={selection.isSelectionMode}
+                disabled={pool.length === 0 || isBulkDeleting}
+                className={`${FOLDERS_TRIGGER_CLASS} ${selection.isSelectionMode ? FOLDERS_TRIGGER_MARKED_CLASS : FOLDERS_TRIGGER_REST_CLASS}`}
+              >
+                <span className="min-w-0 truncate">{selection.isSelectionMode ? SELECT_DONE_LABEL : SELECT_LABEL}</span>
+              </button>
             <button
               type="button"
               onClick={onToggleFolders}
@@ -550,6 +672,7 @@ export default function VaultV2Mockup({
               <Folder size={14} aria-hidden="true" className="flex-none" />
               <span className="min-w-0 truncate">{activeFolder ? activeFolder.name : FOLDERS_ROOT_LABEL}</span>
             </button>
+            </>
           }
           filterGroups={filterGroups}
           selectedValues={selectedValues}
@@ -595,7 +718,7 @@ export default function VaultV2Mockup({
       }
     >
       <div className="flex items-start gap-[var(--space-6)]">
-      <div className="flex min-w-0 flex-1 flex-col gap-[var(--space-6)]">
+      <div ref={gridColumnRef} className="flex min-w-0 flex-1 flex-col gap-[var(--space-6)]">
         {notice.message ? (
           <KitNotice message={notice.message} tone={noticeTone} onDismiss={notice.clear} />
         ) : null}
@@ -660,6 +783,10 @@ export default function VaultV2Mockup({
                   }}
                   liked={isLiked(item)}
                   bookmarked={isSaved(item)}
+                  isSelectable={selection.isSelectionMode}
+                  isSelected={selection.isSelected(item.id)}
+                  onToggleSelect={() => selection.toggleItem(item.id)}
+                  onAddToFolder={live && item.isOwn ? () => selection.selectItem(item.id) : undefined}
                   onOpenImageOverlay={() =>
                     setOverlayImage({ ...item, imageSrc: item.imageSrc, title: item.title })
                   }
@@ -698,6 +825,28 @@ export default function VaultV2Mockup({
             />
           </>
         )}
+
+        {/* The one selection bar (AF4, option 3A): fixed at the
+            viewport's bottom at md and up, centered on this column
+            through its dock insets; docked above the nav below md.
+            Download ships Soon on this page (M3). */}
+        {selection.isSelectionMode ? (
+          <KitSelectionBar
+            selectedCount={selection.selectedCount}
+            itemNoun={VAULT_ITEM_NOUN}
+            folders={folderStore.folders}
+            onAddToFolder={handleAddToFolder}
+            removeFromFolderName={activeFolder?.name || ""}
+            onRemoveFromFolder={handleRemoveFromFolder}
+            onDownload={null}
+            isDownloadSoon
+            onDelete={handleDeleteSelected}
+            onDone={selection.leaveSelectionMode}
+            isBusy={isBulkDeleting}
+            dockInsets={dockInsets}
+            deleteBody={`This deletes ${selection.selectedCount} selected ${pluralNoun(selection.selectedCount)} from your Vault permanently. This cannot be undone.`}
+          />
+        ) : null}
       </div>
 
       {/* Folders column (1A): right of the grid at 1100 and up, only
@@ -708,6 +857,7 @@ export default function VaultV2Mockup({
       ) : null}
       </div>
     </KitStudioPageView>
+    </div>
 
     {/* Folders sheet (1A, below 1100): the Kit frame's sheet with the
         grabber; choosing a folder closes it. */}
