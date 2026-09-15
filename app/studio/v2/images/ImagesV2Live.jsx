@@ -82,12 +82,14 @@ const MEDIA_ITEM_NOUN = "image";
 const SELECT_LABEL = "Select";
 const SELECT_DONE_LABEL = "Done";
 // The composer column's open and close control (follow-up 1, item 5):
-// the same KitPanelToggle the story chat mounts on its rails, at the
-// column's grid-facing edge, turning with the column's state (a
-// right-edge panel, so open is the turned orientation). Closed, the
-// column collapses to a rail holding only the toggle and the grid
-// takes the width. Page state, default open; below 1100 the composer
-// is already the sheet and this column is hidden.
+// the same KitPanelToggle the story chat mounts on its rails, turning
+// with the column's state (a right-edge panel, so open is the turned
+// orientation). Open, it sits on the mode toggle's row at its left
+// through the panel's modeRowLeadingSlot (follow-up 2, item 6), so
+// the column has no blank row above; closed, the column collapses to
+// a rail holding only the toggle and the grid takes the width. Page
+// state, default open; below 1100 the composer is already the sheet
+// and this column is hidden.
 const COMPOSER_OPEN_LABEL = "Open composer";
 const COMPOSER_CLOSE_LABEL = "Close composer";
 
@@ -452,6 +454,18 @@ export default function ImagesV2Live() {
     [isSavedOn, hasMediaPick, grid.mediaFilter]
   );
   const nestedBackLabel = mobileCreatorOpen ? "Back to the composer" : null;
+  const composerToggle = (
+    <button
+      type="button"
+      onClick={() => setIsComposerOpen((current) => !current)}
+      title={isComposerOpen ? COMPOSER_CLOSE_LABEL : COMPOSER_OPEN_LABEL}
+      aria-label={isComposerOpen ? COMPOSER_CLOSE_LABEL : COMPOSER_OPEN_LABEL}
+      aria-expanded={isComposerOpen}
+      className={BARE_ICON_BUTTON_CLASS}
+    >
+      <KitPanelToggle side="right" open={isComposerOpen} />
+    </button>
+  );
 
   return (
     <>
@@ -622,24 +636,20 @@ export default function ImagesV2Live() {
                 maxHeight: "calc(100dvh - var(--topbar-h) - var(--space-8))",
               }}
             >
-              <div className="flex shrink-0 items-center justify-start px-[var(--space-2)] py-[var(--space-2)]">
-                <button
-                  type="button"
-                  onClick={() => setIsComposerOpen((current) => !current)}
-                  title={isComposerOpen ? COMPOSER_CLOSE_LABEL : COMPOSER_OPEN_LABEL}
-                  aria-label={isComposerOpen ? COMPOSER_CLOSE_LABEL : COMPOSER_OPEN_LABEL}
-                  aria-expanded={isComposerOpen}
-                  className={BARE_ICON_BUTTON_CLASS}
-                >
-                  <KitPanelToggle side="right" open={isComposerOpen} />
-                </button>
-              </div>
               {/* remix is already inside panelProps; it is named here
                   so the Remix wiring on this surface is greppable and
-                  guarded by imagesV2LiveAdapterDiagnostics.mjs. */}
+                  guarded by imagesV2LiveAdapterDiagnostics.mjs. The
+                  toggle rides the mode toggle's row while open and is
+                  the rail's only content while closed. */}
               {isComposerOpen ? (
-                <KitImageCreatorPanel {...live.panelProps} remix={live.panelProps.remix} />
-              ) : null}
+                <KitImageCreatorPanel
+                  {...live.panelProps}
+                  remix={live.panelProps.remix}
+                  modeRowLeadingSlot={composerToggle}
+                />
+              ) : (
+                <div className="flex shrink-0 items-center justify-start px-[var(--space-2)] py-[var(--space-2)]">{composerToggle}</div>
+              )}
             </aside>
           </div>
         </KitStudioPageView>

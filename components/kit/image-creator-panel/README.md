@@ -37,6 +37,10 @@ Nothing inside the scroll region may be wider than it
    non-interactive with the `Soon` label while `videoDisabled`; live
    (session 5) it opens the Video mode and keeps the `Soon` label
    while `video.available` is false. See "Video mode" below.
+   `modeRowLeadingSlot` (2.6.0, AF5 follow-up 2): an optional node at
+   the row's left (the Media page's composer column toggle); the mode
+   toggle shrinks to fit beside it, and the stage tabs sit one gap
+   tighter under the row.
 2. Stage tabs: Generate and Remix. The Remix stage (session 4, notes
    5, 5a, 5b, 10 Sep 2026) renders when the caller passes `remix`;
    without it the session 1 stub ("Not available yet") stays. See
