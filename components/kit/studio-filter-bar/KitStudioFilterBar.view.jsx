@@ -220,17 +220,20 @@ export default function KitStudioFilterBarView({
         {/* controlsSlot (2.4.0, ASSET-FOLDERS AF2): a caller's own
             controls, riding the same scroller as Filter and Sort,
             after Sort and before the view toggle. The bar applies no
-            sizing here; a slotted control still meets the touch
-            floor on its own. */}
+            sizing to what the slot holds; a slotted control still
+            meets the touch floor on its own. The wrapper grows to
+            the row (AF5 follow-up 2, item 3) so a caller can spread
+            its controls across the row on phones; the two wrappers
+            render only with content, so an empty slot adds no gap. */}
         {controlsSlot && (
-          <div className="flex flex-none items-center gap-[var(--space-2)]">{controlsSlot}</div>
+          <div className="flex min-w-0 flex-1 items-center gap-[var(--space-2)]">{controlsSlot}</div>
         )}
 
         {/* Right edge at every width (browser review 9 Sep 2026,
             item 10): under 700px the row is a horizontal scroller, so
             ml-auto pushes the toggle to the far edge and balances the
             bar; at 700 and up the parent already sits at the right. */}
-        <div className="ml-auto flex flex-none items-center">{viewModeSlot}</div>
+        {viewModeSlot && <div className="ml-auto flex flex-none items-center">{viewModeSlot}</div>}
       </div>
     </div>
   );

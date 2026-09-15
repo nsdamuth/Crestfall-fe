@@ -109,9 +109,13 @@ test("the bulk section left the View and the ViewModel keeps its handlers by nam
   // off here through showSelectionToggle and stays on the legacy page.
   assert.match(page, /showSelectionToggle=\{false\}/);
   assert.match(view, /hasSelectableMedia && showSelectionToggle/);
-  const slot = page.slice(page.indexOf("controlsSlot={"), page.indexOf("viewModeSlot={"));
-  const order = ["onToggleSelectionMode", "onToggleFolders", "KitDropdownView"].map((needle) => slot.indexOf(needle));
-  assert.ok(order.every((index) => index >= 0) && order[0] < order[1] && order[1] < order[2], "Select, Folders, Filter in that order");
+  // Follow-up 2 items 3 and 5: the density toggle rides the same row,
+  // last, so the four controls share one row's gaps.
+  const slot = page.slice(page.indexOf("controlsSlot={"), page.indexOf("bannerSlot={"));
+  const order = ["onToggleSelectionMode", "onToggleFolders", "KitDropdownView", "ViewModeToggleView"].map((needle) => slot.indexOf(needle));
+  assert.ok(order.every((index) => index >= 0) && order[0] < order[1] && order[1] < order[2] && order[2] < order[3], "Select, Folders, Filter, density in that order");
+  assert.doesNotMatch(slot, /viewModeSlot=/);
+  assert.match(slot, /justify-between/);
 });
 
 // AF5 item 2: folder membership filters after the Library filter and

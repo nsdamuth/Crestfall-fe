@@ -480,7 +480,11 @@ export default function ImagesV2Live() {
               filterGroups={[]}
               sortOptions={[]}
               controlsSlot={
-                <>
+                // The four controls in one row (follow-up 2, items 3
+                // and 5): on phones they spread across the row with
+                // equal gaps between; at 700 and up they sit at the
+                // row's right side with one equal gap.
+                <div className="flex w-full min-w-0 items-center justify-between gap-[var(--space-2)]">
                   <button
                     type="button"
                     onClick={grid.onToggleSelectionMode}
@@ -524,19 +528,19 @@ export default function ImagesV2Live() {
                       }}
                     />
                   ))}
-                </>
-              }
-              viewModeSlot={
-                // Density, RULED 6 Sep 2026: the shared toggle slot
-                // carries the Large/Grid density flip through the
-                // unchanged onToggleMobileGrid (grid = compact).
-                <ViewModeToggleView
-                  value={grid.compactMobileGrid ? "grid" : "list"}
-                  label="Library density"
-                  onChange={(next) => {
-                    if ((next === "grid") !== grid.compactMobileGrid) grid.onToggleMobileGrid?.();
-                  }}
-                />
+                  {/* Density, RULED 6 Sep 2026: the Large/Grid density
+                      flip through the unchanged onToggleMobileGrid
+                      (grid = compact), last in the row at its right
+                      edge (it left the bar's own toggle slot so the
+                      four controls share one row's gaps). */}
+                  <ViewModeToggleView
+                    value={grid.compactMobileGrid ? "grid" : "list"}
+                    label="Library density"
+                    onChange={(next) => {
+                      if ((next === "grid") !== grid.compactMobileGrid) grid.onToggleMobileGrid?.();
+                    }}
+                  />
+                </div>
               }
             />
           }
