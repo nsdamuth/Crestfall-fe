@@ -17,7 +17,7 @@
 // top: calc(var(--topbar-h) - 1px) with --control-filter content
 // and --space-3 padding above and below at 700 and up, so the column
 // pins just beneath it with one --space-4 gap, every term a token.
-import { Ellipsis, Folder, FolderPlus } from "lucide-react";
+import { ChevronRight, Ellipsis, Folder, FolderPlus } from "lucide-react";
 
 import KitModalFrame from "../KitModalFrame";
 import { MENU_PANEL_RECIPE, MenuRow } from "../form-field/menuRecipe";
@@ -87,6 +87,7 @@ function FolderRow({
   renameDraft,
   isMenuOpen,
   onSelectFolder,
+  onToggleOpen,
   onToggleMenu,
   onBeginRename,
   onChangeRenameDraft,
@@ -101,6 +102,27 @@ function FolderRow({
         className={`${ROW_RECIPE} pr-[var(--space-1)] ${row.isSelected ? ROW_INK.selected : ROW_INK.rest}`}
         style={indentStyle(row.depth)}
       >
+        {/* Collapse and expand (AF5 follow-up 4, item 2): a 44px
+            chevron at the left of every row with children, turning
+            90 degrees on open; a childless row keeps the same width
+            blank so names align within a level. */}
+        {row.hasChildren ? (
+          <button
+            type="button"
+            aria-label={copy.toggleLabel(row.name, row.isOpen)}
+            aria-expanded={row.isOpen}
+            onClick={() => onToggleOpen?.(row.id)}
+            className={ICON_BUTTON_RECIPE}
+          >
+            <ChevronRight
+              size={16}
+              aria-hidden="true"
+              className={`transition-transform duration-[var(--dur-fast)] ${row.isOpen ? "rotate-90" : ""}`}
+            />
+          </button>
+        ) : (
+          <span aria-hidden="true" className="w-[var(--control-md)] flex-none" />
+        )}
         <Folder size={16} aria-hidden="true" className="flex-none" />
         {isRenaming ? (
           <RenameField
@@ -359,6 +381,7 @@ function PanelBody(props) {
               renameDraft={renameDraft}
               isMenuOpen={menuOpenId === row.id}
               onSelectFolder={onSelectFolder}
+              onToggleOpen={props.onToggleOpen}
               onToggleMenu={props.onToggleMenu}
               onBeginRename={props.onBeginRename}
               onChangeRenameDraft={props.onChangeRenameDraft}

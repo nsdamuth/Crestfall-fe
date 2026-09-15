@@ -8,6 +8,7 @@ import { kitFoldersPanelFixtures } from "./KitFoldersPanel.fixtures.js";
 import { KIT_FOLDERS_PANEL_VIEW_CONTRACT_VERSION } from "./KitFoldersPanel.contract.js";
 import { FOLDERS_PANEL_COPY } from "./useKitFoldersPanelViewModel.js";
 import {
+  applyFolderRowVisibility,
   applySetItemFolder,
   buildFolderRows,
   getItemFolderId,
@@ -33,8 +34,8 @@ function stateOf(id) {
   return normalizeFolderState({ folders: props.folders, itemsByFolder: props.itemsByFolder }, props.surface);
 }
 
-test("contract 1.0.0 and the four named fixtures", () => {
-  assert.equal(KIT_FOLDERS_PANEL_VIEW_CONTRACT_VERSION, "1.0.0");
+test("contract 1.1.0 and the four named fixtures", () => {
+  assert.equal(KIT_FOLDERS_PANEL_VIEW_CONTRACT_VERSION, "1.1.0");
   assert.deepEqual(kitFoldersPanelFixtures.map((entry) => entry.id), ["default", "empty", "deep", "longest"]);
   assert.equal(buildFolderRows(stateOf("empty")).length, 0);
   assert.equal(Math.max(...buildFolderRows(stateOf("deep")).map((row) => row.depth)), 3);
@@ -79,6 +80,38 @@ test("Move re-parents a folder with its child and refuses a move that would reac
   assert.equal(refused.ok, false);
   assert.match(refused.note, /3 levels/);
   assert.equal(store.moveFolder({ folderId: places.id, parentId: heroes.id }).ok, false);
+});
+
+// AF5 follow-up 4, item 2: a collapsed parent renders no child rows,
+// the chosen folder's ancestors render open, and a collapsed parent's
+// count still reads its full subtree.
+test("a collapsed parent hides its children and the chosen folder's ancestors stay open", () => {
+  const state = stateOf("deep");
+  const rows = buildFolderRows(state, { selectedFolderId: "cast-heroes-final" });
+
+  const collapsedHeroes = applyFolderRowVisibility(state, rows, { collapsedIds: new Set(["cast-heroes"]), selectedFolderId: null });
+  assert.deepEqual(collapsedHeroes.map((row) => row.id), ["cast", "cast-heroes", "cast-villains"]);
+  assert.equal(collapsedHeroes.find((row) => row.id === "cast-heroes").isOpen, false);
+  assert.equal(collapsedHeroes.find((row) => row.id === "cast").isOpen, true);
+  assert.equal(collapsedHeroes.find((row) => row.id === "cast-heroes").count, rows.find((row) => row.id === "cast-heroes").count);
+
+  const collapsedRoot = applyFolderRowVisibility(state, rows, { collapsedIds: new Set(["cast"]), selectedFolderId: null });
+  assert.deepEqual(collapsedRoot.map((row) => row.id), ["cast"]);
+
+  // With the deepest row chosen, its ancestors read open even while
+  // marked collapsed, so the selection never hides.
+  const chosen = applyFolderRowVisibility(state, rows, { collapsedIds: new Set(["cast", "cast-heroes"]), selectedFolderId: "cast-heroes-final" });
+  assert.deepEqual(chosen.map((row) => row.id), ["cast", "cast-heroes", "cast-heroes-final", "cast-villains"]);
+  assert.ok(chosen.every((row) => row.isOpen));
+
+  const view = read("KitFoldersPanel.view.jsx");
+  assert.match(view, /row\.hasChildren \? \(/);
+  assert.match(view, /aria-expanded=\{row\.isOpen\}/);
+  assert.match(view, /rotate-90/);
+  assert.match(view, /onToggleOpen\?\.\(row\.id\)/);
+  const viewModel = read("useKitFoldersPanelViewModel.js");
+  assert.match(viewModel, /useState\(\(\) => new Set\(\)\)/);
+  assert.doesNotMatch(viewModel, /localStorage/);
 });
 
 // G1: a cross-surface item is refused.

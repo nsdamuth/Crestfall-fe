@@ -1,4 +1,15 @@
-export const KIT_FOLDERS_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
+export const KIT_FOLDERS_PANEL_VIEW_CONTRACT_VERSION = "1.1.0";
+
+/**
+ * 1.1.0 (14 Sep 2026, AF5 follow-up 4 item 2, RULED by Brian), additive:
+ * collapse and expand. Every row with children carries a 44px chevron
+ * at its left that turns 90 degrees on open; children hide while the
+ * parent is collapsed; the chosen folder's ancestors always read
+ * open; the open state is the panel's own page memory, default open,
+ * never persisted; a collapsed parent's count still reads its full
+ * subtree. The ViewModel hands the View rows carrying isOpen and
+ * hasChildren plus onToggleOpen(folderId); no page prop changes.
+ */
 
 /**
  * Stable portable UI boundary for the shared Folders panel kit piece

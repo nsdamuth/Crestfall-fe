@@ -13,6 +13,11 @@ writes. Contract 1.0.0. Folder glyph only: no emoji, no color (R4).
   row a folder glyph, the name (truncating with an ellipsis), the
   count of items filed in it and its sub-folders, and a 44px menu
   trigger. Rows are 44px (`--control-md`) at every pointer.
+- Collapse and expand (1.1.0, AF5 follow-up 4): a 44px chevron at
+  the left of every row with children turns 90 degrees on open;
+  children hide while collapsed; the chosen folder's ancestors stay
+  open; the open state is page memory only, default open; a
+  collapsed parent's count still reads its full subtree.
 - The row menu, on the shared menu recipe (`components/kit/form-field/
   menuRecipe.jsx`), expands inline under its row: Rename (an inline
   field on the row, Enter saves, Escape cancels), Move (a picker
@@ -35,7 +40,7 @@ scroller would be clipped by it and could open past the sheet's
 bottom edge at 390, so the menu is the shared recipe in flow, always
 inside the viewport by construction.
 
-## Contract (1.0.0)
+## Contract (1.1.0)
 
 | prop | type | default | meaning |
 | --- | --- | --- | --- |

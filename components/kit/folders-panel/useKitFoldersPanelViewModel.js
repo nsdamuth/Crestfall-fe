@@ -13,6 +13,7 @@ import { useState } from "react";
 import {
   FOLDER_MAX_DEPTH,
   ROOT_FOLDER_LABEL,
+  applyFolderRowVisibility,
   buildFolderRows,
   countFiledItems,
   getChildren,
@@ -52,6 +53,7 @@ export const FOLDERS_PANEL_COPY = Object.freeze({
   emptyBody: "Create a folder to start organizing.",
   footerNote: "Folders are saved in this browser for now.",
   menuLabel: (name) => `Options for ${name}`,
+  toggleLabel: (name, isOpen) => `${isOpen ? "Collapse" : "Expand"} ${name}`,
   rowLabel: (name, count) => `${name}, ${count} item${count === 1 ? "" : "s"}`,
 });
 
@@ -76,8 +78,23 @@ export function useKitFoldersPanelViewModel(props = {}) {
   const [rename, setRename] = useState({ folderId: null, draft: "" });
   const [dialog, setDialog] = useState(CLOSED_DIALOG);
   const [dialogError, setDialogError] = useState("");
+  // Collapse state (follow-up 4, item 2): page memory only, default
+  // open; the chosen folder's ancestors read open regardless.
+  const [collapsedIds, setCollapsedIds] = useState(() => new Set());
 
-  const rows = buildFolderRows(state, { selectedFolderId });
+  const rows = applyFolderRowVisibility(state, buildFolderRows(state, { selectedFolderId }), {
+    collapsedIds,
+    selectedFolderId,
+  });
+
+  function toggleOpen(folderId) {
+    setCollapsedIds((current) => {
+      const next = new Set(current);
+      if (next.has(folderId)) next.delete(folderId);
+      else next.add(folderId);
+      return next;
+    });
+  }
 
   function report(result, tone = "neutral") {
     if (result && typeof result === "object") {
@@ -245,6 +262,7 @@ export function useKitFoldersPanelViewModel(props = {}) {
     renameDraft: rename.draft,
     dialog: dialogView,
     onSelectFolder: selectFolder,
+    onToggleOpen: toggleOpen,
     onToggleMenu: toggleMenu,
     onBeginRename: beginRename,
     onChangeRenameDraft: changeRenameDraft,
