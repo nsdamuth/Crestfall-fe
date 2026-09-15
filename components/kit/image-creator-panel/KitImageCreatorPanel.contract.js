@@ -1,4 +1,14 @@
-export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.5.0";
+export const KIT_IMAGE_CREATOR_PANEL_VIEW_CONTRACT_VERSION = "2.6.0";
+
+/**
+ * 2.6.0 (14 Sep 2026, AF5 follow-up 2 item 6, RULED by Brian), additive:
+ * - modeRowLeadingSlot (node, default null): rendered at the left of
+ *   the Image / Video mode toggle on its own row; the mode toggle
+ *   shrinks to fit beside it (the Media page's composer column open
+ *   and close toggle). The stage tabs (Generate, Remix) keep their
+ *   equal widths and sit one gap tighter under the mode row. Absent,
+ *   every existing consumer renders the same controls.
+ */
 
 /**
  * Stable portable UI boundary for the Media Studio composer (kit

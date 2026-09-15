@@ -19,12 +19,18 @@ test("V2 media history uses portable danger confirmation instead of browser dial
     "components/studio/image-studio/media-history-grid/MediaHistoryGrid.view.jsx"
   );
 
+  // The confirmation moved to the Kit selection bar (ASSET-FOLDERS
+  // AF4 and AF5, 14 Sep 2026): the grid View no longer carries it.
+  const bar = read("components/kit/selection-bar/KitSelectionBar.view.jsx");
+  const page = read("app/studio/v2/images/ImagesV2Live.jsx");
+
   assert.match(viewModel, /bulkDeleteConfirmOpen/);
   assert.match(viewModel, /handleConfirmBulkDelete/);
   assert.doesNotMatch(viewModel, /window\.(?:confirm|alert)/);
-  assert.match(view, /KitModalFrame/);
-  assert.match(view, /Delete permanently/);
-  assert.match(view, /This action cannot\s+be undone/);
+  assert.doesNotMatch(view, /KitModalFrame|Delete permanently/);
+  assert.match(bar, /KitModalFrame/);
+  assert.match(page, /<KitSelectionBar/);
+  assert.match(page, /This cannot be undone\./);
 });
 
 test("creation image library returns variant generation to V2 Images", () => {
@@ -41,7 +47,10 @@ test("V2 Images empty state reflects multi-ingredient generation", () => {
     "components/studio/image-studio/media-history-grid/MediaHistoryGrid.view.jsx"
   );
 
-  assert.match(view, /Choose your ingredients and generate an image/);
+  // "assets" replaced "ingredients" in this copy at the FE/MEDIA-STUDIO
+  // review (the View reads "Choose your assets and generate an image or
+  // video"); the assertion follows the ruled copy.
+  assert.match(view, /Choose your assets and generate an image/);
   assert.doesNotMatch(view, /Select a character and generate an image/);
 });
 

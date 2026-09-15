@@ -658,6 +658,23 @@
   }
 }
 
+/* --- HAIRLINE FADE, AF5 follow-up 3 item 6 ----------------------
+   One recipe for every separator in the primary sidebar, the mobile
+   drawer, and the divider under the page header's eyebrow, title,
+   and description: the --line token as a horizontal gradient that
+   fades to transparent at both ends instead of a flat line. On a
+   1px-tall element (h-px) it is the line itself; on a container it
+   draws the line along the bottom edge. Applied in the sidebar
+   view, the mobile drawer, and StudioPageHeader only; no per-page
+   override.                                                         */
+
+.cf-hairline-fade {
+  background-image: linear-gradient(90deg, transparent, var(--line) 12%, var(--line) 88%, transparent);
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: 50% 100%;
+}
+
 /* --- CREATE ACTION BAR, package MOBILE-SHELLS ----------------
    The create pages carry their primary action (Save Draft) in a
    side panel or a page header row. Below the breakpoint that

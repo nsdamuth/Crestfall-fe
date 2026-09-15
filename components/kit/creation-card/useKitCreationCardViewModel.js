@@ -66,5 +66,10 @@ export function useKitCreationCardViewModel(props) {
     onShare: toCallback(props?.onShare),
     onArchive: toCallback(props?.onArchive),
     onDelete: toCallback(props?.onDelete),
+    // v3.9.0, select mode and the folder row (ASSET-FOLDERS AF4).
+    isSelectable: Boolean(props?.isSelectable),
+    isSelected: Boolean(props?.isSelected),
+    onToggleSelect: toCallback(props?.onToggleSelect),
+    onAddToFolder: toCallback(props?.onAddToFolder),
   };
 }

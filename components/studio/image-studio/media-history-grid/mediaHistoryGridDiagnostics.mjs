@@ -4,6 +4,8 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { applyMediaHistoryFilters, normalizeMediaFilterModel } from "./mediaHistoryVisibility.js";
+
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(currentDir, "../../../..");
 
@@ -13,12 +15,16 @@ function read(relativePath) {
 
 test("Media History Grid shell stays thin and preserves application slots", () => {
   const shell = read("components/studio/image-studio/MediaHistoryGrid.jsx");
+  // The three injected controls moved to MediaHistoryGridSkin.jsx on
+  // 6 Sep 2026 (FE/FILTERS) so a page can call the ViewModel itself.
+  const skin = read("components/studio/image-studio/MediaHistoryGridSkin.jsx");
 
   assert.match(shell, /useMediaHistoryGridViewModel/);
-  assert.match(shell, /MediaHistoryGridView/);
-  assert.match(shell, /FilterPillComponent=\{FilterPill\}/);
-  assert.match(shell, /MediaTileQuickActions/);
-  assert.match(shell, /MediaLightbox/);
+  assert.match(shell, /MediaHistoryGridSkin/);
+  assert.match(skin, /MediaHistoryGridView/);
+  assert.match(skin, /FilterPillComponent=\{FilterPill\}/);
+  assert.match(skin, /MediaTileQuickActions/);
+  assert.match(skin, /MediaLightbox/);
   assert.doesNotMatch(shell, /fetchMediaReactions|deleteImageOutput/);
   assert.doesNotMatch(shell, /useState|useEffect|window\.confirm/);
 });
@@ -60,15 +66,83 @@ test("portable View owns masonry and presentation without Crestfall clients", ()
 
   assert.match(view, /ResizeObserver/);
   assert.match(view, /gridRowEnd/);
-  assert.match(view, /Select all visible/i);
-  assert.match(view, /Delete selected/i);
   assert.match(view, /renderQuickActions/);
   assert.match(view, /renderLightbox/);
-  assert.match(view, /KitModalFrame/);
-  assert.match(view, /Delete permanently/);
-  assert.match(view, /This action cannot\s+be undone/);
   assert.doesNotMatch(view, /mediaReactionClient|imageOutputClient/);
   assert.doesNotMatch(view, /fetchMediaReactions|deleteImageOutput/);
+});
+
+// AF5 (ASSET-FOLDERS, 14 Sep 2026): the View's bulk section and its
+// confirm modal are gone; the page composes the one Kit selection bar
+// against the same ViewModel handlers by name (contract law), so the
+// ViewModel still returns every bulk handler it did.
+test("the bulk section left the View and the ViewModel keeps its handlers by name", () => {
+  const view = read(
+    "components/studio/image-studio/media-history-grid/MediaHistoryGrid.view.jsx"
+  );
+  const viewModel = read(
+    "components/studio/image-studio/media-history-grid/useMediaHistoryGridViewModel.js"
+  );
+  const page = read("app/studio/v2/images/ImagesV2Live.jsx");
+
+  assert.doesNotMatch(view, /Select all visible|Delete selected|Delete permanently|KitModalFrame/);
+  assert.doesNotMatch(view, /KitSelectionBar/);
+  assert.match(view, /\{selectionMode \? "Done" : "Select"\}/);
+  for (const handler of [
+    "onToggleSelectionMode",
+    "onToggleMediaSelection",
+    "onToggleSelectAllVisible",
+    "onClearSelection",
+    "onBulkDeleteSelected",
+    "onCancelBulkDelete",
+    "onConfirmBulkDelete",
+  ]) {
+    assert.match(viewModel, new RegExp(`${handler}:`), `ViewModel still returns ${handler}`);
+  }
+  assert.equal((page.match(/<KitSelectionBar/g) || []).length, 1);
+  assert.match(page, /onDelete=\{handleDeleteSelected\}/);
+  assert.match(page, /grid\.onConfirmBulkDelete\?\.\(\)/);
+  assert.match(page, /onDone=\{grid\.onToggleSelectionMode\}/);
+  assert.match(page, /\{grid\.selectionMode \? null : \(/);
+  // Follow-up 1 item 2: Select sits in the shared bar on this page,
+  // before Folders and Filter; the View's own toggle is off here
+  // through showSelectionToggle and stays on the legacy page.
+  assert.match(page, /showSelectionToggle=\{false\}/);
+  assert.match(view, /hasSelectableMedia && showSelectionToggle/);
+  // AF6 item 1: Select and Folders ride the bar's leadingSlot (2.5.0),
+  // the bar renders the Library dropdown itself on the grid handlers
+  // through onFilterToggle, and the density toggle is its viewModeSlot,
+  // last on the bar's one row (follow-up 2 items 3 and 5).
+  const slot = page.slice(page.indexOf("leadingSlot={"), page.indexOf("bannerSlot={"));
+  const order = ["onToggleSelectionMode", "onToggleFolders", "onFilterToggle=", "viewModeSlot="].map((needle) => slot.indexOf(needle));
+  assert.ok(order.every((index) => index >= 0) && order[0] < order[1] && order[1] < order[2] && order[2] < order[3], "Select, Folders, Filter, density in that order");
+  assert.doesNotMatch(slot, /controlsSlot=|KitDropdownView/);
+});
+
+// AF5 item 2: folder membership filters after the Library filter and
+// the two compose. A folder holding an image and a video with the
+// Videos filter on yields only the video.
+test("folder membership composes with the Library filter", () => {
+  const image = { id: "img-1", imageOutputId: "img-1", type: "IMAGE" };
+  const video = { id: "vid-1", imageOutputId: "vid-1", type: "VIDEO" };
+  const outside = { id: "img-2", imageOutputId: "img-2", type: "IMAGE" };
+  const items = [image, video, outside];
+  const folderItemIds = ["img-1", "vid-1"];
+
+  assert.deepEqual(
+    applyMediaHistoryFilters(items, { media: "VIDEOS", activity: [] }, folderItemIds),
+    [video]
+  );
+  assert.deepEqual(applyMediaHistoryFilters(items, { media: "ALL", activity: [] }, folderItemIds), [image, video]);
+  assert.deepEqual(applyMediaHistoryFilters(items, { media: "VIDEOS", activity: [] }, null), [video]);
+  assert.deepEqual(applyMediaHistoryFilters(items, "ALL", null), items);
+  assert.deepEqual(normalizeMediaFilterModel("BOOKMARKED"), { media: "ALL", activity: ["BOOKMARKED"] });
+
+  const viewModel = read(
+    "components/studio/image-studio/media-history-grid/useMediaHistoryGridViewModel.js"
+  );
+  assert.match(viewModel, /folderItemIds = null,/);
+  assert.match(viewModel, /applyMediaHistoryFilters\(items, activeFilter, folderItemIds\)/);
 });
 
 test("existing Image Studio consumer remains connected through the Workbench boundary", () => {
@@ -144,7 +218,7 @@ test("V2 Image Library owns asset search, opaque filters, and working Grid/Large
   assert.match(view, /\{compactMobileGrid \? "Large" : "Grid"\}/);
   assert.match(view, /className=\{`grid \$\{mobileGridClass\}`\}/);
 
-  assert.match(contract, /MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1\.3\.0"/);
+  assert.match(contract, /MEDIA_HISTORY_GRID_VIEW_CONTRACT_VERSION = "1\.6\.0"/);
   assert.match(contract, /onChangeSearchQuery/);
   assert.match(contract, /onClearFilters/);
 });

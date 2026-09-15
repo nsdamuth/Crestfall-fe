@@ -1,4 +1,4 @@
-export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.3.1";
+export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.5.0";
 
 /**
  * Stable portable UI boundary for the shared sticky filter bar kit
@@ -43,6 +43,28 @@ export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.3.1";
  * non-default pick; every filter trigger keeps reading "Filter". The
  * mechanism (KitDropdown labelMode "replace" with restingValue) is
  * unchanged.
+ *
+ * 2.4.0 (ASSET-FOLDERS plan, package AF2, 14 Sep 2026), additive:
+ * an optional `controlsSlot`, rendered inside the bar's existing
+ * sideways-scrolling control group, after Sort and before
+ * `viewModeSlot`. Absent (the default, every existing consumer),
+ * the bar renders byte-identical to 2.3.1. The slot exists so a
+ * page can add its own controls (the Folders trigger, AF5 and
+ * AF6) to the shared bar row instead of duplicating the row's
+ * layout, sticky offset, and mobile scroller.
+ *
+ * 2.5.0 (ASSET-FOLDERS plan, package AF6, 14 Sep 2026), additive:
+ * an optional `leadingSlot`, rendered before the Filter button.
+ * With it, the bar's controls become one row, the Media row ruled
+ * at AF5 follow-up 2 (items 3 and 5): the leading controls, then
+ * Filter, Sort, `controlsSlot`, and `viewModeSlot`, filling the
+ * search field's width with equal gaps on phones and sitting at the
+ * row's right with one equal gap at 700 and up. Absent (the
+ * default, every consumer but Media and Vault), the bar renders
+ * byte-identical to 2.4.0. The slot exists so a page can put Select
+ * and Folders before Filter while the bar still owns Filter and
+ * Sort, instead of rendering Filter itself (Media's round-1
+ * workaround, retired with this version). Callbacks unchanged.
  *
  * @typedef {Object} KitStudioFilterBarOption
  * @property {string} value
@@ -90,6 +112,20 @@ export const KIT_STUDIO_FILTER_BAR_VIEW_CONTRACT_VERSION = "2.3.1";
  * @property {((value: string) => void)|null} onSortChange
  * @property {boolean} isLoadingCounts
  * @property {import("react").ReactNode|null} viewModeSlot
+ * @property {import("react").ReactNode|null} [leadingSlot] added
+ *   2.5.0, default null. Rendered before the Filter button. While
+ *   present the bar lays every control out on one row (leadingSlot,
+ *   Filter, Sort, controlsSlot, viewModeSlot): justify-between at
+ *   the row's full width on phones, right-aligned with one
+ *   --space-3 gap at 700 and up. The bar applies no sizing to what
+ *   it holds; a slotted control meets the touch floor on its own.
+ * @property {import("react").ReactNode|null} [controlsSlot] added
+ *   2.4.0, default null. Rendered after Sort and before
+ *   viewModeSlot, inside the same sideways scroller (390) or the
+ *   same flex-wrap row (700 and up) as Filter and Sort. The bar
+ *   applies no sizing to what it holds; a caller's control still
+ *   resolves to `--control-md` on a coarse pointer under the
+ *   standing touch-floor law.
  * @property {KitStudioFilterBarQuickTab[]} [quickTabs] added 2.1.0,
  *   default []. A single-select tab row between search and the
  *   Filter button, for a page with one dominant split (Images: All /

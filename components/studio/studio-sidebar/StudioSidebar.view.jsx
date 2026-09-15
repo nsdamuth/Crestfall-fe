@@ -385,7 +385,7 @@ function SidebarDivider({ dense = false, tightTop = false }) {
       ? "my-[var(--space-3)]"
       : "my-[var(--space-4)]";
 
-  return <div className={`${spacing} border-t border-[var(--line-strong)]`} />;
+  return <div aria-hidden="true" className={`${spacing} h-px cf-hairline-fade`} />;
 }
 
 function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
@@ -409,7 +409,7 @@ function PreviewGroup({ group, collapsed, InternalLinkComponent = "a" }) {
           {group.label}
         </p>
       ) : null}
-      <div className="mb-[var(--space-2)] border-t border-[var(--line-strong)]" />
+      <div aria-hidden="true" className="mb-[var(--space-2)] h-px cf-hairline-fade" />
       {/* Rhythm one step up, RULED 6 Sep 2026 (sidebar batch 2, items
           6 and 7): dense rows resolve to --control-md, group gap stays
           --space-6. SUPERSEDED in part 10 Sep 2026 (browser review

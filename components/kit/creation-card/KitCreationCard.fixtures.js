@@ -163,3 +163,29 @@ export const kitCreationCardOwnerKebabListFixture = {
   ...kitCreationCardOwnerKebabFixture,
   layout: "list",
 };
+
+// Select mode and the folder row, v3.9.0 (ASSET-FOLDERS AF4): every
+// fixture above omits isSelectable, isSelected, onToggleSelect, and
+// onAddToFolder deliberately, so the unchanged rendering stays
+// exercised everywhere else.
+export const kitCreationCardSelectableFixture = {
+  ...kitCreationCardOwnWorkFixture,
+  isSelectable: true,
+  isSelected: false,
+  onToggleSelect: noop,
+};
+
+export const kitCreationCardSelectedFixture = {
+  ...kitCreationCardSelectableFixture,
+  isSelected: true,
+};
+
+export const kitCreationCardSelectedListFixture = {
+  ...kitCreationCardSelectedFixture,
+  layout: "list",
+};
+
+export const kitCreationCardAddToFolderFixture = {
+  ...kitCreationCardOwnerKebabFixture,
+  onAddToFolder: noop,
+};

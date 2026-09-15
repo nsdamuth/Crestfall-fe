@@ -265,7 +265,7 @@ function ModeToggle({ mode, onChangeMode, videoDisabled, videoSoon, videoSoonLab
     <div
       role="group"
       aria-label="Media type"
-      className="grid grid-cols-2 gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-1)]"
+      className="grid min-w-0 flex-1 grid-cols-2 gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-1)]"
     >
       {options.map((option) => {
         const Icon = option.icon;
@@ -1748,6 +1748,11 @@ function VideoBlock({
 export default function KitImageCreatorPanelView({
   mode = "IMAGE",
   onChangeMode = null,
+  // modeRowLeadingSlot (2.6.0, 14 Sep 2026, AF5 follow-up 2 item 6):
+  // an optional node at the left of the mode toggle on its own row
+  // (the Media page's column open and close toggle); the mode toggle
+  // shrinks to fit beside it. Absent, the row renders as before.
+  modeRowLeadingSlot = null,
   videoDisabled = true,
   videoSoonLabel = "Soon",
   stage = "GENERATE",
@@ -1810,15 +1815,22 @@ export default function KitImageCreatorPanelView({
     <div className="flex h-full min-h-0 w-full min-w-0 flex-1 flex-col">
       <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-[var(--space-5)] pb-[var(--space-6)] pt-[var(--space-5)]">
         <div className="flex min-w-0 flex-col gap-[var(--space-5)]">
-          <ModeToggle
-            mode={mode}
-            onChangeMode={onChangeMode}
-            videoDisabled={videoDisabled}
-            videoSoon={Boolean(video) && !video.available}
-            videoSoonLabel={videoSoonLabel}
-          />
+          {/* The mode row and the stage tabs sit one gap tighter than
+              the sections below (follow-up 2, item 6). */}
+          <div className="flex min-w-0 flex-col gap-[var(--space-4)]">
+            <div className="flex min-w-0 items-center gap-[var(--space-2)]">
+              {modeRowLeadingSlot}
+              <ModeToggle
+                mode={mode}
+                onChangeMode={onChangeMode}
+                videoDisabled={videoDisabled}
+                videoSoon={Boolean(video) && !video.available}
+                videoSoonLabel={videoSoonLabel}
+              />
+            </div>
 
-          {!isVideoMode ? <StageTabs stage={stage} onChangeStage={onChangeStage} /> : null}
+            {!isVideoMode ? <StageTabs stage={stage} onChangeStage={onChangeStage} /> : null}
+          </div>
 
           {videoActive ? (
             <VideoStage video={video} idPrefix={idPrefix} />

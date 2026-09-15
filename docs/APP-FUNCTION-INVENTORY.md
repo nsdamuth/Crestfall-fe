@@ -648,3 +648,70 @@ the creator byline link) are listed once per route. CR-072 to CR-077
 filed; the four out-of-scope share entry points the G1 grep still
 names (chat transcript share dialog, lore document renderer, creator
 profile share, retired preview harness) are unchanged.
+
+## Media folders and selection bar rows (ASSET-FOLDERS AF5, 14 Sep 2026)
+
+Fourteen rows added under `/studio/v2/images` after the sticky right
+rail row: the Folders trigger in the filter bar's controlsSlot and the
+KitPanelToggle glyph before the density toggle (one page-local toggle,
+`onToggleFolders`); the Folders panel itself (the 18rem column left of
+the grid at 1100 and up, the Kit sheet below, option 1A) with its All
+and folder rows, New folder, and the row menu (Rename, Move to,
+Delete), every write through the browser-local folder store (option
+2A) whose `operation_name` quotes the route shape it expects; the
+grid's existing Select / Done toggle and per-card check, first mapped
+on this route; the Kit selection bar's five items ("N selected", Add
+to folder, Download, Delete, Done, option 3A) with the Add to folder
+and Delete rows naming the store write and the grid ViewModel's
+existing `onConfirmBulkDelete` by name; and the KitNotice line.
+
+Three rows retired to `status: removed` under `/studio/image-studio`
+(media history grid, selection mode): Select All Visible / Clear
+Visible, Clear, and Delete Selected (N). The grid View's bulk section
+is gone with AF5; the ViewModel still returns every handler by name,
+unrendered, and the legacy route keeps Select mode with the per-card
+check and no bulk action until it takes the same bar (its Select /
+Done row carries that note). Reported, not dropped silently.
+
+## Media bar order and composer toggle (AF5 follow-up 1, 14 Sep 2026)
+
+Rows brought to the browser review's rulings under `/studio/v2/images`:
+Select / Done moves from the library header into the shared bar's
+controlsSlot as the first control after the search field (the grid
+View's additive `showSelectionToggle`, 1.6.0, off on this page); the
+Folders button follows it and alone opens and closes the panel, reading
+selected while open and collapsing the primary sidebar to its rail
+through the studio chrome's `claimLeft("page")`; the Library dropdown
+row (916) is rewritten to the 10 Sep 2026 dropdown ruling and placed
+third; the panel glyph row is retired to `status: removed`; the sticky
+right rail row names its new open and close toggle (the story chat's
+KitPanelToggle at the column's edge, closed leaving a rail); the panel
+row carries the ruled footer copy.
+
+## Vault folders and selection bar rows (ASSET-FOLDERS AF6, 14 Sep 2026)
+
+Fourteen rows added under `/studio/v2/vault` at the end of the ledger:
+Select / Done and the Folders trigger, both in the shared bar's
+`leadingSlot` (KitStudioFilterBar 2.5.0, additive, item 1); the Folders
+panel itself (the 18rem column on the right of the card grid at 1100
+and up, since Vault has no composer, the Kit sheet below) with its All
+and folder rows, New folder, and the row menu (Rename, Move, Delete),
+every write through the browser-local folder store's VAULT surface whose
+`operation_name` quotes the route shape it expects; the per-card check
+control and the kebab's Add to folder (which selects the card so the
+bar's own picker is the next tap, read where the brief was silent); the
+Kit selection bar's five items ("N selected", Add to folder / Remove
+from folder, Download as `stubbed` on the Soon chip per M3, Delete
+naming the page's existing `deleteCreation` looped over the selection
+from the bar's Kit-frame confirmation, Done); and the KitNotice line.
+Folder membership on Vault filters after the type, Visibility, and
+Status filters, the search, and the sort (`vaultVisibility.js`, the
+pure filter the diagnostics run).
+
+Rows brought to item 1 under `/studio/v2/images`: the Library dropdown
+row (916) is rendered by the bar itself again (`KitDropdown` composed by
+KitStudioFilterBar 2.5.0, the page's own dropdown render retired), and
+the Select and Folders rows (1061, 1055) name the `leadingSlot`. Under
+`/studio/v2/vault` the Filter row (902) and the view toggle row (905)
+name their placement on the bar's one row; the Sort row (904) parses
+with the wrong column count at tip and is untouched.
