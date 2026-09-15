@@ -672,3 +672,18 @@ is gone with AF5; the ViewModel still returns every handler by name,
 unrendered, and the legacy route keeps Select mode with the per-card
 check and no bulk action until it takes the same bar (its Select /
 Done row carries that note). Reported, not dropped silently.
+
+## Media bar order and composer toggle (AF5 follow-up 1, 14 Sep 2026)
+
+Rows brought to the browser review's rulings under `/studio/v2/images`:
+Select / Done moves from the library header into the shared bar's
+controlsSlot as the first control after the search field (the grid
+View's additive `showSelectionToggle`, 1.6.0, off on this page); the
+Folders button follows it and alone opens and closes the panel, reading
+selected while open and collapsing the primary sidebar to its rail
+through the studio chrome's `claimLeft("page")`; the Library dropdown
+row (916) is rewritten to the 10 Sep 2026 dropdown ruling and placed
+third; the panel glyph row is retired to `status: removed`; the sticky
+right rail row names its new open and close toggle (the story chat's
+KitPanelToggle at the column's edge, closed leaving a rail); the panel
+row carries the ruled footer copy.
