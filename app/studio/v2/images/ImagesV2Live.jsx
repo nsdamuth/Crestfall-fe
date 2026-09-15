@@ -29,9 +29,15 @@ import { useFolderStore } from "@/lib/client/studio/folders/useFolderStore";
 import ImagesV2CameraPresetPicker from "./images-live/ImagesV2CameraPresetPicker";
 import ImagesV2ComposerSheet from "./images-live/ImagesV2ComposerSheet";
 import ImagesV2ImageViewer, { buildDownloadOptions } from "./images-live/ImagesV2ImageViewer";
-import { useColumnDockInsets } from "./images-live/useColumnDockInsets";
-import { useFoldersPanelHost } from "./images-live/useFoldersPanelHost";
 import { useImagesV2LiveViewModel } from "./images-live/useImagesV2LiveViewModel";
+import { useColumnDockInsets } from "@/components/studio/folders/hooks/useColumnDockInsets";
+import { useFoldersPanelHost } from "@/components/studio/folders/hooks/useFoldersPanelHost";
+import {
+  FOLDERS_ROOT_LABEL,
+  FOLDERS_TRIGGER_CLASS,
+  FOLDERS_TRIGGER_MARKED_CLASS,
+  FOLDERS_TRIGGER_REST_CLASS,
+} from "@/components/studio/folders/foldersTriggerRecipe";
 
 // Library filter, RULED 10 Sep 2026 (browser review round 4, item 5),
 // superseding the 6 Sep two-section panel on this page only: one
@@ -72,7 +78,6 @@ function countLibrary(items, value) {
 // filters the visible media after the Library filter through the grid
 // ViewModel's folderItemIds input; a folder shows its own items plus
 // its sub-folders', the same reading as the panel's row count.
-const FOLDERS_ROOT_LABEL = "Folders";
 const MEDIA_ITEM_NOUN = "image";
 // Select (AF5 follow-up 1, item 2): the grid header's Select / Done
 // toggle moved into the shared bar, first control after the search
@@ -99,15 +104,6 @@ const COMPOSER_CLOSE_LABEL = "Close composer";
 function pluralNoun(count) {
   return count === 1 ? MEDIA_ITEM_NOUN : `${MEDIA_ITEM_NOUN}s`;
 }
-
-// The Filter trigger's own recipe (KitDropdown.view), so Select and
-// Folders read as the controls beside it; gold while marked, the way
-// the Filter trigger turns gold on a non-resting pick.
-const FOLDERS_TRIGGER_CLASS =
-  "inline-flex min-w-0 max-w-[10rem] min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--step-above)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:min-h-[var(--control-md)]";
-const FOLDERS_TRIGGER_REST_CLASS =
-  "text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]";
-const FOLDERS_TRIGGER_MARKED_CLASS = "text-[var(--gold-bright)]";
 
 // The one filter that exists on an asset picker today: the creator's
 // own assets or the public catalog (session 2, note 3; "Mine" reworded
