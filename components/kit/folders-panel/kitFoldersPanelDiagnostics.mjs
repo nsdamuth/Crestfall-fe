@@ -11,6 +11,7 @@ import {
   applySetItemFolder,
   buildFolderRows,
   getItemFolderId,
+  listParentChoices,
   normalizeFolderState,
   validateCreate,
   validateSetItemFolder,
@@ -47,6 +48,37 @@ test("the deep fixture cannot take a fourth level", () => {
   const result = validateCreate(state, { surface: "VAULT", parentId: deepest.id, name: "Fourth" });
   assert.equal(result.ok, false);
   assert.match(result.error, /3 levels/);
+});
+
+// AF5 follow-up 4, item 1: Move re-parents. A level-1 folder with one
+// child moves under another level-1 folder (the child lands at level
+// 3, the tree re-renders in place, the note names both), and the same
+// move is refused where the child would land at level 4; the picker
+// never lists the folder itself or its descendants.
+test("Move re-parents a folder with its child and refuses a move that would reach level 4", () => {
+  const store = createFolderStore({ surface: "MEDIA", storage: null, makeId: (() => { let n = 0; return () => `m${(n += 1)}`; })() });
+  const cast = store.createFolder({ parentId: null, name: "Cast" }).folder;
+  const heroes = store.createFolder({ parentId: cast.id, name: "Heroes" }).folder;
+  const places = store.createFolder({ parentId: null, name: "Places" }).folder;
+  const north = store.createFolder({ parentId: places.id, name: "North" }).folder;
+
+  const choices = listParentChoices(store.getSnapshot(), { forFolderId: cast.id });
+  assert.deepEqual(choices.map((choice) => choice.id), [null, places.id, north.id]);
+  assert.equal(choices.find((choice) => choice.id === places.id).isAllowed, true);
+  assert.equal(choices.find((choice) => choice.id === north.id).isAllowed, false);
+
+  const moved = store.moveFolder({ folderId: cast.id, parentId: places.id });
+  assert.equal(moved.ok, true);
+  assert.equal(moved.note, 'Moved "Cast" into "Places".');
+  assert.deepEqual(
+    buildFolderRows(store.getSnapshot()).map((row) => [row.name, row.depth]),
+    [["Places", 1], ["Cast", 2], ["Heroes", 3], ["North", 2]]
+  );
+
+  const refused = store.moveFolder({ folderId: cast.id, parentId: north.id });
+  assert.equal(refused.ok, false);
+  assert.match(refused.note, /3 levels/);
+  assert.equal(store.moveFolder({ folderId: places.id, parentId: heroes.id }).ok, false);
 });
 
 // G1: a cross-surface item is refused.
