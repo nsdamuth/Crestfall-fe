@@ -307,7 +307,9 @@ function PanelDialog({ dialog, copy, onCloseDialog, onChangeCreateDraft, onChoos
           <button type="button" onClick={onCloseDialog} className="cf-btn cf-btn--secondary cf-btn--sm">
             {copy.cancel}
           </button>
-          <button type="button" onClick={onCommitDelete} className="cf-btn cf-btn--danger cf-btn--sm">
+          {/* The bordered danger recipe (B5, the modal-confirm CTA), the
+              same height and shape as Cancel (follow-up 4, item 3). */}
+          <button type="button" onClick={onCommitDelete} className="cf-btn cf-btn--danger-filled cf-btn--sm">
             {copy.delete}
           </button>
         </DialogActions>
