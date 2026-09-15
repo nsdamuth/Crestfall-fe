@@ -11,11 +11,8 @@ import {
   Search,
   SlidersHorizontal,
   Loader2,
-  Trash2,
   X,
 } from "lucide-react";
-
-import KitModalFrame from "@/components/kit/KitModalFrame";
 
 function getNumericDimension(value) {
   const parsed = Number.parseInt(value, 10);
@@ -218,12 +215,8 @@ export default function MediaHistoryGridView({
   reactionMessage = "",
   deleteMessage = "",
   selectionMode = false,
-  selectedCount = 0,
   isBulkDeleting = false,
-  bulkDeleteConfirmOpen = false,
   hasSelectableMedia = false,
-  hasVisibleSelectableMedia = false,
-  allVisibleSelectableItemsSelected = false,
   lightboxProps = null,
   eagerImageCount = 4,
   masonryRowHeight = 8,
@@ -245,11 +238,6 @@ export default function MediaHistoryGridView({
   onToggleLike,
   onToggleBookmark,
   onOpenMedia,
-  onToggleSelectAllVisible,
-  onClearSelection,
-  onBulkDeleteSelected,
-  onCancelBulkDelete,
-  onConfirmBulkDelete,
   onLoadMoreHistory,
   FilterPillComponent,
   renderQuickActions,
@@ -370,56 +358,11 @@ export default function MediaHistoryGridView({
       </section>
       ) : null}
 
-      {selectionMode ? (
-        <section className="sticky top-20 z-30 flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-md)] border border-[var(--line)] bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)] px-4 py-3 shadow-2xl backdrop-blur-md lg:top-4">
-          <div>
-            <p className="text-[length:var(--text-eyebrow)] font-medium uppercase leading-[var(--lh-eyebrow)] tracking-[var(--track-eyebrow)] text-[var(--gold-ornament)]">
-              {selectedCount} selected
-            </p>
-            <p className="mt-1 text-xs text-[var(--ink-dim)]">
-              Tap images to add or remove them from this deletion batch.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-[var(--space-2)]">
-            <button
-              type="button"
-              onClick={onToggleSelectAllVisible}
-              disabled={isBulkDeleting || !hasVisibleSelectableMedia}
-              className="cf-btn cf-btn--secondary cf-btn--sm"
-            >
-              {allVisibleSelectableItemsSelected
-                ? "Clear visible"
-                : "Select all visible"}
-            </button>
-
-            <button
-              type="button"
-              onClick={onClearSelection}
-              disabled={isBulkDeleting || !selectedCount}
-              className="cf-btn cf-btn--secondary cf-btn--sm"
-            >
-              Clear
-            </button>
-
-            <button
-              type="button"
-              onClick={onBulkDeleteSelected}
-              disabled={isBulkDeleting || !selectedCount}
-              className="cf-btn cf-btn--danger cf-btn--sm"
-            >
-              {isBulkDeleting ? (
-                <Loader2 size={14} className="animate-spin" />
-              ) : (
-                <Trash2 size={14} />
-              )}
-              {isBulkDeleting
-                ? "Deleting..."
-                : `Delete selected (${selectedCount})`}
-            </button>
-          </div>
-        </section>
-      ) : null}
+      {/* The selection actions (AF5, 14 Sep 2026): the bulk section
+          that sat here is gone. The page composes the Kit selection
+          bar (components/kit/selection-bar) against the same
+          ViewModel handlers by name; this View keeps only the
+          per-card check and the Select / Done toggle above. */}
 
       {historyStatus === "loading" ? (
         <div className="rounded-[var(--radius-md)] border border-white/10 bg-black/25 px-4 py-6 text-sm text-[var(--ink-dim)]">
@@ -500,86 +443,7 @@ export default function MediaHistoryGridView({
       {lightboxProps && renderLightbox
         ? renderLightbox(lightboxProps)
         : null}
-
-      {bulkDeleteConfirmOpen ? (
-        <BulkDeleteConfirmModal
-          selectedCount={selectedCount}
-          isDeleting={isBulkDeleting}
-          onCancel={onCancelBulkDelete}
-          onConfirm={onConfirmBulkDelete}
-        />
-      ) : null}
     </div>
-  );
-}
-
-function BulkDeleteConfirmModal({
-  selectedCount = 0,
-  isDeleting = false,
-  onCancel = null,
-  onConfirm = null,
-}) {
-  const noun = selectedCount === 1 ? "image" : "images";
-
-  return (
-    <KitModalFrame
-      onClose={isDeleting ? null : onCancel}
-      ariaLabel={`Delete ${selectedCount} selected ${noun}?`}
-      panelClassName="w-full max-w-[28rem]"
-    >
-      <div className="p-[var(--space-6)] pt-[var(--space-8)]">
-        <div className="flex items-start gap-[var(--space-3)]">
-          <AlertTriangle
-            size={22}
-            className="mt-1 flex-none text-[var(--status-danger)]"
-          />
-          <div>
-            <p className="text-[length:var(--text-label)] uppercase tracking-[var(--track-label)] text-[var(--status-danger)]">
-              Permanent deletion
-            </p>
-            <h2 className="mt-[var(--space-2)] font-display text-3xl text-[var(--ink)]">
-              Delete {selectedCount} selected {noun}?
-            </h2>
-            <p className="mt-[var(--space-3)] text-[length:var(--text-body)] leading-[var(--lh-body)] text-[var(--ink-dim)]">
-              This removes the selected {noun} from Image Studio, connected
-              creation libraries, and featured image slots. This action cannot
-              be undone.
-            </p>
-          </div>
-        </div>
-
-        <div aria-hidden="true" className="my-[var(--space-5)] h-px bg-[image:var(--line-fade)]" />
-
-        <div className="flex flex-wrap justify-end gap-[var(--space-3)]">
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={isDeleting}
-            className="cf-btn cf-btn--secondary"
-          >
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={onConfirm}
-            disabled={isDeleting || !selectedCount}
-            className="cf-btn cf-btn--danger"
-          >
-            {isDeleting ? (
-              <>
-                <Loader2 size={14} className="animate-spin" />
-                Deleting...
-              </>
-            ) : (
-              <>
-                <Trash2 size={14} />
-                Delete permanently
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-    </KitModalFrame>
   );
 }
 

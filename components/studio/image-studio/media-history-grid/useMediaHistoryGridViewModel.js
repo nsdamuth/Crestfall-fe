@@ -10,6 +10,13 @@ import {
 import { deleteImageOutput } from "@/lib/client/studio/media/imageOutputClient";
 import { fetchOwnedCreations } from "@/lib/client/studio/creations/creationClient";
 
+import {
+  ACTIVITY_FILTER_VALUES,
+  MEDIA_FILTER_VALUES,
+  applyMediaHistoryFilters,
+  normalizeMediaFilterModel,
+} from "./mediaHistoryVisibility.js";
+
 export const EAGER_IMAGE_COUNT = 4;
 export const MASONRY_ROW_HEIGHT = 8;
 export const MASONRY_GAP = 12;
@@ -25,25 +32,10 @@ export const MEDIA_HISTORY_FILTER_OPTIONS = [
   { value: "BOOKMARKED", label: "Saved" },
 ];
 
-export const MEDIA_FILTER_VALUES = ["ALL", "IMAGES", "VIDEOS"];
-export const ACTIVITY_FILTER_VALUES = ["LIKED", "BOOKMARKED"];
-
-// Two-section filter model (1.4.0, 6 Sep 2026, FE/FILTERS): one media
-// pick (All clears it) combined with any number of activity flags.
-// The legacy single string ("ALL" | "IMAGES" | "VIDEOS" | "LIKED" |
-// "BOOKMARKED") still resolves so the older header keeps working.
-export function normalizeMediaFilterModel(activeFilter) {
-  if (activeFilter && typeof activeFilter === "object") {
-    const media = MEDIA_FILTER_VALUES.includes(activeFilter.media) ? activeFilter.media : "ALL";
-    const activity = Array.isArray(activeFilter.activity)
-      ? activeFilter.activity.filter((value) => ACTIVITY_FILTER_VALUES.includes(value))
-      : [];
-    return { media, activity };
-  }
-  if (ACTIVITY_FILTER_VALUES.includes(activeFilter)) return { media: "ALL", activity: [activeFilter] };
-  if (MEDIA_FILTER_VALUES.includes(activeFilter)) return { media: activeFilter, activity: [] };
-  return { media: "ALL", activity: [] };
-}
+// The filter model and the Library and folder list steps live in
+// mediaHistoryVisibility.js (pure, so the grid diagnostics run them);
+// re-exported here under their existing names (contract law).
+export { MEDIA_FILTER_VALUES, ACTIVITY_FILTER_VALUES, normalizeMediaFilterModel };
 
 function toggleSetItem(setter, id) {
   if (!id) return;
@@ -248,27 +240,16 @@ function getMediaHistorySearchText(item, creationSearchLabelsById = {}) {
     .join(" ");
 }
 
+// Library filter, then folder membership (AF5, 14 Sep 2026: null
+// folderItemIds means no folder is chosen), then the search terms.
 export function filterMediaHistoryItems(
   items,
   activeFilter,
   searchQuery = "",
-  creationSearchLabelsById = {}
+  creationSearchLabelsById = {},
+  folderItemIds = null
 ) {
-  const { media, activity } = normalizeMediaFilterModel(activeFilter);
-  let filtered = items;
-
-  if (media === "IMAGES") {
-    filtered = filtered.filter((item) => item.type !== "VIDEO");
-  } else if (media === "VIDEOS") {
-    filtered = filtered.filter((item) => item.type === "VIDEO");
-  }
-  if (activity.length) {
-    filtered = filtered.filter(
-      (item) =>
-        (activity.includes("LIKED") && item.liked) ||
-        (activity.includes("BOOKMARKED") && item.bookmarked)
-    );
-  }
+  const filtered = applyMediaHistoryFilters(items, activeFilter, folderItemIds);
 
   const normalizedQuery = normalizeSearchValue(searchQuery);
   if (!normalizedQuery) return filtered;
@@ -337,6 +318,10 @@ export function useMediaHistoryGridViewModel({
   // 3): the workbench owns the two constants, the grid only carries
   // them, the viewer renders them. Absent on the legacy page.
   viewerCoinCosts = null,
+  // Folder membership (AF5, 14 Sep 2026): the item ids filed in the
+  // page's chosen folder, applied after the Library filter; null
+  // when no folder is chosen. Absent on the legacy page.
+  folderItemIds = null,
 } = {}) {
   const safeGeneratedMedia = Array.isArray(generatedMedia)
     ? generatedMedia
@@ -501,9 +486,10 @@ export function useMediaHistoryGridViewModel({
         mediaItems,
         { media: mediaFilter, activity: activityFilters },
         searchQuery,
-        creationSearchLabelsById
+        creationSearchLabelsById,
+        folderItemIds
       ),
-    [mediaItems, mediaFilter, activityFilters, searchQuery, creationSearchLabelsById]
+    [mediaItems, mediaFilter, activityFilters, searchQuery, creationSearchLabelsById, folderItemIds]
   );
 
   useEffect(() => {

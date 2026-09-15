@@ -648,3 +648,27 @@ the creator byline link) are listed once per route. CR-072 to CR-077
 filed; the four out-of-scope share entry points the G1 grep still
 names (chat transcript share dialog, lore document renderer, creator
 profile share, retired preview harness) are unchanged.
+
+## Media folders and selection bar rows (ASSET-FOLDERS AF5, 14 Sep 2026)
+
+Fourteen rows added under `/studio/v2/images` after the sticky right
+rail row: the Folders trigger in the filter bar's controlsSlot and the
+KitPanelToggle glyph before the density toggle (one page-local toggle,
+`onToggleFolders`); the Folders panel itself (the 18rem column left of
+the grid at 1100 and up, the Kit sheet below, option 1A) with its All
+and folder rows, New folder, and the row menu (Rename, Move to,
+Delete), every write through the browser-local folder store (option
+2A) whose `operation_name` quotes the route shape it expects; the
+grid's existing Select / Done toggle and per-card check, first mapped
+on this route; the Kit selection bar's five items ("N selected", Add
+to folder, Download, Delete, Done, option 3A) with the Add to folder
+and Delete rows naming the store write and the grid ViewModel's
+existing `onConfirmBulkDelete` by name; and the KitNotice line.
+
+Three rows retired to `status: removed` under `/studio/image-studio`
+(media history grid, selection mode): Select All Visible / Clear
+Visible, Clear, and Delete Selected (N). The grid View's bulk section
+is gone with AF5; the ViewModel still returns every handler by name,
+unrendered, and the legacy route keeps Select mode with the per-card
+check and no bulk action until it takes the same bar (its Select /
+Done row carries that note). Reported, not dropped silently.
