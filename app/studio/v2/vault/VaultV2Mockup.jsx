@@ -13,13 +13,33 @@
 // choice dialog. No other edit, delete, or bulk affordance appears
 // anywhere on this page; the rest of the prior hold stands. No live
 // data, no API calls otherwise, no other real navigation.
-import { useMemo, useState } from "react";
+//
+// Folders (ASSET-FOLDERS plan, package AF6, 14 Sep 2026): surface
+// VAULT of the browser-local folder store (option 2A ruled). The
+// Folders button rides the shared bar's leadingSlot (KitStudioFilterBar
+// 2.5.0) before Filter and Sort, reads "Folders" at the root and the
+// folder's name once one is chosen, alone opens and closes the panel,
+// and reads selected while it is open. The panel is the 18rem column
+// on the RIGHT of the card grid at 1100 and up (Vault has no composer,
+// so the column takes the composer's side) and the Kit sheet below,
+// where choosing a folder closes it. Membership filters the visible
+// creations after Visibility, Status, search, and sort, composing with
+// all of them (vaultVisibility.js, the pure filter). Every folder
+// write reports through the one KitNotice above the grid, delete in
+// the danger tone. Opening the column collapses the primary sidebar
+// to its rail through the studio chrome's claimLeft("page"), the same
+// call Media makes.
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Folder } from "lucide-react";
 
 import KitStudioPageView from "@/components/kit/studio-page/KitStudioPage.view";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
 import KitStudioFilterBarView from "@/components/kit/studio-filter-bar/KitStudioFilterBar.view";
 import KitCreationCardView from "@/components/kit/creation-card/KitCreationCard.view";
+import KitFoldersPanel from "@/components/kit/KitFoldersPanel";
+import KitNotice from "@/components/kit/KitNotice";
+import { useKitNoticeAutoClear } from "@/components/kit/notice/useKitNoticeViewModel";
 import KitLoadMoreView from "@/components/kit/load-more/KitLoadMore.view";
 import KitPromoBannerView from "@/components/kit/promo-banner/KitPromoBanner.view";
 import KitImageOverlay from "@/components/kit/KitImageOverlay";
@@ -30,19 +50,21 @@ import KitAlertStripView from "@/components/kit/alert-strip/KitAlertStrip.view";
 import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeToggle.view";
 import FixtureActionNotice from "../FixtureActionNotice";
 import { useStudioAccount } from "@/components/studio/StudioAccountProvider";
+import { useStudioChrome } from "@/components/studio/StudioChromeProvider";
 import { useCreationEngagementState } from "@/components/studio/engagement/hooks/useCreationEngagementState";
 import StoryLaunchRequirementsSheet from "@/components/studio/story-rooms/StoryLaunchRequirementsSheet";
 import { useStoryLaunchController } from "@/components/studio/story-rooms/hooks/useStoryLaunchController";
 import { archiveCreation, deleteCreation } from "@/lib/client/studio/creations/creationClient";
 import { isChatCapableCreationType } from "@/lib/shared/creations/creationTypePolicy";
 import { canArchiveVaultItem, canDeleteVaultItem } from "@/lib/shared/presentation/vaultPresentation";
-import {
-  buildDomainFilterGroups,
-  getCatalogCreationType,
-  getCatalogTags,
-  getSelectedCatalogCreationTypes,
-  orderFilterGroups,
-} from "../catalog/creationCatalogFilterTaxonomy.js";
+import { getDescendantIds } from "@/lib/client/studio/folders/folderRules";
+import { useFolderStore } from "@/lib/client/studio/folders/useFolderStore";
+import { buildDomainFilterGroups, orderFilterGroups } from "../catalog/creationCatalogFilterTaxonomy.js";
+// The two layout hooks the Media composition minted (AF5): which host
+// the Folders panel takes on this page (the column at 1100 and up,
+// the sheet below), read from the same query.
+import { useFoldersPanelHost } from "../images/images-live/useFoldersPanelHost";
+import { VISIBILITY_LABELS, filterVaultItems } from "./vaultVisibility.js";
 
 function canonArt(name) {
   return encodeURI(`/tmp-mockup-images/canon-character-images/${name}.png`);
@@ -52,14 +74,17 @@ function creatorArt(name) {
   return encodeURI(`/tmp-mockup-images/alpha-test-creator-images/${name}.png`);
 }
 
-// Visibility badge label per the product model's ruled four-state
-// enum (section 5). Canon items carry the Canon badge instead of a
-// visibility badge (tag economy 2.16(c): Canon always informs).
-const VISIBILITY_LABELS = {
-  PRIVATE: "Private",
-  INTERNAL: "Internal",
-  PUBLIC: "Public",
-};
+// The Folders trigger: the Filter trigger's own recipe (KitDropdown.
+// view), the same three class strings the Media composition carries,
+// so the control reads as the one beside Filter on both pages; gold
+// while marked, the way the Filter trigger turns gold on a non-resting
+// pick. One shared definition for the two pages is a follow-up.
+const FOLDERS_ROOT_LABEL = "Folders";
+const FOLDERS_TRIGGER_CLASS =
+  "inline-flex min-w-0 max-w-[10rem] min-h-[var(--control-filter)] items-center gap-[var(--space-1)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--step-above)] px-[var(--space-3)] text-[length:var(--text-ui)] leading-[var(--lh-ui)] transition-colors duration-[var(--dur-hover)] [@media(pointer:coarse)]:min-h-[var(--control-md)]";
+const FOLDERS_TRIGGER_REST_CLASS =
+  "text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)] active:bg-[var(--state-pressed-fill)]";
+const FOLDERS_TRIGGER_MARKED_CLASS = "text-[var(--gold-bright)]";
 
 // Fixture items are owner-created work only. The Vault is an ownership
 // surface, not a bookmark collection; saving Community work never imports it here.
@@ -186,15 +211,53 @@ export default function VaultV2Mockup({
   // on live wiring open a non-persisting notice instead of doing
   // nothing.
   const [actionNotice, setActionNotice] = useState(null);
+  // Folders panel: closed by default (1A), the chosen folder page-local
+  // (null is the root row All); the note above the grid.
+  const [foldersOpen, setFoldersOpen] = useState(false);
+  const [selectedFolderId, setSelectedFolderId] = useState(null);
+  const [noticeTone, setNoticeTone] = useState("neutral");
+  const notice = useKitNoticeAutoClear();
+  const foldersHost = useFoldersPanelHost();
+  const folderStore = useFolderStore("VAULT");
+  // The primary sidebar's collapse control is the studio chrome's left
+  // edge (StudioChromeProvider, decision J1), the same handler Media
+  // calls: opening the Folders column collapses the sidebar to its rail
+  // through claimLeft("page"); closing hands nothing back; expanding
+  // the sidebar (leftOwner "nav") closes the column, one left panel at
+  // a time; leaving the route releases the edge.
+  const { leftOwner, claimLeft, releaseLeft } = useStudioChrome();
+  const onToggleFolders = useCallback(() => {
+    if (!foldersOpen && foldersHost === "column") claimLeft?.("page");
+    setFoldersOpen(!foldersOpen);
+  }, [claimLeft, foldersHost, foldersOpen]);
+  if (foldersOpen && foldersHost === "column" && leftOwner === "nav") setFoldersOpen(false);
+  useEffect(() => () => releaseLeft?.(), [releaseLeft]);
   const engagementState = useCreationEngagementState(live ? ownedItems : []);
   const sourceItems = ownedItems;
   const effectiveMode = live ? (loadError ? "error" : "default") : fixtureMode;
+  const pool = useMemo(
+    () => (effectiveMode === "empty" || effectiveMode === "error" ? [] : sourceItems),
+    [effectiveMode, sourceItems]
+  );
 
   const activeVisibilityValues = selectedValues.visibility || [];
 
-  const filterGroups = useMemo(() => {
-    const pool = effectiveMode === "empty" || effectiveMode === "error" ? [] : sourceItems;
+  // The chosen folder, or null once it is gone from the store (a
+  // delete lifts the selection to the parent through the panel; a
+  // cleared browser store reads as the root).
+  const activeFolder = useMemo(
+    () => (selectedFolderId ? folderStore.folders.find((folder) => folder.id === selectedFolderId) || null : null),
+    [folderStore.folders, selectedFolderId]
+  );
+  const folderItemIds = useMemo(() => {
+    if (!activeFolder) return null;
+    const state = { surface: "VAULT", folders: folderStore.folders, itemsByFolder: folderStore.itemsByFolder };
+    return [activeFolder.id, ...getDescendantIds(state, activeFolder.id)].flatMap(
+      (folderId) => folderStore.itemsByFolder[folderId] || []
+    );
+  }, [activeFolder, folderStore.folders, folderStore.itemsByFolder]);
 
+  const filterGroups = useMemo(() => {
     // Ruled section order (FE/FILTERS, 6 Sep 2026): five domains,
     // Visibility, Status; no Tags. Every option renders with its live
     // count, zero muted and selectable. No Activity section on Vault.
@@ -221,42 +284,20 @@ export default function VaultV2Mockup({
         })),
       },
     ]);
-  }, [effectiveMode, sourceItems]);
+  }, [pool]);
 
-  const filteredItems = useMemo(() => {
-    if (effectiveMode === "empty" || effectiveMode === "error") return [];
-
-    const query = searchValue.trim().toLowerCase();
-    const types = getSelectedCatalogCreationTypes(selectedValues);
-    const visibilities = selectedValues.visibility || [];
-    const statuses = selectedValues.status || [];
-
-    const filtered = sourceItems.filter((item) => {
-      const itemType = getCatalogCreationType(item);
-      const itemStatus = String(item.status || "").trim().toUpperCase();
-      const itemTags = getCatalogTags(item);
-
-      if (types.length && !types.includes(itemType)) return false;
-      if (visibilities.length && !visibilities.includes(item.visibility)) return false;
-      if (statuses.length && (!item.isOwn || !statuses.includes(itemStatus))) return false;
-
-      const haystack = `${item.title} ${item.subtitle} ${item.description || ""} ${
-        VISIBILITY_LABELS[item.visibility] || ""
-      } ${itemStatus} ${itemTags.join(" ")}`.toLowerCase();
-      if (query && !haystack.includes(query)) return false;
-      return true;
-    });
-
-    const sorted = [...filtered];
-    if (selectedSort === "popular") {
-      sorted.sort((a, b) => (b.plays || 0) - (a.plays || 0));
-    } else if (selectedSort === "hearts") {
-      sorted.sort((a, b) => (b.hearts || 0) - (a.hearts || 0));
-    } else if (selectedSort === "recent") {
-      sorted.sort((a, b) => b.recency - a.recency);
-    }
-    return sorted;
-  }, [effectiveMode, sourceItems, searchValue, selectedValues, selectedSort]);
+  // The one pure filter (vaultVisibility.js): type, Visibility, Status,
+  // search, sort, then the folder's membership last.
+  const filteredItems = useMemo(
+    () =>
+      filterVaultItems(pool, {
+        query: searchValue,
+        selectedValues,
+        sort: selectedSort,
+        folderItemIds,
+      }),
+    [pool, searchValue, selectedValues, selectedSort, folderItemIds]
+  );
 
   const visibleItems = filteredItems.slice(0, visibleCount);
   const hasMore = visibleCount < filteredItems.length;
@@ -271,6 +312,33 @@ export default function VaultV2Mockup({
     });
     setVisibleCount(PAGE_SIZE);
   }
+
+  // Every folder write reports through the one KitNotice: the store's
+  // note string, delete in the danger tone.
+  function showNote(note, tone = "neutral") {
+    setNoticeTone(tone === "danger" ? "danger" : "neutral");
+    notice.show(note);
+  }
+
+  function handleSelectFolder(folderId) {
+    setSelectedFolderId(folderId ?? null);
+    setVisibleCount(PAGE_SIZE);
+    if (foldersHost === "sheet") setFoldersOpen(false);
+  }
+
+  const foldersPanelProps = {
+    surface: "VAULT",
+    folders: folderStore.folders,
+    itemsByFolder: folderStore.itemsByFolder,
+    allCount: pool.length,
+    selectedFolderId: activeFolder?.id ?? null,
+    onSelectFolder: handleSelectFolder,
+    onCreateFolder: folderStore.createFolder,
+    onRenameFolder: folderStore.renameFolder,
+    onMoveFolder: folderStore.moveFolder,
+    onDeleteFolder: folderStore.deleteFolder,
+    onNotice: showNote,
+  };
 
   function toggleId(setter) {
     return (id) =>
@@ -465,6 +533,24 @@ export default function VaultV2Mockup({
             setSearchValue(value);
             setVisibleCount(PAGE_SIZE);
           }}
+          // Bar order, ruled (Media rulings carried to Vault): Select,
+          // Folders, Filter, Sort, then the grid and list toggle, on
+          // the bar's one leadingSlot row (2.5.0): filling the search
+          // field's width with equal gaps on phones, at the row's
+          // right at md and up.
+          leadingSlot={
+            <button
+              type="button"
+              onClick={onToggleFolders}
+              aria-pressed={foldersOpen}
+              aria-expanded={foldersOpen}
+              aria-label={activeFolder ? `${FOLDERS_ROOT_LABEL}: ${activeFolder.name}` : FOLDERS_ROOT_LABEL}
+              className={`${FOLDERS_TRIGGER_CLASS} ${foldersOpen || activeFolder ? FOLDERS_TRIGGER_MARKED_CLASS : FOLDERS_TRIGGER_REST_CLASS}`}
+            >
+              <Folder size={14} aria-hidden="true" className="flex-none" />
+              <span className="min-w-0 truncate">{activeFolder ? activeFolder.name : FOLDERS_ROOT_LABEL}</span>
+            </button>
+          }
           filterGroups={filterGroups}
           selectedValues={selectedValues}
           onFilterToggle={toggleFilter}
@@ -508,6 +594,12 @@ export default function VaultV2Mockup({
         />
       }
     >
+      <div className="flex items-start gap-[var(--space-6)]">
+      <div className="flex min-w-0 flex-1 flex-col gap-[var(--space-6)]">
+        {notice.message ? (
+          <KitNotice message={notice.message} tone={noticeTone} onDismiss={notice.clear} />
+        ) : null}
+
         {effectiveMode === "error" && (
           <KitAlertStripView
             tone="danger"
@@ -606,7 +698,22 @@ export default function VaultV2Mockup({
             />
           </>
         )}
+      </div>
+
+      {/* Folders column (1A): right of the grid at 1100 and up, only
+          while open; below 1100 the sheet renders instead, outside
+          this row. */}
+      {foldersOpen && foldersHost === "column" ? (
+        <KitFoldersPanel host="column" {...foldersPanelProps} />
+      ) : null}
+      </div>
     </KitStudioPageView>
+
+    {/* Folders sheet (1A, below 1100): the Kit frame's sheet with the
+        grabber; choosing a folder closes it. */}
+    {foldersOpen && foldersHost === "sheet" ? (
+      <KitFoldersPanel host="sheet" {...foldersPanelProps} onClose={() => setFoldersOpen(false)} />
+    ) : null}
 
     {overlayImage && (
       <KitImageOverlay
