@@ -7,11 +7,23 @@
 // in the View.
 import { useState } from "react";
 
-import { usePhoneWidth } from "../modal-frame/usePhoneWidth";
+import { usePhoneWidth } from "../modal-frame/usePhoneWidth.js";
 import { buildFolderRows, normalizeFolderState } from "../../../lib/client/studio/folders/folderRules.js";
 import { SELECTION_BAR_COPY, pluralize } from "./selectionBarCopy.js";
 
 export { SELECTION_BAR_COPY, pluralize };
+
+// The two normalizers the ViewModel reads props through (AF5 follow-up
+// 1, item 1: they were referenced without being defined, so the first
+// render threw once a page mounted the bar). A missing handler reads
+// as null, so the View renders the control and the fire is a no-op.
+function callback(value) {
+  return typeof value === "function" ? value : null;
+}
+
+function text(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
 
 export function useKitSelectionBarViewModel(props = {}) {
   const selectedCount = Number.isInteger(props.selectedCount) && props.selectedCount > 0 ? props.selectedCount : 0;

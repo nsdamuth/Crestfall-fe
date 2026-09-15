@@ -4,9 +4,26 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { createElement } from "react";
+import { renderToString } from "react-dom/server";
+
 import { KIT_SELECTION_BAR_VIEW_CONTRACT_VERSION } from "./KitSelectionBar.contract.js";
 import { kitSelectionBarFixtures } from "./KitSelectionBar.fixtures.js";
 import { SELECTION_BAR_COPY, pluralize } from "./selectionBarCopy.js";
+import { useKitSelectionBarViewModel } from "./useKitSelectionBarViewModel.js";
+
+// Mounts the ViewModel the way the Binding Shell does, through a real
+// React render (react-dom/server, no window), and hands back what it
+// returned. The View itself is JSX and stays a source read.
+function mountViewModel(props) {
+  let viewProps = null;
+  function Probe() {
+    viewProps = useKitSelectionBarViewModel(props);
+    return null;
+  }
+  renderToString(createElement(Probe));
+  return viewProps;
+}
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const read = (relativePath) => fs.readFileSync(path.join(currentDir, relativePath), "utf8");
@@ -20,6 +37,48 @@ test("contract 1.0.0 and the four named fixtures", () => {
   assert.ok(byId.many.selectedCount > 1);
   assert.equal(byId.soon.isDownloadSoon, true);
   assert.equal(byId.soon.isDeleteSoon, true);
+});
+
+// AF5 follow-up 1, item 1: the bar mounted on /studio/v2/images threw
+// "callback is not defined" on the first render. Mount the ViewModel
+// with every handler supplied and with every handler absent.
+test("the ViewModel mounts with every handler supplied and with every handler absent", () => {
+  const fired = [];
+  const supplied = mountViewModel({
+    selectedCount: 2,
+    itemNoun: "image",
+    folders: [{ id: "f1", parentId: null, name: "Cast", depth: 1 }],
+    onAddToFolder: (folderId) => fired.push(`add:${folderId}`),
+    onDownload: () => fired.push("download"),
+    onDelete: () => fired.push("delete"),
+    onDone: () => fired.push("done"),
+    deleteBody: "  Named body.  ",
+  });
+  assert.equal(supplied.isVisible, true);
+  assert.equal(supplied.countLabel, "2 selected");
+  assert.equal(supplied.noun, "images");
+  assert.equal(supplied.deleteBody, "Named body.");
+  assert.deepEqual(supplied.folderRows.map((row) => row.id), ["f1"]);
+  supplied.onPickFolder("f1");
+  supplied.onDownload();
+  supplied.onConfirmDelete();
+  supplied.onDone();
+  assert.deepEqual(fired, ["add:f1", "download", "delete", "done"]);
+
+  const absent = mountViewModel({ selectedCount: 1 });
+  assert.equal(absent.isVisible, true);
+  assert.equal(absent.noun, "item");
+  assert.equal(absent.deleteBody, SELECTION_BAR_COPY.deleteBody);
+  assert.equal(absent.onDownload, null);
+  assert.equal(absent.onDone, null);
+  assert.doesNotThrow(() => {
+    absent.onPickFolder("missing");
+    absent.onConfirmDelete();
+  });
+
+  const empty = mountViewModel({});
+  assert.equal(empty.isVisible, false);
+  assert.equal(empty.selectedCount, 0);
 });
 
 test("the copy: N selected, the five controls, and the count in the delete copy", () => {
