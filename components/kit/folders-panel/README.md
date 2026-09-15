@@ -15,7 +15,7 @@ writes. Contract 1.0.0. Folder glyph only: no emoji, no color (R4).
   trigger. Rows are 44px (`--control-md`) at every pointer.
 - The row menu, on the shared menu recipe (`components/kit/form-field/
   menuRecipe.jsx`), expands inline under its row: Rename (an inline
-  field on the row, Enter saves, Escape cancels), Move to (a picker
+  field on the row, Enter saves, Escape cancels), Move (a picker
   on the Kit frame listing All and every folder with space under the
   cap), Delete (a confirmation on the Kit frame naming what moves up
   to the parent).

@@ -27,7 +27,7 @@ export const FOLDERS_PANEL_COPY = Object.freeze({
   allLabel: ROOT_FOLDER_LABEL,
   newFolder: "New folder",
   rename: "Rename",
-  moveTo: "Move to",
+  moveTo: "Move",
   delete: "Delete",
   cancel: "Cancel",
   save: "Save",

@@ -120,6 +120,6 @@ test("the copy carries the ruled title, root row, footer line, and the three men
   assert.equal(FOLDERS_PANEL_COPY.title, "Folders");
   assert.equal(FOLDERS_PANEL_COPY.allLabel, "All");
   assert.equal(FOLDERS_PANEL_COPY.footerNote, "Folders are saved in this browser for now.");
-  assert.deepEqual([FOLDERS_PANEL_COPY.rename, FOLDERS_PANEL_COPY.moveTo, FOLDERS_PANEL_COPY.delete], ["Rename", "Move to", "Delete"]);
+  assert.deepEqual([FOLDERS_PANEL_COPY.rename, FOLDERS_PANEL_COPY.moveTo, FOLDERS_PANEL_COPY.delete], ["Rename", "Move", "Delete"]);
   assert.equal(FOLDERS_PANEL_COPY.deleteBody(2, 1, "Cast"), 'Its 2 sub-folders and 1 item move to "Cast". Nothing is deleted from your library.');
 });

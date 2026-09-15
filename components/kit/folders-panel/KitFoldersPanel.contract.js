@@ -7,7 +7,8 @@ export const KIT_FOLDERS_PANEL_VIEW_CONTRACT_VERSION = "1.0.0";
  * levels under a root row All, lets the user pick one to filter by,
  * and carries the five folder writes: New folder at the top, and a
  * row menu on the shared menu recipe with Rename (an inline field on
- * the row), Move to (a picker on the Kit frame), and Delete (a
+ * the row), Move (a picker on the Kit frame; the copy ruled at AF5
+ * follow-up 3), and Delete (a
  * confirmation on the Kit frame). Folder glyph only: no emoji, no
  * color (R4).
  *
