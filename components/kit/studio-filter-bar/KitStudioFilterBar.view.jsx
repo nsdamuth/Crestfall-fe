@@ -162,6 +162,11 @@ export default function KitStudioFilterBarView({
       />
 
       <div className="scrollbar-none flex items-center gap-[var(--space-4)] overflow-x-auto min-[700px]:ml-auto min-[700px]:flex-none min-[700px]:flex-wrap min-[700px]:overflow-visible">
+        {/* The bar's own group renders only with content (AF5
+            follow-up 3, item 5): an empty group added a gap at the
+            row's left edge, so a caller's controls could not sit
+            flush with the search field. */}
+        {(quickTabs.length > 0 || hasGroups || sortOptions.length > 0) && (
         <div className="flex items-center gap-[var(--space-2)] min-[700px]:flex-wrap">
           <QuickTabs
             tabs={quickTabs}
@@ -216,6 +221,7 @@ export default function KitStudioFilterBarView({
             />
           )}
         </div>
+        )}
 
         {/* controlsSlot (2.4.0, ASSET-FOLDERS AF2): a caller's own
             controls, riding the same scroller as Filter and Sort,
