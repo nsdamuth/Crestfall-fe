@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Folder, ImagePlus } from "lucide-react";
 
@@ -21,6 +21,7 @@ import ViewModeToggleView from "@/components/studio/view-mode-toggle/ViewModeTog
 import { useIngredientPickerViewModel } from "@/components/studio/image-studio/ingredient-picker/useIngredientPickerViewModel";
 import { useSaveIngredientPresetViewModel } from "@/components/studio/image-studio/save-ingredient-preset/useSaveIngredientPresetViewModel";
 import StudioPageHeaderView from "@/components/studio/studio-page-header/StudioPageHeader.view";
+import { useStudioChrome } from "@/components/studio/StudioChromeProvider";
 import { getDescendantIds } from "@/lib/client/studio/folders/folderRules";
 import { useFolderStore } from "@/lib/client/studio/folders/useFolderStore";
 
@@ -266,7 +267,22 @@ export default function ImagesV2Live() {
   const notice = useKitNoticeAutoClear();
   const foldersHost = useFoldersPanelHost();
   const folderStore = useFolderStore("MEDIA");
-  const onToggleFolders = useCallback(() => setFoldersOpen((current) => !current), []);
+  // The primary sidebar's collapse control is the studio chrome's left
+  // edge (StudioChromeProvider, decision J1): the sidebar reads
+  // leftOwner "page" as collapsed, so opening the Folders column
+  // collapses the sidebar to its rail through claimLeft("page"), the
+  // same handler the story chat's story list calls (follow-up 1, item
+  // 4). Closing the panel hands nothing back, so the sidebar stays on
+  // its rail until the user expands it; expanding it (leftOwner "nav")
+  // closes the column, one left panel at a time. Leaving the route
+  // releases the edge, as the chat page does.
+  const { leftOwner, claimLeft, releaseLeft } = useStudioChrome();
+  const onToggleFolders = useCallback(() => {
+    if (!foldersOpen && foldersHost === "column") claimLeft?.("page");
+    setFoldersOpen(!foldersOpen);
+  }, [claimLeft, foldersHost, foldersOpen]);
+  if (foldersOpen && foldersHost === "column" && leftOwner === "nav") setFoldersOpen(false);
+  useEffect(() => () => releaseLeft?.(), [releaseLeft]);
   const openCameraPresetPicker = useCallback(() => setCameraPickerOpen(true), []);
   const closeCameraPresetPicker = useCallback(() => setCameraPickerOpen(false), []);
   const sharedImageOutputId = String(searchParams?.get("image") || "").trim();
