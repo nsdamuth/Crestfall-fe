@@ -400,6 +400,14 @@ override so touch keeps the 44px floor; RULED 13 Sep 2026 by Brian's story chat 
 48, `--icon-sm/md/lg` 16/20/24, `--container` 1200, `--measure` 68ch.
 All locked.
 
+`--dock-h` (minted 14 Sep 2026, AF5 follow-up 3 item 4) is the mobile
+dock's own height above the safe area, `calc(var(--control-md) +
+var(--space-4) + 1px)`: its rows are `--control-md` tall inside
+`--space-2` above and below, plus its 1px top line. A bar docking on
+the nav sits at `bottom: calc(var(--dock-h) + env(safe-area-inset-bottom))`
+so the two meet with zero gap; the Media page's Compose bar is the
+first consumer.
+
 ## Container law, RULED 23 Aug 2026
 
 Every `/studio` page's content column is `max-width: var(--container)`

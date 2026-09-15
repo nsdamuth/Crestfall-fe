@@ -683,10 +683,12 @@ export default function ImagesV2Live() {
           on phones (follow-up 2, item 4: the in-page button above the
           grid is gone). Edge to edge, glass on the ratified themed
           panel glass token with its paired blur, no border; one
-          whisper hairline sits above the bottom nav. It hides while
+          whisper hairline sits above the bottom nav, and the bar sits
+          flush on the nav through the dock's own height token
+          (follow-up 3, item 4). It hides while
           select mode is on (AF5): the selection bar takes its place. */}
       {grid.selectionMode ? null : (
-        <div className="fixed inset-x-0 bottom-[calc(4.6rem+env(safe-area-inset-bottom))] z-40 min-[1100px]:hidden">
+        <div className="fixed inset-x-0 bottom-[calc(var(--dock-h)+env(safe-area-inset-bottom))] z-40 min-[1100px]:hidden">
           <div className="flex items-center bg-[var(--panel-ui-glass)] px-[var(--space-5)] py-[var(--space-2)] backdrop-blur-[var(--blur-panel)]">
             {/* Opens the composer sheet (browser review 9 Sep 2026,
                 item 9); Generate lives inside the sheet's fixed

@@ -366,6 +366,11 @@
                                   control-sm/control-md per the kit
                                   polish 2 ruling; touch keeps control-md */
   --control-md:  2.75rem;   /* 44, default, touch safe       */
+  /* The mobile dock's own height above the safe area (AF5 follow-up
+     3, item 4): its rows are --control-md tall inside --space-2 above
+     and below, plus its 1px top line. A bar docking on the nav sits
+     at bottom: calc(var(--dock-h) + env(safe-area-inset-bottom)). */
+  --dock-h:      calc(var(--control-md) + var(--space-4) + 1px);
   --control-lg:  3rem;      /* 48, primary CTAs              */
   --topbar-h: calc(var(--control-md) + var(--space-3) * 2 + 1px);
     /* StudioTopBar's own height (control height, its py-space-3 top
