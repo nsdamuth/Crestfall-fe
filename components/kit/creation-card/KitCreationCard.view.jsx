@@ -33,6 +33,8 @@ import {
   Archive,
   BookOpen,
   Bookmark,
+  Check,
+  FolderPlus,
   Heart,
   Image as ImageIcon,
   Maximize2,
@@ -127,6 +129,41 @@ function IconActionButton({ label, active = false, onClick = null, children }) {
   );
 }
 
+// Select mode (v3.9.0, ASSET-FOLDERS AF4): a 44px check control in
+// the art corner, rendered only when the caller passes isSelectable.
+// Selected reads in the gold recipe (gold mark on the light wash,
+// the same selection-state law as the face actions); the dark art
+// plate stays beneath for legibility. 44px at every pointer, since
+// a select mode is a tapping mode. Only this control toggles; the
+// open tap and the three face actions are untouched.
+function SelectControl({ isSelected = false, onToggleSelect = null, title = "" }) {
+  const label = isSelected ? `Deselect ${title || "creation"}` : `Select ${title || "creation"}`;
+  return (
+    <button
+      type="button"
+      role="checkbox"
+      aria-checked={isSelected}
+      aria-label={label}
+      title={label}
+      onClick={(event) => stopAndRun(event, onToggleSelect)}
+      className={`relative flex h-[var(--control-md)] w-[var(--control-md)] flex-none items-center justify-center overflow-hidden rounded-[var(--radius-full)] border transition-colors ${
+        isSelected
+          ? "border-[var(--gold-ornament)] text-[var(--gold-bright)]"
+          : "border-[var(--line)] text-[var(--art-ink-dim)] hover:border-[var(--gold-ornament)] hover:text-[var(--art-ink)]"
+      }`}
+    >
+      <span
+        aria-hidden="true"
+        className={`absolute inset-0 bg-[var(--tag-bed-art)] transition-opacity ${isSelected ? "opacity-60" : "opacity-100"}`}
+      />
+      {isSelected && <span aria-hidden="true" className="absolute inset-0 bg-[var(--fill)]" />}
+      <span className="relative">
+        <Check size={18} aria-hidden="true" className={isSelected ? "opacity-100" : "opacity-40"} />
+      </span>
+    </button>
+  );
+}
+
 // Viewer-owned kebab menu, RULED 22 Aug 2026 (Fable law review, Final
 // Ruling Render close, NEW LAW A). Non-owned cards render no kebab at
 // all: the caller gates this by passing isOwner. A separate,
@@ -163,6 +200,7 @@ function KebabMenu({
   onEdit,
   onGenerateImage,
   onShare,
+  onAddToFolder,
   onArchive,
   onDelete,
 }) {
@@ -224,6 +262,15 @@ function KebabMenu({
                   onClick={() => { onGenerateImage?.(); onClose?.(); }}
                 />
                 <KebabMenuItem label="Share" Icon={Share2} onClick={() => { onShare?.(); onClose?.(); }} />
+                {onAddToFolder ? (
+                  // v3.9.0 (ASSET-FOLDERS AF4): the folder row, only
+                  // when the page supplies the handler.
+                  <KebabMenuItem
+                    label="Add to folder"
+                    Icon={FolderPlus}
+                    onClick={() => { onAddToFolder?.(); onClose?.(); }}
+                  />
+                ) : null}
                 <KebabMenuItem
                   label="Archive"
                   Icon={Archive}
@@ -357,8 +404,12 @@ function GridCard({
   onEdit,
   onGenerateImage,
   onShare,
+  onAddToFolder,
   onArchive,
   onDelete,
+  isSelectable,
+  isSelected,
+  onToggleSelect,
 }) {
   const hasImage = Boolean(imageSrc);
 
@@ -393,7 +444,10 @@ function GridCard({
 
       <div className="pointer-events-none relative z-[2] flex h-full flex-col justify-between p-[var(--space-3)]">
         <div className="flex items-start justify-between gap-[var(--space-2)]">
-          <div className="pointer-events-auto">
+          <div className="pointer-events-auto flex items-start gap-[var(--space-2)]">
+            {isSelectable ? (
+              <SelectControl isSelected={isSelected} onToggleSelect={onToggleSelect} title={title} />
+            ) : null}
             <BadgeRow badges={badges} />
           </div>
           <div className={`pointer-events-auto flex items-start gap-[var(--space-1)] ${OVERLAY_REVEAL}`}>
@@ -405,6 +459,7 @@ function GridCard({
                 onEdit={onEdit}
                 onGenerateImage={onGenerateImage}
                 onShare={onShare}
+                onAddToFolder={onAddToFolder}
                 onArchive={onArchive}
                 onDelete={onDelete}
               />
@@ -471,8 +526,12 @@ function ListCard({
   onEdit,
   onGenerateImage,
   onShare,
+  onAddToFolder,
   onArchive,
   onDelete,
+  isSelectable,
+  isSelected,
+  onToggleSelect,
 }) {
   const hasImage = Boolean(imageSrc);
 
@@ -508,6 +567,11 @@ function ListCard({
       />
 
       <div className="pointer-events-none relative z-[2] flex h-full items-center justify-between gap-[var(--space-3)] p-[var(--space-4)]">
+        {isSelectable ? (
+          <div className="pointer-events-auto flex-none">
+            <SelectControl isSelected={isSelected} onToggleSelect={onToggleSelect} title={title} />
+          </div>
+        ) : null}
         <div className="min-w-0">
           <div className="pointer-events-auto mb-[var(--space-1)]">
             <BadgeRow badges={badges} />
@@ -538,6 +602,7 @@ function ListCard({
               onEdit={onEdit}
               onGenerateImage={onGenerateImage}
               onShare={onShare}
+              onAddToFolder={onAddToFolder}
               onArchive={onArchive}
               onDelete={onDelete}
             />
@@ -590,6 +655,10 @@ export default function KitCreationCardView({
   onShare = null,
   onArchive = null,
   onDelete = null,
+  isSelectable = false,
+  isSelected = false,
+  onToggleSelect = null,
+  onAddToFolder = null,
 }) {
   const isList = layout === "list";
   const onOpen = resolveOpenHandler(assetKind, onOpenImageOverlay, onOpenAssetDetail);
@@ -629,8 +698,12 @@ export default function KitCreationCardView({
     onEdit,
     onGenerateImage,
     onShare,
+    onAddToFolder,
     onArchive,
     onDelete,
+    isSelectable,
+    isSelected,
+    onToggleSelect,
   };
 
   return (

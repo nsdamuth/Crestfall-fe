@@ -1,4 +1,4 @@
-export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.8.0";
+export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.9.0";
 
 /**
  * Stable portable UI boundary for the shared creation card kit piece
@@ -175,6 +175,25 @@ export const KIT_CREATION_CARD_VIEW_CONTRACT_VERSION = "3.8.0";
  * bleed grid/list geometry, text placement, overlays, and assigned-art behavior
  * remain unchanged. Unillustrated cards never imply that Crestfall stock art
  * was selected.
+ *
+ * v3.9.0 (ASSET-FOLDERS plan, package AF4, 14 Sep 2026), additive:
+ * select mode and the folder row. Four optional props, every one
+ * absent on every existing consumer, so every prior fixture renders
+ * unchanged.
+ * @property {boolean} [isSelectable] optional (v3.9.0), default false.
+ *   When true the card renders a 44px check control in the art
+ *   corner (top-left in grid, before the badges; the row's left edge
+ *   in list). The face actions and the open tap are unchanged; only
+ *   the check toggles selection.
+ * @property {boolean} [isSelected] optional (v3.9.0), default false.
+ *   The check reads selected in the gold recipe (gold mark on the
+ *   light wash, the same selection-state law as the face actions).
+ * @property {(() => void)|null} [onToggleSelect] optional (v3.9.0),
+ *   default null; fires from the check control only. The card holds
+ *   no selection state (option 3A: the page does).
+ * @property {(() => void)|null} [onAddToFolder] optional (v3.9.0),
+ *   default null; a kebab row "Add to folder" after Share, rendered
+ *   only when supplied, owner-gated like the rest of the kebab.
  */
 
 export {};
