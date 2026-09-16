@@ -129,12 +129,13 @@ export function getImageStudioComposerViewProps({
     }));
 
   const activeRenderStyle = getRenderStyleRailStop(renderStyle);
-  const workflowTuningDefinition = getImageWorkflowTuningDefinition(
-    activeRenderStyle.value
-  );
   const normalizedWorkflowTuning = normalizeImageWorkflowTuning(
     activeRenderStyle.value,
     workflowTuning
+  );
+  const workflowTuningDefinition = getImageWorkflowTuningDefinition(
+    activeRenderStyle.value,
+    normalizedWorkflowTuning
   );
   const renderStyleRailProps = {
     value: activeRenderStyle.value,
@@ -156,16 +157,48 @@ export function getImageStudioComposerViewProps({
         enabled: true,
         title: "Advanced Workflow Tuning",
         description: workflowTuningDefinition.description,
-        safetyNote:
-          "Controls stay inside tested workflow bounds. CFG, samplers, schedulers, and model selection remain locked.",
+        safetyNote: workflowTuningDefinition.safetyNote,
         modified: Boolean(workflowTuningTouched),
-        controls: workflowTuningDefinition.controls.map((entry) => ({
-          ...entry,
-          value: normalizedWorkflowTuning[entry.id],
-          valueLabel: `${Math.round(normalizedWorkflowTuning[entry.id])}%`,
-          onChange: (nextValue) =>
-            onChangeWorkflowTuning?.(entry.id, nextValue),
-        })),
+        controls: workflowTuningDefinition.controls.map((entry) => {
+          const rawValue = normalizedWorkflowTuning[entry.id];
+          const detailOptionIndex =
+            entry.kind === "discrete-range"
+              ? Math.max(
+                  0,
+                  entry.options?.findIndex(
+                    (option) => Number(option.value) === Number(rawValue)
+                  ) ?? 0
+                )
+              : null;
+          const projectedValue =
+            entry.kind === "discrete-range"
+              ? detailOptionIndex
+              : entry.toDisplayValue
+                ? entry.toDisplayValue(rawValue)
+                : rawValue;
+          const valueLabel =
+            entry.kind === "discrete-range"
+              ? entry.options?.[detailOptionIndex]?.label || String(rawValue)
+              : entry.formatValue
+                ? entry.formatValue(projectedValue)
+                : String(projectedValue);
+          return {
+            ...entry,
+            value: projectedValue,
+            valueLabel,
+            onChange: (nextValue) => {
+              if (entry.kind === "discrete-range") {
+                const nextOption = entry.options?.[Number(nextValue)] || entry.options?.[0];
+                onChangeWorkflowTuning?.(entry.id, nextOption?.value ?? rawValue);
+                return;
+              }
+              const payloadValue = entry.fromDisplayValue
+                ? entry.fromDisplayValue(nextValue)
+                : nextValue;
+              onChangeWorkflowTuning?.(entry.id, payloadValue);
+            },
+          };
+        }),
         handoff:
           workflowTuningDefinition.handoff &&
           normalizedWorkflowTuning[

@@ -271,6 +271,16 @@ recipe (`bg-[color-mix(in_srgb,var(--canvas)_88%,transparent)]` plus
 `blur(4px)` is a fourth, unrelated mechanism and is not governed by
 any of these tokens.
 
+`.cf-hairline-fade` (`app/design-system.css`, minted 14 Sep 2026, AF5
+follow-up 3 item 6) is the one hairline-fade recipe: a horizontal
+`--line` gradient fading to transparent at both ends
+(`linear-gradient(90deg, transparent, var(--line) 12%, var(--line)
+88%, transparent)`, a 1px `background-size`), drawn along a
+container's bottom edge rather than a 1px element. Legal on the
+primary sidebar's section and group dividers, the mobile drawer's
+dividers, and the divider under the page header's eyebrow, title,
+and description; no per-page override.
+
 ## Over-art ink
 
 | Token | Value (both themes) | Role | Status |

@@ -780,10 +780,12 @@ function RecipeFact({ label, value }) {
 }
 
 function GenerationRecipeDetails({ recipe, copySettingsMessage, onCopySettings }) {
-  const presetPresentation = recipe?.settingsPreset
-    ? getImageSettingsPresetPresentation(recipe.settingsPreset)
-    : null;
   const reproduction = recipe?.reproduction || {};
+  const presetPresentation = recipe?.settingsPreset
+    ? getImageSettingsPresetPresentation(recipe.settingsPreset, {
+        workflowTuningPresentation: reproduction.workflowTuningPresentation,
+      })
+    : null;
   const assets = Array.isArray(recipe?.assetsUsed) ? recipe.assetsUsed : [];
   const headerId = recipe?.jobId ? ` [${recipe.jobId}]` : "";
 

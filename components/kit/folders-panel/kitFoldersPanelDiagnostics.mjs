@@ -160,10 +160,12 @@ test("the View is stateless, reads no storage, carries both hosts, the 44px floo
   for (const needle of ['variant="sheet"', "control-md", "18rem", "sticky", "truncate", "sheetGrabber", "MenuRow"]) {
     assert.ok(view.includes(needle), `view carries ${needle}`);
   }
-  // The row menu never floats: the shared recipe is used without its
-  // absolute position, so it cannot open past the sheet or be clipped
-  // by the list's scroller.
-  assert.match(view, /MENU_PANEL_RECIPE\.replace\("absolute z-50 ", ""\)/);
+  // The row menu never floats: the shared recipe's inline placement
+  // (AF7 item 3, menuPanelRecipe) is used, no absolute position, so
+  // it cannot open past the sheet or be clipped by the list's
+  // scroller; the string replace itself now lives in menuRecipe.jsx.
+  assert.match(view, /menuPanelRecipe\("inline"\)/);
+  assert.doesNotMatch(view, /\.replace\(/);
   // No emoji, no color choice anywhere in the panel (R4).
   assert.doesNotMatch(view, /emoji|colorPicker|swatch/i);
 });

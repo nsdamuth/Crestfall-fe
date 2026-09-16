@@ -7,6 +7,7 @@ import {
 import {
   getImageWorkflowTuningDefinition,
   getRenderStyleRailStop,
+  getWorkflowTuningPresentationValue,
   normalizeImageWorkflowTuning,
   normalizeRenderStyleRailSelection,
 } from "./imageWorkflowTuning.js";
@@ -28,6 +29,17 @@ function normalizeObject(value) {
 
 function hasOption(options, value) {
   return options.some((option) => String(option.value) === String(value));
+}
+
+function normalizeLocationViewMode(value) {
+  const raw = String(value || "").trim();
+  const normalized = raw.toUpperCase();
+  if (["INTERIOR", "EXTERIOR", "SCENIC"].includes(normalized)) return normalized;
+  if (normalized.startsWith("CUSTOM:")) {
+    const customId = raw.slice(raw.indexOf(":") + 1).trim();
+    return customId ? `CUSTOM:${customId}` : "AUTO";
+  }
+  return "AUTO";
 }
 
 export function normalizeImageSettingsPreset(value) {
@@ -56,10 +68,7 @@ export function normalizeImageSettingsPreset(value) {
       typeof source.sceneryOnlyHelperEnabled === "boolean"
         ? source.sceneryOnlyHelperEnabled
         : true,
-    locationViewMode:
-      ["INTERIOR", "EXTERIOR"].includes(String(source.locationViewMode || "").toUpperCase())
-        ? String(source.locationViewMode).toUpperCase()
-        : "AUTO",
+    locationViewMode: normalizeLocationViewMode(source.locationViewMode),
     negativePrompt: typeof source.negativePrompt === "string" ? source.negativePrompt : "",
   };
 }
@@ -95,22 +104,52 @@ export function serializeImageSettingsPreset(value) {
   );
 }
 
-export function getImageSettingsPresetPresentation(value) {
+
+export function getImageSettingsPresetPresentation(
+  value,
+  { workflowTuningPresentation = null } = {}
+) {
   const normalized = normalizeImageSettingsPreset(value);
   const renderStyle = getRenderStyleRailStop(normalized.renderStyle);
   const camera = getCameraPresetDefinition(normalized.cameraFraming);
-  const definition = getImageWorkflowTuningDefinition(normalized.renderStyle);
+  const definition = getImageWorkflowTuningDefinition(
+    normalized.renderStyle,
+    normalized.workflowTuning
+  );
+  const presentationSnapshot = normalizeObject(workflowTuningPresentation);
   const tuningParts = [];
 
   for (const control of definition?.controls || []) {
-    const labels = {
-      referenceInfluence: "Ref",
-      styleBalance: control.label.includes("Fantasy") ? "Fantasy" : "Balance",
-      foundationDetail: "Foundation",
-      polishDetail: "Polish",
-      detailLevel: "Detail",
-    };
-    tuningParts.push(`${labels[control.id] || control.label} ${Math.round(normalized.workflowTuning[control.id])}%`);
+    if (control.id === "referenceInfluence") {
+      continue;
+    }
+
+    if (control.id === "detailScale") {
+      const option = control.options?.find(
+        (entry) => Number(entry.value) === Number(normalized.workflowTuning.detailScale)
+      );
+      const detailLabel =
+        typeof presentationSnapshot.detailScaleLabel === "string" &&
+        presentationSnapshot.detailScaleLabel.trim()
+          ? presentationSnapshot.detailScaleLabel.trim()
+          : option?.label || String(normalized.workflowTuning.detailScale);
+      tuningParts.push(`Detail ${detailLabel}`);
+      continue;
+    }
+
+    const snapshotValue = Number(presentationSnapshot[control.id]);
+    const presentedValue = Number.isFinite(snapshotValue)
+      ? Math.min(Math.max(Math.round(snapshotValue), 0), 100)
+      : getWorkflowTuningPresentationValue(
+          normalized.renderStyle,
+          control.id,
+          normalized.workflowTuning[control.id],
+          normalized.workflowTuning
+        );
+
+    tuningParts.push(
+      `${control.label} ${control.formatValue ? control.formatValue(presentedValue) : String(presentedValue)}`
+    );
   }
 
   return {

@@ -4,6 +4,11 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { assetBuilderConfigs } from "@/components/studio/create/assets/assetBuilderConfigs";
+import {
+  createLocationCustomImageViewId,
+  normalizeLocationCustomImageViews,
+  LOCATION_CUSTOM_VIEW_LABEL_MAX_LENGTH,
+} from "@/lib/shared/image-generation/locationImageViews";
 import { createLocationDraft } from "@/lib/client/studio/locations/locationClient";
 import {
   LOCATION_CONTENT_RATING_OPTIONS,
@@ -24,6 +29,8 @@ export const LOCATION_BUILDER_INITIAL_FORM = Object.freeze({
   interior_negative_prompt: "",
   exterior_image_prompt: "",
   exterior_negative_prompt: "",
+  scenic_image_prompt: "",
+  scenic_negative_prompt: "",
   tags: "",
   visibility: "PRIVATE",
   content_rating: "SFW",
@@ -45,6 +52,7 @@ export const LOCATION_BUILDER_INITIAL_DATA = Object.freeze({
     inheritsTravelRules: true,
   },
   engine_module_bindings: [],
+  custom_image_views: [],
   boundRegistries: {
     eventRegistryIds: [],
     questRegistryIds: [],
@@ -101,6 +109,9 @@ function cloneInitialLocationData(value) {
       ...normalizeObject(source.inheritance),
     },
     engine_module_bindings: normalizeArray(source.engine_module_bindings),
+    custom_image_views: normalizeLocationCustomImageViews(
+      source.custom_image_views || source.customImageViews
+    ),
     boundRegistries: {
       ...LOCATION_BUILDER_INITIAL_DATA.boundRegistries,
       ...normalizeObject(source.boundRegistries),
@@ -191,6 +202,17 @@ export function buildLocationCreationPayload({
         normalizedForm.exterior_negative_prompt,
         LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
       ),
+      scenic_image_prompt: limitLocationPromptValue(
+        normalizedForm.scenic_image_prompt,
+        LOCATION_IMAGE_PROMPT_MAX_LENGTH
+      ),
+      scenic_negative_prompt: limitLocationPromptValue(
+        normalizedForm.scenic_negative_prompt,
+        LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+      ),
+      custom_image_views: normalizeLocationCustomImageViews(
+        normalizedLocationData.custom_image_views
+      ),
       selected_cover: selectedCover,
 
       playable: false,
@@ -244,6 +266,7 @@ export function useLocationBuilderViewModel({
   const [parentPickerOpen, setParentPickerOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState("idle");
   const [saveMessage, setSaveMessage] = useState("");
+  const [customViewEditor, setCustomViewEditor] = useState(null);
 
   const candidates = useMemo(
     () => buildCoverCandidates(form.image_count),
@@ -277,9 +300,9 @@ export function useLocationBuilderViewModel({
 
   function updateField(field, value) {
     const nextValue =
-      ["image_prompt", "interior_image_prompt", "exterior_image_prompt"].includes(field)
+      ["image_prompt", "interior_image_prompt", "exterior_image_prompt", "scenic_image_prompt"].includes(field)
         ? limitLocationPromptValue(value, LOCATION_IMAGE_PROMPT_MAX_LENGTH)
-        : ["negative_prompt", "interior_negative_prompt", "exterior_negative_prompt"].includes(field)
+        : ["negative_prompt", "interior_negative_prompt", "exterior_negative_prompt", "scenic_negative_prompt"].includes(field)
           ? limitLocationPromptValue(value, LOCATION_NEGATIVE_PROMPT_MAX_LENGTH)
           : value;
 
@@ -336,6 +359,103 @@ export function useLocationBuilderViewModel({
     });
   }
 
+  function openAddCustomView() {
+    setCustomViewEditor({
+      editingId: null,
+      label: "",
+      prompt: "",
+      negativePrompt: "",
+    });
+  }
+
+  function openEditCustomView(id) {
+    const view = normalizeLocationCustomImageViews(
+      locationData.custom_image_views
+    ).find((entry) => entry.id === id);
+    if (!view) return;
+
+    setCustomViewEditor({
+      editingId: view.id,
+      label: view.label,
+      prompt: view.prompt,
+      negativePrompt: view.negative_prompt,
+    });
+  }
+
+  function updateCustomViewEditor(field, value) {
+    setCustomViewEditor((current) =>
+      current
+        ? {
+            ...current,
+            [field]:
+              field === "label"
+                ? String(value || "").slice(
+                    0,
+                    LOCATION_CUSTOM_VIEW_LABEL_MAX_LENGTH
+                  )
+                : field === "negativePrompt"
+                  ? limitLocationPromptValue(
+                      value,
+                      LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+                    )
+                  : limitLocationPromptValue(
+                      value,
+                      LOCATION_IMAGE_PROMPT_MAX_LENGTH
+                    ),
+          }
+        : current
+    );
+  }
+
+  function saveCustomView() {
+    if (!customViewEditor) return;
+
+    const currentViews = normalizeLocationCustomImageViews(
+      locationData.custom_image_views
+    );
+    const label = String(customViewEditor.label || "").trim();
+    const prompt = limitLocationPromptValue(
+      customViewEditor.prompt,
+      LOCATION_IMAGE_PROMPT_MAX_LENGTH
+    ).trim();
+
+    if (!label || !prompt) return;
+
+    const id =
+      customViewEditor.editingId ||
+      createLocationCustomImageViewId(label, currentViews);
+    const nextEntry = {
+      id,
+      label,
+      prompt,
+      negative_prompt: limitLocationPromptValue(
+        customViewEditor.negativePrompt,
+        LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+      ).trim(),
+    };
+    const nextViews = customViewEditor.editingId
+      ? currentViews.map((entry) =>
+          entry.id === id ? nextEntry : entry
+        )
+      : [...currentViews, nextEntry];
+
+    updateLocationData("custom_image_views", nextViews);
+    setCustomViewEditor(null);
+  }
+
+  function removeCustomView(id) {
+    updateLocationData(
+      "custom_image_views",
+      normalizeLocationCustomImageViews(locationData.custom_image_views).filter(
+        (entry) => entry.id !== id
+      )
+    );
+
+    if (customViewEditor?.editingId === id) {
+      setCustomViewEditor(null);
+    }
+  }
+
   async function saveDraft() {
     if (saveStatus === "saving") return;
 
@@ -390,6 +510,17 @@ export function useLocationBuilderViewModel({
       saveStatus,
       saveMessage,
       saveDisabled: saveStatus === "saving",
+      customViews: normalizeLocationCustomImageViews(
+        locationData.custom_image_views
+      ),
+      customViewEditor,
+      customViewLabelMaxLength: LOCATION_CUSTOM_VIEW_LABEL_MAX_LENGTH,
+      onAddCustomView: openAddCustomView,
+      onEditCustomView: openEditCustomView,
+      onRemoveCustomView: removeCustomView,
+      onChangeCustomViewEditor: updateCustomViewEditor,
+      onSaveCustomView: saveCustomView,
+      onCloseCustomViewEditor: () => setCustomViewEditor(null),
       onUpdateField: updateField,
       onUpdateLocationData: updateLocationData,
       onUpdateInheritance: updateInheritance,
