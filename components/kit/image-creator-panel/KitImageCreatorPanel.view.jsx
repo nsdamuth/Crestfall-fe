@@ -1864,42 +1864,6 @@ export default function KitImageCreatorPanelView({
             </div>
           )}
 
-          {!videoActive && !isVideoMode && !isRemixStage && locationViewControl ? (
-            <section className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] p-[var(--space-3)]">
-              <ControlTitle>{locationViewControl.label || "Location View"}</ControlTitle>
-              {locationViewControl.showToggle ? (
-                <div className="mt-[var(--space-2)] grid grid-cols-2 gap-[var(--space-2)]">
-                  {locationViewControl.options.map((option) => {
-                    const active = locationViewControl.value === option.value;
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => locationViewControl.onChange?.(option.value)}
-                        className={`min-h-[var(--control-md)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
-                          active
-                            ? "border-[var(--gold-ornament)]/55 bg-[var(--fill)] text-[var(--gold-bright)]"
-                            : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : (
-                <p className="mt-[var(--space-2)] text-[length:var(--text-ui)] text-[var(--ink)]">
-                  {locationViewControl.options.find((option) => option.value === locationViewControl.value)?.label || locationViewControl.value}
-                </p>
-              )}
-              {locationViewControl.helperText ? (
-                <p className="mt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
-                  {locationViewControl.helperText}
-                </p>
-              ) : null}
-            </section>
-          ) : null}
-
           {videoActive ? null : isVideoMode ? (
             <VideoBlock
               videoOptionFields={videoOptionFields}
@@ -1926,6 +1890,64 @@ export default function KitImageCreatorPanelView({
                   className={FIELD_RECIPE}
                 />
               </label>
+
+              {locationViewControl ? (
+                <section className="rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--fill-whisper)] p-[var(--space-3)]">
+                  <ControlTitle>{locationViewControl.label || "Location View"}</ControlTitle>
+                  <div className="mt-[var(--space-2)] grid grid-cols-2 gap-[var(--space-2)]">
+                    {locationViewControl.options.map((option) => {
+                      const active = locationViewControl.value === option.value;
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => locationViewControl.onChange?.(option.value)}
+                          className={`min-h-[var(--control-md)] rounded-[var(--radius-md)] border px-[var(--space-3)] text-[length:var(--text-label)] transition-colors ${
+                            active
+                              ? "border-[var(--gold-ornament)]/55 bg-[var(--fill)] text-[var(--gold-bright)]"
+                              : "border-[var(--line-whisper)] bg-[var(--surface-1)] text-[var(--ink-dim)] hover:border-[var(--line)] hover:text-[var(--ink)]"
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {locationViewControl.customOptions?.length ? (
+                    <div className="mt-[var(--space-3)]">
+                      <SettingSelect
+                        fieldId="location-custom-view"
+                        title="Additional View"
+                        valueLabel={
+                          locationViewControl.customOptions.find(
+                            (option) => option.value === locationViewControl.value
+                          )?.label || "Select an additional view"
+                        }
+                        isChanged={Boolean(
+                          locationViewControl.customOptions.some(
+                            (option) => option.value === locationViewControl.value
+                          )
+                        )}
+                        options={locationViewControl.customOptions}
+                        value={
+                          locationViewControl.customOptions.some(
+                            (option) => option.value === locationViewControl.value
+                          )
+                            ? locationViewControl.value
+                            : ""
+                        }
+                        onChange={(value) => locationViewControl.onChange?.(value)}
+                        idPrefix={idPrefix}
+                      />
+                    </div>
+                  ) : null}
+                  {locationViewControl.helperText ? (
+                    <p className="mt-[var(--space-2)] text-[length:var(--text-label)] leading-[var(--lh-label)] text-[var(--ink-dim)]">
+                      {locationViewControl.helperText}
+                    </p>
+                  ) : null}
+                </section>
+              ) : null}
 
               <ImageSettings
                 renderStyleRailProps={renderStyleRailProps}

@@ -3,8 +3,11 @@
 import {
   Image as ImageIcon,
   MapPin,
+  Pencil,
+  Plus,
   Save,
   Tag,
+  Trash2,
   X,
 } from "lucide-react";
 
@@ -35,6 +38,15 @@ export default function LocationBuilderView({
   saveStatus,
   saveMessage,
   saveDisabled,
+  customViews = [],
+  customViewEditor = null,
+  customViewLabelMaxLength = 80,
+  onAddCustomView = null,
+  onEditCustomView = null,
+  onRemoveCustomView = null,
+  onChangeCustomViewEditor = null,
+  onSaveCustomView = null,
+  onCloseCustomViewEditor = null,
   onUpdateField,
   onUpdateLocationData,
   onUpdateInheritance,
@@ -213,7 +225,7 @@ export default function LocationBuilderView({
               onChange={(value) =>
                 onUpdateField?.("image_prompt", value)
               }
-              placeholder="Optional fallback prompt used when no Interior or Exterior prompt is available."
+              placeholder="Optional fallback prompt used when no Interior, Exterior, or Scenic prompt is available."
               rows={5}
               maxLength={LOCATION_IMAGE_PROMPT_MAX_LENGTH}
               helperText="Optional fallback for legacy/simple locations. Max 2,000 characters."
@@ -225,7 +237,7 @@ export default function LocationBuilderView({
               onChange={(value) =>
                 onUpdateField?.("negative_prompt", value)
               }
-              placeholder="Optional fallback negatives used when no matching Interior or Exterior negative prompt is available."
+              placeholder="Optional fallback negatives used when no matching Interior, Exterior, or Scenic negative prompt is available."
               rows={5}
               maxLength={LOCATION_NEGATIVE_PROMPT_MAX_LENGTH}
               helperText="Optional fallback negative guidance. Max 300 characters."
@@ -270,6 +282,83 @@ export default function LocationBuilderView({
                 maxLength={LOCATION_NEGATIVE_PROMPT_MAX_LENGTH}
               />
             </div>
+
+            <div className="grid gap-4 rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Scenic</p>
+              <TextAreaField
+                label="Scenic Prompt"
+                value={form.scenic_image_prompt}
+                onChange={(value) => onUpdateField?.("scenic_image_prompt", value)}
+                placeholder="Optional guidance for broad establishing, aerial, elevated, distant, panoramic, skyline, or realm-scale views."
+                rows={5}
+                maxLength={LOCATION_IMAGE_PROMPT_MAX_LENGTH}
+              />
+              <TextAreaField
+                label="Scenic Negative Prompt"
+                value={form.scenic_negative_prompt}
+                onChange={(value) => onUpdateField?.("scenic_negative_prompt", value)}
+                placeholder="Optional negatives specific to scenic or establishing views."
+                rows={4}
+                maxLength={LOCATION_NEGATIVE_PROMPT_MAX_LENGTH}
+              />
+            </div>
+
+            <section className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Additional Views</p>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
+                    Create reusable named views for specific districts, rooms, landmarks, perspectives, or other visual contexts within this Location.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onAddCustomView?.()}
+                  className="cf-btn cf-btn--secondary shrink-0"
+                >
+                  <Plus size={14} />
+                  Add view
+                </button>
+              </div>
+
+              {customViews.length ? (
+                <div className="mt-4 grid gap-3">
+                  {customViews.map((view) => (
+                    <div
+                      key={view.id}
+                      className="flex flex-col gap-3 rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-3 md:flex-row md:items-center md:justify-between"
+                    >
+                      <div className="min-w-0">
+                        <p className="font-medium text-[var(--ink)]">{view.label}</p>
+                        <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
+                          {view.prompt || "No prompt authored yet."}
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => onEditCustomView?.(view.id)}
+                          className="cf-btn cf-btn--secondary"
+                        >
+                          <Pencil size={13} />
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onRemoveCustomView?.(view.id)}
+                          className="cf-btn cf-btn--danger"
+                        >
+                          <Trash2 size={13} />
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-4 text-sm text-[var(--ink-dim)]">No additional views yet.</p>
+              )}
+            </section>
           </div>
         </EditorCard>
 
@@ -488,6 +577,78 @@ export default function LocationBuilderView({
       </div>
 
       {parentPickerContent}
+
+      {customViewEditor ? (
+        <div
+          className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]"
+          role="dialog"
+          aria-modal="true"
+          aria-label={customViewEditor.editingId ? "Edit additional Location view" : "Add additional Location view"}
+        >
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-1)] p-5 shadow-2xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Location View</p>
+                <h3 className="mt-2 font-display text-2xl">
+                  {customViewEditor.editingId ? "Edit additional view" : "Add additional view"}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => onCloseCustomViewEditor?.()}
+                className="rounded-full border border-[var(--line)] p-2 text-[var(--ink-dim)] hover:text-[var(--ink)]"
+                aria-label="Close additional view editor"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="mt-5 grid gap-4">
+              <TextField
+                label="View Name"
+                value={customViewEditor.label}
+                onChange={(value) => onChangeCustomViewEditor?.("label", value)}
+                placeholder="e.g., Grand Palace Courtyard"
+                maxLength={customViewLabelMaxLength}
+              />
+              <TextAreaField
+                label="Prompt"
+                value={customViewEditor.prompt}
+                onChange={(value) => onChangeCustomViewEditor?.("prompt", value)}
+                placeholder="Describe this specific view of the Location."
+                rows={8}
+                maxLength={LOCATION_IMAGE_PROMPT_MAX_LENGTH}
+              />
+              <TextAreaField
+                label="Negative Prompt"
+                value={customViewEditor.negativePrompt}
+                onChange={(value) => onChangeCustomViewEditor?.("negativePrompt", value)}
+                placeholder="Optional negatives specific to this view."
+                rows={4}
+                maxLength={LOCATION_NEGATIVE_PROMPT_MAX_LENGTH}
+              />
+            </div>
+
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => onCloseCustomViewEditor?.()}
+                className="cf-btn cf-btn--secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => onSaveCustomView?.()}
+                disabled={!String(customViewEditor.label || "").trim() || !String(customViewEditor.prompt || "").trim()}
+                className="cf-btn cf-btn--primary disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Save view
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
       {/* MOBILE-SHELLS: the aside's Save draft is a full scroll away on a
           phone, so the same action docks to the bottom edge below md. The
           aside button is untouched and is what renders on desktop. */}
@@ -545,7 +706,7 @@ function CheckField({ label, checked, onChange }) {
   );
 }
 
-function TextField({ label, value, onChange, placeholder }) {
+function TextField({ label, value, onChange, placeholder, maxLength }) {
   return (
     <label className="block">
       <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
@@ -556,6 +717,7 @@ function TextField({ label, value, onChange, placeholder }) {
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
+        maxLength={maxLength}
         className="mt-2 w-full rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
       />
     </label>

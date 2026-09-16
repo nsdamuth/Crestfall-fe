@@ -1,5 +1,12 @@
 "use client";
 
+import { useState } from "react";
+import {
+  createLocationCustomImageViewId,
+  normalizeLocationCustomImageViews,
+  LOCATION_CUSTOM_VIEW_LABEL_MAX_LENGTH,
+} from "@/lib/shared/image-generation/locationImageViews";
+
 export const LOCATION_IMAGE_PROMPT_MAX_LENGTH = 2000;
 export const LOCATION_NEGATIVE_PROMPT_MAX_LENGTH = 300;
 
@@ -13,10 +20,10 @@ const DEFAULT_COPY = Object.freeze({
     "Reusable image-generation wording for this location.",
   imagePromptLabel: "General Image Prompt",
   imagePromptPlaceholder:
-    "Optional fallback image prompt used when no Interior or Exterior prompt is available. Max 2,000 characters.",
+    "Optional fallback image prompt used when no Interior, Exterior, or Scenic prompt is available. Max 2,000 characters.",
   negativePromptLabel: "General Negative Prompt",
   negativePromptPlaceholder:
-    "Optional fallback negatives used when no matching Interior or Exterior negative prompt is available. Max 300 characters.",
+    "Optional fallback negatives used when no matching Interior, Exterior, or Scenic negative prompt is available. Max 300 characters.",
   interiorPromptLabel: "Interior Prompt",
   interiorPromptPlaceholder:
     "Optional guidance for images rendered from inside this location. Max 2,000 characters.",
@@ -29,6 +36,15 @@ const DEFAULT_COPY = Object.freeze({
   exteriorNegativePromptLabel: "Exterior Negative Prompt",
   exteriorNegativePromptPlaceholder:
     "Optional negatives specific to exterior views. Max 300 characters.",
+  scenicPromptLabel: "Scenic Prompt",
+  scenicPromptPlaceholder:
+    "Optional guidance for broad establishing, aerial, elevated, distant, panoramic, skyline, or realm-scale views. Max 2,000 characters.",
+  scenicNegativePromptLabel: "Scenic Negative Prompt",
+  scenicNegativePromptPlaceholder:
+    "Optional negatives specific to scenic or establishing views. Max 300 characters.",
+  customViewsTitle: "Additional Views",
+  customViewsDescription:
+    "Create reusable named views for specific districts, rooms, landmarks, perspectives, or other visual contexts within this Location.",
   usageNotesLabel: "Usage Notes",
   usageNotesPlaceholder:
     "When should this location be used? What scenes, characters, moods, or image presets does it support?",
@@ -82,6 +98,17 @@ export function normalizeLocationPromptGuidanceData(data = {}) {
       source.exterior_negative_prompt || source.exteriorNegativePrompt,
       LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
     ),
+    scenicPrompt: limitLocationPromptValue(
+      source.scenic_image_prompt || source.scenicImagePrompt,
+      LOCATION_IMAGE_PROMPT_MAX_LENGTH
+    ),
+    scenicNegativePrompt: limitLocationPromptValue(
+      source.scenic_negative_prompt || source.scenicNegativePrompt,
+      LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+    ),
+    customViews: normalizeLocationCustomImageViews(
+      source.custom_image_views || source.customImageViews
+    ),
     usageNotes: normalizeText(source.usage_notes),
     compatibilityNotes: normalizeText(source.compatibility_notes),
     registryNotes: normalizeText(source.registry_notes),
@@ -93,6 +120,93 @@ export function useLocationPromptGuidanceSectionViewModel({
   updateDataField = null,
 } = {}) {
   const values = normalizeLocationPromptGuidanceData(form?.data);
+  const [customViewEditor, setCustomViewEditor] = useState(null);
+
+  function openAddCustomView() {
+    setCustomViewEditor({
+      editingId: null,
+      label: "",
+      prompt: "",
+      negativePrompt: "",
+    });
+  }
+
+  function openEditCustomView(id) {
+    const view = values.customViews.find((entry) => entry.id === id);
+    if (!view) return;
+
+    setCustomViewEditor({
+      editingId: view.id,
+      label: view.label,
+      prompt: view.prompt,
+      negativePrompt: view.negative_prompt,
+    });
+  }
+
+  function updateCustomViewEditor(field, value) {
+    setCustomViewEditor((current) =>
+      current
+        ? {
+            ...current,
+            [field]:
+              field === "label"
+                ? String(value || "").slice(0, LOCATION_CUSTOM_VIEW_LABEL_MAX_LENGTH)
+                : field === "negativePrompt"
+                  ? limitLocationPromptValue(
+                      value,
+                      LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+                    )
+                  : limitLocationPromptValue(
+                      value,
+                      LOCATION_IMAGE_PROMPT_MAX_LENGTH
+                    ),
+          }
+        : current
+    );
+  }
+
+  function saveCustomView() {
+    if (!customViewEditor) return;
+
+    const label = String(customViewEditor.label || "").trim();
+    const prompt = limitLocationPromptValue(
+      customViewEditor.prompt,
+      LOCATION_IMAGE_PROMPT_MAX_LENGTH
+    ).trim();
+    if (!label || !prompt) return;
+
+    const editingId = customViewEditor.editingId;
+    const id =
+      editingId || createLocationCustomImageViewId(label, values.customViews);
+    const nextEntry = {
+      id,
+      label,
+      prompt,
+      negative_prompt: limitLocationPromptValue(
+        customViewEditor.negativePrompt,
+        LOCATION_NEGATIVE_PROMPT_MAX_LENGTH
+      ).trim(),
+    };
+    const nextViews = editingId
+      ? values.customViews.map((entry) =>
+          entry.id === editingId ? nextEntry : entry
+        )
+      : [...values.customViews, nextEntry];
+
+    updateDataField?.("custom_image_views", nextViews);
+    setCustomViewEditor(null);
+  }
+
+  function removeCustomView(id) {
+    updateDataField?.(
+      "custom_image_views",
+      values.customViews.filter((entry) => entry.id !== id)
+    );
+
+    if (customViewEditor?.editingId === id) {
+      setCustomViewEditor(null);
+    }
+  }
 
   return {
     ...DEFAULT_COPY,
@@ -109,6 +223,13 @@ export function useLocationPromptGuidanceSectionViewModel({
     exteriorPromptMaxLength: LOCATION_IMAGE_PROMPT_MAX_LENGTH,
     exteriorNegativePromptValue: values.exteriorNegativePrompt,
     exteriorNegativePromptMaxLength: LOCATION_NEGATIVE_PROMPT_MAX_LENGTH,
+    scenicPromptValue: values.scenicPrompt,
+    scenicPromptMaxLength: LOCATION_IMAGE_PROMPT_MAX_LENGTH,
+    scenicNegativePromptValue: values.scenicNegativePrompt,
+    scenicNegativePromptMaxLength: LOCATION_NEGATIVE_PROMPT_MAX_LENGTH,
+    customViews: values.customViews,
+    customViewEditor,
+    customViewLabelMaxLength: LOCATION_CUSTOM_VIEW_LABEL_MAX_LENGTH,
     usageNotesValue: values.usageNotes,
     compatibilityNotesValue: values.compatibilityNotes,
     registryNotesValue: values.registryNotes,
@@ -144,6 +265,22 @@ export function useLocationPromptGuidanceSectionViewModel({
         "exterior_negative_prompt",
         limitLocationPromptValue(value, LOCATION_NEGATIVE_PROMPT_MAX_LENGTH)
       ),
+    onChangeScenicPrompt: (value) =>
+      updateDataField?.(
+        "scenic_image_prompt",
+        limitLocationPromptValue(value, LOCATION_IMAGE_PROMPT_MAX_LENGTH)
+      ),
+    onChangeScenicNegativePrompt: (value) =>
+      updateDataField?.(
+        "scenic_negative_prompt",
+        limitLocationPromptValue(value, LOCATION_NEGATIVE_PROMPT_MAX_LENGTH)
+      ),
+    onAddCustomView: openAddCustomView,
+    onEditCustomView: openEditCustomView,
+    onRemoveCustomView: removeCustomView,
+    onChangeCustomViewEditor: updateCustomViewEditor,
+    onSaveCustomView: saveCustomView,
+    onCloseCustomViewEditor: () => setCustomViewEditor(null),
     onChangeUsageNotes: (value) => updateDataField?.("usage_notes", value),
     onChangeCompatibilityNotes: (value) =>
       updateDataField?.("compatibility_notes", value),

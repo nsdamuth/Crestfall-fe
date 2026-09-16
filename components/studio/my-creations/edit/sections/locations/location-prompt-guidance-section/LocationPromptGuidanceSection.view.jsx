@@ -1,6 +1,9 @@
+import { Pencil, Plus, Trash2, X } from "lucide-react";
+
 import {
   SectionTitle,
   TextAreaField,
+  TextField,
   SHORT_LONGFORM_MAX_LENGTH,
   DEEP_LONGFORM_MAX_LENGTH,
 } from "@/components/studio/my-creations/edit/sections/SharedFields";
@@ -36,6 +39,19 @@ export default function LocationPromptGuidanceSectionView({
   exteriorNegativePromptValue = "",
   exteriorNegativePromptPlaceholder = "",
   exteriorNegativePromptMaxLength = 300,
+  scenicPromptLabel = "Scenic Prompt",
+  scenicPromptValue = "",
+  scenicPromptPlaceholder = "",
+  scenicPromptMaxLength = DEEP_LONGFORM_MAX_LENGTH,
+  scenicNegativePromptLabel = "Scenic Negative Prompt",
+  scenicNegativePromptValue = "",
+  scenicNegativePromptPlaceholder = "",
+  scenicNegativePromptMaxLength = 300,
+  customViewsTitle = "Additional Views",
+  customViewsDescription = "",
+  customViews = [],
+  customViewEditor = null,
+  customViewLabelMaxLength = 80,
   usageNotesLabel = "Usage Notes",
   usageNotesValue = "",
   usageNotesPlaceholder = "",
@@ -52,6 +68,14 @@ export default function LocationPromptGuidanceSectionView({
   onChangeInteriorNegativePrompt = null,
   onChangeExteriorPrompt = null,
   onChangeExteriorNegativePrompt = null,
+  onChangeScenicPrompt = null,
+  onChangeScenicNegativePrompt = null,
+  onAddCustomView = null,
+  onEditCustomView = null,
+  onRemoveCustomView = null,
+  onChangeCustomViewEditor = null,
+  onSaveCustomView = null,
+  onCloseCustomViewEditor = null,
   onChangeUsageNotes = null,
   onChangeCompatibilityNotes = null,
   onChangeRegistryNotes = null,
@@ -130,6 +154,89 @@ export default function LocationPromptGuidanceSectionView({
           />
         </div>
 
+        <div className="grid gap-[var(--space-4)] rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)]">
+          <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+            Scenic
+          </p>
+          <TextAreaField
+            label={scenicPromptLabel}
+            value={scenicPromptValue}
+            onChange={(value) => onChangeScenicPrompt?.(value)}
+            placeholder={scenicPromptPlaceholder}
+            maxLength={scenicPromptMaxLength}
+          />
+          <TextAreaField
+            label={scenicNegativePromptLabel}
+            value={scenicNegativePromptValue}
+            onChange={(value) => onChangeScenicNegativePrompt?.(value)}
+            placeholder={scenicNegativePromptPlaceholder}
+            maxLength={scenicNegativePromptMaxLength}
+          />
+        </div>
+
+        <section className="rounded-[var(--radius-md)] border border-[var(--line)] bg-[var(--surface-2)] p-[var(--space-4)]">
+          <div className="flex flex-wrap items-start justify-between gap-[var(--space-3)]">
+            <div className="min-w-0">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">
+                {customViewsTitle}
+              </p>
+              {customViewsDescription ? (
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-dim)]">
+                  {customViewsDescription}
+                </p>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              onClick={() => onAddCustomView?.()}
+              className="cf-btn cf-btn--secondary shrink-0"
+            >
+              <Plus size={14} />
+              Add view
+            </button>
+          </div>
+
+          {customViews.length ? (
+            <div className="mt-[var(--space-4)] grid gap-[var(--space-3)]">
+              {customViews.map((view) => (
+                <div
+                  key={view.id}
+                  className="flex flex-col gap-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--line-whisper)] bg-[var(--surface-1)] p-[var(--space-3)] md:flex-row md:items-center md:justify-between"
+                >
+                  <div className="min-w-0">
+                    <p className="font-medium text-[var(--ink)]">{view.label}</p>
+                    <p className="mt-1 line-clamp-2 text-sm leading-6 text-[var(--ink-dim)]">
+                      {view.prompt || "No prompt authored yet."}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onEditCustomView?.(view.id)}
+                      className="cf-btn cf-btn--secondary"
+                    >
+                      <Pencil size={13} />
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => onRemoveCustomView?.(view.id)}
+                      className="cf-btn cf-btn--danger"
+                    >
+                      <Trash2 size={13} />
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-[var(--space-4)] text-sm text-[var(--ink-dim)]">
+              No additional views yet.
+            </p>
+          )}
+        </section>
+
         <TextAreaField
           label={usageNotesLabel}
           value={usageNotesValue}
@@ -154,6 +261,72 @@ export default function LocationPromptGuidanceSectionView({
           maxLength={SHORT_LONGFORM_MAX_LENGTH}
         />
       </div>
+
+      {customViewEditor ? (
+        <div
+          className="fixed inset-0 z-[90] flex items-center justify-center bg-[var(--scrim-strong)] p-4 backdrop-blur-[2px]"
+          role="dialog"
+          aria-modal="true"
+          aria-label={customViewEditor.editingId ? "Edit additional Location view" : "Add additional Location view"}
+        >
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[var(--radius-lg)] border border-[var(--line)] bg-[var(--surface-1)] p-[var(--space-5)] shadow-2xl">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-[var(--gold-ornament)]">Location View</p>
+                <h3 className="mt-2 font-display text-2xl">
+                  {customViewEditor.editingId ? "Edit additional view" : "Add additional view"}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => onCloseCustomViewEditor?.()}
+                className="rounded-full border border-[var(--line)] p-2 text-[var(--ink-dim)] hover:text-[var(--ink)]"
+                aria-label="Close additional view editor"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="mt-[var(--space-5)] grid gap-[var(--space-4)]">
+              <TextField
+                label="View Name"
+                value={customViewEditor.label}
+                onChange={(value) => onChangeCustomViewEditor?.("label", value)}
+                placeholder="e.g., Grand Palace Courtyard"
+                maxLength={customViewLabelMaxLength}
+              />
+              <TextAreaField
+                label="Prompt"
+                value={customViewEditor.prompt}
+                onChange={(value) => onChangeCustomViewEditor?.("prompt", value)}
+                placeholder="Describe this specific view of the Location."
+                maxLength={DEEP_LONGFORM_MAX_LENGTH}
+              />
+              <TextAreaField
+                label="Negative Prompt"
+                value={customViewEditor.negativePrompt}
+                onChange={(value) => onChangeCustomViewEditor?.("negativePrompt", value)}
+                placeholder="Optional negatives specific to this view."
+                maxLength={300}
+              />
+            </div>
+
+            <div className="mt-[var(--space-5)] flex justify-end gap-2">
+              <button type="button" onClick={() => onCloseCustomViewEditor?.()} className="cf-btn cf-btn--secondary">
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => onSaveCustomView?.()}
+                disabled={!String(customViewEditor.label || "").trim() || !String(customViewEditor.prompt || "").trim()}
+                className="cf-btn cf-btn--primary disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Save view
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
