@@ -276,6 +276,8 @@ export function buildPresetDraftPayload({
           interior_negative_prompt: "",
           exterior_image_prompt: "",
           exterior_negative_prompt: "",
+          scenic_image_prompt: "",
+          scenic_negative_prompt: "",
           boundRegistryLinks: {
             eventRegistries: [],
             questRegistries: [],

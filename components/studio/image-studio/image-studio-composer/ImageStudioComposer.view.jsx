@@ -109,41 +109,6 @@ export default function ImageStudioComposerView({
       ) : null}
 
 
-      {locationViewControl ? (
-        <section className="mt-4 rounded-xl border border-[var(--gold-ornament)]/15 bg-[var(--surface-1)] p-3">
-          <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
-            {locationViewControl.label || "Location View"}
-          </p>
-          {locationViewControl.showToggle ? (
-            <div className="mt-2 grid grid-cols-2 gap-2">
-              {locationViewControl.options.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => locationViewControl.onChange?.(option.value)}
-                  className={`rounded-xl border px-3 py-2 text-xs transition ${
-                    locationViewControl.value === option.value
-                      ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
-                      : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <p className="mt-2 text-sm text-[var(--ink)]">
-              {locationViewControl.options.find((option) => option.value === locationViewControl.value)?.label || locationViewControl.value}
-            </p>
-          )}
-          {locationViewControl.helperText ? (
-            <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
-              {locationViewControl.helperText}
-            </p>
-          ) : null}
-        </section>
-      ) : null}
-
       {isVideoMode ? (
         videoToolsProps ? (
           <VideoToolsPanelView {...videoToolsProps} />
@@ -162,6 +127,35 @@ export default function ImageStudioComposerView({
               className="mt-2 w-full resize-none rounded-xl border border-white/10 bg-[var(--surface-1)] px-4 py-3 text-sm leading-6 text-[var(--ink)] outline-none placeholder:text-[var(--ink-dim)] focus:border-[var(--gold-ornament)]/50"
             />
           </label>
+
+          {locationViewControl ? (
+            <section className="mt-4 rounded-xl border border-[var(--gold-ornament)]/15 bg-[var(--surface-1)] p-3">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--gold-ornament)]">
+                {locationViewControl.label || "Location View"}
+              </p>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                {locationViewControl.options.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => locationViewControl.onChange?.(option.value)}
+                    className={`rounded-xl border px-3 py-2 text-xs transition ${
+                      locationViewControl.value === option.value
+                        ? "border-[var(--gold-ornament)]/55 bg-[var(--gold-ornament)]/15 text-[var(--ink)]"
+                        : "border-white/10 bg-[var(--surface-2)] text-[var(--ink-dim)] hover:border-[var(--gold-ornament)]/30"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              {locationViewControl.helperText ? (
+                <p className="mt-2 text-xs leading-5 text-[var(--ink-dim)]">
+                  {locationViewControl.helperText}
+                </p>
+              ) : null}
+            </section>
+          ) : null}
           <button
             type="button"
             onClick={() => onGenerateImage?.()}

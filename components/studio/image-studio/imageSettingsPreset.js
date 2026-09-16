@@ -31,6 +31,17 @@ function hasOption(options, value) {
   return options.some((option) => String(option.value) === String(value));
 }
 
+function normalizeLocationViewMode(value) {
+  const raw = String(value || "").trim();
+  const normalized = raw.toUpperCase();
+  if (["INTERIOR", "EXTERIOR", "SCENIC"].includes(normalized)) return normalized;
+  if (normalized.startsWith("CUSTOM:")) {
+    const customId = raw.slice(raw.indexOf(":") + 1).trim();
+    return customId ? `CUSTOM:${customId}` : "AUTO";
+  }
+  return "AUTO";
+}
+
 export function normalizeImageSettingsPreset(value) {
   const source = normalizeObject(value);
   if (source.contract !== IMAGE_SETTINGS_PRESET_CONTRACT) {
@@ -57,10 +68,7 @@ export function normalizeImageSettingsPreset(value) {
       typeof source.sceneryOnlyHelperEnabled === "boolean"
         ? source.sceneryOnlyHelperEnabled
         : true,
-    locationViewMode:
-      ["INTERIOR", "EXTERIOR"].includes(String(source.locationViewMode || "").toUpperCase())
-        ? String(source.locationViewMode).toUpperCase()
-        : "AUTO",
+    locationViewMode: normalizeLocationViewMode(source.locationViewMode),
     negativePrompt: typeof source.negativePrompt === "string" ? source.negativePrompt : "",
   };
 }

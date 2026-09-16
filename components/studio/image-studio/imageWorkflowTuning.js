@@ -171,6 +171,7 @@ function profile({
   detailScaleOptions,
   scaleSet,
   supportsReferenceInfluence = false,
+  controlPresentation = null,
 }) {
   return Object.freeze({
     key,
@@ -180,6 +181,9 @@ function profile({
     defaultScale,
     detailScaleOptions: Object.freeze(detailScaleOptions),
     supportsReferenceInfluence,
+    controlPresentation: controlPresentation
+      ? Object.freeze({ ...controlPresentation })
+      : null,
     scales: Object.freeze(
       Object.fromEntries(
         Object.entries(scaleSet).map(([nextKey, tuple]) => [scaleKey(nextKey), toEnvelope(tuple)])
@@ -235,6 +239,26 @@ const PROFILE_DEFINITIONS = Object.freeze({
     detailScaleOptions: [1, 1.25, 1.5, 1.75, 2],
     scaleSet: SCALES.hybrid,
     supportsReferenceInfluence: true,
+    controlPresentation: {
+      foundationSteps: Object.freeze({
+        label: "Fantasy Foundation Detail",
+        description: "How much of the bounded fantasy-foundation detail budget is used in Stage 1.",
+        leftLabel: "Lighter",
+        rightLabel: "Full Detail",
+      }),
+      polishSteps: Object.freeze({
+        label: "Realism Polish Detail",
+        description: "How much of the bounded realism-polish detail budget is used in Stage 2.",
+        leftLabel: "Lighter",
+        rightLabel: "Full Detail",
+      }),
+      polishDenoise: Object.freeze({
+        label: "Realism Balance",
+        description: "How strongly the realism polish is allowed to reshape the fantasy foundation during Stage 2.",
+        leftLabel: "More Fantasy",
+        rightLabel: "Max Realism",
+      }),
+    },
   }),
   crestfall_fantasy_realism: profile({
     key: "crestfall_fantasy_realism",
@@ -247,6 +271,26 @@ const PROFILE_DEFINITIONS = Object.freeze({
     detailScaleOptions: [1, 1.25, 1.5, 1.75, 2],
     scaleSet: SCALES.hybrid,
     supportsReferenceInfluence: true,
+    controlPresentation: {
+      foundationSteps: Object.freeze({
+        label: "Realistic Foundation Detail",
+        description: "How much of the bounded realism-foundation detail budget is used in Stage 1.",
+        leftLabel: "Lighter",
+        rightLabel: "Richer",
+      }),
+      polishSteps: Object.freeze({
+        label: "Fantasy Polish Detail",
+        description: "How much of the bounded fantasy-polish detail budget is used in Stage 2.",
+        leftLabel: "Lighter",
+        rightLabel: "Richer",
+      }),
+      polishDenoise: Object.freeze({
+        label: "Fantasy Influence",
+        description: "How strongly the fantasy polish may reshape the realism-first foundation while staying in the balanced Heroic lane.",
+        leftLabel: "Mostly Realistic",
+        rightLabel: "Stronger Fantasy",
+      }),
+    },
   }),
   crestfall_realistic_fantasy: profile({
     key: "crestfall_realistic_fantasy",
@@ -259,6 +303,26 @@ const PROFILE_DEFINITIONS = Object.freeze({
     detailScaleOptions: [1, 1.25, 1.5, 1.75, 2],
     scaleSet: SCALES.cinematic,
     supportsReferenceInfluence: true,
+    controlPresentation: {
+      foundationSteps: Object.freeze({
+        label: "Realistic Foundation Detail",
+        description: "How much of the bounded realism-foundation detail budget is used in Stage 1.",
+        leftLabel: "Lighter",
+        rightLabel: "Richer",
+      }),
+      polishSteps: Object.freeze({
+        label: "Fantasy Polish Detail",
+        description: "How much of the bounded fantasy-polish detail budget is used in Stage 2.",
+        leftLabel: "Lighter",
+        rightLabel: "Richer",
+      }),
+      polishDenoise: Object.freeze({
+        label: "Fantasy Influence",
+        description: "How strongly the restrained fantasy polish may reshape the realism-first foundation during Stage 2.",
+        leftLabel: "Mostly Realistic",
+        rightLabel: "Stronger Fantasy",
+      }),
+    },
   }),
 });
 
@@ -386,6 +450,13 @@ function formatDefaultValue(control, value) {
   return control.formatValue ? control.formatValue(value) : String(value);
 }
 
+function getControlPresentation(profile, controlId, fallback) {
+  return {
+    ...fallback,
+    ...(profile?.controlPresentation?.[controlId] || {}),
+  };
+}
+
 function buildControls(profile, normalizedTuning) {
   const scaleEnvelope = getScaleEnvelope(profile, normalizedTuning.detailScale);
 
@@ -418,6 +489,36 @@ function buildControls(profile, normalizedTuning) {
       ? 10
       : SEMANTIC_MIN;
 
+  const foundationPresentation = getControlPresentation(
+    profile,
+    "foundationSteps",
+    {
+      label: "Foundation",
+      description:
+        "How strongly the image foundation is established before finishing passes begin.",
+      leftLabel: "Lighter",
+      rightLabel: "Stronger",
+    }
+  );
+  const polishPresentation = getControlPresentation(profile, "polishSteps", {
+    label: "Refinement",
+    description:
+      "How much finishing detail and cleanup the later pass adds on top of the foundation.",
+    leftLabel: "Lighter",
+    rightLabel: "Richer",
+  });
+  const denoisePresentation = getControlPresentation(
+    profile,
+    "polishDenoise",
+    {
+      label: "Variation",
+      description:
+        "How freely the finishing pass is allowed to reinterpret the established foundation.",
+      leftLabel: "Gentler",
+      rightLabel: "Freer",
+    }
+  );
+
   controls.push(
     discreteRangeControl({
       id: "detailScale",
@@ -431,11 +532,10 @@ function buildControls(profile, normalizedTuning) {
     }),
     rangeControl({
       id: "foundationSteps",
-      label: "Foundation",
-      description:
-        "How strongly the image foundation is established before finishing passes begin.",
-      leftLabel: "Lighter",
-      rightLabel: "Stronger",
+      label: foundationPresentation.label,
+      description: foundationPresentation.description,
+      leftLabel: foundationPresentation.leftLabel,
+      rightLabel: foundationPresentation.rightLabel,
       min: foundationSemanticMin,
       max: SEMANTIC_MAX,
       step: 1,
@@ -460,11 +560,10 @@ function buildControls(profile, normalizedTuning) {
     }),
     rangeControl({
       id: "polishSteps",
-      label: "Refinement",
-      description:
-        "How much finishing detail and cleanup the later pass adds on top of the foundation.",
-      leftLabel: "Lighter",
-      rightLabel: "Richer",
+      label: polishPresentation.label,
+      description: polishPresentation.description,
+      leftLabel: polishPresentation.leftLabel,
+      rightLabel: polishPresentation.rightLabel,
       min: SEMANTIC_MIN,
       max: SEMANTIC_MAX,
       step: 1,
@@ -480,11 +579,10 @@ function buildControls(profile, normalizedTuning) {
     }),
     rangeControl({
       id: "polishDenoise",
-      label: "Variation",
-      description:
-        "How freely the finishing pass is allowed to reinterpret the established foundation.",
-      leftLabel: "Gentler",
-      rightLabel: "Freer",
+      label: denoisePresentation.label,
+      description: denoisePresentation.description,
+      leftLabel: denoisePresentation.leftLabel,
+      rightLabel: denoisePresentation.rightLabel,
       min: SEMANTIC_MIN,
       max: SEMANTIC_MAX,
       step: 1,
