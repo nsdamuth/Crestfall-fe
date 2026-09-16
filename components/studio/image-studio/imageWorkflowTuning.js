@@ -619,6 +619,40 @@ export function getWorkflowTuningPresentationValue(profileKey, controlId, rawVal
   return control.toDisplayValue ? control.toDisplayValue(rawValue) : rawValue;
 }
 
+export function buildWorkflowTuningPresentationSnapshot(profileKey, tuning = {}) {
+  const normalizedTuning = normalizeImageWorkflowTuning(profileKey, tuning);
+  const definition = getImageWorkflowTuningDefinition(profileKey, normalizedTuning);
+  if (!definition) return null;
+
+  const snapshot = {
+    version: "image_workflow_tuning_presentation_v1",
+  };
+
+  for (const control of definition.controls || []) {
+    if (control.id === "detailScale") {
+      const option = (control.options || []).find(
+        (entry) => Number(entry.value) === Number(normalizedTuning.detailScale)
+      );
+      snapshot.detailScale = normalizedTuning.detailScale;
+      snapshot.detailScaleLabel = option?.label || String(normalizedTuning.detailScale);
+      continue;
+    }
+
+    const rawValue = normalizedTuning[control.id];
+    if (!Number.isFinite(Number(rawValue))) continue;
+
+    const presentedValue = control.toDisplayValue
+      ? control.toDisplayValue(rawValue)
+      : rawValue;
+
+    if (Number.isFinite(Number(presentedValue))) {
+      snapshot[control.id] = Math.round(Number(presentedValue));
+    }
+  }
+
+  return snapshot;
+}
+
 export function normalizeRenderStyleRailSelection(profileKey) {
   const normalizedKey = String(profileKey || "").trim();
   if (RENDER_STYLE_RAIL_STOPS.some((entry) => entry.value === normalizedKey)) {

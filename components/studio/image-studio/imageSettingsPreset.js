@@ -104,7 +104,11 @@ export function serializeImageSettingsPreset(value) {
   );
 }
 
-export function getImageSettingsPresetPresentation(value) {
+
+export function getImageSettingsPresetPresentation(
+  value,
+  { workflowTuningPresentation = null } = {}
+) {
   const normalized = normalizeImageSettingsPreset(value);
   const renderStyle = getRenderStyleRailStop(normalized.renderStyle);
   const camera = getCameraPresetDefinition(normalized.cameraFraming);
@@ -112,6 +116,7 @@ export function getImageSettingsPresetPresentation(value) {
     normalized.renderStyle,
     normalized.workflowTuning
   );
+  const presentationSnapshot = normalizeObject(workflowTuningPresentation);
   const tuningParts = [];
 
   for (const control of definition?.controls || []) {
@@ -119,32 +124,32 @@ export function getImageSettingsPresetPresentation(value) {
       continue;
     }
 
-    if (control.kind === "discrete-range") {
-      tuningParts.push(
-        `${control.label} ${control.formatValue ? control.formatValue(control.defaultValue) : control.defaultValue}`
+    if (control.id === "detailScale") {
+      const option = control.options?.find(
+        (entry) => Number(entry.value) === Number(normalized.workflowTuning.detailScale)
       );
+      const detailLabel =
+        typeof presentationSnapshot.detailScaleLabel === "string" &&
+        presentationSnapshot.detailScaleLabel.trim()
+          ? presentationSnapshot.detailScaleLabel.trim()
+          : option?.label || String(normalized.workflowTuning.detailScale);
+      tuningParts.push(`Detail ${detailLabel}`);
       continue;
     }
 
-    const presentedValue = getWorkflowTuningPresentationValue(
-      normalized.renderStyle,
-      control.id,
-      normalized.workflowTuning[control.id],
-      normalized.workflowTuning
-    );
+    const snapshotValue = Number(presentationSnapshot[control.id]);
+    const presentedValue = Number.isFinite(snapshotValue)
+      ? Math.min(Math.max(Math.round(snapshotValue), 0), 100)
+      : getWorkflowTuningPresentationValue(
+          normalized.renderStyle,
+          control.id,
+          normalized.workflowTuning[control.id],
+          normalized.workflowTuning
+        );
+
     tuningParts.push(
       `${control.label} ${control.formatValue ? control.formatValue(presentedValue) : String(presentedValue)}`
     );
-  }
-
-  const detailControl = definition?.controls?.find((control) => control.id === "detailScale");
-  if (detailControl?.kind === "discrete-range") {
-    const option = detailControl.options?.find(
-      (entry) => Number(entry.value) === Number(normalized.workflowTuning.detailScale)
-    );
-    if (option?.label) {
-      tuningParts[0] = `Detail ${option.label}`;
-    }
   }
 
   return {

@@ -16,6 +16,7 @@ import {
   isLocationOnlyImageComposition,
 } from "./locationOnlySceneryPrompt.js";
 import {
+  buildWorkflowTuningPresentationSnapshot,
   getDefaultImageWorkflowTuning,
   getWorkflowTuningHandoff,
   getWorkflowTuningPayload,
@@ -502,6 +503,10 @@ export function buildImageGenerationPayload({
     tuning: workflowTuning,
     touched: workflowTuningTouched,
   });
+  const workflowTuningPresentation = buildWorkflowTuningPresentationSnapshot(
+    renderStyle,
+    workflowTuning
+  );
 
   return {
     mode: "image",
@@ -563,6 +568,9 @@ export function buildImageGenerationPayload({
       locationViewMode: String(locationViewMode || "AUTO").toUpperCase(),
       ...(resolvedWorkflowTuning
         ? { workflowTuning: resolvedWorkflowTuning }
+        : {}),
+      ...(workflowTuningPresentation
+        ? { workflowTuningPresentation }
         : {}),
     },
     modelProfile: getModelProfile(renderStyle),

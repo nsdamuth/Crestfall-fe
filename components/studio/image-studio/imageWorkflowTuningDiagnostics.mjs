@@ -5,6 +5,7 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
+  buildWorkflowTuningPresentationSnapshot,
   getDefaultImageWorkflowTuning,
   getImageWorkflowTuningDefinition,
   getRenderStyleRailStop,
@@ -192,4 +193,101 @@ test("composer initializes tuning before definition and maps semantic UI values 
   assert.ok(normalizationIndex < definitionIndex);
   assert.match(viewModel, /entry\.toDisplayValue/);
   assert.match(viewModel, /entry\.fromDisplayValue/);
+});
+
+
+test("hybrid Image Details show exact recorded recipe values instead of re-projecting through current envelopes", () => {
+  const cases = [
+    [
+      "crestfall_fantasy_realistic",
+      { detailScale: 2, foundationSteps: 25, polishSteps: 25, polishDenoise: 0.2 },
+      "Detail Maximum · Fantasy Foundation Detail 25 steps · Realism Polish Detail 25 steps · Realism Balance 20%",
+    ],
+    [
+      "crestfall_fantasy_realism",
+      { referenceInfluence: 50, detailScale: 2, foundationSteps: 25, polishSteps: 25, polishDenoise: 0.2 },
+      "Detail Maximum · Realistic Foundation Detail 25 steps · Fantasy Polish Detail 25 steps · Fantasy Influence 20%",
+    ],
+    [
+      "crestfall_realistic_fantasy",
+      { referenceInfluence: 50, detailScale: 2, foundationSteps: 25, polishSteps: 35, polishDenoise: 0.4 },
+      "Detail Maximum · Realistic Foundation Detail 25 steps · Fantasy Polish Detail 35 steps · Fantasy Influence 40%",
+    ],
+  ];
+
+  for (const [renderStyle, workflowTuning, expected] of cases) {
+    const presentation = getImageSettingsPresetPresentation({
+      contract: IMAGE_SETTINGS_PRESET_CONTRACT,
+      renderStyle,
+      cameraFraming: "AUTO",
+      aspectRatio: "4:5",
+      wardrobeTheme: "AUTO",
+      workflowTuning,
+      sceneryOnlyHelperEnabled: true,
+      locationViewMode: "AUTO",
+      negativePrompt: "",
+    });
+    assert.equal(presentation.tuningSummary, expected);
+  }
+});
+
+
+test("workflow tuning presentation snapshot captures the exact user-facing values", () => {
+  const snapshot = buildWorkflowTuningPresentationSnapshot(
+    "crestfall_fantasy_realism",
+    {
+      referenceInfluence: 50,
+      detailScale: 2,
+      foundationSteps: 25,
+      polishSteps: 25,
+      polishDenoise: 0.2,
+    }
+  );
+
+  assert.deepEqual(snapshot, {
+    version: "image_workflow_tuning_presentation_v1",
+    referenceInfluence: 50,
+    detailScale: 2,
+    detailScaleLabel: "Maximum",
+    foundationSteps: 0,
+    polishSteps: 0,
+    polishDenoise: 0,
+  });
+});
+
+test("Image Details can use a persisted presentation snapshot without exposing raw internals", () => {
+  const preset = {
+    contract: IMAGE_SETTINGS_PRESET_CONTRACT,
+    renderStyle: "crestfall_fantasy_realism",
+    cameraFraming: "AUTO",
+    aspectRatio: "4:5",
+    wardrobeTheme: "AUTO",
+    workflowTuning: {
+      referenceInfluence: 50,
+      detailScale: 2,
+      foundationSteps: 25,
+      polishSteps: 25,
+      polishDenoise: 0.2,
+    },
+    sceneryOnlyHelperEnabled: true,
+    locationViewMode: "AUTO",
+    negativePrompt: "",
+  };
+
+  const presentation = getImageSettingsPresetPresentation(preset, {
+    workflowTuningPresentation: {
+      version: "image_workflow_tuning_presentation_v1",
+      detailScale: 2,
+      detailScaleLabel: "Maximum",
+      foundationSteps: 37,
+      polishSteps: 62,
+      polishDenoise: 41,
+    },
+  });
+
+  assert.equal(
+    presentation.tuningSummary,
+    "Detail Maximum · Realistic Foundation Detail 37% · Fantasy Polish Detail 62% · Fantasy Influence 41%"
+  );
+  assert.doesNotMatch(presentation.tuningSummary, /steps|denoise|0\.2/i);
 });
